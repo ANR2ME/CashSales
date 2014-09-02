@@ -11,7 +11,7 @@ namespace Core.Interface.Repository
         IQueryable<UserMenu> GetQueryable();
         IList<UserMenu> GetAll();
         UserMenu GetObjectById(int Id);
-        UserMenu GetObjectByName(string Name);
+        UserMenu GetObjectByNameAndGroupName(string Name, string GroupName);
         UserMenu CreateObject(UserMenu userMenu);
         UserMenu SoftDeleteObject(UserMenu userMenu);
         bool DeleteObject(int Id);

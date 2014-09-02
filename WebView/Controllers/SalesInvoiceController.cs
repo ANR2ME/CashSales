@@ -62,6 +62,11 @@ namespace WebView.Controllers
 
         public ActionResult Index()
         {
+            if (!AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.SalesInvoice, Core.Constants.Constant.MenuGroupName.Transaction))
+            {
+                return Content("You are not allowed to View this Page.");
+            }
+
             return View();
         }
 
@@ -280,7 +285,17 @@ namespace WebView.Controllers
         {
             try
             {
-             
+                if (!AuthenticationModel.IsAllowed("Create", Core.Constants.Constant.MenuName.SalesInvoice, Core.Constants.Constant.MenuGroupName.Transaction))
+                {
+                    Dictionary<string, string> Errors = new Dictionary<string, string>();
+                    Errors.Add("Generic", "You are Not Allowed to Add record");
+
+                    return Json(new
+                    {
+                        Errors
+                    }, JsonRequestBehavior.AllowGet);
+                }
+
                 model = _salesInvoiceService.CreateObject(model,_deliveryOrderService);
             }
             catch (Exception ex)
@@ -307,6 +322,17 @@ namespace WebView.Controllers
             decimal amount = 0;
             try
             {
+                if (!AuthenticationModel.IsAllowed("Edit", Core.Constants.Constant.MenuName.SalesInvoice, Core.Constants.Constant.MenuGroupName.Transaction))
+                {
+                    Dictionary<string, string> Errors = new Dictionary<string, string>();
+                    Errors.Add("Generic", "You are Not Allowed to Edit record");
+
+                    return Json(new
+                    {
+                        Errors
+                    }, JsonRequestBehavior.AllowGet);
+                }
+
                 model = _salesInvoiceDetailService.CreateObject(model,_salesInvoiceService,_salesOrderDetailService,_deliveryOrderDetailService);
                 amount = _salesInvoiceService.GetObjectById(model.SalesInvoiceId).AmountReceivable;
             }
@@ -335,6 +361,17 @@ namespace WebView.Controllers
         {
             try
             {
+                if (!AuthenticationModel.IsAllowed("Edit", Core.Constants.Constant.MenuName.SalesInvoice, Core.Constants.Constant.MenuGroupName.Transaction))
+                {
+                    Dictionary<string, string> Errors = new Dictionary<string, string>();
+                    Errors.Add("Generic", "You are Not Allowed to Edit record");
+
+                    return Json(new
+                    {
+                        Errors
+                    }, JsonRequestBehavior.AllowGet);
+                }
+
                 var data = _salesInvoiceService.GetObjectById(model.Id);
                 data.DeliveryOrderId = model.DeliveryOrderId;
                 data.Description = model.Description;
@@ -368,6 +405,17 @@ namespace WebView.Controllers
         {
             try
             {
+                if (!AuthenticationModel.IsAllowed("Delete", Core.Constants.Constant.MenuName.SalesInvoice, Core.Constants.Constant.MenuGroupName.Transaction))
+                {
+                    Dictionary<string, string> Errors = new Dictionary<string, string>();
+                    Errors.Add("Generic", "You are Not Allowed to Delete Record");
+
+                    return Json(new
+                    {
+                        Errors
+                    }, JsonRequestBehavior.AllowGet);
+                }
+
                 var data = _salesInvoiceService.GetObjectById(model.Id);
                 model = _salesInvoiceService.SoftDeleteObject(data,_salesInvoiceDetailService);
             }
@@ -395,6 +443,17 @@ namespace WebView.Controllers
             decimal amount = 0;
             try
             {
+                if (!AuthenticationModel.IsAllowed("Edit", Core.Constants.Constant.MenuName.SalesInvoice, Core.Constants.Constant.MenuGroupName.Transaction))
+                {
+                    Dictionary<string, string> Errors = new Dictionary<string, string>();
+                    Errors.Add("Generic", "You are Not Allowed to Edit record");
+
+                    return Json(new
+                    {
+                        Errors
+                    }, JsonRequestBehavior.AllowGet);
+                }
+
                 var data = _salesInvoiceDetailService.GetObjectById(model.Id);
                 model = _salesInvoiceDetailService.SoftDeleteObject(data,_salesInvoiceService);
                 amount = _salesInvoiceService.GetObjectById(model.SalesInvoiceId).AmountReceivable;
@@ -424,6 +483,17 @@ namespace WebView.Controllers
             decimal amount = 0;
             try
             {
+                if (!AuthenticationModel.IsAllowed("Edit", Core.Constants.Constant.MenuName.SalesInvoice, Core.Constants.Constant.MenuGroupName.Transaction))
+                {
+                    Dictionary<string, string> Errors = new Dictionary<string, string>();
+                    Errors.Add("Generic", "You are Not Allowed to Edit record");
+
+                    return Json(new
+                    {
+                        Errors
+                    }, JsonRequestBehavior.AllowGet);
+                }
+
                 var data = _salesInvoiceDetailService.GetObjectById(model.Id);
                 data.Quantity = model.Quantity;
                 data.DeliveryOrderDetailId = model.DeliveryOrderDetailId;
@@ -456,6 +526,17 @@ namespace WebView.Controllers
         {
             try
             {
+                if (!AuthenticationModel.IsAllowed("Confirm", Core.Constants.Constant.MenuName.SalesInvoice, Core.Constants.Constant.MenuGroupName.Transaction))
+                {
+                    Dictionary<string, string> Errors = new Dictionary<string, string>();
+                    Errors.Add("Generic", "You are Not Allowed to Confirm Record");
+
+                    return Json(new
+                    {
+                        Errors
+                    }, JsonRequestBehavior.AllowGet);
+                }
+
                 var data = _salesInvoiceService.GetObjectById(model.Id);
                 model = _salesInvoiceService.ConfirmObject(data,model.ConfirmationDate.Value,_salesInvoiceDetailService,
                     _salesOrderService,_deliveryOrderService,_deliveryOrderDetailService,_receivableService);
@@ -483,6 +564,16 @@ namespace WebView.Controllers
         {
             try
             {
+                if (!AuthenticationModel.IsAllowed("UnConfirm", Core.Constants.Constant.MenuName.SalesInvoice, Core.Constants.Constant.MenuGroupName.Transaction))
+                {
+                    Dictionary<string, string> Errors = new Dictionary<string, string>();
+                    Errors.Add("Generic", "You are Not Allowed to UnConfirm record");
+
+                    return Json(new
+                    {
+                        Errors
+                    }, JsonRequestBehavior.AllowGet);
+                }
 
                 var data = _salesInvoiceService.GetObjectById(model.Id);
                 model = _salesInvoiceService.UnconfirmObject(data, _salesInvoiceDetailService,_deliveryOrderService,

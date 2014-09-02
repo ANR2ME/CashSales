@@ -9,13 +9,17 @@ namespace Core.Interface.Service
 {
     public interface IUserAccessService
     {
-        IQueryable<UserAccess> GetQueryable();
         IUserAccessValidator GetValidator();
+        IQueryable<UserAccess> GetQueryable();
+        IQueryable<UserAccess> GetQueryableObjectsByUserAccountId(int UserAccountId);
         IList<UserAccess> GetAll();
+        IList<UserAccess> GetObjectsByUserAccountId(int UserAccountId);
+        UserAccess GetObjectByUserAccountIdAndUserMenuId(int UserAccountId, int UserMenuId);
         UserAccess GetObjectById(int Id);
         UserAccess CreateObject(UserAccess userAccess, IUserAccountService _userAccountService, IUserMenuService _userMenuService);
         UserAccess UpdateObject(UserAccess userAccess, IUserAccountService _userAccountService, IUserMenuService _userMenuService);
         UserAccess SoftDeleteObject(UserAccess userAccess);
         bool DeleteObject(int Id);
+        bool CreateDefaultAccess(int UserAccountId, IUserMenuService _userMenuService, IUserAccountService _userAccountService);
     }
 }

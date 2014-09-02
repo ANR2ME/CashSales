@@ -46,6 +46,11 @@ namespace WebView.Controllers
 
         public ActionResult Index()
         {
+            if (!AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.PurchaseReceival, Core.Constants.Constant.MenuGroupName.Transaction))
+            {
+                return Content("You are not allowed to View this Page.");
+            }
+
             return View();
         }
 
@@ -326,7 +331,17 @@ namespace WebView.Controllers
         {
             try
             {
-             
+                if (!AuthenticationModel.IsAllowed("Create", Core.Constants.Constant.MenuName.PurchaseReceival, Core.Constants.Constant.MenuGroupName.Transaction))
+                {
+                    Dictionary<string, string> Errors = new Dictionary<string, string>();
+                    Errors.Add("Generic", "You are Not Allowed to Add record");
+
+                    return Json(new
+                    {
+                        Errors
+                    }, JsonRequestBehavior.AllowGet);
+                }
+
                 model = _purchaseReceivalService.CreateObject(model,_purchaseOrderService,_warehouseService);
             }
             catch (Exception ex)
@@ -352,6 +367,17 @@ namespace WebView.Controllers
         {
             try
             {
+                if (!AuthenticationModel.IsAllowed("Edit", Core.Constants.Constant.MenuName.PurchaseReceival, Core.Constants.Constant.MenuGroupName.Transaction))
+                {
+                    Dictionary<string, string> Errors = new Dictionary<string, string>();
+                    Errors.Add("Generic", "You are Not Allowed to Edit record");
+
+                    return Json(new
+                    {
+                        Errors
+                    }, JsonRequestBehavior.AllowGet);
+                }
+
                 model = _purchaseReceivalDetailService.CreateObject(model,_purchaseReceivalService,_purchaseOrderDetailService,_purchaseOrderService,_itemService);
             }
             catch (Exception ex)
@@ -377,6 +403,17 @@ namespace WebView.Controllers
         {
             try
             {
+                if (!AuthenticationModel.IsAllowed("Edit", Core.Constants.Constant.MenuName.PurchaseReceival, Core.Constants.Constant.MenuGroupName.Transaction))
+                {
+                    Dictionary<string, string> Errors = new Dictionary<string, string>();
+                    Errors.Add("Generic", "You are Not Allowed to Edit record");
+
+                    return Json(new
+                    {
+                        Errors
+                    }, JsonRequestBehavior.AllowGet);
+                }
+
                 var data = _purchaseReceivalService.GetObjectById(model.Id);
                 data.PurchaseOrderId = model.PurchaseOrderId;
                 data.ReceivalDate = model.ReceivalDate;
@@ -406,6 +443,17 @@ namespace WebView.Controllers
         {
             try
             {
+                if (!AuthenticationModel.IsAllowed("Delete", Core.Constants.Constant.MenuName.PurchaseReceival, Core.Constants.Constant.MenuGroupName.Transaction))
+                {
+                    Dictionary<string, string> Errors = new Dictionary<string, string>();
+                    Errors.Add("Generic", "You are Not Allowed to Delete Record");
+
+                    return Json(new
+                    {
+                        Errors
+                    }, JsonRequestBehavior.AllowGet);
+                }
+
                 var data = _purchaseReceivalService.GetObjectById(model.Id);
                 model = _purchaseReceivalService.SoftDeleteObject(data,_purchaseReceivalDetailService);
             }
@@ -432,6 +480,17 @@ namespace WebView.Controllers
         {
             try
             {
+                if (!AuthenticationModel.IsAllowed("Edit", Core.Constants.Constant.MenuName.PurchaseReceival, Core.Constants.Constant.MenuGroupName.Transaction))
+                {
+                    Dictionary<string, string> Errors = new Dictionary<string, string>();
+                    Errors.Add("Generic", "You are Not Allowed to Edit record");
+
+                    return Json(new
+                    {
+                        Errors
+                    }, JsonRequestBehavior.AllowGet);
+                }
+
                 var data = _purchaseReceivalDetailService.GetObjectById(model.Id);
                 model = _purchaseReceivalDetailService.SoftDeleteObject(data);
             }
@@ -458,6 +517,17 @@ namespace WebView.Controllers
         {
             try
             {
+                if (!AuthenticationModel.IsAllowed("Edit", Core.Constants.Constant.MenuName.PurchaseReceival, Core.Constants.Constant.MenuGroupName.Transaction))
+                {
+                    Dictionary<string, string> Errors = new Dictionary<string, string>();
+                    Errors.Add("Generic", "You are Not Allowed to Edit record");
+
+                    return Json(new
+                    {
+                        Errors
+                    }, JsonRequestBehavior.AllowGet);
+                }
+
                 var data = _purchaseReceivalDetailService.GetObjectById(model.Id);
                 data.PurchaseOrderDetailId = model.PurchaseOrderDetailId;
                 data.ItemId = model.ItemId;
@@ -488,6 +558,17 @@ namespace WebView.Controllers
         {
             try
             {
+                if (!AuthenticationModel.IsAllowed("Confirm", Core.Constants.Constant.MenuName.PurchaseReceival, Core.Constants.Constant.MenuGroupName.Transaction))
+                {
+                    Dictionary<string, string> Errors = new Dictionary<string, string>();
+                    Errors.Add("Generic", "You are Not Allowed to Confirm Record");
+
+                    return Json(new
+                    {
+                        Errors
+                    }, JsonRequestBehavior.AllowGet);
+                }
+
                 var data = _purchaseReceivalService.GetObjectById(model.Id);
                 model = _purchaseReceivalService.ConfirmObject(data,model.ConfirmationDate.Value,_purchaseReceivalDetailService,_purchaseOrderService,_purchaseOrderDetailService,_stockMutationService,_itemService,_barringService,_warehouseItemService);
             }
@@ -514,6 +595,16 @@ namespace WebView.Controllers
         {
             try
             {
+                if (!AuthenticationModel.IsAllowed("UnConfirm", Core.Constants.Constant.MenuName.PurchaseReceival, Core.Constants.Constant.MenuGroupName.Transaction))
+                {
+                    Dictionary<string, string> Errors = new Dictionary<string, string>();
+                    Errors.Add("Generic", "You are Not Allowed to UnConfirm record");
+
+                    return Json(new
+                    {
+                        Errors
+                    }, JsonRequestBehavior.AllowGet);
+                }
 
                 var data = _purchaseReceivalService.GetObjectById(model.Id);
                 model = _purchaseReceivalService.UnconfirmObject(data,_purchaseReceivalDetailService,_purchaseInvoiceService,_purchaseInvoiceDetailService,_purchaseOrderService,_purchaseOrderDetailService,_stockMutationService,_itemService,_barringService,_warehouseItemService);

@@ -31,6 +31,11 @@ namespace WebView.Controllers
 
         public ActionResult Index()
         {
+            if (!AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.CashBankMutation, Core.Constants.Constant.MenuGroupName.Master))
+            {
+                return Content("You are not allowed to View this Page.");
+            }
+
             return View();
         }
 
@@ -130,6 +135,17 @@ namespace WebView.Controllers
         {
             try
             {
+                if (!AuthenticationModel.IsAllowed("Create", Core.Constants.Constant.MenuName.CashBankMutation, Core.Constants.Constant.MenuGroupName.Master))
+                {
+                    Dictionary<string, string> Errors = new Dictionary<string, string>();
+                    Errors.Add("Generic", "You are Not Allowed to Add record");
+
+                    return Json(new
+                    {
+                        Errors
+                    }, JsonRequestBehavior.AllowGet);
+                }
+
                model = _cashBankMutationService.CreateObject(model,_cashBankService);
             }
             catch (Exception ex)
@@ -155,6 +171,17 @@ namespace WebView.Controllers
         {
             try
             {
+                if (!AuthenticationModel.IsAllowed("Edit", Core.Constants.Constant.MenuName.CashBankMutation, Core.Constants.Constant.MenuGroupName.Master))
+                {
+                    Dictionary<string, string> Errors = new Dictionary<string, string>();
+                    Errors.Add("Generic", "You are Not Allowed to Edit record");
+
+                    return Json(new
+                    {
+                        Errors
+                    }, JsonRequestBehavior.AllowGet);
+                }
+
                 var data = _cashBankMutationService.GetObjectById(model.Id);
                 data.SourceCashBankId = model.SourceCashBankId;
                 data.TargetCashBankId = model.TargetCashBankId;
@@ -184,6 +211,17 @@ namespace WebView.Controllers
         {
             try
             {
+                if (!AuthenticationModel.IsAllowed("Delete", Core.Constants.Constant.MenuName.CashBankMutation, Core.Constants.Constant.MenuGroupName.Master))
+                {
+                    Dictionary<string, string> Errors = new Dictionary<string, string>();
+                    Errors.Add("Generic", "You are Not Allowed to Delete Record");
+
+                    return Json(new
+                    {
+                        Errors
+                    }, JsonRequestBehavior.AllowGet);
+                }
+
                var data = _cashBankMutationService.GetObjectById(model.Id);
                model = _cashBankMutationService.SoftDeleteObject(data);
             }
@@ -210,7 +248,17 @@ namespace WebView.Controllers
         {
             try
             {
-                
+                if (!AuthenticationModel.IsAllowed("Confirm", Core.Constants.Constant.MenuName.CashBankMutation, Core.Constants.Constant.MenuGroupName.Master))
+                {
+                    Dictionary<string, string> Errors = new Dictionary<string, string>();
+                    Errors.Add("Generic", "You are Not Allowed to Confirm Record");
+
+                    return Json(new
+                    {
+                        Errors
+                    }, JsonRequestBehavior.AllowGet);
+                }
+
                 var data = _cashBankMutationService.GetObjectById(model.Id);
                 model = _cashBankMutationService.ConfirmObject(data,model.ConfirmationDate.Value,_cashMutationService,_cashBankService);
             }
@@ -237,6 +285,17 @@ namespace WebView.Controllers
         {
             try
             {
+                if (!AuthenticationModel.IsAllowed("UnConfirm", Core.Constants.Constant.MenuName.CashBankMutation, Core.Constants.Constant.MenuGroupName.Master))
+                {
+                    Dictionary<string, string> Errors = new Dictionary<string, string>();
+                    Errors.Add("Generic", "You are Not Allowed to UnConfirm record");
+
+                    return Json(new
+                    {
+                        Errors
+                    }, JsonRequestBehavior.AllowGet);
+                }
+
                 var data = _cashBankMutationService.GetObjectById(model.Id);
                 model = _cashBankMutationService.UnconfirmObject(data,_cashMutationService,_cashBankService);
             }

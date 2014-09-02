@@ -30,12 +30,12 @@ namespace Validation.Validation
             return userMenu;
         }
 
-        public UserMenu VHasUniqueName(UserMenu userMenu, IUserMenuService _userMenuService)
+        public UserMenu VHasUniqueNameAndGroupName(UserMenu userMenu, IUserMenuService _userMenuService)
         {
-            UserMenu userMenu2 = _userMenuService.GetObjectByName(userMenu.Name.Trim());
+            UserMenu userMenu2 = _userMenuService.GetObjectByNameAndGroupName(userMenu.Name.Trim(), userMenu.GroupName.Trim());
             if (userMenu2 != null && userMenu.Id != userMenu2.Id)
             {
-                userMenu.Errors.Add("Name", "Sudah ada");
+                userMenu.Errors.Add("Generic", "Kombinasi Name dan GroupName sudah ada");
             }
             return userMenu;
         }
@@ -46,7 +46,7 @@ namespace Validation.Validation
             if (!isValid(userMenu)) { return userMenu; }
             VIsValidGroupName(userMenu);
             if (!isValid(userMenu)) { return userMenu; }
-            VHasUniqueName(userMenu, _userMenuService);
+            VHasUniqueNameAndGroupName(userMenu, _userMenuService);
             return userMenu;
         }
 

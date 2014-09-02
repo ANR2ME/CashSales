@@ -68,6 +68,11 @@ namespace WebView.Controllers
 
         public ActionResult Index()
         {
+            if (!AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.CustomPurchaseInvoice, Core.Constants.Constant.MenuGroupName.Transaction))
+            {
+                return Content("You are not allowed to View this Page.");
+            }
+
             return View();
         }
 
@@ -329,6 +334,17 @@ namespace WebView.Controllers
         {
             try
             {
+                if (!AuthenticationModel.IsAllowed("Create", Core.Constants.Constant.MenuName.CustomPurchaseInvoice, Core.Constants.Constant.MenuGroupName.Transaction))
+                {
+                    Dictionary<string, string> Errors = new Dictionary<string, string>();
+                    Errors.Add("Generic", "You are Not Allowed to Add record");
+
+                    return Json(new
+                    {
+                        Errors
+                    }, JsonRequestBehavior.AllowGet);
+                }
+
                 model = _customPurchaseInvoiceService.CreateObject(model, _warehouseService, _contactService);
             }
             catch (Exception ex)
@@ -355,6 +371,17 @@ namespace WebView.Controllers
             decimal total = 0;
             try
             {
+                if (!AuthenticationModel.IsAllowed("Edit", Core.Constants.Constant.MenuName.CustomPurchaseInvoice, Core.Constants.Constant.MenuGroupName.Transaction))
+                {
+                    Dictionary<string, string> Errors = new Dictionary<string, string>();
+                    Errors.Add("Generic", "You are Not Allowed to Edit record");
+
+                    return Json(new
+                    {
+                        Errors
+                    }, JsonRequestBehavior.AllowGet);
+                }
+
                 model = _customPurchaseInvoiceDetailService.CreateObject(model, _customPurchaseInvoiceService, _itemService, _warehouseItemService, _priceMutationService);
                 total = _customPurchaseInvoiceService.GetObjectById(model.CustomPurchaseInvoiceId).Total;
             }
@@ -383,6 +410,17 @@ namespace WebView.Controllers
         {
             try
             {
+                if (!AuthenticationModel.IsAllowed("Edit", Core.Constants.Constant.MenuName.CustomPurchaseInvoice, Core.Constants.Constant.MenuGroupName.Transaction))
+                {
+                    Dictionary<string, string> Errors = new Dictionary<string, string>();
+                    Errors.Add("Generic", "You are Not Allowed to Edit record");
+
+                    return Json(new
+                    {
+                        Errors
+                    }, JsonRequestBehavior.AllowGet);
+                }
+
                 var data = _customPurchaseInvoiceService.GetObjectById(model.Id);
                 data.Description = model.Description;
                 data.PurchaseDate = model.PurchaseDate;
@@ -416,6 +454,17 @@ namespace WebView.Controllers
             decimal total = 0;
             try
             {
+                if (!AuthenticationModel.IsAllowed("Edit", Core.Constants.Constant.MenuName.CustomPurchaseInvoice, Core.Constants.Constant.MenuGroupName.Transaction))
+                {
+                    Dictionary<string, string> Errors = new Dictionary<string, string>();
+                    Errors.Add("Generic", "You are Not Allowed to Edit record");
+
+                    return Json(new
+                    {
+                        Errors
+                    }, JsonRequestBehavior.AllowGet);
+                }
+
                 var data = _customPurchaseInvoiceDetailService.GetObjectById(model.Id);
                 data.ItemId = model.ItemId;
                 data.Quantity = model.Quantity;
@@ -478,6 +527,17 @@ namespace WebView.Controllers
         {
             try
             {
+                if (!AuthenticationModel.IsAllowed("Confirm", Core.Constants.Constant.MenuName.CustomPurchaseInvoice, Core.Constants.Constant.MenuGroupName.Transaction))
+                {
+                    Dictionary<string, string> Errors = new Dictionary<string, string>();
+                    Errors.Add("Generic", "You are Not Allowed to Confirm Record");
+
+                    return Json(new
+                    {
+                        Errors
+                    }, JsonRequestBehavior.AllowGet);
+                }
+
                 var data = _customPurchaseInvoiceService.GetObjectById(model.Id);
                 model = _customPurchaseInvoiceService.ConfirmObject(data, model.ConfirmationDate.Value, _customPurchaseInvoiceDetailService, 
                                                     _contactService, _priceMutationService, _payableService, _customPurchaseInvoiceService, _warehouseItemService, 
@@ -506,6 +566,16 @@ namespace WebView.Controllers
         {
             try
             {
+                if (!AuthenticationModel.IsAllowed("UnConfirm", Core.Constants.Constant.MenuName.CustomPurchaseInvoice, Core.Constants.Constant.MenuGroupName.Transaction))
+                {
+                    Dictionary<string, string> Errors = new Dictionary<string, string>();
+                    Errors.Add("Generic", "You are Not Allowed to UnConfirm record");
+
+                    return Json(new
+                    {
+                        Errors
+                    }, JsonRequestBehavior.AllowGet);
+                }
 
                 var data = _customPurchaseInvoiceService.GetObjectById(model.Id);
                 model = _customPurchaseInvoiceService.UnconfirmObject(data, _customPurchaseInvoiceDetailService, _payableService, _paymentVoucherDetailService,
@@ -535,6 +605,17 @@ namespace WebView.Controllers
         {
             try
             {
+                if (!AuthenticationModel.IsAllowed("Paid", Core.Constants.Constant.MenuName.CustomPurchaseInvoice, Core.Constants.Constant.MenuGroupName.Transaction))
+                {
+                    Dictionary<string, string> Errors = new Dictionary<string, string>();
+                    Errors.Add("Generic", "You are Not Allowed to Paid record");
+
+                    return Json(new
+                    {
+                        Errors
+                    }, JsonRequestBehavior.AllowGet);
+                }
+
                 var data = _customPurchaseInvoiceService.GetObjectById(model.Id);
                 data.Allowance = model.Allowance;
                 data.IsGBCH = model.IsGBCH;
@@ -566,6 +647,16 @@ namespace WebView.Controllers
         {
             try
             {
+                if (!AuthenticationModel.IsAllowed("UnPaid", Core.Constants.Constant.MenuName.CustomPurchaseInvoice, Core.Constants.Constant.MenuGroupName.Transaction))
+                {
+                    Dictionary<string, string> Errors = new Dictionary<string, string>();
+                    Errors.Add("Generic", "You are Not Allowed to UnPaid record");
+
+                    return Json(new
+                    {
+                        Errors
+                    }, JsonRequestBehavior.AllowGet);
+                }
 
                 var data = _customPurchaseInvoiceService.GetObjectById(model.Id);
                 model = _customPurchaseInvoiceService.UnpaidObject(data, _paymentVoucherService, _paymentVoucherDetailService, _cashBankService,
@@ -595,6 +686,17 @@ namespace WebView.Controllers
         {
             try
             {
+                if (!AuthenticationModel.IsAllowed("Delete", Core.Constants.Constant.MenuName.CustomPurchaseInvoice, Core.Constants.Constant.MenuGroupName.Transaction))
+                {
+                    Dictionary<string, string> Errors = new Dictionary<string, string>();
+                    Errors.Add("Generic", "You are Not Allowed to Delete Record");
+
+                    return Json(new
+                    {
+                        Errors
+                    }, JsonRequestBehavior.AllowGet);
+                }
+
                 var data = _customPurchaseInvoiceService.GetObjectById(model.Id);
                 model = _customPurchaseInvoiceService.SoftDeleteObject(data, _customPurchaseInvoiceDetailService);
             }
@@ -622,6 +724,17 @@ namespace WebView.Controllers
             decimal total = 0;
             try
             {
+                if (!AuthenticationModel.IsAllowed("Edit", Core.Constants.Constant.MenuName.CustomPurchaseInvoice, Core.Constants.Constant.MenuGroupName.Transaction))
+                {
+                    Dictionary<string, string> Errors = new Dictionary<string, string>();
+                    Errors.Add("Generic", "You are Not Allowed to Edit record");
+
+                    return Json(new
+                    {
+                        Errors
+                    }, JsonRequestBehavior.AllowGet);
+                }
+
                 var data = _customPurchaseInvoiceDetailService.GetObjectById(model.Id);
                 model = _customPurchaseInvoiceDetailService.SoftDeleteObject(data, _customPurchaseInvoiceService);
                 total = _customPurchaseInvoiceService.GetObjectById(model.CustomPurchaseInvoiceId).Total;

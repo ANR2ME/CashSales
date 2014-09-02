@@ -38,6 +38,11 @@ namespace WebView.Controllers
 
         public ActionResult Index()
         {
+            if (!AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.StockAdjustment, Core.Constants.Constant.MenuGroupName.Master))
+            {
+                return Content("You are not allowed to View this Page.");
+            }
+
             return View();
         }
 
@@ -238,6 +243,17 @@ namespace WebView.Controllers
         {
             try
             {
+                if (!AuthenticationModel.IsAllowed("Create", Core.Constants.Constant.MenuName.StockAdjustment, Core.Constants.Constant.MenuGroupName.Master))
+                {
+                    Dictionary<string, string> Errors = new Dictionary<string, string>();
+                    Errors.Add("Generic", "You are Not Allowed to Add record");
+
+                    return Json(new
+                    {
+                        Errors
+                    }, JsonRequestBehavior.AllowGet);
+                }
+
                 model = _stockAdjustmentService.CreateObject(model,_warehouseService);
             }
             catch (Exception ex)
@@ -263,6 +279,17 @@ namespace WebView.Controllers
         {
             try
             {
+                if (!AuthenticationModel.IsAllowed("Edit", Core.Constants.Constant.MenuName.StockAdjustment, Core.Constants.Constant.MenuGroupName.Master))
+                {
+                    Dictionary<string, string> Errors = new Dictionary<string, string>();
+                    Errors.Add("Generic", "You are Not Allowed to Edit record");
+
+                    return Json(new
+                    {
+                        Errors
+                    }, JsonRequestBehavior.AllowGet);
+                }
+
                 model = _stockAdjustmentDetailService.CreateObject(model,_stockAdjustmentService,_itemService,_warehouseItemService);
             }
             catch (Exception ex)
@@ -288,6 +315,17 @@ namespace WebView.Controllers
         {
             try
             {
+                if (!AuthenticationModel.IsAllowed("Edit", Core.Constants.Constant.MenuName.StockAdjustment, Core.Constants.Constant.MenuGroupName.Master))
+                {
+                    Dictionary<string, string> Errors = new Dictionary<string, string>();
+                    Errors.Add("Generic", "You are Not Allowed to Edit record");
+
+                    return Json(new
+                    {
+                        Errors
+                    }, JsonRequestBehavior.AllowGet);
+                }
+
                 var data = _stockAdjustmentService.GetObjectById(model.Id);
                 data.AdjustmentDate = model.AdjustmentDate;
                 data.Description = model.Description;
@@ -317,6 +355,17 @@ namespace WebView.Controllers
         {
             try
             {
+                if (!AuthenticationModel.IsAllowed("Edit", Core.Constants.Constant.MenuName.StockAdjustment, Core.Constants.Constant.MenuGroupName.Master))
+                {
+                    Dictionary<string, string> Errors = new Dictionary<string, string>();
+                    Errors.Add("Generic", "You are Not Allowed to Edit record");
+
+                    return Json(new
+                    {
+                        Errors
+                    }, JsonRequestBehavior.AllowGet);
+                }
+
                 var data = _stockAdjustmentDetailService.GetObjectById(model.Id);
                 data.ItemId = model.ItemId;
                 data.Quantity = model.Quantity;
@@ -347,6 +396,17 @@ namespace WebView.Controllers
         {
             try
             {
+                if (!AuthenticationModel.IsAllowed("Delete", Core.Constants.Constant.MenuName.StockAdjustment, Core.Constants.Constant.MenuGroupName.Master))
+                {
+                    Dictionary<string, string> Errors = new Dictionary<string, string>();
+                    Errors.Add("Generic", "You are Not Allowed to Delete Record");
+
+                    return Json(new
+                    {
+                        Errors
+                    }, JsonRequestBehavior.AllowGet);
+                }
+
                 var data = _stockAdjustmentService.GetObjectById(model.Id);
                 model = _stockAdjustmentService.SoftDeleteObject(data, _stockAdjustmentDetailService);
             }
@@ -373,6 +433,17 @@ namespace WebView.Controllers
         {
             try
             {
+                if (!AuthenticationModel.IsAllowed("Edit", Core.Constants.Constant.MenuName.StockAdjustment, Core.Constants.Constant.MenuGroupName.Master))
+                {
+                    Dictionary<string, string> Errors = new Dictionary<string, string>();
+                    Errors.Add("Generic", "You are Not Allowed to Edit record");
+
+                    return Json(new
+                    {
+                        Errors
+                    }, JsonRequestBehavior.AllowGet);
+                }
+
                 var data = _stockAdjustmentDetailService.GetObjectById(model.Id);
                 model = _stockAdjustmentDetailService.SoftDeleteObject(data);
             }
@@ -399,6 +470,17 @@ namespace WebView.Controllers
         {
             try
             {
+                if (!AuthenticationModel.IsAllowed("Confirm", Core.Constants.Constant.MenuName.StockAdjustment, Core.Constants.Constant.MenuGroupName.Master))
+                {
+                    Dictionary<string, string> Errors = new Dictionary<string, string>();
+                    Errors.Add("Generic", "You are Not Allowed to Confirm Record");
+
+                    return Json(new
+                    {
+                        Errors
+                    }, JsonRequestBehavior.AllowGet);
+                }
+
                 var data = _stockAdjustmentService.GetObjectById(model.Id);
                 model = _stockAdjustmentService.ConfirmObject(data, model.ConfirmationDate.Value, _stockAdjustmentDetailService, _stockMutationService, _itemService, _barringService, _warehouseItemService);
             }
@@ -425,6 +507,16 @@ namespace WebView.Controllers
         {
             try
             {
+                if (!AuthenticationModel.IsAllowed("UnConfirm", Core.Constants.Constant.MenuName.StockAdjustment, Core.Constants.Constant.MenuGroupName.Master))
+                {
+                    Dictionary<string, string> Errors = new Dictionary<string, string>();
+                    Errors.Add("Generic", "You are Not Allowed to UnConfirm record");
+
+                    return Json(new
+                    {
+                        Errors
+                    }, JsonRequestBehavior.AllowGet);
+                }
 
                 var data = _stockAdjustmentService.GetObjectById(model.Id);
                 model = _stockAdjustmentService.UnconfirmObject(data,_stockAdjustmentDetailService,_stockMutationService,_itemService,_barringService,_warehouseItemService);

@@ -36,6 +36,11 @@ namespace WebView.Controllers
 
         public ActionResult Index()
         {
+            if (!AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.StockMutation, Core.Constants.Constant.MenuGroupName.Master))
+            {
+                return Content("You are not allowed to View this Page.");
+            }
+
             return View();
         }
 

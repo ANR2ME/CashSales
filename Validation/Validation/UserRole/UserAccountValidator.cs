@@ -35,7 +35,7 @@ namespace Validation.Validation
         {
             if (OldPassword == null || OldPassword.Trim() == "")
             {
-                userAccount.Errors.Add("OldPassword", "Tidak boleh kosong");
+                userAccount.Errors.Add("Generic", "OldPassword Tidak boleh kosong");
             }
             else
             {
@@ -44,7 +44,23 @@ namespace Validation.Validation
                 UserAccount userAccount2 = _userAccountService.GetObjectById(userAccount.Id);
                 if (encOldPassword != userAccount2.Password)
                 {
-                    userAccount.Errors.Add("OldPassword", "Salah");
+                    userAccount.Errors.Add("Generic", "OldPassword Salah");
+                }
+            }
+            return userAccount;
+        }
+
+        public UserAccount VIsCorrectNewPassword(UserAccount userAccount, string NewPassword, string ConfirmPassword)
+        {
+            if (NewPassword == null || NewPassword.Trim() == "")
+            {
+                userAccount.Errors.Add("Generic", "NewPassword Tidak boleh kosong");
+            }
+            else
+            {
+                if (NewPassword.Trim() != ConfirmPassword.Trim())
+                {
+                    userAccount.Errors.Add("Generic", "ConfirmPassword Salah");
                 }
             }
             return userAccount;
@@ -79,9 +95,17 @@ namespace Validation.Validation
             return userAccount;
         }
 
-        public UserAccount VUpdateObject(UserAccount userAccount, string OldPassword, IUserAccountService _userAccountService)
+        public UserAccount VUpdateObject(UserAccount userAccount, IUserAccountService _userAccountService)
         {
             VCreateObject(userAccount, _userAccountService);
+            return userAccount;
+        }
+
+        public UserAccount VUpdateObjectPassword(UserAccount userAccount, string OldPassword, string NewPassword, string ConfirmPassword, IUserAccountService _userAccountService)
+        {
+            VCreateObject(userAccount, _userAccountService);
+            if (!isValid(userAccount)) { return userAccount; }
+            VIsCorrectNewPassword(userAccount, NewPassword, ConfirmPassword);
             if (!isValid(userAccount)) { return userAccount; }
             VIsCorrectOldPassword(userAccount, OldPassword, _userAccountService);
             return userAccount;
@@ -99,9 +123,15 @@ namespace Validation.Validation
             return isValid(userAccount);
         }
 
-        public bool ValidUpdateObject(UserAccount userAccount, string OldPassword, IUserAccountService _userAccountService)
+        public bool ValidUpdateObjectPassword(UserAccount userAccount, string OldPassword, string NewPassword, string ConfirmPassword, IUserAccountService _userAccountService)
         {
-            VUpdateObject(userAccount, OldPassword, _userAccountService);
+            VUpdateObjectPassword(userAccount, OldPassword, NewPassword, ConfirmPassword, _userAccountService);
+            return isValid(userAccount);
+        }
+
+        public bool ValidUpdateObject(UserAccount userAccount, IUserAccountService _userAccountService)
+        {
+            VUpdateObject(userAccount, _userAccountService);
             return isValid(userAccount);
         }
 

@@ -43,6 +43,11 @@ namespace WebView.Controllers
 
         public ActionResult Index()
         {
+            if (!AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.SalesOrder, Core.Constants.Constant.MenuGroupName.Transaction))
+            {
+                return Content("You are not allowed to View this Page.");
+            }
+
             return View();
         }
 
@@ -309,6 +314,17 @@ namespace WebView.Controllers
         {
             try
             {
+                if (!AuthenticationModel.IsAllowed("Create", Core.Constants.Constant.MenuName.SalesOrder, Core.Constants.Constant.MenuGroupName.Transaction))
+                {
+                    Dictionary<string, string> Errors = new Dictionary<string, string>();
+                    Errors.Add("Generic", "You are Not Allowed to Add record");
+
+                    return Json(new
+                    {
+                        Errors
+                    }, JsonRequestBehavior.AllowGet);
+                }
+
                 model = _salesOrderService.CreateObject(model,_contactService);
             }
             catch (Exception ex)
@@ -334,6 +350,17 @@ namespace WebView.Controllers
         {
             try
             {
+                if (!AuthenticationModel.IsAllowed("Edit", Core.Constants.Constant.MenuName.SalesOrder, Core.Constants.Constant.MenuGroupName.Transaction))
+                {
+                    Dictionary<string, string> Errors = new Dictionary<string, string>();
+                    Errors.Add("Generic", "You are Not Allowed to Edit record");
+
+                    return Json(new
+                    {
+                        Errors
+                    }, JsonRequestBehavior.AllowGet);
+                }
+
                 model = _salesOrderDetailService.CreateObject(model,_salesOrderService,_itemService);
             }
             catch (Exception ex)
@@ -359,6 +386,17 @@ namespace WebView.Controllers
         {
             try
             {
+                if (!AuthenticationModel.IsAllowed("Edit", Core.Constants.Constant.MenuName.SalesOrder, Core.Constants.Constant.MenuGroupName.Transaction))
+                {
+                    Dictionary<string, string> Errors = new Dictionary<string, string>();
+                    Errors.Add("Generic", "You are Not Allowed to Edit record");
+
+                    return Json(new
+                    {
+                        Errors
+                    }, JsonRequestBehavior.AllowGet);
+                }
+
                 var data = _salesOrderService.GetObjectById(model.Id);
                 data.ContactId = model.ContactId;
                 data.SalesDate = model.SalesDate;
@@ -387,6 +425,17 @@ namespace WebView.Controllers
         {
             try
             {
+                if (!AuthenticationModel.IsAllowed("Delete", Core.Constants.Constant.MenuName.SalesOrder, Core.Constants.Constant.MenuGroupName.Transaction))
+                {
+                    Dictionary<string, string> Errors = new Dictionary<string, string>();
+                    Errors.Add("Generic", "You are Not Allowed to Delete Record");
+
+                    return Json(new
+                    {
+                        Errors
+                    }, JsonRequestBehavior.AllowGet);
+                }
+
                 var data = _salesOrderService.GetObjectById(model.Id);
                 model = _salesOrderService.SoftDeleteObject(data,_salesOrderDetailService);
             }
@@ -413,6 +462,17 @@ namespace WebView.Controllers
         {
             try
             {
+                if (!AuthenticationModel.IsAllowed("Edit", Core.Constants.Constant.MenuName.SalesOrder, Core.Constants.Constant.MenuGroupName.Transaction))
+                {
+                    Dictionary<string, string> Errors = new Dictionary<string, string>();
+                    Errors.Add("Generic", "You are Not Allowed to Edit record");
+
+                    return Json(new
+                    {
+                        Errors
+                    }, JsonRequestBehavior.AllowGet);
+                }
+
                 var data = _salesOrderDetailService.GetObjectById(model.Id);
                 model = _salesOrderDetailService.SoftDeleteObject(data);
             }
@@ -439,6 +499,17 @@ namespace WebView.Controllers
         {
             try
             {
+                if (!AuthenticationModel.IsAllowed("Edit", Core.Constants.Constant.MenuName.SalesOrder, Core.Constants.Constant.MenuGroupName.Transaction))
+                {
+                    Dictionary<string, string> Errors = new Dictionary<string, string>();
+                    Errors.Add("Generic", "You are Not Allowed to Edit record");
+
+                    return Json(new
+                    {
+                        Errors
+                    }, JsonRequestBehavior.AllowGet);
+                }
+
                 var data = _salesOrderDetailService.GetObjectById(model.Id);
                 data.ItemId = model.ItemId;
                 data.Quantity = model.Quantity;
@@ -469,6 +540,17 @@ namespace WebView.Controllers
         {
             try
             {
+                if (!AuthenticationModel.IsAllowed("Confirm", Core.Constants.Constant.MenuName.SalesOrder, Core.Constants.Constant.MenuGroupName.Transaction))
+                {
+                    Dictionary<string, string> Errors = new Dictionary<string, string>();
+                    Errors.Add("Generic", "You are Not Allowed to Confirm Record");
+
+                    return Json(new
+                    {
+                        Errors
+                    }, JsonRequestBehavior.AllowGet);
+                }
+
                 var data = _salesOrderService.GetObjectById(model.Id);
                 model = _salesOrderService.ConfirmObject(data,model.ConfirmationDate.Value,_salesOrderDetailService,_stockMutationService,_itemService,_barringService,_warehouseItemService);
             }
@@ -495,6 +577,16 @@ namespace WebView.Controllers
         {
             try
             {
+                if (!AuthenticationModel.IsAllowed("UnConfirm", Core.Constants.Constant.MenuName.SalesOrder, Core.Constants.Constant.MenuGroupName.Transaction))
+                {
+                    Dictionary<string, string> Errors = new Dictionary<string, string>();
+                    Errors.Add("Generic", "You are Not Allowed to UnConfirm record");
+
+                    return Json(new
+                    {
+                        Errors
+                    }, JsonRequestBehavior.AllowGet);
+                }
 
                 var data = _salesOrderService.GetObjectById(model.Id);
                 model = _salesOrderService.UnconfirmObject(data,_salesOrderDetailService,_deliveryOrderService,_deliveryOrderDetailService,_stockMutationService,_itemService,_barringService,_warehouseItemService);

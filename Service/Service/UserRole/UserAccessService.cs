@@ -31,14 +31,29 @@ namespace Service.Service
             return _repository.GetQueryable();
         }
 
+        public IQueryable<UserAccess> GetQueryableObjectsByUserAccountId(int UserAccountId)
+        {
+            return _repository.GetQueryableObjectsByUserAccountId(UserAccountId);
+        }
+
         public IList<UserAccess> GetAll()
         {
             return _repository.GetAll();
         }
 
+        public IList<UserAccess> GetObjectsByUserAccountId(int UserAccountId)
+        {
+            return _repository.GetObjectsByUserAccountId(UserAccountId);
+        }
+
         public UserAccess GetObjectById(int Id)
         {
             return _repository.GetObjectById(Id);
+        }
+
+        public UserAccess GetObjectByUserAccountIdAndUserMenuId(int UserAccountId, int UserMenuId)
+        {
+            return _repository.GetObjectByUserAccountIdAndUserMenuId(UserAccountId, UserMenuId);
         }
 
         public UserAccess CreateObject(UserAccess userAccess, IUserAccountService _userAccountService, IUserMenuService _userMenuService)
@@ -61,5 +76,21 @@ namespace Service.Service
         {
             return _repository.DeleteObject(Id);
         }
+
+        public bool CreateDefaultAccess(int UserAccountId, IUserMenuService _userMenuService, IUserAccountService _userAccountService)
+        {
+            var userMenus = _userMenuService.GetAll();
+            foreach (var userMenu in userMenus)
+            {
+                UserAccess userAccess = new UserAccess()
+                {
+                    UserAccountId = UserAccountId,
+                    UserMenuId = userMenu.Id,
+                };
+                CreateObject(userAccess, _userAccountService, _userMenuService);
+            }
+            return true;
+        }
+
     }
 }

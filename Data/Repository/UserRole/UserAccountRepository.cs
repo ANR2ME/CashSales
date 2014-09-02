@@ -49,6 +49,14 @@ namespace Data.Repository
             return userAccount;
         }
 
+        public UserAccount IsLoginValid(string username, string password)
+        {
+            string lowerusername = username.ToLower();
+            UserAccount userAccount = Find(x => x.Username.ToLower() == lowerusername && x.Password == password && !x.IsDeleted);
+            if (userAccount != null) { userAccount.Errors = new Dictionary<string, string>(); }
+            return userAccount;
+        }
+
         public UserAccount CreateObject(UserAccount userAccount)
         {
             userAccount.IsDeleted = false;

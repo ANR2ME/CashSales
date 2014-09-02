@@ -13,7 +13,7 @@ namespace Core.Interface.Service
         IUserMenuValidator GetValidator();
         IList<UserMenu> GetAll();
         UserMenu GetObjectById(int Id);
-        UserMenu GetObjectByName(string Name);
+        UserMenu GetObjectByNameAndGroupName(string Name, string GroupName);
         UserMenu CreateObject(UserMenu userMenu);
         UserMenu CreateObject(string Name, string GroupName);
         UserMenu SoftDeleteObject(UserMenu userMenu);

@@ -54,6 +54,11 @@ namespace WebView.Controllers
 
         public ActionResult Index()
         {
+            if (!AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.ReceiptVoucher, Core.Constants.Constant.MenuGroupName.Transaction))
+            {
+                return Content("You are not allowed to View this Page.");
+            }
+
             return View();
         }
 
@@ -348,7 +353,17 @@ namespace WebView.Controllers
         {
             try
             {
-             
+                if (!AuthenticationModel.IsAllowed("Create", Core.Constants.Constant.MenuName.ReceiptVoucher, Core.Constants.Constant.MenuGroupName.Transaction))
+                {
+                    Dictionary<string, string> Errors = new Dictionary<string, string>();
+                    Errors.Add("Generic", "You are Not Allowed to Add record");
+
+                    return Json(new
+                    {
+                        Errors
+                    }, JsonRequestBehavior.AllowGet);
+                }
+
                 model = _receiptVoucherService.CreateObject(model,_receiptVoucherDetailService,_receivableService
                     ,_contactService,_cashBankService);
             }
@@ -375,6 +390,17 @@ namespace WebView.Controllers
         {
             try
             {
+                if (!AuthenticationModel.IsAllowed("Edit", Core.Constants.Constant.MenuName.ReceiptVoucher, Core.Constants.Constant.MenuGroupName.Transaction))
+                {
+                    Dictionary<string, string> Errors = new Dictionary<string, string>();
+                    Errors.Add("Generic", "You are Not Allowed to Edit record");
+
+                    return Json(new
+                    {
+                        Errors
+                    }, JsonRequestBehavior.AllowGet);
+                }
+
                 model = _receiptVoucherDetailService.CreateObject(model,_receiptVoucherService,_cashBankService,_receivableService);
             }
             catch (Exception ex)
@@ -401,6 +427,17 @@ namespace WebView.Controllers
         {
             try
             {
+                if (!AuthenticationModel.IsAllowed("Edit", Core.Constants.Constant.MenuName.ReceiptVoucher, Core.Constants.Constant.MenuGroupName.Transaction))
+                {
+                    Dictionary<string, string> Errors = new Dictionary<string, string>();
+                    Errors.Add("Generic", "You are Not Allowed to Edit record");
+
+                    return Json(new
+                    {
+                        Errors
+                    }, JsonRequestBehavior.AllowGet);
+                }
+
                 var data = _receiptVoucherService.GetObjectById(model.Id);
                 data.ContactId = model.ContactId;
                 data.CashBankId = model.CashBankId;
@@ -435,6 +472,17 @@ namespace WebView.Controllers
         {
             try
             {
+                if (!AuthenticationModel.IsAllowed("Delete", Core.Constants.Constant.MenuName.ReceiptVoucher, Core.Constants.Constant.MenuGroupName.Transaction))
+                {
+                    Dictionary<string, string> Errors = new Dictionary<string, string>();
+                    Errors.Add("Generic", "You are Not Allowed to Delete Record");
+
+                    return Json(new
+                    {
+                        Errors
+                    }, JsonRequestBehavior.AllowGet);
+                }
+
                 var data = _receiptVoucherService.GetObjectById(model.Id);
                 model = _receiptVoucherService.SoftDeleteObject(data,_receiptVoucherDetailService);
             }
@@ -461,6 +509,17 @@ namespace WebView.Controllers
         {
             try
             {
+                if (!AuthenticationModel.IsAllowed("Edit", Core.Constants.Constant.MenuName.ReceiptVoucher, Core.Constants.Constant.MenuGroupName.Transaction))
+                {
+                    Dictionary<string, string> Errors = new Dictionary<string, string>();
+                    Errors.Add("Generic", "You are Not Allowed to Edit record");
+
+                    return Json(new
+                    {
+                        Errors
+                    }, JsonRequestBehavior.AllowGet);
+                }
+
                 var data = _receiptVoucherDetailService.GetObjectById(model.Id);
                 model = _receiptVoucherDetailService.SoftDeleteObject(data);
             }
@@ -487,6 +546,17 @@ namespace WebView.Controllers
         {
             try
             {
+                if (!AuthenticationModel.IsAllowed("Edit", Core.Constants.Constant.MenuName.ReceiptVoucher, Core.Constants.Constant.MenuGroupName.Transaction))
+                {
+                    Dictionary<string, string> Errors = new Dictionary<string, string>();
+                    Errors.Add("Generic", "You are Not Allowed to Edit record");
+
+                    return Json(new
+                    {
+                        Errors
+                    }, JsonRequestBehavior.AllowGet);
+                }
+
                 var data = _receiptVoucherDetailService.GetObjectById(model.Id);
                 data.ReceivableId = model.ReceivableId;
                 data.Amount = model.Amount;
@@ -517,6 +587,17 @@ namespace WebView.Controllers
         {
             try
             {
+                if (!AuthenticationModel.IsAllowed("Confirm", Core.Constants.Constant.MenuName.ReceiptVoucher, Core.Constants.Constant.MenuGroupName.Transaction))
+                {
+                    Dictionary<string, string> Errors = new Dictionary<string, string>();
+                    Errors.Add("Generic", "You are Not Allowed to Confirm Record");
+
+                    return Json(new
+                    {
+                        Errors
+                    }, JsonRequestBehavior.AllowGet);
+                }
+
                 var data = _receiptVoucherService.GetObjectById(model.Id);
                 model = _receiptVoucherService.ConfirmObject(data,model.ConfirmationDate.Value,
                     _receiptVoucherDetailService,_cashBankService,_receivableService,_cashMutationService);
@@ -544,6 +625,16 @@ namespace WebView.Controllers
         {
             try
             {
+                if (!AuthenticationModel.IsAllowed("UnConfirm", Core.Constants.Constant.MenuName.ReceiptVoucher, Core.Constants.Constant.MenuGroupName.Transaction))
+                {
+                    Dictionary<string, string> Errors = new Dictionary<string, string>();
+                    Errors.Add("Generic", "You are Not Allowed to UnConfirm record");
+
+                    return Json(new
+                    {
+                        Errors
+                    }, JsonRequestBehavior.AllowGet);
+                }
 
                 var data = _receiptVoucherService.GetObjectById(model.Id);
                 model = _receiptVoucherService.UnconfirmObject(data,_receiptVoucherDetailService,_cashBankService,
@@ -572,6 +663,17 @@ namespace WebView.Controllers
         {
             try
             {
+                if (!AuthenticationModel.IsAllowed("Reconcile", Core.Constants.Constant.MenuName.ReceiptVoucher, Core.Constants.Constant.MenuGroupName.Transaction))
+                {
+                    Dictionary<string, string> Errors = new Dictionary<string, string>();
+                    Errors.Add("Generic", "You are Not Allowed to Reconcile Record");
+
+                    return Json(new
+                    {
+                        Errors
+                    }, JsonRequestBehavior.AllowGet);
+                }
+
                 var data = _receiptVoucherService.GetObjectById(model.Id);
                 model = _receiptVoucherService.ReconcileObject(data,model.ReconciliationDate.Value,_receiptVoucherDetailService,
                     _cashMutationService, _cashBankService, _receivableService);
@@ -599,6 +701,17 @@ namespace WebView.Controllers
         {
             try
             {
+                if (!AuthenticationModel.IsAllowed("UnReconcile", Core.Constants.Constant.MenuName.ReceiptVoucher, Core.Constants.Constant.MenuGroupName.Transaction))
+                {
+                    Dictionary<string, string> Errors = new Dictionary<string, string>();
+                    Errors.Add("Generic", "You are Not Allowed to UnReconcile Record");
+
+                    return Json(new
+                    {
+                        Errors
+                    }, JsonRequestBehavior.AllowGet);
+                }
+
                 var data = _receiptVoucherService.GetObjectById(model.Id);
                 model = _receiptVoucherService.UnreconcileObject(data,_receiptVoucherDetailService,_cashMutationService,
                     _cashBankService, _receivableService

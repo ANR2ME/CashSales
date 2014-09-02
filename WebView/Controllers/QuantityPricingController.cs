@@ -33,6 +33,11 @@ namespace WebView.Controllers
 
         public ActionResult Index()
         {
+            if (!AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.QuantityPricing, Core.Constants.Constant.MenuGroupName.Master))
+            {
+                return Content("You are not allowed to View this Page.");
+            }
+
             return View();
         }
 
@@ -137,6 +142,17 @@ namespace WebView.Controllers
         {
             try
             {
+                if (!AuthenticationModel.IsAllowed("Create", Core.Constants.Constant.MenuName.QuantityPricing, Core.Constants.Constant.MenuGroupName.Master))
+                {
+                    Dictionary<string, string> Errors = new Dictionary<string, string>();
+                    Errors.Add("Generic", "You are Not Allowed to Add record");
+
+                    return Json(new
+                    {
+                        Errors
+                    }, JsonRequestBehavior.AllowGet);
+                }
+
                 model = _quantityPricingService.CreateObject(model, _itemTypeService);
             }
             catch (Exception ex)
@@ -162,6 +178,17 @@ namespace WebView.Controllers
         {
             try
             {
+                if (!AuthenticationModel.IsAllowed("Edit", Core.Constants.Constant.MenuName.QuantityPricing, Core.Constants.Constant.MenuGroupName.Master))
+                {
+                    Dictionary<string, string> Errors = new Dictionary<string, string>();
+                    Errors.Add("Generic", "You are Not Allowed to Edit record");
+
+                    return Json(new
+                    {
+                        Errors
+                    }, JsonRequestBehavior.AllowGet);
+                }
+
                 var data = _quantityPricingService.GetObjectById(model.Id);
                 data.Discount = model.Discount;
                 data.MinQuantity = model.MinQuantity;
@@ -192,6 +219,17 @@ namespace WebView.Controllers
         {
             try
             {
+                if (!AuthenticationModel.IsAllowed("Delete", Core.Constants.Constant.MenuName.QuantityPricing, Core.Constants.Constant.MenuGroupName.Master))
+                {
+                    Dictionary<string, string> Errors = new Dictionary<string, string>();
+                    Errors.Add("Generic", "You are Not Allowed to Delete Record");
+
+                    return Json(new
+                    {
+                        Errors
+                    }, JsonRequestBehavior.AllowGet);
+                }
+
                 var data = _quantityPricingService.GetObjectById(model.Id);
                 model = _quantityPricingService.SoftDeleteObject(data);
             }

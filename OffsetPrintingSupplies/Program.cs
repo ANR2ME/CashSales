@@ -268,7 +268,7 @@ namespace OffsetPrintingSupplies
 
             string oldpassword = "sysadmin";
             //d.admin.Password = "sysadmin123";
-            d.admin = d._userAccountService.UpdateObject(d.admin, oldpassword, "sysadmin123");
+            d.admin = d._userAccountService.UpdateObjectPassword(d.admin, oldpassword, "sysadmin123", "sysadmin123");
             Console.WriteLine(d.admin.Errors.Count());
 
             d.user.Username = "Adam";

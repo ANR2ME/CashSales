@@ -12,7 +12,7 @@ namespace Core.Interface.Validation
     {
         UserMenu VIsValidName(UserMenu userMenu);
         UserMenu VIsValidGroupName(UserMenu userMenu);
-        UserMenu VHasUniqueName(UserMenu userMenu, IUserMenuService _userMenuService);
+        UserMenu VHasUniqueNameAndGroupName(UserMenu userMenu, IUserMenuService _userMenuService);
         UserMenu VCreateObject(UserMenu userMenu, IUserMenuService _userMenuService);
         UserMenu VDeleteObject(UserMenu userMenu);
         bool ValidCreateObject(UserMenu userMenu, IUserMenuService _userMenuService);

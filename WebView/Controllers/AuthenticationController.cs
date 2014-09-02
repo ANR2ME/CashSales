@@ -4,14 +4,25 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Security;
+using Core.Interface.Service;
+using Data.Repository;
 using log4net;
+using Service.Service;
+using Validation.Validation;
 
 namespace WebView.Controllers
 {
     public class AuthenticationController : Controller
     {
 
-        private readonly static log4net.ILog LOG = log4net.LogManager.GetLogger("AccountController");
+        private readonly static log4net.ILog LOG = log4net.LogManager.GetLogger("AuthenticationController");
+        private IUserAccountService _userAccountService;
+
+        public AuthenticationController()
+        {
+            _userAccountService = new UserAccountService(new UserAccountRepository(), new UserAccountValidator());
+        }
+
         public ActionResult Index()
         {
             return View();
@@ -61,16 +72,16 @@ namespace WebView.Controllers
 
                     if (ModelState.IsValid)
                     {
-                        //var objUser = _userService.IsLoginValid(username, password, companyId);
-                        var objUser = true;
+                        var objUser = _userAccountService.IsLoginValid(username, password);
+                        
                         if (objUser == null)
                         {
                             ModelState.AddModelError("", "Invalid credential");
                         }
-                        //else if (objUser.Deleted)
-                        //{
-                        //    ModelState.AddModelError("", "User has been removed");
-                        //}
+                        else if (objUser.IsDeleted)
+                        {
+                            ModelState.AddModelError("", "User has been removed");
+                        }
                         else
                         {
                             int SessionTime = 120;
@@ -84,12 +95,12 @@ namespace WebView.Controllers
                             FormsAuthenticationTicket tkt;
                             string cookiestr;
                             HttpCookie ck;
-                            tkt = new FormsAuthenticationTicket(1, "1",
-                                //objUser.Id.ToString(),
+                            tkt = new FormsAuthenticationTicket(1,
+                                objUser.Id.ToString(),
                                 DateTime.Now,
                                 DateTime.Now.AddMinutes(SessionTime),
-                                user.RememberMe, "#");
-                            // objUser.CompanyId.ToString() + "#" + objUser.UserTypeId.ToString() + "#" + objUser.Name);
+                                user.RememberMe,
+                                objUser.Username + "#" + objUser.Name);
                             cookiestr = FormsAuthentication.Encrypt(tkt);
                             ck = new HttpCookie(FormsAuthentication.FormsCookieName, cookiestr);
                             if (user.RememberMe)
@@ -125,7 +136,7 @@ namespace WebView.Controllers
             LOG.Info("Logout Success, UserCode: ");
 
             FormsAuthentication.SignOut();
-            return RedirectToAction("Login", "Account");
+            return RedirectToAction("Login", "Authentication");
         }
     }
 }

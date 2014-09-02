@@ -34,9 +34,9 @@ namespace Data.Repository
             return userMenu;
         }
 
-        public UserMenu GetObjectByName(string Name)
+        public UserMenu GetObjectByNameAndGroupName(string Name, string GroupName)
         {
-            UserMenu userMenu = Find(x => x.Name == Name && !x.IsDeleted);
+            UserMenu userMenu = Find(x => x.Name == Name && x.GroupName == GroupName && !x.IsDeleted);
             if (userMenu != null) { userMenu.Errors = new Dictionary<string, string>(); }
             return userMenu;
         }

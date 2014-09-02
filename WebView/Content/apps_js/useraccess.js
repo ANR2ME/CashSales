@@ -48,8 +48,8 @@
         // Clear and Reload all grid
         $("#tbl_access_master").jqGrid("clearGridData", true).trigger("reloadGrid");
         $("#tbl_access_report").jqGrid("clearGridData", true).trigger("reloadGrid");
-        $("#tbl_access_file").jqGrid("clearGridData", true).trigger("reloadGrid");
-        $("#tbl_access_proses").jqGrid("clearGridData", true).trigger("reloadGrid");
+        $("#tbl_access_transaction").jqGrid("clearGridData", true).trigger("reloadGrid");
+        $("#tbl_access_setting").jqGrid("clearGridData", true).trigger("reloadGrid");
 
     });
     
@@ -65,26 +65,26 @@
 
     function PopulateUserAccess(group, objUserAccess) {
         if (objUserAccess != null) {
-            for (var i = 0; i < objUserAccess.listUserAccess.length; i++) {
+            for (var i = 0; i < objUserAccess.model.length; i++) {
                 var newData = {};
-                newData.code = objUserAccess.listUserAccess[i].MenuId;
-                newData.name = objUserAccess.listUserAccess[i].Name;
-                newData.read = objUserAccess.listUserAccess[i].View;
-                newData.write = objUserAccess.listUserAccess[i].Create;
-                newData.edit = objUserAccess.listUserAccess[i].Edit;
-                newData.delete = objUserAccess.listUserAccess[i].Delete;
-                newData.undelete = objUserAccess.listUserAccess[i].UnDelete;
-                newData.print = objUserAccess.listUserAccess[i].Print;
+                newData.code = objUserAccess.model[i].Id;
+                newData.name = objUserAccess.model[i].Name;
+                newData.read = objUserAccess.model[i].AllowView;
+                newData.write = objUserAccess.model[i].AllowCreate;
+                newData.edit = objUserAccess.model[i].AllowEdit;
+                newData.delete = objUserAccess.model[i].AllowDelete;
+                newData.undelete = objUserAccess.model[i].AllowUndelete;
+                newData.print = objUserAccess.model[i].AllowPrint;
 
                 // New Record
-                var group_menu = objUserAccess.listUserAccess[i].GroupName.toLowerCase();
+                var group_menu = objUserAccess.model[i].GroupName.toLowerCase();
                 jQuery("#tbl_access_" + group_menu).jqGrid('addRowData', $("#tbl_access_" + group_menu).getGridParam("reccount") + 1, newData);
             }
         }
     }
 
     // ---- View
-    function UpdateAllowView(menuId, isAllow) {
+    function UpdateAllow(menuId, isAllow, colName) {
         var userId = 0;
         var id = jQuery("#tbl_users").jqGrid('getGridParam', 'selrow');
         if (id) {
@@ -97,20 +97,29 @@
         $.ajax({
             contentType: "application/json",
             type: 'POST',
-            url: base_url + "UserAccess/AllowView",
+            url: base_url + "UserAccess/Update?colName=" + colName + "&isAllow=" + isAllow,
             data: JSON.stringify({
-                UserId:userId, MenuId: menuId, IsAllow: isAllow
+                Id: menuId
             }),
             success: function (result) {
-                if (!result.isValid) {
-                    $.messager.alert('Warning', result.message, 'warning');
+                if (JSON.stringify(result.Errors) != '{}') {
+                    for (var key in result.Errors) {
+                        if (key != null && key != undefined && key != 'Generic') {
+                            $('input[name=' + key + ']').addClass('errormessage').after('<span class="errormessage">**' + result.Errors[key] + '</span>');
+                            $('textarea[name=' + key + ']').addClass('errormessage').after('<span class="errormessage">**' + result.Errors[key] + '</span>');
+                        }
+                        else {
+                            $.messager.alert('Warning', result.Errors[key], 'warning');
+                        }
+                    }
                 }
+                
             }
         });
     }
 
     $("input[name=cbAllowView]").live("click", function () {
-        UpdateAllowView($(this).attr('rel'), $(this).is(":checked"));
+        UpdateAllow($(this).attr('rel'), $(this).is(":checked"), "View");
     });
 
     function cboxAllowView(cellvalue, options, rowObject) {
@@ -121,33 +130,8 @@
     // ---- END View
 
     // ---- Edit
-    function UpdateAllowEdit(menuId, isAllow) {
-        var userId = 0;
-        var id = jQuery("#tbl_users").jqGrid('getGridParam', 'selrow');
-        if (id) {
-            userId = id;
-        } else {
-            $.messager.alert('Information', 'Please Select User...!!', 'info');
-            return;
-        };
-
-        $.ajax({
-            contentType: "application/json",
-            type: 'POST',
-            url: base_url + "UserAccess/AllowEdit",
-            data: JSON.stringify({
-                UserId: userId, MenuId: menuId, IsAllow: isAllow
-            }),
-            success: function (result) {
-                if (!result.isValid) {
-                    $.messager.alert('Warning', result.message, 'warning');
-                }
-            }
-        });
-    }
-
     $("input[name=cbAllowEdit]").live("click", function () {
-        UpdateAllowEdit($(this).attr('rel'), $(this).is(":checked"));
+        UpdateAllow($(this).attr('rel'), $(this).is(":checked"), "Edit");
     });
 
     function cboxAllowEdit(cellvalue, options, rowObject) {
@@ -158,33 +142,8 @@
     // ---- END Edit
 
     // ---- Delete
-    function UpdateAllowDelete(menuId, isAllow) {
-        var userId = 0;
-        var id = jQuery("#tbl_users").jqGrid('getGridParam', 'selrow');
-        if (id) {
-            userId = id;
-        } else {
-            $.messager.alert('Information', 'Please Select User...!!', 'info');
-            return;
-        };
-
-        $.ajax({
-            contentType: "application/json",
-            type: 'POST',
-            url: base_url + "UserAccess/AllowDelete",
-            data: JSON.stringify({
-                UserId: userId, MenuId: menuId, IsAllow: isAllow
-            }),
-            success: function (result) {
-                if (!result.isValid) {
-                    $.messager.alert('Warning', result.message, 'warning');
-                }
-            }
-        });
-    }
-
     $("input[name=cbAllowDelete]").live("click", function () {
-        UpdateAllowDelete($(this).attr('rel'), $(this).is(":checked"));
+        UpdateAllow($(this).attr('rel'), $(this).is(":checked"), "Delete");
     });
 
     function cboxAllowDelete(cellvalue, options, rowObject) {
@@ -195,33 +154,8 @@
     // ---- END Delete
 
     // ---- UnDelete
-    function UpdateAllowUnDelete(menuId, isAllow) {
-        var userId = 0;
-        var id = jQuery("#tbl_users").jqGrid('getGridParam', 'selrow');
-        if (id) {
-            userId = id;
-        } else {
-            $.messager.alert('Information', 'Please Select User...!!', 'info');
-            return;
-        };
-
-        $.ajax({
-            contentType: "application/json",
-            type: 'POST',
-            url: base_url + "UserAccess/AllowUnDelete",
-            data: JSON.stringify({
-                UserId: userId, MenuId: menuId, IsAllow: isAllow
-            }),
-            success: function (result) {
-                if (!result.isValid) {
-                    $.messager.alert('Warning', result.message, 'warning');
-                }
-            }
-        });
-    }
-
     $("input[name=cbAllowUnDelete]").live("click", function () {
-        UpdateAllowUnDelete($(this).attr('rel'), $(this).is(":checked"));
+        UpdateAllow($(this).attr('rel'), $(this).is(":checked"), "Undelete");
     });
 
     function cboxAllowUnDelete(cellvalue, options, rowObject) {
@@ -231,34 +165,81 @@
 
     // ---- END UnDelete
 
-    // ---- Print
-    function UpdateAllowPrint(menuId, isAllow) {
-        var userId = 0;
-        var id = jQuery("#tbl_users").jqGrid('getGridParam', 'selrow');
-        if (id) {
-            userId = id;
-        } else {
-            $.messager.alert('Information', 'Please Select User...!!', 'info');
-            return;
-        };
+    // ---- Confirm
+    $("input[name=cbAllowConfirm]").live("click", function () {
+        UpdateAllow($(this).attr('rel'), $(this).is(":checked"), "Confirm");
+    });
 
-        $.ajax({
-            contentType: "application/json",
-            type: 'POST',
-            url: base_url + "UserAccess/AllowPrint",
-            data: JSON.stringify({
-                UserId: userId, MenuId: menuId, IsAllow: isAllow
-            }),
-            success: function (result) {
-                if (!result.isValid) {
-                    $.messager.alert('Warning', result.message, 'warning');
-                }
-            }
-        });
+    function cboxAllowConfirm(cellvalue, options, rowObject) {
+        return '<input name="cbAllowConfirm" rel="' + rowObject.code + '" type="checkbox"' + (cellvalue ? ' checked="checked"' : '') +
+            '/>';
     }
 
+    // ---- END Confirm
+
+    // ---- UnConfirm
+    $("input[name=cbAllowUnConfirm]").live("click", function () {
+        UpdateAllow($(this).attr('rel'), $(this).is(":checked"), "UnConfirm");
+    });
+
+    function cboxAllowUnConfirm(cellvalue, options, rowObject) {
+        return '<input name="cbAllowUnConfirm" rel="' + rowObject.code + '" type="checkbox"' + (cellvalue ? ' checked="checked"' : '') +
+            '/>';
+    }
+
+    // ---- END UnConfirm
+
+    // ---- Paid
+    $("input[name=cbAllowPaid]").live("click", function () {
+        UpdateAllow($(this).attr('rel'), $(this).is(":checked"), "Paid");
+    });
+
+    function cboxAllowPaid(cellvalue, options, rowObject) {
+        return '<input name="cbAllowPaid" rel="' + rowObject.code + '" type="checkbox"' + (cellvalue ? ' checked="checked"' : '') +
+            '/>';
+    }
+
+    // ---- END Paid
+
+    // ---- UnPaid
+    $("input[name=cbAllowUnPaid]").live("click", function () {
+        UpdateAllow($(this).attr('rel'), $(this).is(":checked"), "UnPaid");
+    });
+
+    function cboxAllowUnPaid(cellvalue, options, rowObject) {
+        return '<input name="cbAllowUnPaid" rel="' + rowObject.code + '" type="checkbox"' + (cellvalue ? ' checked="checked"' : '') +
+            '/>';
+    }
+
+    // ---- END UnPaid
+
+    // ---- Reconcile
+    $("input[name=cbAllowReconcile]").live("click", function () {
+        UpdateAllow($(this).attr('rel'), $(this).is(":checked"), "Reconcile");
+    });
+
+    function cboxAllowReconcile(cellvalue, options, rowObject) {
+        return '<input name="cbAllowReconcile" rel="' + rowObject.code + '" type="checkbox"' + (cellvalue ? ' checked="checked"' : '') +
+            '/>';
+    }
+
+    // ---- END Reconcile
+
+    // ---- UnReconcile
+    $("input[name=cbAllowUnReconcile]").live("click", function () {
+        UpdateAllow($(this).attr('rel'), $(this).is(":checked"), "UnReconcile");
+    });
+
+    function cboxAllowUnReconcile(cellvalue, options, rowObject) {
+        return '<input name="cbAllowUnReconcile" rel="' + rowObject.code + '" type="checkbox"' + (cellvalue ? ' checked="checked"' : '') +
+            '/>';
+    }
+
+    // ---- END UnReconcile
+
+    // ---- Print
     $("input[name=cbAllowPrint]").live("click", function () {
-        UpdateAllowPrint($(this).attr('rel'), $(this).is(":checked"));
+        UpdateAllow($(this).attr('rel'), $(this).is(":checked"), "Print");
     });
 
     function cboxAllowPrint(cellvalue, options, rowObject) {
@@ -269,33 +250,8 @@
     // ---- END Print
 
     // ---- Create
-    function UpdateAllowCreate(menuId, isAllow) {
-        var userId = 0;
-        var id = jQuery("#tbl_users").jqGrid('getGridParam', 'selrow');
-        if (id) {
-            userId = id;
-        } else {
-            $.messager.alert('Information', 'Please Select User...!!', 'info');
-            return;
-        };
-
-        $.ajax({
-            contentType: "application/json",
-            type: 'POST',
-            url: base_url + "UserAccess/AllowCreate",
-            data: JSON.stringify({
-                UserId: userId, MenuId: menuId, IsAllow: isAllow
-            }),
-            success: function (result) {
-                if (!result.isValid) {
-                    $.messager.alert('Warning', result.message, 'warning');
-                }
-            }
-        });
-    }
-
     $("input[name=cbAllowCreate]").live("click", function () {
-        UpdateAllowCreate($(this).attr('rel'), $(this).is(":checked"));
+        UpdateAllow($(this).attr('rel'), $(this).is(":checked"), "Create");
     });
 
     function cboxAllowCreate(cellvalue, options, rowObject) {
@@ -307,10 +263,10 @@
 
     // Table User Access Group - Master
     jQuery("#tbl_access_master").jqGrid({
-        url: base_url + 'index.html',
+       // url: base_url + 'index.html',
         datatype: "json",
         mtype: 'GET',
-        colNames: ['Code', 'Name', 'View', 'Create', 'Edit', 'Delete', 'Un-Delete', 'Print'],
+        colNames: ['Code', 'Name', 'View', 'Create', 'Edit', 'Delete', 'Confirm', 'UnConfirm', 'Paid', 'UnPaid', 'Reconcile', 'UnReconcile', 'Print'],
         colModel: [{ name: 'code', index: 'code', width: 50, align: 'center' },
                   { name: 'name', index: 'name', width: 160 },
                   {
@@ -338,10 +294,40 @@
                       formatter: cboxAllowDelete, formatoptions: { disabled: false }
                   },
                   {
-                      name: 'undelete', index: 'undelete', width: 60, align: 'center', sortable: false,
+                      name: 'confirm', index: 'confirm', width: 60, align: 'center', sortable: false,
                       editable: true,
                       edittype: 'checkbox', editoptions: { value: "1:0" },
-                      formatter: cboxAllowUnDelete, formatoptions: { disabled: false }
+                      formatter: cboxAllowConfirm, formatoptions: { disabled: false }
+                  },
+                  {
+                      name: 'unconfirm', index: 'unconfirm', width: 60, align: 'center', sortable: false,
+                      editable: true,
+                      edittype: 'checkbox', editoptions: { value: "1:0" },
+                      formatter: cboxAllowUnConfirm, formatoptions: { disabled: false }
+                  },
+                  {
+                      name: 'paid', index: 'paid', width: 60, align: 'center', sortable: false,
+                      editable: true,
+                      edittype: 'checkbox', editoptions: { value: "1:0" },
+                      formatter: cboxAllowPaid, formatoptions: { disabled: false }
+                  },
+                  {
+                      name: 'unpaid', index: 'unpaid', width: 60, align: 'center', sortable: false,
+                      editable: true,
+                      edittype: 'checkbox', editoptions: { value: "1:0" },
+                      formatter: cboxAllowUnPaid, formatoptions: { disabled: false }
+                  },
+                  {
+                      name: 'reconcile', index: 'reconcile', width: 60, align: 'center', sortable: false,
+                      editable: true,
+                      edittype: 'checkbox', editoptions: { value: "1:0" },
+                      formatter: cboxAllowReconcile, formatoptions: { disabled: false }
+                  },
+                  {
+                      name: 'unreconcile', index: 'unreconcile', width: 60, align: 'center', sortable: false,
+                      editable: true,
+                      edittype: 'checkbox', editoptions: { value: "1:0" },
+                      formatter: cboxAllowUnReconcile, formatoptions: { disabled: false }
                   },
                   {
                       name: 'print', index: 'print', width: 50, align: 'center', sortable: false,
@@ -363,11 +349,11 @@
     // END Table User Access Group - Master
 
     // Table User Access Group - File
-    jQuery("#tbl_access_file").jqGrid({
-        url: base_url + 'index.html',
+    jQuery("#tbl_access_transaction").jqGrid({
+       // url: base_url + 'index.html',
         datatype: "json",
         mtype: 'GET',
-        colNames: ['Code', 'Name', 'View', 'Create', 'Edit', 'Delete', 'Un-Delete', 'Print'],
+        colNames: ['Code', 'Name', 'View', 'Create', 'Edit', 'Delete', 'Confirm', 'UnConfirm', 'Paid', 'UnPaid', 'Reconcile', 'UnReconcile', 'Print'],
         colModel: [{ name: 'code', index: 'code', width: 50, align: 'center' },
                   { name: 'name', index: 'name', width: 160 },
                   {
@@ -395,10 +381,40 @@
                       formatter: cboxAllowDelete, formatoptions: { disabled: false }
                   },
                   {
-                      name: 'undelete', index: 'undelete', width: 60, align: 'center', sortable: false,
+                      name: 'confirm', index: 'confirm', width: 60, align: 'center', sortable: false,
                       editable: true,
                       edittype: 'checkbox', editoptions: { value: "1:0" },
-                      formatter: cboxAllowUnDelete, formatoptions: { disabled: false }
+                      formatter: cboxAllowConfirm, formatoptions: { disabled: false }
+                  },
+                  {
+                      name: 'unconfirm', index: 'unconfirm', width: 60, align: 'center', sortable: false,
+                      editable: true,
+                      edittype: 'checkbox', editoptions: { value: "1:0" },
+                      formatter: cboxAllowUnConfirm, formatoptions: { disabled: false }
+                  },
+                  {
+                      name: 'paid', index: 'paid', width: 60, align: 'center', sortable: false,
+                      editable: true,
+                      edittype: 'checkbox', editoptions: { value: "1:0" },
+                      formatter: cboxAllowPaid, formatoptions: { disabled: false }
+                  },
+                  {
+                      name: 'unpaid', index: 'unpaid', width: 60, align: 'center', sortable: false,
+                      editable: true,
+                      edittype: 'checkbox', editoptions: { value: "1:0" },
+                      formatter: cboxAllowUnPaid, formatoptions: { disabled: false }
+                  },
+                  {
+                      name: 'reconcile', index: 'reconcile', width: 60, align: 'center', sortable: false,
+                      editable: true,
+                      edittype: 'checkbox', editoptions: { value: "1:0" },
+                      formatter: cboxAllowReconcile, formatoptions: { disabled: false }
+                  },
+                  {
+                      name: 'unreconcile', index: 'unreconcile', width: 60, align: 'center', sortable: false,
+                      editable: true,
+                      edittype: 'checkbox', editoptions: { value: "1:0" },
+                      formatter: cboxAllowUnReconcile, formatoptions: { disabled: false }
                   },
                   {
                       name: 'print', index: 'print', width: 50, align: 'center', sortable: false,
@@ -416,15 +432,15 @@
         width: 580,
         height: 380
     });
-    $("#tbl_access_file").jqGrid('navGrid', '#toolbar_lookup_table_so_container', { del: false, add: false, edit: false, search: false });
+    $("#tbl_access_transaction").jqGrid('navGrid', '#toolbar_lookup_table_so_container', { del: false, add: false, edit: false, search: false });
     // END Table User Access Group - File
 
     // Table User Access Group - Report
     jQuery("#tbl_access_report").jqGrid({
-        url: base_url + 'index.html',
+      // url: base_url + 'index.html',
         datatype: "json",
         mtype: 'GET',
-        colNames: ['Code', 'Name', 'View', 'Create', 'Edit', 'Delete', 'Un-Delete', 'Print'],
+        colNames: ['Code', 'Name', 'View', 'Create', 'Edit', 'Delete', 'Confirm', 'UnConfirm', 'Paid', 'UnPaid', 'Reconcile', 'UnReconcile', 'Print'],
         colModel: [{ name: 'code', index: 'code', width: 50, align: 'center' },
                   { name: 'name', index: 'name', width: 160 },
                   {
@@ -437,36 +453,61 @@
                       name: 'write', index: 'write', width: 50, align: 'center', sortable: false,
                       editable: true,
                       edittype: 'checkbox', editoptions: { value: "1:0" },
-                      formatter: "checkbox", formatoptions: { disabled: false },
-                      hidden: true
+                      formatter: cboxAllowCreate, formatoptions: { disabled: false }
                   },
                   {
                       name: 'edit', index: 'edit', width: 50, align: 'center', sortable: false,
                       editable: true,
                       edittype: 'checkbox', editoptions: { value: "1:0" },
-                      formatter: "checkbox", formatoptions: { disabled: false },
-                      hidden: true
+                      formatter: cboxAllowEdit, formatoptions: { disabled: false }
                   },
                   {
                       name: 'delete', index: 'delete', width: 50, align: 'center', sortable: false,
                       editable: true,
                       edittype: 'checkbox', editoptions: { value: "1:0" },
-                      formatter: "checkbox", formatoptions: { disabled: false },
-                      hidden: true
+                      formatter: cboxAllowDelete, formatoptions: { disabled: false }
                   },
                   {
-                      name: 'undelete', index: 'undelete', width: 60, align: 'center', sortable: false,
+                      name: 'confirm', index: 'confirm', width: 60, align: 'center', sortable: false,
                       editable: true,
                       edittype: 'checkbox', editoptions: { value: "1:0" },
-                      formatter: "checkbox", formatoptions: { disabled: false },
-                      hidden: true
+                      formatter: cboxAllowConfirm, formatoptions: { disabled: false }
+                  },
+                  {
+                      name: 'unconfirm', index: 'unconfirm', width: 60, align: 'center', sortable: false,
+                      editable: true,
+                      edittype: 'checkbox', editoptions: { value: "1:0" },
+                      formatter: cboxAllowUnConfirm, formatoptions: { disabled: false }
+                  },
+                  {
+                      name: 'paid', index: 'paid', width: 60, align: 'center', sortable: false,
+                      editable: true,
+                      edittype: 'checkbox', editoptions: { value: "1:0" },
+                      formatter: cboxAllowPaid, formatoptions: { disabled: false }
+                  },
+                  {
+                      name: 'unpaid', index: 'unpaid', width: 60, align: 'center', sortable: false,
+                      editable: true,
+                      edittype: 'checkbox', editoptions: { value: "1:0" },
+                      formatter: cboxAllowUnPaid, formatoptions: { disabled: false }
+                  },
+                  {
+                      name: 'reconcile', index: 'reconcile', width: 60, align: 'center', sortable: false,
+                      editable: true,
+                      edittype: 'checkbox', editoptions: { value: "1:0" },
+                      formatter: cboxAllowReconcile, formatoptions: { disabled: false }
+                  },
+                  {
+                      name: 'unreconcile', index: 'unreconcile', width: 60, align: 'center', sortable: false,
+                      editable: true,
+                      edittype: 'checkbox', editoptions: { value: "1:0" },
+                      formatter: cboxAllowUnReconcile, formatoptions: { disabled: false }
                   },
                   {
                       name: 'print', index: 'print', width: 50, align: 'center', sortable: false,
                       editable: true,
                       edittype: 'checkbox', editoptions: { value: "1:0" },
-                      formatter: "checkbox", formatoptions: { disabled: false },
-                      hidden: true
+                      formatter: cboxAllowPrint, formatoptions: { disabled: false }
                   }
         ],
         sortname: 'kode',
@@ -482,11 +523,11 @@
     // END Table User Access Group - Report
 
     // Table User Access Group - Setting
-    jQuery("#tbl_access_proses").jqGrid({
-        url: base_url + 'index.html',
+    jQuery("#tbl_access_setting").jqGrid({
+        //url: base_url + 'index.html',
         datatype: "json",
         mtype: 'GET',
-        colNames: ['Code', 'Name', 'View', 'Create', 'Edit', 'Delete', 'Un-Delete', 'Print'],
+        colNames: ['Code', 'Name', 'View', 'Create', 'Edit', 'Delete', 'Confirm', 'UnConfirm', 'Paid', 'UnPaid', 'Reconcile', 'UnReconcile', 'Print'],
         colModel: [{ name: 'code', index: 'code', width: 50, align: 'center' },
                   { name: 'name', index: 'name', width: 160 },
                   {
@@ -499,36 +540,61 @@
                       name: 'write', index: 'write', width: 50, align: 'center', sortable: false,
                       editable: true,
                       edittype: 'checkbox', editoptions: { value: "1:0" },
-                      formatter: "checkbox", formatoptions: { disabled: false },
-                      hidden: true
+                      formatter: cboxAllowCreate, formatoptions: { disabled: false }
                   },
                   {
                       name: 'edit', index: 'edit', width: 50, align: 'center', sortable: false,
                       editable: true,
                       edittype: 'checkbox', editoptions: { value: "1:0" },
-                      formatter: "checkbox", formatoptions: { disabled: false },
-                      hidden: true
+                      formatter: cboxAllowEdit, formatoptions: { disabled: false }
                   },
                   {
                       name: 'delete', index: 'delete', width: 50, align: 'center', sortable: false,
                       editable: true,
                       edittype: 'checkbox', editoptions: { value: "1:0" },
-                      formatter: "checkbox", formatoptions: { disabled: false },
-                      hidden: true
+                      formatter: cboxAllowDelete, formatoptions: { disabled: false }
                   },
                   {
-                      name: 'undelete', index: 'undelete', width: 60, align: 'center', sortable: false,
+                      name: 'confirm', index: 'confirm', width: 60, align: 'center', sortable: false,
                       editable: true,
                       edittype: 'checkbox', editoptions: { value: "1:0" },
-                      formatter: "checkbox", formatoptions: { disabled: false },
-                      hidden: true
+                      formatter: cboxAllowConfirm, formatoptions: { disabled: false }
+                  },
+                  {
+                      name: 'unconfirm', index: 'unconfirm', width: 60, align: 'center', sortable: false,
+                      editable: true,
+                      edittype: 'checkbox', editoptions: { value: "1:0" },
+                      formatter: cboxAllowUnConfirm, formatoptions: { disabled: false }
+                  },
+                  {
+                      name: 'paid', index: 'paid', width: 60, align: 'center', sortable: false,
+                      editable: true,
+                      edittype: 'checkbox', editoptions: { value: "1:0" },
+                      formatter: cboxAllowPaid, formatoptions: { disabled: false }
+                  },
+                  {
+                      name: 'unpaid', index: 'unpaid', width: 60, align: 'center', sortable: false,
+                      editable: true,
+                      edittype: 'checkbox', editoptions: { value: "1:0" },
+                      formatter: cboxAllowUnPaid, formatoptions: { disabled: false }
+                  },
+                  {
+                      name: 'reconcile', index: 'reconcile', width: 60, align: 'center', sortable: false,
+                      editable: true,
+                      edittype: 'checkbox', editoptions: { value: "1:0" },
+                      formatter: cboxAllowReconcile, formatoptions: { disabled: false }
+                  },
+                  {
+                      name: 'unreconcile', index: 'unreconcile', width: 60, align: 'center', sortable: false,
+                      editable: true,
+                      edittype: 'checkbox', editoptions: { value: "1:0" },
+                      formatter: cboxAllowUnReconcile, formatoptions: { disabled: false }
                   },
                   {
                       name: 'print', index: 'print', width: 50, align: 'center', sortable: false,
                       editable: true,
                       edittype: 'checkbox', editoptions: { value: "1:0" },
-                      formatter: "checkbox", formatoptions: { disabled: false },
-                      hidden: true
+                      formatter: cboxAllowPrint, formatoptions: { disabled: false }
                   }
         ],
         sortname: 'kode',
@@ -540,20 +606,20 @@
         width: 580,
         height: 380
     });
-    $("#tbl_access_proses").jqGrid('navGrid', '#toolbar_lookup_table_so_container', { del: false, add: false, edit: false, search: false });
+    $("#tbl_access_setting").jqGrid('navGrid', '#toolbar_lookup_table_so_container', { del: false, add: false, edit: false, search: false });
     // END Table User Access Group - Setting
 
     // Table User List
     jQuery("#tbl_users").jqGrid({
         url: base_url + 'User/GetList',
         datatype: "json",
-        colNames: ['Code', 'Name', 'Department', 'Title', 'App. GM'],
+        colNames: ['Code', 'Name', 'Department', 'Title', 'Is Admin'],
         colModel: [{ name: 'usercode', index: 'usercode', width: 80 },
                   { name: 'username', index: 'username', width: 200 },
                   { name: 'department', index: 'department', width: 80 },
                   { name: 'title', index: 'title', width: 100 },
                   {
-                      name: 'app_acc', index: 'app_acc', width: 60, align: 'center', sortable: false,
+                      name: 'isadmin', index: 'isadmin', width: 60, align: 'center', sortable: false,
                       editable: true,
                       edittype: 'checkbox', editoptions: { value: "1:0" },
                       formatter: "checkbox", formatoptions: { disabled: true }
@@ -569,8 +635,8 @@
             // Clear and Reload all grid
             $("#tbl_access_master").jqGrid("clearGridData", true).trigger("reloadGrid");
             $("#tbl_access_report").jqGrid("clearGridData", true).trigger("reloadGrid");
-            $("#tbl_access_file").jqGrid("clearGridData", true).trigger("reloadGrid");
-            $("#tbl_access_proses").jqGrid("clearGridData", true).trigger("reloadGrid");
+            $("#tbl_access_transaction").jqGrid("clearGridData", true).trigger("reloadGrid");
+            $("#tbl_access_setting").jqGrid("clearGridData", true).trigger("reloadGrid");
 
             usercode = id;
             GetUserAccess();
@@ -642,9 +708,9 @@
         }
 
         // File
-        var ids = $("#tbl_access_file").jqGrid('getDataIDs');
+        var ids = $("#tbl_access_transaction").jqGrid('getDataIDs');
         for (var i = 0; i < ids.length; i++) {
-            var datagrid = jQuery("#tbl_access_file").jqGrid('getRowData', ids[i]);
+            var datagrid = jQuery("#tbl_access_transaction").jqGrid('getRowData', ids[i]);
             var obj = {};
             obj['Input'] = datagrid.write;
             obj['Lihat'] = datagrid.read;
@@ -672,9 +738,9 @@
         }
 
         // Proses
-        var ids = $("#tbl_access_proses").jqGrid('getDataIDs');
+        var ids = $("#tbl_access_setting").jqGrid('getDataIDs');
         for (var i = 0; i < ids.length; i++) {
-            var datagrid = jQuery("#tbl_access_proses").jqGrid('getRowData', ids[i]);
+            var datagrid = jQuery("#tbl_access_setting").jqGrid('getRowData', ids[i]);
             var obj = {};
             obj['Input'] = datagrid.write;
             obj['Lihat'] = datagrid.read;

@@ -52,6 +52,12 @@ namespace Service.Service
             return _repository.GetObjectByUsername(username);
         }
 
+        public UserAccount IsLoginValid(string username, string password)
+        {
+            StringEncryption se = new StringEncryption();
+            return _repository.IsLoginValid(username, se.Encrypt(password));
+        }
+
         public UserAccount CreateObject(UserAccount userAccount)
         {
             userAccount.Errors = new Dictionary<String, String>();
@@ -80,14 +86,28 @@ namespace Service.Service
             return CreateObject(userAccount);
         }
 
-        public UserAccount UpdateObject(UserAccount userAccount, string OldPassword, string NewPassword)
+        public UserAccount UpdateObjectPassword(UserAccount userAccount, string OldPassword, string NewPassword, string ConfirmPassword)
         {
-            if(_validator.ValidUpdateObject(userAccount, OldPassword, this))
+            if (_validator.ValidUpdateObjectPassword(userAccount, OldPassword, NewPassword, ConfirmPassword, this))
             {
                 userAccount.Username = userAccount.Username.Trim();
                 StringEncryption se = new StringEncryption();
                 //string realpassword = userAccount.Password;
                 userAccount.Password = se.Encrypt(NewPassword);
+                _repository.UpdateObject(userAccount);
+                //userAccount.Password = realpassword; // set back to unencrypted password to prevent encrypting an already encrypted password on the next update
+            }
+            return userAccount;
+        }
+
+        public UserAccount UpdateObject(UserAccount userAccount)
+        {
+            if(_validator.ValidUpdateObject(userAccount, this))
+            {
+                userAccount.Username = userAccount.Username.Trim();
+                StringEncryption se = new StringEncryption();
+                //string realpassword = userAccount.Password;
+                userAccount.Password = se.Encrypt(userAccount.Password);
                 _repository.UpdateObject(userAccount);
                 //userAccount.Password = realpassword; // set back to unencrypted password to prevent encrypting an already encrypted password on the next update
             }
@@ -113,6 +133,8 @@ namespace Service.Service
             }
             return userAccount;
         }
+
+        
 
         /*public static bool IsAuthenticated()
         {

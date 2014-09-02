@@ -172,15 +172,29 @@
 						v_confirm_password = $($.trim('#txtconfirmpass')).val();
 
 					$.ajax({
-						url: base_url + "User/ChangePassword",
+						url: base_url + "User/UpdatePassword",
 						type: "POST",
 						contentType: "application/json",
 						data: JSON.stringify({
 							OldPassword: v_old_password, NewPassword: v_new_password, ConfirmPassword: v_confirm_password
 						}),
 						success: function (result) {
-							$.messager.alert('Result', result, 'info');
-							clearForm();
+						    if (JSON.stringify(result.Errors) != '{}') {
+						        for (var key in result.Errors) {
+						            if (key != null && key != undefined && key != 'Generic') {
+						                $('input[name=' + key + ']').addClass('errormessage').after('<span class="errormessage">**' + result.Errors[key] + '</span>');
+						                $('textarea[name=' + key + ']').addClass('errormessage').after('<span class="errormessage">**' + result.Errors[key] + '</span>');
+						            }
+						            else {
+						                $.messager.alert('Warning', result.Errors[key], 'warning');
+						            }
+						        }
+						    } else {
+						     
+						        $.messager.alert('Success', "Password berhasil diubah", 'info');
+						        clearForm();
+						        $('#frm_change_pass_div').dialog('close');
+						    }
 						}
 					});
 				});
@@ -234,10 +248,11 @@
 		      @if (WebView.AuthenticationModel.IsAuthenticated())
      {
 				<div id="user-greeting">
-					Welcome <strong>@*@infoss.Models.AccountModels.GetUserName()*@</strong> &nbsp;|&nbsp; <a href="@Url.Action("Logout", "Account")">Logout
+					Welcome <strong>@WebView.AuthenticationModel.GetUserName()</strong> &nbsp;|&nbsp; <a href="@Url.Action("Logout", "Authentication")">Logout
 					</a>
 				</div>
      }
+            
 		</div>
 		<div data-options="region:'south',border:false" style="height: 10px; background: #E7EBF2 !important;">
 			&nbsp;

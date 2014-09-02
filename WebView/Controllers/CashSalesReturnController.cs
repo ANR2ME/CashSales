@@ -68,6 +68,11 @@ namespace WebView.Controllers
 
         public ActionResult Index()
         {
+            if (!AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.CashSalesReturn, Core.Constants.Constant.MenuGroupName.Transaction))
+            {
+                return Content("You are not allowed to View this Page.");
+            }
+
             return View();
         }
 
@@ -293,6 +298,16 @@ namespace WebView.Controllers
         {
             try
             {
+                if (!AuthenticationModel.IsAllowed("Create", Core.Constants.Constant.MenuName.CashSalesReturn, Core.Constants.Constant.MenuGroupName.Transaction))
+                {
+                    Dictionary<string, string> Errors = new Dictionary<string, string>();
+                    Errors.Add("Generic", "You are Not Allowed to Add record");
+
+                    return Json(new
+                    {
+                        Errors
+                    }, JsonRequestBehavior.AllowGet);
+                }
                 model = _cashSalesReturnService.CreateObject(model, _cashSalesInvoiceService, _cashBankService);
             }
             catch (Exception ex)
@@ -319,6 +334,17 @@ namespace WebView.Controllers
             decimal total = 0;
             try
             {
+                if (!AuthenticationModel.IsAllowed("Edit", Core.Constants.Constant.MenuName.CashSalesReturn, Core.Constants.Constant.MenuGroupName.Transaction))
+                {
+                    Dictionary<string, string> Errors = new Dictionary<string, string>();
+                    Errors.Add("Generic", "You are Not Allowed to Edit record");
+
+                    return Json(new
+                    {
+                        Errors
+                    }, JsonRequestBehavior.AllowGet);
+                }
+
                 model = _cashSalesReturnDetailService.CreateObject(model, _cashSalesReturnService, _cashSalesInvoiceDetailService);
                 total = _cashSalesReturnService.GetObjectById(model.CashSalesReturnId).Total;
             }
@@ -347,6 +373,17 @@ namespace WebView.Controllers
         {
             try
             {
+                if (!AuthenticationModel.IsAllowed("Edit", Core.Constants.Constant.MenuName.CashSalesReturn, Core.Constants.Constant.MenuGroupName.Transaction))
+                {
+                    Dictionary<string, string> Errors = new Dictionary<string, string>();
+                    Errors.Add("Generic", "You are Not Allowed to Edit record");
+
+                    return Json(new
+                    {
+                        Errors
+                    }, JsonRequestBehavior.AllowGet);
+                }
+
                 var data = _cashSalesReturnService.GetObjectById(model.Id);
                 data.Description = model.Description;
                 data.ReturnDate = model.ReturnDate;
@@ -378,6 +415,17 @@ namespace WebView.Controllers
             decimal total = 0;
             try
             {
+                if (!AuthenticationModel.IsAllowed("Edit", Core.Constants.Constant.MenuName.CashSalesReturn, Core.Constants.Constant.MenuGroupName.Transaction))
+                {
+                    Dictionary<string, string> Errors = new Dictionary<string, string>();
+                    Errors.Add("Generic", "You are Not Allowed to Edit record");
+
+                    return Json(new
+                    {
+                        Errors
+                    }, JsonRequestBehavior.AllowGet);
+                }
+
                 var data = _cashSalesReturnDetailService.GetObjectById(model.Id);
                 data.CashSalesInvoiceDetailId = model.CashSalesInvoiceDetailId;
                 data.Quantity = model.Quantity;
@@ -409,6 +457,17 @@ namespace WebView.Controllers
         {
             try
             {
+                if (!AuthenticationModel.IsAllowed("Confirm", Core.Constants.Constant.MenuName.CashSalesReturn, Core.Constants.Constant.MenuGroupName.Transaction))
+                {
+                    Dictionary<string, string> Errors = new Dictionary<string, string>();
+                    Errors.Add("Generic", "You are Not Allowed to Confirm Record");
+
+                    return Json(new
+                    {
+                        Errors
+                    }, JsonRequestBehavior.AllowGet);
+                }
+
                 var data = _cashSalesReturnService.GetObjectById(model.Id);
                 model = _cashSalesReturnService.ConfirmObject(data, model.ConfirmationDate.Value, model.Allowance, _cashSalesReturnDetailService, 
                                                     _contactService, _cashSalesInvoiceService, _cashSalesInvoiceDetailService, _priceMutationService, _payableService, 
@@ -437,6 +496,16 @@ namespace WebView.Controllers
         {
             try
             {
+                if (!AuthenticationModel.IsAllowed("UnConfirm", Core.Constants.Constant.MenuName.CashSalesReturn, Core.Constants.Constant.MenuGroupName.Transaction))
+                {
+                    Dictionary<string, string> Errors = new Dictionary<string, string>();
+                    Errors.Add("Generic", "You are Not Allowed to UnConfirm record");
+
+                    return Json(new
+                    {
+                        Errors
+                    }, JsonRequestBehavior.AllowGet);
+                }
 
                 var data = _cashSalesReturnService.GetObjectById(model.Id);
                 model = _cashSalesReturnService.UnconfirmObject(data, _cashSalesReturnDetailService, _cashSalesInvoiceDetailService, _payableService, _paymentVoucherDetailService,
@@ -466,6 +535,17 @@ namespace WebView.Controllers
         {
             try
             {
+                if (!AuthenticationModel.IsAllowed("Paid", Core.Constants.Constant.MenuName.CashSalesReturn, Core.Constants.Constant.MenuGroupName.Transaction))
+                {
+                    Dictionary<string, string> Errors = new Dictionary<string, string>();
+                    Errors.Add("Generic", "You are Not Allowed to Paid record");
+
+                    return Json(new
+                    {
+                        Errors
+                    }, JsonRequestBehavior.AllowGet);
+                }
+
                 var data = _cashSalesReturnService.GetObjectById(model.Id);
                 data.Allowance = model.Allowance;
                 model = _cashSalesReturnService.PaidObject(data, _cashBankService, _payableService, _paymentVoucherService, _paymentVoucherDetailService, 
@@ -494,6 +574,16 @@ namespace WebView.Controllers
         {
             try
             {
+                if (!AuthenticationModel.IsAllowed("UnPaid", Core.Constants.Constant.MenuName.CashSalesReturn, Core.Constants.Constant.MenuGroupName.Transaction))
+                {
+                    Dictionary<string, string> Errors = new Dictionary<string, string>();
+                    Errors.Add("Generic", "You are Not Allowed to UnPaid record");
+
+                    return Json(new
+                    {
+                        Errors
+                    }, JsonRequestBehavior.AllowGet);
+                }
 
                 var data = _cashSalesReturnService.GetObjectById(model.Id);
                 model = _cashSalesReturnService.UnpaidObject(data, _paymentVoucherService, _paymentVoucherDetailService, _cashBankService,
@@ -523,6 +613,17 @@ namespace WebView.Controllers
         {
             try
             {
+                if (!AuthenticationModel.IsAllowed("Delete", Core.Constants.Constant.MenuName.CashSalesReturn, Core.Constants.Constant.MenuGroupName.Transaction))
+                {
+                    Dictionary<string, string> Errors = new Dictionary<string, string>();
+                    Errors.Add("Generic", "You are Not Allowed to Delete Record");
+
+                    return Json(new
+                    {
+                        Errors
+                    }, JsonRequestBehavior.AllowGet);
+                }
+
                 var data = _cashSalesReturnService.GetObjectById(model.Id);
                 model = _cashSalesReturnService.SoftDeleteObject(data, _cashSalesReturnDetailService);
             }
@@ -550,6 +651,17 @@ namespace WebView.Controllers
             decimal total = 0;
             try
             {
+                if (!AuthenticationModel.IsAllowed("Edit", Core.Constants.Constant.MenuName.CashSalesReturn, Core.Constants.Constant.MenuGroupName.Transaction))
+                {
+                    Dictionary<string, string> Errors = new Dictionary<string, string>();
+                    Errors.Add("Generic", "You are Not Allowed to Edit record");
+
+                    return Json(new
+                    {
+                        Errors
+                    }, JsonRequestBehavior.AllowGet);
+                }
+
                 var data = _cashSalesReturnDetailService.GetObjectById(model.Id);
                 model = _cashSalesReturnDetailService.SoftDeleteObject(data, _cashSalesReturnService);
                 total = _cashSalesReturnService.GetObjectById(model.CashSalesReturnId).Total;

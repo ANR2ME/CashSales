@@ -89,7 +89,7 @@ namespace TestValidation
             {
                 string oldpassword = "sysadmin";
                 //d.admin.Password = "sysadmin123";
-                d.admin = d._userAccountService.UpdateObject(d.admin, oldpassword, "sysadmin123");
+                d.admin = d._userAccountService.UpdateObjectPassword(d.admin, oldpassword, "sysadmin123", "sysadmin123");
                 d.admin.Errors.Count().should_be(0);
             };
 
@@ -97,7 +97,7 @@ namespace TestValidation
             {
                 string oldpassword = "123";
                 //d.admin.Password = "asal2an";
-                d.admin = d._userAccountService.UpdateObject(d.admin, oldpassword, "asal2an");
+                d.admin = d._userAccountService.UpdateObjectPassword(d.admin, oldpassword, "asal2an", "asal2an");
                 d.admin.Errors.Count().should_not_be(0);
             };
 

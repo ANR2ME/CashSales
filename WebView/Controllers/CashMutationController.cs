@@ -27,6 +27,11 @@ namespace WebView.Controllers
 
         public ActionResult Index()
         {
+            if (!AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.CashMutation, "Master"))
+            {
+                return Content("You are not allowed to View this Page.");
+            }
+
             return View();
         }
 

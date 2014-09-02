@@ -13,6 +13,7 @@ namespace Core.Interface.Repository
         UserAccount GetObjectById(int Id);
         UserAccount GetObjectByIsAdmin(bool IsAdmin);
         UserAccount GetObjectByUsername(string username);
+        UserAccount IsLoginValid(string username, string password);
         UserAccount CreateObject(UserAccount userAccount);
         UserAccount UpdateObject(UserAccount userAccount);
         UserAccount SoftDeleteObject(UserAccount userAccount);

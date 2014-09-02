@@ -17,7 +17,7 @@ namespace Validation.Validation
             UserAccount userAccount = _userAccountService.GetObjectById(userAccess.UserAccountId);
             if (userAccount == null)
             {
-                userAccess.Errors.Add("UserAccount", "Tidak valid");
+                userAccess.Errors.Add("Generic", "UserAccount Tidak valid");
             }
             return userAccess;
         }
@@ -27,7 +27,7 @@ namespace Validation.Validation
             UserMenu userMenu = _userMenuService.GetObjectById(userAccess.UserMenuId);
             if (userMenu == null)
             {
-                userAccess.Errors.Add("UserMenu", "Tidak valid");
+                userAccess.Errors.Add("Generic", "UserMenu Tidak valid");
             }
             return userAccess;
         }

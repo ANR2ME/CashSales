@@ -6,6 +6,7 @@ using System.Web;
 using System.Web.Mvc;
 using System.Web.Security;
 using Service.Service;
+using Core;
 using Core.Interface.Service;
 using Core.DomainModel;
 using Data.Repository;
@@ -23,6 +24,7 @@ namespace WebView.Controllers
         public UserController()
         {
             _userAccountService = new UserAccountService(new UserAccountRepository(), new UserAccountValidator());
+
         }
 
 
@@ -30,6 +32,11 @@ namespace WebView.Controllers
 
         public ActionResult Index()
         {
+            if (!AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.User, Core.Constants.Constant.MenuGroupName.Setting))
+            {
+                return Content("You are not allowed to View this Page.");
+            }
+
             return View();
         }
 
@@ -53,6 +60,7 @@ namespace WebView.Controllers
                              model.Description,
                              model.CreatedAt,
                              model.UpdatedAt,
+                             model.IsAdmin
                          }).Where(filter).OrderBy(sidx + " " + sord); //.ToList();
 
             var list = query.AsEnumerable();
@@ -90,6 +98,7 @@ namespace WebView.Controllers
                             model.Description,
                             model.CreatedAt,
                             model.UpdatedAt,
+                            model.IsAdmin
                       }
                     }).ToArray()
             }, JsonRequestBehavior.AllowGet);
@@ -130,6 +139,17 @@ namespace WebView.Controllers
         {
             try
             {
+                if (!AuthenticationModel.IsAllowed("Create", Core.Constants.Constant.MenuName.User, Core.Constants.Constant.MenuGroupName.Setting))
+                {
+                    Dictionary<string, string> Errors = new Dictionary<string, string>();
+                    Errors.Add("Generic", "You are Not Allowed to Add record");
+
+                    return Json(new
+                    {
+                        Errors
+                    }, JsonRequestBehavior.AllowGet);
+                }
+
                 model = _userAccountService.CreateObject(model);
             }
             catch (Exception ex)
@@ -151,14 +171,27 @@ namespace WebView.Controllers
         }
 
         [HttpPost]
-        public dynamic Update(UserAccount model,string OldPassword,string NewPassword)
+        public dynamic Update(UserAccount model)
         {
             try
             {
+                if (!AuthenticationModel.IsAllowed("Edit", Core.Constants.Constant.MenuName.User, Core.Constants.Constant.MenuGroupName.Setting))
+                {
+                    Dictionary<string, string> Errors = new Dictionary<string, string>();
+                    Errors.Add("Generic", "You are Not Allowed to Edit record");
+
+                    return Json(new
+                    {
+                        Errors
+                    }, JsonRequestBehavior.AllowGet);
+                }
+
                 var data = _userAccountService.GetObjectById(model.Id);
                 data.Name = model.Name;
                 data.Description = model.Description;
-                model = _userAccountService.UpdateObject(data,OldPassword,NewPassword);
+                data.Username = model.Username;
+                data.Password = model.Password;
+                model = _userAccountService.UpdateObject(data);
             }
             catch (Exception ex)
             {
@@ -179,10 +212,76 @@ namespace WebView.Controllers
         }
 
         [HttpPost]
+        public dynamic UpdatePassword(string OldPassword, string NewPassword, string ConfirmPassword)
+        {
+            try
+            {
+
+                var data = _userAccountService.GetObjectById(AuthenticationModel.GetUserId());
+                data = _userAccountService.UpdateObjectPassword(data, OldPassword, NewPassword, ConfirmPassword);
+
+                return Json(new
+                {
+                    data.Errors
+                });
+            }
+            catch (Exception ex)
+            {
+                LOG.Error("Update Failed", ex);
+                Dictionary<string, string> Errors = new Dictionary<string, string>();
+                Errors.Add("Generic", "Error " + ex);
+
+                return Json(new
+                {
+                    Errors
+                }, JsonRequestBehavior.AllowGet);
+            }
+            
+        }
+
+        [HttpPost]
+        public dynamic ResetPassword()
+        {
+            try
+            {
+
+                var data = _userAccountService.GetObjectById(AuthenticationModel.GetUserId());
+                //data = _userAccountService.ResetObjectPassword(data, NewPassword);
+
+                return Json(new
+                {
+                    data.Errors
+                });
+            }
+            catch (Exception ex)
+            {
+                LOG.Error("Update Failed", ex);
+                Dictionary<string, string> Errors = new Dictionary<string, string>();
+                Errors.Add("Generic", "Error " + ex);
+
+                return Json(new
+                {
+                    Errors
+                }, JsonRequestBehavior.AllowGet);
+            }
+
+        }
+
+        [HttpPost]
         public dynamic Delete(UserAccount model)
         {
             try
             {
+                if (!AuthenticationModel.IsAllowed("Delete", Core.Constants.Constant.MenuName.User, Core.Constants.Constant.MenuGroupName.Setting))
+                {
+                    Dictionary<string, string> Errors = new Dictionary<string, string>();
+                    Errors.Add("Generic", "You are Not Allowed to Delete Record");
+
+                    return Json(new
+                    {
+                        Errors
+                    }, JsonRequestBehavior.AllowGet);
+                }
                
                 var data = _userAccountService.GetObjectById(model.Id);
                 model = _userAccountService.SoftDeleteObject(data, AuthenticationModel.GetUserId());

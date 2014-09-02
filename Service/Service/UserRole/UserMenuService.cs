@@ -41,9 +41,9 @@ namespace Service.Service
             return _repository.GetObjectById(Id);
         }
 
-        public UserMenu GetObjectByName(string Name)
+        public UserMenu GetObjectByNameAndGroupName(string Name, string GroupName)
         {
-            return _repository.GetObjectByName(Name);
+            return _repository.GetObjectByNameAndGroupName(Name, GroupName);
         }
 
         public UserMenu CreateObject(UserMenu userMenu)

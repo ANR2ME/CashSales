@@ -6,12 +6,18 @@ using System.Web.Mvc;
 using System.Web.Security;
 using System.Web;
 using System.Linq;
+using Core.Interface.Service;
+using Service.Service;
+using Data.Repository;
+using Validation.Validation;
+using Core.DomainModel;
 
 
 namespace WebView
 {
     public class AuthenticationModel
     {
+
         public static bool IsAuthenticated()
         {
             // IF IN MODE TESTING
@@ -28,6 +34,37 @@ namespace WebView
             }
             return false;
         }//end function IsAuthenticated
+
+        public static bool IsAllowed(string Role, string MenuName, string MenuGroupName)
+        {
+            IUserAccountService _userAccountService = new UserAccountService(new UserAccountRepository(), new UserAccountValidator());
+            IUserAccessService _userAccessService = new UserAccessService(new UserAccessRepository(), new UserAccessValidator());
+            IUserMenuService _userMenuService = new UserMenuService(new UserMenuRepository(), new UserMenuValidator());
+
+            UserMenu userMenu = _userMenuService.GetObjectByNameAndGroupName(MenuName, MenuGroupName);
+            if (userMenu != null) 
+            {
+                UserAccess userAccess = _userAccessService.GetObjectByUserAccountIdAndUserMenuId(GetUserId(), userMenu.Id);
+                if (userAccess != null) 
+                {
+                    switch (Role.ToLower()) {
+                        case "view" : return userAccess.AllowView;
+                        case "create" : return userAccess.AllowCreate;
+                        case "edit" : return userAccess.AllowEdit;
+                        case "delete" : return userAccess.AllowDelete;
+                        case "undelete" : return userAccess.AllowUndelete;
+                        case "confirm" : return userAccess.AllowConfirm;
+                        case "unconfirm" : return userAccess.AllowUnconfirm;
+                        case "paid" : return userAccess.AllowPaid;
+                        case "unpaid" : return userAccess.AllowUnpaid;
+                        case "reconcile" : return userAccess.AllowReconcile;
+                        case "unreconcile" : return userAccess.AllowUnreconcile;
+                        case "print" : return userAccess.AllowPrint;
+                    }
+                }
+            }
+            return false; 
+        }//end function IsAllowed
 
         public static int GetUserId()
         {
@@ -87,8 +124,8 @@ namespace WebView
                         // when the ticket is created, separate multiple roles 
                         // with commas) 
                         string[] userDetail = ticket.UserData.Split('#');
-                        if (!String.IsNullOrEmpty(userDetail[2]))
-                            userName = userDetail[2];
+                        if (!String.IsNullOrEmpty(userDetail[1]))
+                            userName = userDetail[1];
                     }
                 }
             }

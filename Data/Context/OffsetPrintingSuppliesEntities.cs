@@ -14,6 +14,7 @@ namespace Data.Context
         public OffsetPrintingSuppliesEntities() : base("CashSales")
         {
             Database.SetInitializer<OffsetPrintingSuppliesEntities>(new DropCreateDatabaseIfModelChanges<OffsetPrintingSuppliesEntities>());
+       
         }
 
         public void DeleteAllTables()

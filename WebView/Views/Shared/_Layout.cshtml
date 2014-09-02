@@ -1,14 +1,66 @@
 ﻿@{
-	bool underMaintenance = false;
-	string strUnderMaintenance = System.Configuration.ConfigurationManager.AppSettings["UnderMaintenance"];
-	if (!String.IsNullOrEmpty(strUnderMaintenance))
-	{
-		if (!bool.TryParse(strUnderMaintenance, out underMaintenance))
-		{
-			underMaintenance = false;
-		}
-	}
+    bool underMaintenance = false;
+    string strUnderMaintenance = System.Configuration.ConfigurationManager.AppSettings["UnderMaintenance"];
+    if (!String.IsNullOrEmpty(strUnderMaintenance))
+    {
+        if (!bool.TryParse(strUnderMaintenance, out underMaintenance))
+        {
+            underMaintenance = false;
+        }
+    }
 
+    if (!WebView.AuthenticationModel.IsAuthenticated())
+    {
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <title>@ViewBag.Title </title>
+        <link href="~/favicon.ico" rel="shortcut icon" type="image/x-icon" />
+        <meta name="viewport" content="width=device-width" />
+        @Styles.Render("~/Content/css")
+        @Styles.Render("~/Content/themes/base/css")
+
+        <script type="text/javascript">
+            var base_url = '@Url.Content("~//")';
+            window.top.location = base_url;
+        </script>
+
+        @Scripts.Render("~/bundles/jquery")
+        @Scripts.Render("~/bundles/modernizr")
+        @RenderSection("scripts", required: false)
+        @RenderSection("head", required: false)
+    </head>
+    <body>
+        <span>This site is under maintenance</span>
+    </body>
+    </html>
+        
+    }
+
+       if (underMaintenance)
+    {           // **************************************** Under Maintenance page
+        
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <title>@*@ViewBag.Title -  @infoss.Models.AccountModels.GetCompanyName()*@</title>
+        <link href="~/favicon.ico" rel="shortcut icon" type="image/x-icon" />
+        <meta name="viewport" content="width=device-width" />
+
+        <script type="text/javascript">
+            window.top.location = '@Url.Action("Logout", "Account")';
+        </script>
+        @RenderBody()
+    </head>
+    <body>
+        <span>This site is under maintenance</span>
+    </body>
+    </html>
+    }           // **************************************** END Under Maintenance page
+    else
+    {       // NOT Under Maintenance
 
 	<!DOCTYPE html>
 	<html lang="en">
@@ -179,13 +231,13 @@
 			</div>
 			<div id="header-message">| &nbsp; ACCOUNTING SYSTEM</div>
 
-		   @* @if (infoss.Models.AccountModels.IsAuthenticated())
-			{
-				*@<div id="user-greeting">
+		      @if (WebView.AuthenticationModel.IsAuthenticated())
+     {
+				<div id="user-greeting">
 					Welcome <strong>@*@infoss.Models.AccountModels.GetUserName()*@</strong> &nbsp;|&nbsp; <a href="@Url.Action("Logout", "Account")">Logout
 					</a>
 				</div>
-			@*}*@
+     }
 		</div>
 		<div data-options="region:'south',border:false" style="height: 10px; background: #E7EBF2 !important;">
 			&nbsp;
@@ -349,6 +401,7 @@
 									</li>
 									<li id="menu-item-51"><a href="#">Setting</a>
 										<ul>
+                                            <li><a href="@Url.Action("Index", "User")">User</a></li>
 											<li><a href="@Url.Action("Index", "UserAccess")">User Access Right</a></li>
 											<li><a href="#" id="menu_change_pass">Change Password</a></li>
 										</ul>
@@ -420,5 +473,5 @@
 		</div>
 	</body>
 	</html>
-
-	}   // END NOT Under Maintenance
+}
+    }   // END NOT Under Maintenance

@@ -56,7 +56,7 @@
     function GetUserAccess() {
         $.ajax({
             dataType: "json",
-            url: base_url + "UserAccess/GetUserAccessOperationalList?UserId=" + usercode + "&groupName=" + group,
+            url: base_url + "UserAccess/GetUserAccess?UserId=" + usercode + "&groupName=" + group,
             success: function (result) {
                 PopulateUserAccess(group, result);
             }
@@ -545,7 +545,7 @@
 
     // Table User List
     jQuery("#tbl_users").jqGrid({
-        url: base_url + 'UserAccess/GetUserList',
+        url: base_url + 'User/GetList',
         datatype: "json",
         colNames: ['Code', 'Name', 'Department', 'Title', 'App. GM'],
         colModel: [{ name: 'usercode', index: 'usercode', width: 80 },
@@ -575,7 +575,7 @@
             usercode = id;
             GetUserAccess();
         },
-        sortname: 'usercode',
+        sortname: 'id',
         viewrecords: true,
         gridview: true,
         shrinkToFit: false,

@@ -11,7 +11,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Validation", "Validation\Va
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestValidation", "TestValidation\TestValidation.csproj", "{6A18ED05-6179-4697-8648-B44594203DCC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OffsetPrintingSupplies", "OffsetPrintingSupplies\OffsetPrintingSupplies.csproj", "{1EA8D668-A5B2-460A-8200-C3C2E5EB9C5A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CashSales", "OffsetPrintingSupplies\CashSales.csproj", "{1EA8D668-A5B2-460A-8200-C3C2E5EB9C5A}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExtJs", "ExtJs\ExtJs.csproj", "{EDF120C7-DF97-4EA4-9E70-0D21C9C8E2AB}"
 EndProject

@@ -11,7 +11,7 @@ namespace Data.Context
 {
     public class OffsetPrintingSuppliesEntities : DbContext
     {
-        public OffsetPrintingSuppliesEntities()
+        public OffsetPrintingSuppliesEntities() : base("CashSales")
         {
             Database.SetInitializer<OffsetPrintingSuppliesEntities>(new DropCreateDatabaseIfModelChanges<OffsetPrintingSuppliesEntities>());
         }

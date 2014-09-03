@@ -25,6 +25,10 @@ namespace Validation.Validation
             {
                 cashSalesInvoice.Errors.Add("DueDate", "Tidak ada");
             }
+            else if (cashSalesInvoice.DueDate.GetValueOrDefault().Date < cashSalesInvoice.SalesDate.Date)
+            {
+                cashSalesInvoice.Errors.Add("DueDate", "Harus lebih besar atau sama dengan Sales Date");
+            }
             return cashSalesInvoice;
         }
 
@@ -33,6 +37,10 @@ namespace Validation.Validation
             if (cashSalesInvoice.ConfirmationDate == null || cashSalesInvoice.ConfirmationDate.Equals(DateTime.FromBinary(0)))
             {
                 cashSalesInvoice.Errors.Add("ConfirmationDate", "Tidak ada");
+            }
+            else if (cashSalesInvoice.ConfirmationDate.GetValueOrDefault().Date < cashSalesInvoice.SalesDate.Date)
+            {
+                cashSalesInvoice.Errors.Add("ConfirmationDate", "Harus lebih besar atau sama dengan Sales Date");
             }
             return cashSalesInvoice;
         }

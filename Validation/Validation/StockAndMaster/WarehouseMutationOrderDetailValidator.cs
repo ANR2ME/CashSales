@@ -93,7 +93,7 @@ namespace Validation.Validation
         }
 
         public WarehouseMutationOrderDetail VNonNegativeStockQuantity(WarehouseMutationOrderDetail warehouseMutationOrderDetail, IWarehouseMutationOrderService _warehouseMutationOrderService,
-                                                                      IItemService _itemService, IBarringService _barringService, IWarehouseItemService _warehouseItemService, bool CaseConfirm)
+                                                                      IItemService _itemService, /*IBarringService _barringService,*/ IWarehouseItemService _warehouseItemService, bool CaseConfirm)
         {
             WarehouseMutationOrder warehouseMutationOrder = _warehouseMutationOrderService.GetObjectById(warehouseMutationOrderDetail.WarehouseMutationOrderId);
             WarehouseItem warehouseItemFrom = _warehouseItemService.FindOrCreateObject(warehouseMutationOrder.WarehouseFromId, warehouseMutationOrderDetail.ItemId);
@@ -119,6 +119,8 @@ namespace Validation.Validation
             VNonNegativeNorZeroQuantity(warehouseMutationOrderDetail);
             if (!isValid(warehouseMutationOrderDetail)) { return warehouseMutationOrderDetail; }
             VUniqueItem(warehouseMutationOrderDetail, _warehouseMutationOrderDetailService, _itemService);
+            if (!isValid(warehouseMutationOrderDetail)) { return warehouseMutationOrderDetail; }
+            VNonNegativeStockQuantity(warehouseMutationOrderDetail, _warehouseMutationOrderService, _itemService, /*_barringService,*/ _warehouseItemService, true);
             return warehouseMutationOrderDetail;
         }
 
@@ -151,7 +153,7 @@ namespace Validation.Validation
         {
             VHasConfirmationDate(warehouseMutationOrderDetail);
             if (!isValid(warehouseMutationOrderDetail)) { return warehouseMutationOrderDetail; }
-            VNonNegativeStockQuantity(warehouseMutationOrderDetail, _warehouseMutationOrderService, _itemService, _barringService, _warehouseItemService, true);
+            VNonNegativeStockQuantity(warehouseMutationOrderDetail, _warehouseMutationOrderService, _itemService, /*_barringService,*/ _warehouseItemService, true);
             return warehouseMutationOrderDetail;
         }
 
@@ -162,7 +164,7 @@ namespace Validation.Validation
             if (!isValid(warehouseMutationOrderDetail)) { return warehouseMutationOrderDetail; }
             VHasBeenConfirmed(warehouseMutationOrderDetail);
             if (!isValid(warehouseMutationOrderDetail)) { return warehouseMutationOrderDetail; }
-            VNonNegativeStockQuantity(warehouseMutationOrderDetail, _warehouseMutationOrderService, _itemService, _barringService, _warehouseItemService, false);
+            VNonNegativeStockQuantity(warehouseMutationOrderDetail, _warehouseMutationOrderService, _itemService, /*_barringService,*/ _warehouseItemService, false);
             return warehouseMutationOrderDetail;
         }
 

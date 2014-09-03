@@ -57,48 +57,51 @@ namespace WebView
 
         public void CreateUserMenus()
         {
-            _userMenuService.CreateObject("Contact", "Master");
-            _userMenuService.CreateObject("ItemType", "Master");
-            _userMenuService.CreateObject("UoM", "Master");
-            _userMenuService.CreateObject("Quantity Pricing", "Master");
+            _userMenuService.CreateObject(Core.Constants.Constant.MenuName.Contact, Core.Constants.Constant.MenuGroupName.Master);
+            _userMenuService.CreateObject(Core.Constants.Constant.MenuName.ItemType, Core.Constants.Constant.MenuGroupName.Master);
+            _userMenuService.CreateObject(Core.Constants.Constant.MenuName.UoM, Core.Constants.Constant.MenuGroupName.Master);
+            _userMenuService.CreateObject(Core.Constants.Constant.MenuName.QuantityPricing, Core.Constants.Constant.MenuGroupName.Master);
 
-            _userMenuService.CreateObject("CashBank", "Master");
-            _userMenuService.CreateObject("CashBank Adjustment", "Master");
-            _userMenuService.CreateObject("CashBank Mutation", "Master");
-            _userMenuService.CreateObject("Cash Mutation", "Master");
-            _userMenuService.CreateObject("Payment Request", "Master");
+            _userMenuService.CreateObject(Core.Constants.Constant.MenuName.CashBank, Core.Constants.Constant.MenuGroupName.Master);
+            _userMenuService.CreateObject(Core.Constants.Constant.MenuName.CashBankAdjustment, Core.Constants.Constant.MenuGroupName.Master);
+            _userMenuService.CreateObject(Core.Constants.Constant.MenuName.CashBankMutation, Core.Constants.Constant.MenuGroupName.Master);
+            _userMenuService.CreateObject(Core.Constants.Constant.MenuName.CashMutation, Core.Constants.Constant.MenuGroupName.Master);
+            _userMenuService.CreateObject(Core.Constants.Constant.MenuName.PaymentRequest, Core.Constants.Constant.MenuGroupName.Master);
 
-            _userMenuService.CreateObject("Item", "Master");
-            _userMenuService.CreateObject("Stock Adjustment", "Master");
-            _userMenuService.CreateObject("Stock Mutation", "Master");
-            _userMenuService.CreateObject("Warehouse", "Master");
-            _userMenuService.CreateObject("WarehouseItem", "Master");
-            _userMenuService.CreateObject("Warehouse Mutation", "Master");
+            _userMenuService.CreateObject(Core.Constants.Constant.MenuName.Item, Core.Constants.Constant.MenuGroupName.Master);
+            _userMenuService.CreateObject(Core.Constants.Constant.MenuName.StockAdjustment, Core.Constants.Constant.MenuGroupName.Master);
+            _userMenuService.CreateObject(Core.Constants.Constant.MenuName.StockMutation, Core.Constants.Constant.MenuGroupName.Master);
+            _userMenuService.CreateObject(Core.Constants.Constant.MenuName.Warehouse, Core.Constants.Constant.MenuGroupName.Master);
+            _userMenuService.CreateObject(Core.Constants.Constant.MenuName.WarehouseItem, Core.Constants.Constant.MenuGroupName.Master);
+            _userMenuService.CreateObject(Core.Constants.Constant.MenuName.WarehouseMutation, Core.Constants.Constant.MenuGroupName.Master);
 
-            _userMenuService.CreateObject("Purchase Order", "Transaction");
-            _userMenuService.CreateObject("Purchase Receival", "Transaction");
-            _userMenuService.CreateObject("Purchase Invoice", "Transaction");
-            _userMenuService.CreateObject("Custom Purchase Invoice", "Transaction");
-            _userMenuService.CreateObject("Payment Voucher", "Transaction");
-            _userMenuService.CreateObject("Payable", "Transaction");
+            _userMenuService.CreateObject(Core.Constants.Constant.MenuName.PurchaseOrder, Core.Constants.Constant.MenuGroupName.Transaction);
+            _userMenuService.CreateObject(Core.Constants.Constant.MenuName.PurchaseReceival, Core.Constants.Constant.MenuGroupName.Transaction);
+            _userMenuService.CreateObject(Core.Constants.Constant.MenuName.PurchaseInvoice, Core.Constants.Constant.MenuGroupName.Transaction);
+            _userMenuService.CreateObject(Core.Constants.Constant.MenuName.CustomPurchaseInvoice, Core.Constants.Constant.MenuGroupName.Transaction);
+            _userMenuService.CreateObject(Core.Constants.Constant.MenuName.PaymentVoucher, Core.Constants.Constant.MenuGroupName.Transaction);
+            _userMenuService.CreateObject(Core.Constants.Constant.MenuName.Payable, Core.Constants.Constant.MenuGroupName.Transaction);
 
-            _userMenuService.CreateObject("Sales Order", "Transaction");
-            _userMenuService.CreateObject("Delivery Order", "Transaction");
-            _userMenuService.CreateObject("Sales Invoice", "Transaction");
-            _userMenuService.CreateObject("Cash Sales Invoice", "Transaction");
-            _userMenuService.CreateObject("Cash Sales Return", "Transaction");
-            _userMenuService.CreateObject("Retail Sales Invoice", "Transaction");
-            _userMenuService.CreateObject("Receipt Voucher", "Transaction");
-            _userMenuService.CreateObject("Receivable", "Transaction");
+            _userMenuService.CreateObject(Core.Constants.Constant.MenuName.SalesOrder, Core.Constants.Constant.MenuGroupName.Transaction);
+            _userMenuService.CreateObject(Core.Constants.Constant.MenuName.DeliveryOrder, Core.Constants.Constant.MenuGroupName.Transaction);
+            _userMenuService.CreateObject(Core.Constants.Constant.MenuName.SalesInvoice, Core.Constants.Constant.MenuGroupName.Transaction);
+            _userMenuService.CreateObject(Core.Constants.Constant.MenuName.CashSalesInvoice, Core.Constants.Constant.MenuGroupName.Transaction);
+            _userMenuService.CreateObject(Core.Constants.Constant.MenuName.CashSalesReturn, Core.Constants.Constant.MenuGroupName.Transaction);
+            _userMenuService.CreateObject(Core.Constants.Constant.MenuName.RetailSalesInvoice, Core.Constants.Constant.MenuGroupName.Transaction);
+            _userMenuService.CreateObject(Core.Constants.Constant.MenuName.ReceiptVoucher, Core.Constants.Constant.MenuGroupName.Transaction);
+            _userMenuService.CreateObject(Core.Constants.Constant.MenuName.Receivable, Core.Constants.Constant.MenuGroupName.Transaction);
 
-            _userMenuService.CreateObject("User", "Setting");
-            _userMenuService.CreateObject("User Access Right", "Setting");
-            _userMenuService.CreateObject("Change Password", "Setting");
+            _userMenuService.CreateObject(Core.Constants.Constant.MenuName.User, Core.Constants.Constant.MenuGroupName.Setting);
+            _userMenuService.CreateObject(Core.Constants.Constant.MenuName.UserAccessRight, Core.Constants.Constant.MenuGroupName.Setting);
         }
 
         public void CreateSysAdmin()
         {
-            UserAccount userAccount = _userAccountService.CreateObject("Admin", "sysadmin", "Administrator", "Administrator", true);
+            UserAccount userAccount = _userAccountService.GetObjectByUsername(Core.Constants.Constant.UserType.Admin);
+            if (userAccount == null)
+            {
+                userAccount = _userAccountService.CreateObject(Core.Constants.Constant.UserType.Admin, "sysadmin", "Administrator", "Administrator", true);
+            }
 
             var userMenus = _userMenuService.GetAll();
             foreach (var userMenu in userMenus)

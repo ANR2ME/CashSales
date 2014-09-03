@@ -65,9 +65,9 @@ namespace Service.Service
             return (warehouseMutationOrder = _validator.ValidUpdateObject(warehouseMutationOrder, _warehouseService) ? _repository.UpdateObject(warehouseMutationOrder) : warehouseMutationOrder);
         }
 
-        public WarehouseMutationOrder SoftDeleteObject(WarehouseMutationOrder warehouseMutationOrder)
+        public WarehouseMutationOrder SoftDeleteObject(WarehouseMutationOrder warehouseMutationOrder, IWarehouseMutationOrderDetailService _warehouseMutationOrderDetailService)
         {
-            return (warehouseMutationOrder = _validator.ValidDeleteObject(warehouseMutationOrder) ? _repository.SoftDeleteObject(warehouseMutationOrder) : warehouseMutationOrder);
+            return (warehouseMutationOrder = _validator.ValidDeleteObject(warehouseMutationOrder, _warehouseMutationOrderDetailService) ? _repository.SoftDeleteObject(warehouseMutationOrder) : warehouseMutationOrder);
         }
 
         public WarehouseMutationOrder ConfirmObject(WarehouseMutationOrder warehouseMutationOrder, DateTime ConfirmationDate, IWarehouseMutationOrderDetailService _warehouseMutationOrderDetailService,

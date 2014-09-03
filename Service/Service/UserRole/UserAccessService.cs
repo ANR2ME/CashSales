@@ -59,12 +59,12 @@ namespace Service.Service
         public UserAccess CreateObject(UserAccess userAccess, IUserAccountService _userAccountService, IUserMenuService _userMenuService)
         {
             userAccess.Errors = new Dictionary<String, String>();
-            return (_validator.ValidCreateObject(userAccess, _userAccountService, _userMenuService) ? _repository.CreateObject(userAccess) : userAccess);
+            return (_validator.ValidCreateObject(userAccess, _userAccountService, _userMenuService, this) ? _repository.CreateObject(userAccess) : userAccess);
         }
 
         public UserAccess UpdateObject(UserAccess userAccess, IUserAccountService _userAccountService, IUserMenuService _userMenuService)
         {
-            return (_validator.ValidUpdateObject(userAccess, _userAccountService, _userMenuService) ? _repository.UpdateObject(userAccess) : userAccess);
+            return (_validator.ValidUpdateObject(userAccess, _userAccountService, _userMenuService, this) ? _repository.UpdateObject(userAccess) : userAccess);
         }
 
         public UserAccess SoftDeleteObject(UserAccess userAccess)

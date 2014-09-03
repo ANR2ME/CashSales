@@ -9,7 +9,7 @@ namespace Core.Interface.Validation
 {
     public interface ICashSalesReturnDetailValidator
     {
-        CashSalesReturnDetail VIsNotConfirmed(CashSalesReturnDetail cashSalesReturnDetail, ICashSalesReturnService _cashSalesReturnService);
+        CashSalesReturnDetail VIsParentNotConfirmed(CashSalesReturnDetail cashSalesReturnDetail, ICashSalesReturnService _cashSalesReturnService);
         CashSalesReturnDetail VHasCashSalesReturn(CashSalesReturnDetail cashSalesReturnDetail, ICashSalesReturnService _cashSalesReturnService);
         CashSalesReturnDetail VIsValidCashSalesInvoiceDetail(CashSalesReturnDetail cashSalesReturnDetail, ICashSalesInvoiceDetailService _cashSalesInvoiceDetailService, ICashSalesReturnService _cashSalesReturnService);
         CashSalesReturnDetail VIsValidQuantity(CashSalesReturnDetail cashSalesReturnDetail, ICashSalesInvoiceDetailService _cashSalesInvoiceDetailService, ICashSalesReturnDetailService _cashSalesReturnDetailService);

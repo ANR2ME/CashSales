@@ -114,11 +114,12 @@ namespace Service.Service
                                              IReceiptVoucherService _receiptVoucherService, IReceiptVoucherDetailService _receiptVoucherDetailService, 
                                              IContactService _contactService, ICashMutationService _cashMutationService)
         {
+            retailSalesInvoice.AmountPaid = AmountPaid;
             if (_validator.ValidPaidObject(retailSalesInvoice, _cashBankService, _receiptVoucherService))
             {
                 CashBank cashBank = _cashBankService.GetObjectById((int)retailSalesInvoice.CashBankId.GetValueOrDefault());
                 retailSalesInvoice.IsBank = cashBank.IsBank;
-                retailSalesInvoice.AmountPaid = AmountPaid;
+                
                 if (!retailSalesInvoice.IsGBCH)
                 {
                     retailSalesInvoice.GBCH_No = null;

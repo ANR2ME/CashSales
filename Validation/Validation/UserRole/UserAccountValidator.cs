@@ -44,7 +44,7 @@ namespace Validation.Validation
                 UserAccount userAccount2 = _userAccountService.GetObjectById(userAccount.Id);
                 if (encOldPassword != userAccount2.Password)
                 {
-                    userAccount.Errors.Add("Generic", "OldPassword Salah");
+                    userAccount.Errors.Add("Generic", "Old Password Salah");
                 }
             }
             return userAccount;
@@ -54,13 +54,13 @@ namespace Validation.Validation
         {
             if (NewPassword == null || NewPassword.Trim() == "")
             {
-                userAccount.Errors.Add("Generic", "NewPassword Tidak boleh kosong");
+                userAccount.Errors.Add("Generic", "New Password Tidak boleh kosong");
             }
             else
             {
                 if (NewPassword.Trim() != ConfirmPassword.Trim())
                 {
-                    userAccount.Errors.Add("Generic", "ConfirmPassword Salah");
+                    userAccount.Errors.Add("Generic", "Confirm Password tidak sama dengan New Password");
                 }
             }
             return userAccount;
@@ -80,7 +80,16 @@ namespace Validation.Validation
         {
             if (userAccount.Id == LoggedId)
             {
-                userAccount.Errors.Add("UserAccount", "Tidak boleh sama dengan UserAccount anda");
+                userAccount.Errors.Add("Generic", "Tidak boleh menghapus account anda sendiri");
+            }
+            return userAccount;
+        }
+
+        public UserAccount VIsNonAdmin(UserAccount userAccount)
+        {
+            if (userAccount.IsAdmin)
+            {
+                userAccount.Errors.Add("Generic", "Tidak boleh Admin");
             }
             return userAccount;
         }
@@ -97,6 +106,8 @@ namespace Validation.Validation
 
         public UserAccount VUpdateObject(UserAccount userAccount, IUserAccountService _userAccountService)
         {
+            VIsNonAdmin(userAccount);
+            if (!isValid(userAccount)) { return userAccount; }
             VCreateObject(userAccount, _userAccountService);
             return userAccount;
         }

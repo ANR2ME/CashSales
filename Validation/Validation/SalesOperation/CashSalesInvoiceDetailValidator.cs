@@ -10,7 +10,7 @@ namespace Validation.Validation
 {
     public class CashSalesInvoiceDetailValidator : ICashSalesInvoiceDetailValidator
     {
-        public CashSalesInvoiceDetail VIsNotConfirmed(CashSalesInvoiceDetail cashSalesInvoiceDetail, ICashSalesInvoiceService _cashSalesInvoiceService)
+        public CashSalesInvoiceDetail VIsParentNotConfirmed(CashSalesInvoiceDetail cashSalesInvoiceDetail, ICashSalesInvoiceService _cashSalesInvoiceService)
         {
             CashSalesInvoice cashSalesInvoice = _cashSalesInvoiceService.GetObjectById(cashSalesInvoiceDetail.CashSalesInvoiceId);
             if (cashSalesInvoice != null)
@@ -129,6 +129,8 @@ namespace Validation.Validation
                                                       ICashSalesInvoiceDetailService _cashSalesInvoiceDetailService, IItemService _itemService, IWarehouseItemService _warehouseItemService,
                                                       IQuantityPricingService _quantityPricingService)
         {
+            VIsParentNotConfirmed(cashSalesInvoiceDetail, _cashSalesInvoiceService);
+            if (!isValid(cashSalesInvoiceDetail)) { return cashSalesInvoiceDetail; }
             VHasCashSalesInvoice(cashSalesInvoiceDetail, _cashSalesInvoiceService);
             if (!isValid(cashSalesInvoiceDetail)) { return cashSalesInvoiceDetail; }
             VIsValidQuantity(cashSalesInvoiceDetail, _cashSalesInvoiceService, _warehouseItemService);
@@ -141,7 +143,7 @@ namespace Validation.Validation
             if (!isValid(cashSalesInvoiceDetail)) { return cashSalesInvoiceDetail; }
             VUniqueItem(cashSalesInvoiceDetail, _cashSalesInvoiceDetailService, _itemService);
             if (!isValid(cashSalesInvoiceDetail)) { return cashSalesInvoiceDetail; }
-            VIsNotConfirmed(cashSalesInvoiceDetail, _cashSalesInvoiceService);
+            VConfirmObject(cashSalesInvoiceDetail, _cashSalesInvoiceService, _warehouseItemService);
             //if (!isValid(cashSalesInvoiceDetail)) { return cashSalesInvoiceDetail; }
             //VHasQuantityPricing(cashSalesInvoiceDetail, _itemService, _quantityPricingService);
             return cashSalesInvoiceDetail;
@@ -151,14 +153,14 @@ namespace Validation.Validation
                                                       ICashSalesInvoiceDetailService _cashSalesInvoiceDetailService, IItemService _itemService, IWarehouseItemService _warehouseItemService,
                                                       IQuantityPricingService _quantityPricingService)
         {
-            VIsNotConfirmed(cashSalesInvoiceDetail, _cashSalesInvoiceService);
-            if (!isValid(cashSalesInvoiceDetail)) { return cashSalesInvoiceDetail; }
+            //VIsParentNotConfirmed(cashSalesInvoiceDetail, _cashSalesInvoiceService);
+            //if (!isValid(cashSalesInvoiceDetail)) { return cashSalesInvoiceDetail; }
             return VCreateObject(cashSalesInvoiceDetail, _cashSalesInvoiceService, _cashSalesInvoiceDetailService, _itemService, _warehouseItemService, _quantityPricingService);
         }
 
         public CashSalesInvoiceDetail VDeleteObject(CashSalesInvoiceDetail cashSalesInvoiceDetail, ICashSalesInvoiceService _cashSalesInvoiceService)
         {
-            VIsNotConfirmed(cashSalesInvoiceDetail, _cashSalesInvoiceService);
+            VIsParentNotConfirmed(cashSalesInvoiceDetail, _cashSalesInvoiceService);
             return cashSalesInvoiceDetail;
         }
 

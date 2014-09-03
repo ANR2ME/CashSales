@@ -10,7 +10,7 @@ namespace Validation.Validation
 {
     public class RetailSalesInvoiceDetailValidator : IRetailSalesInvoiceDetailValidator
     {
-        public RetailSalesInvoiceDetail VIsNotConfirmed(RetailSalesInvoiceDetail retailSalesInvoiceDetail, IRetailSalesInvoiceService _retailSalesInvoiceService)
+        public RetailSalesInvoiceDetail VIsParentNotConfirmed(RetailSalesInvoiceDetail retailSalesInvoiceDetail, IRetailSalesInvoiceService _retailSalesInvoiceService)
         {
             RetailSalesInvoice retailSalesInvoice = _retailSalesInvoiceService.GetObjectById(retailSalesInvoiceDetail.RetailSalesInvoiceId);
             if (retailSalesInvoice != null)
@@ -72,9 +72,9 @@ namespace Validation.Validation
         {
             RetailSalesInvoice retailSalesInvoice = _retailSalesInvoiceService.GetObjectById(retailSalesInvoiceDetail.RetailSalesInvoiceId);
             WarehouseItem warehouseItem = _warehouseItemService.FindOrCreateObject(retailSalesInvoice.WarehouseId, retailSalesInvoiceDetail.ItemId);
-            if (retailSalesInvoiceDetail.Quantity <= 0 || retailSalesInvoiceDetail.Quantity >= warehouseItem.Quantity)
+            if (retailSalesInvoiceDetail.Quantity <= 0 || retailSalesInvoiceDetail.Quantity > warehouseItem.Quantity)
             {
-                retailSalesInvoiceDetail.Errors.Add("Quantity", "Quantity harus lebih besar dari 0 dan lebih kecil dari WarehouseItem Quantity");
+                retailSalesInvoiceDetail.Errors.Add("Quantity", "Harus lebih besar dari 0 dan lebih kecil atau sama dengan WarehouseItem Quantity");
                 return retailSalesInvoiceDetail;
             }
             return retailSalesInvoiceDetail;
@@ -113,6 +113,8 @@ namespace Validation.Validation
         public RetailSalesInvoiceDetail VCreateObject(RetailSalesInvoiceDetail retailSalesInvoiceDetail, IRetailSalesInvoiceService _retailSalesInvoiceService, 
                                                       IRetailSalesInvoiceDetailService _retailSalesInvoiceDetailService, IItemService _itemService, IWarehouseItemService _warehouseItemService)
         {
+            VIsParentNotConfirmed(retailSalesInvoiceDetail, _retailSalesInvoiceService);
+            if (!isValid(retailSalesInvoiceDetail)) { return retailSalesInvoiceDetail; }
             VHasRetailSalesInvoice(retailSalesInvoiceDetail, _retailSalesInvoiceService);
             if (!isValid(retailSalesInvoiceDetail)) { return retailSalesInvoiceDetail; }
             VIsValidQuantity(retailSalesInvoiceDetail, _retailSalesInvoiceService, _warehouseItemService);
@@ -124,19 +126,21 @@ namespace Validation.Validation
             VHasItem(retailSalesInvoiceDetail, _itemService);
             if (!isValid(retailSalesInvoiceDetail)) { return retailSalesInvoiceDetail; }
             VUniqueItem(retailSalesInvoiceDetail, _retailSalesInvoiceDetailService, _itemService);
+            if (!isValid(retailSalesInvoiceDetail)) { return retailSalesInvoiceDetail; }
+            VConfirmObject(retailSalesInvoiceDetail, _retailSalesInvoiceService, _warehouseItemService);
             return retailSalesInvoiceDetail;
         }
 
         public RetailSalesInvoiceDetail VUpdateObject(RetailSalesInvoiceDetail retailSalesInvoiceDetail, IRetailSalesInvoiceService _retailSalesInvoiceService,
                                                       IRetailSalesInvoiceDetailService _retailSalesInvoiceDetailService, IItemService _itemService, IWarehouseItemService _warehouseItemService)
         {
-            VIsNotConfirmed(retailSalesInvoiceDetail, _retailSalesInvoiceService);
+            
             return VCreateObject(retailSalesInvoiceDetail, _retailSalesInvoiceService, _retailSalesInvoiceDetailService, _itemService, _warehouseItemService);
         }
 
         public RetailSalesInvoiceDetail VDeleteObject(RetailSalesInvoiceDetail retailSalesInvoiceDetail, IRetailSalesInvoiceService _retailSalesInvoiceService)
         {
-            VIsNotConfirmed(retailSalesInvoiceDetail, _retailSalesInvoiceService);
+            VIsParentNotConfirmed(retailSalesInvoiceDetail, _retailSalesInvoiceService);
             return retailSalesInvoiceDetail;
         }
 

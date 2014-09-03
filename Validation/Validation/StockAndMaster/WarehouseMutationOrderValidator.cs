@@ -45,7 +45,7 @@ namespace Validation.Validation
             IList<WarehouseMutationOrderDetail> details = _warehouseMutationOrderDetailService.GetObjectsByWarehouseMutationOrderId(warehouseMutationOrder.Id);
             if (!details.Any())
             {
-                warehouseMutationOrder.Errors.Add("Generic", "Details tidak boleh tidak ada");
+                warehouseMutationOrder.Errors.Add("Generic", "Harus memiliki WarehouseMutationOrder Details");
             }
             return warehouseMutationOrder;
         }
@@ -73,6 +73,16 @@ namespace Validation.Validation
             if (!warehouseMutationOrder.IsConfirmed)
             {
                 warehouseMutationOrder.Errors.Add("Generic", "Harus sudah dikonfirmasi");
+            }
+            return warehouseMutationOrder;
+        }
+
+        public WarehouseMutationOrder VDontHaveDetails(WarehouseMutationOrder warehouseMutationOrder, IWarehouseMutationOrderDetailService _warehouseMutationOrderDetailService)
+        {
+            IList<WarehouseMutationOrderDetail> details = _warehouseMutationOrderDetailService.GetObjectsByWarehouseMutationOrderId(warehouseMutationOrder.Id);
+            if(details.Any())
+            {
+                warehouseMutationOrder.Errors.Add("Generic", "Tidak boleh memiliki WarehouseMutationOrder Details");
             }
             return warehouseMutationOrder;
         }
@@ -113,9 +123,10 @@ namespace Validation.Validation
             return warehouseMutationOrder;
         }
 
-        public WarehouseMutationOrder VDeleteObject(WarehouseMutationOrder warehouseMutationOrder)
+        public WarehouseMutationOrder VDeleteObject(WarehouseMutationOrder warehouseMutationOrder, IWarehouseMutationOrderDetailService _warehouseMutationOrderDetailService)
         {
             VHasNotBeenConfirmed(warehouseMutationOrder);
+            VDontHaveDetails(warehouseMutationOrder, _warehouseMutationOrderDetailService);
             return warehouseMutationOrder;
         }
 
@@ -161,10 +172,10 @@ namespace Validation.Validation
             return isValid(warehouseMutationOrder);
         }
 
-        public bool ValidDeleteObject(WarehouseMutationOrder warehouseMutationOrder)
+        public bool ValidDeleteObject(WarehouseMutationOrder warehouseMutationOrder, IWarehouseMutationOrderDetailService _warehouseMutationOrderDetailService)
         {
             warehouseMutationOrder.Errors.Clear();
-            VDeleteObject(warehouseMutationOrder);
+            VDeleteObject(warehouseMutationOrder, _warehouseMutationOrderDetailService);
             return isValid(warehouseMutationOrder);
         }
 

@@ -9,7 +9,7 @@ namespace Core.DomainModel
     {
         public int Id { get; set; }
         public int ItemId { get; set; }
-        public int PriceMutationId { get; set; }
+        //public int PriceMutationId { get; set; }
         public int CustomPurchaseInvoiceId { get; set; }
         public string Code { get; set; }
 

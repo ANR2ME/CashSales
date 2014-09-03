@@ -28,7 +28,7 @@ namespace Validation.Validation
             return customPurchaseInvoiceDetail;
         }
 
-        public CustomPurchaseInvoiceDetail VIsNotConfirmed(CustomPurchaseInvoiceDetail customPurchaseInvoiceDetail, ICustomPurchaseInvoiceService _customPurchaseInvoiceService)
+        public CustomPurchaseInvoiceDetail VIsParentNotConfirmed(CustomPurchaseInvoiceDetail customPurchaseInvoiceDetail, ICustomPurchaseInvoiceService _customPurchaseInvoiceService)
         {
             CustomPurchaseInvoice customPurchaseInvoice = _customPurchaseInvoiceService.GetObjectById(customPurchaseInvoiceDetail.CustomPurchaseInvoiceId);
             if (customPurchaseInvoice != null)
@@ -78,7 +78,7 @@ namespace Validation.Validation
             return customPurchaseInvoiceDetail;
         }
 
-        public CustomPurchaseInvoiceDetail VIsValidQuantityOrdered(CustomPurchaseInvoiceDetail customPurchaseInvoiceDetail, ICustomPurchaseInvoiceService _customPurchaseInvoiceService, IWarehouseItemService _warehouseItemService)
+        /*public CustomPurchaseInvoiceDetail VIsValidQuantityOrdered(CustomPurchaseInvoiceDetail customPurchaseInvoiceDetail, ICustomPurchaseInvoiceService _customPurchaseInvoiceService, IWarehouseItemService _warehouseItemService)
         {
             CustomPurchaseInvoice customPurchaseInvoice = _customPurchaseInvoiceService.GetObjectById(customPurchaseInvoiceDetail.CustomPurchaseInvoiceId);
             WarehouseItem warehouseItem = _warehouseItemService.FindOrCreateObject(customPurchaseInvoice.WarehouseId, customPurchaseInvoiceDetail.ItemId);
@@ -88,23 +88,20 @@ namespace Validation.Validation
                 return customPurchaseInvoiceDetail;
             }
             return customPurchaseInvoiceDetail;
-        }
+        }*/
 
-        public CustomPurchaseInvoiceDetail VIsValidQuantity(CustomPurchaseInvoiceDetail customPurchaseInvoiceDetail, ICustomPurchaseInvoiceService _customPurchaseInvoiceService, IWarehouseItemService _warehouseItemService)
+        public CustomPurchaseInvoiceDetail VIsValidQuantity(CustomPurchaseInvoiceDetail customPurchaseInvoiceDetail)
         {
-            CustomPurchaseInvoice customPurchaseInvoice = _customPurchaseInvoiceService.GetObjectById(customPurchaseInvoiceDetail.CustomPurchaseInvoiceId);
-            WarehouseItem warehouseItem = _warehouseItemService.FindOrCreateObject(customPurchaseInvoice.WarehouseId, customPurchaseInvoiceDetail.ItemId);
-            if (customPurchaseInvoiceDetail.Quantity <= 0 || customPurchaseInvoiceDetail.Quantity >= warehouseItem.Quantity)
+            if (customPurchaseInvoiceDetail.Quantity <= 0)
             {
-                customPurchaseInvoiceDetail.Errors.Add("Quantity", "Quantity harus lebih besar dari 0 dan lebih kecil dari WarehouseItem Quantity");
-                return customPurchaseInvoiceDetail;
+                customPurchaseInvoiceDetail.Errors.Add("Quantity", "Quantity harus lebih besar dari 0");
             }
             return customPurchaseInvoiceDetail;
         }
 
         public CustomPurchaseInvoiceDetail VConfirmObject(CustomPurchaseInvoiceDetail customPurchaseInvoiceDetail, ICustomPurchaseInvoiceService _customPurchaseInvoiceService, IWarehouseItemService _warehouseItemService)
         {
-            VIsValidQuantityOrdered(customPurchaseInvoiceDetail, _customPurchaseInvoiceService, _warehouseItemService);
+            //VIsValidQuantityOrdered(customPurchaseInvoiceDetail, _customPurchaseInvoiceService, _warehouseItemService);
             return customPurchaseInvoiceDetail;
         }
 
@@ -117,7 +114,7 @@ namespace Validation.Validation
         public CustomPurchaseInvoiceDetail VCreateObject(CustomPurchaseInvoiceDetail customPurchaseInvoiceDetail, ICustomPurchaseInvoiceService _customPurchaseInvoiceService, 
                                                       ICustomPurchaseInvoiceDetailService _customPurchaseInvoiceDetailService, IItemService _itemService, IWarehouseItemService _warehouseItemService)
         {
-            VIsNotConfirmed(customPurchaseInvoiceDetail, _customPurchaseInvoiceService);
+            VIsParentNotConfirmed(customPurchaseInvoiceDetail, _customPurchaseInvoiceService);
             if (!isValid(customPurchaseInvoiceDetail)) { return customPurchaseInvoiceDetail; }
             VHasItem(customPurchaseInvoiceDetail, _itemService);
             if (!isValid(customPurchaseInvoiceDetail)) { return customPurchaseInvoiceDetail; }
@@ -125,7 +122,7 @@ namespace Validation.Validation
             if (!isValid(customPurchaseInvoiceDetail)) { return customPurchaseInvoiceDetail; }
             VHasCustomPurchaseInvoice(customPurchaseInvoiceDetail, _customPurchaseInvoiceService);
             if (!isValid(customPurchaseInvoiceDetail)) { return customPurchaseInvoiceDetail; }
-            VIsValidQuantity(customPurchaseInvoiceDetail, _customPurchaseInvoiceService, _warehouseItemService);
+            VIsValidQuantity(customPurchaseInvoiceDetail);
             if (!isValid(customPurchaseInvoiceDetail)) { return customPurchaseInvoiceDetail; }
             VIsValidListedUnitPrice(customPurchaseInvoiceDetail);
             if (!isValid(customPurchaseInvoiceDetail)) { return customPurchaseInvoiceDetail; }
@@ -143,7 +140,7 @@ namespace Validation.Validation
 
         public CustomPurchaseInvoiceDetail VDeleteObject(CustomPurchaseInvoiceDetail customPurchaseInvoiceDetail, ICustomPurchaseInvoiceService _customPurchaseInvoiceService)
         {
-            VIsNotConfirmed(customPurchaseInvoiceDetail, _customPurchaseInvoiceService);
+            VIsParentNotConfirmed(customPurchaseInvoiceDetail, _customPurchaseInvoiceService);
             return customPurchaseInvoiceDetail;
         }
 

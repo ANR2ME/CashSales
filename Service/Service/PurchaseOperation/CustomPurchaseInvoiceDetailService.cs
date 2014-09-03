@@ -51,37 +51,37 @@ namespace Service.Service
         }
 
         public CustomPurchaseInvoiceDetail CreateObject(CustomPurchaseInvoiceDetail customPurchaseInvoiceDetail, ICustomPurchaseInvoiceService _customPurchaseInvoiceService, 
-                                                     IItemService _itemService, IWarehouseItemService _warehouseItemService, IPriceMutationService _priceMutationService)
+                                                     IItemService _itemService, IWarehouseItemService _warehouseItemService)
         {
             customPurchaseInvoiceDetail.Errors = new Dictionary<String, String>();
             if(_validator.ValidCreateObject(customPurchaseInvoiceDetail, _customPurchaseInvoiceService, this, _itemService, _warehouseItemService))
             {
                 Item item = _itemService.GetObjectById(customPurchaseInvoiceDetail.ItemId);
-                PriceMutation priceMutation = _priceMutationService.GetObjectById(item.PriceMutationId);
                 CustomPurchaseInvoice customPurchaseInvoice = _customPurchaseInvoiceService.GetObjectById(customPurchaseInvoiceDetail.CustomPurchaseInvoiceId);
-                customPurchaseInvoiceDetail.PriceMutationId = item.PriceMutationId;
                 customPurchaseInvoiceDetail.Price = customPurchaseInvoiceDetail.ListedUnitPrice * (100 - customPurchaseInvoiceDetail.Discount) / 100;
-                customPurchaseInvoiceDetail.Amount = priceMutation.Amount * customPurchaseInvoiceDetail.Quantity;
+                customPurchaseInvoiceDetail.Amount = customPurchaseInvoiceDetail.Price * customPurchaseInvoiceDetail.Quantity;
+                customPurchaseInvoiceDetail.CoGS = customPurchaseInvoiceDetail.Quantity * _itemService.CalculateAvgPrice(item, customPurchaseInvoiceDetail.Quantity, customPurchaseInvoiceDetail.Price); 
                 customPurchaseInvoiceDetail = _repository.CreateObject(customPurchaseInvoiceDetail);
                 customPurchaseInvoice.Total = CalculateTotal(customPurchaseInvoiceDetail.CustomPurchaseInvoiceId);
+                customPurchaseInvoice.CoGS = CalculateCoGS(customPurchaseInvoiceDetail.CustomPurchaseInvoiceId);
                 _customPurchaseInvoiceService.GetRepository().Update(customPurchaseInvoice);
             }
             return customPurchaseInvoiceDetail;
         }
 
         public CustomPurchaseInvoiceDetail UpdateObject(CustomPurchaseInvoiceDetail customPurchaseInvoiceDetail, ICustomPurchaseInvoiceService _customPurchaseInvoiceService,
-                                                     IItemService _itemService, IWarehouseItemService _warehouseItemService, IPriceMutationService _priceMutationService)
+                                                     IItemService _itemService, IWarehouseItemService _warehouseItemService)
         {
             if (_validator.ValidUpdateObject(customPurchaseInvoiceDetail, _customPurchaseInvoiceService, this, _itemService, _warehouseItemService))
             {
                 Item item = _itemService.GetObjectById(customPurchaseInvoiceDetail.ItemId);
-                PriceMutation priceMutation = _priceMutationService.GetObjectById(item.PriceMutationId);
                 CustomPurchaseInvoice customPurchaseInvoice = _customPurchaseInvoiceService.GetObjectById(customPurchaseInvoiceDetail.CustomPurchaseInvoiceId);
-                customPurchaseInvoiceDetail.PriceMutationId = item.PriceMutationId;
                 customPurchaseInvoiceDetail.Price = customPurchaseInvoiceDetail.ListedUnitPrice * (100 - customPurchaseInvoiceDetail.Discount) / 100;
-                customPurchaseInvoiceDetail.Amount = priceMutation.Amount * customPurchaseInvoiceDetail.Quantity;
+                customPurchaseInvoiceDetail.Amount = customPurchaseInvoiceDetail.Price * customPurchaseInvoiceDetail.Quantity;
+                customPurchaseInvoiceDetail.CoGS = customPurchaseInvoiceDetail.Quantity * _itemService.CalculateAvgPrice(item, customPurchaseInvoiceDetail.Quantity, customPurchaseInvoiceDetail.Price); 
                 customPurchaseInvoiceDetail = _repository.UpdateObject(customPurchaseInvoiceDetail);
                 customPurchaseInvoice.Total = CalculateTotal(customPurchaseInvoiceDetail.CustomPurchaseInvoiceId);
+                customPurchaseInvoice.CoGS = CalculateCoGS(customPurchaseInvoiceDetail.CustomPurchaseInvoiceId);
                 _customPurchaseInvoiceService.GetRepository().Update(customPurchaseInvoice);
             }
             return customPurchaseInvoiceDetail;
@@ -109,11 +109,16 @@ namespace Service.Service
                     WarehouseItemId = warehouseItem.Id
                 };
 
-                item.SellingPrice = customPurchaseInvoiceDetail.Price * (100 + item.Margin) / 100;
+                decimal hiPrice = GetHighestPrice(customPurchaseInvoice.Id, customPurchaseInvoiceDetail.ItemId);
+                decimal oldSellingPrice = item.SellingPrice;
+                item.SellingPrice = ((hiPrice > customPurchaseInvoiceDetail.Price) ? hiPrice : customPurchaseInvoiceDetail.Price) * (100 + item.Margin) / 100;
                 decimal itemPrice = customPurchaseInvoiceDetail.Amount / customPurchaseInvoiceDetail.Quantity;
                 item.AvgPrice = _itemService.CalculateAndUpdateAvgPrice(item, customPurchaseInvoiceDetail.Quantity, itemPrice);
 
-                PriceMutation priceMutation = _priceMutationService.CreateObject(item.Id, item.SellingPrice, DateTime.Now);
+                if (item.SellingPrice != oldSellingPrice)
+                {
+                    PriceMutation priceMutation = _priceMutationService.CreateObject(item.Id, item.SellingPrice, DateTime.Now);
+                }
 
                 stockMutation = _stockMutationService.CreateObject(stockMutation, _warehouseService, _warehouseItemService, _itemService, _barringService);
                 stockMutation.CreatedAt = (DateTime)customPurchaseInvoice.ConfirmationDate.GetValueOrDefault();
@@ -131,12 +136,18 @@ namespace Service.Service
             if (_validator.ValidUnconfirmObject(customPurchaseInvoiceDetail))
             {
                 Item item = _itemService.GetObjectById(customPurchaseInvoiceDetail.ItemId);
-                CustomPurchaseInvoiceDetail hiCustomPurchaseInvoiceDetail = GetAll().Where(x => x.ItemId == item.Id).OrderByDescending(x => x.Price).FirstOrDefault();
-                item.SellingPrice = hiCustomPurchaseInvoiceDetail.Price * (100 + item.Margin) / 100;
+                //CustomPurchaseInvoiceDetail hiCustomPurchaseInvoiceDetail = GetAll().Where(x => x.ItemId == item.Id).OrderByDescending(x => x.Price).FirstOrDefault();
+                decimal hiPrice = GetHighestPrice(customPurchaseInvoiceDetail.CustomPurchaseInvoiceId, customPurchaseInvoiceDetail.ItemId);
+                decimal oldSellingPrice = item.SellingPrice;
+                
+                item.SellingPrice = hiPrice * (100 + item.Margin) / 100;
                 decimal itemPrice = customPurchaseInvoiceDetail.Amount / customPurchaseInvoiceDetail.Quantity;
                 item.AvgPrice = _itemService.CalculateAndUpdateAvgPrice(item, customPurchaseInvoiceDetail.Quantity * (-1), itemPrice);
 
-                PriceMutation priceMutation = _priceMutationService.CreateObject(item.Id, item.SellingPrice, DateTime.Now);
+                if (item.SellingPrice != oldSellingPrice)
+                {
+                    PriceMutation priceMutation = _priceMutationService.CreateObject(item.Id, item.SellingPrice, DateTime.Now);
+                }
 
                 IList<StockMutation> stockMutations = _stockMutationService.GetObjectsBySourceDocumentDetailForItem(customPurchaseInvoiceDetail.ItemId, Core.Constants.Constant.SourceDocumentDetailType.CustomPurchaseInvoiceDetail, customPurchaseInvoiceDetail.Id);
                 foreach (var stockMutation in stockMutations)
@@ -158,6 +169,7 @@ namespace Service.Service
                 CustomPurchaseInvoice customPurchaseInvoice = _customPurchaseInvoiceService.GetObjectById(customPurchaseInvoiceDetail.CustomPurchaseInvoiceId);
                 _repository.SoftDeleteObject(customPurchaseInvoiceDetail);
                 customPurchaseInvoice.Total = CalculateTotal(customPurchaseInvoiceDetail.CustomPurchaseInvoiceId);
+                customPurchaseInvoice.CoGS = CalculateCoGS(customPurchaseInvoiceDetail.CustomPurchaseInvoiceId);
                 _customPurchaseInvoiceService.GetRepository().Update(customPurchaseInvoice);
             }
             return customPurchaseInvoiceDetail;
@@ -178,5 +190,37 @@ namespace Service.Service
             }
             return Total;
         }
+
+        public decimal CalculateCoGS(int CustomPurchaseInvoiceId)
+        {
+            IList<CustomPurchaseInvoiceDetail> customPurchaseInvoiceDetails = GetObjectsByCustomPurchaseInvoiceId(CustomPurchaseInvoiceId);
+            decimal Total = 0;
+            foreach (var customPurchaseInvoiceDetail in customPurchaseInvoiceDetails)
+            {
+                Total += customPurchaseInvoiceDetail.CoGS;
+            }
+            return Total;
+        }
+
+        public decimal GetHighestPrice(int CustomPurchaseInvoiceId, int ItemId)
+        {
+            IList<CustomPurchaseInvoiceDetail> customPurchaseInvoiceDetails = GetObjectsByCustomPurchaseInvoiceId(CustomPurchaseInvoiceId);
+            
+            decimal Price = 0;
+            /*foreach (var customPurchaseInvoiceDetail in customPurchaseInvoiceDetails)
+            {
+                if (customPurchaseInvoiceDetail.ItemId == ItemId && Price < customPurchaseInvoiceDetail.Price)
+                {
+                    Price = customPurchaseInvoiceDetail.Price;
+                };
+            }*/
+            CustomPurchaseInvoiceDetail hiCustomPurchaseInvoiceDetail = GetQueryable().Where(x => x.ItemId == ItemId).OrderByDescending(x => x.Price).FirstOrDefault();
+            if (hiCustomPurchaseInvoiceDetail != null)
+            {
+                Price = hiCustomPurchaseInvoiceDetail.Price;
+            }
+            return Price;
+        }
+
     }
 }

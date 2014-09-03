@@ -120,12 +120,13 @@ namespace Service.Service
                                              IReceiptVoucherService _receiptVoucherService, IReceiptVoucherDetailService _receiptVoucherDetailService,
                                              IContactService _contactService, ICashMutationService _cashMutationService, ICashSalesReturnService _cashSalesReturnService)
         {
+            cashSalesInvoice.AmountPaid = AmountPaid;
+            cashSalesInvoice.Allowance = Allowance;
             if (_validator.ValidPaidObject(cashSalesInvoice, _cashBankService, _receiptVoucherService, _cashSalesReturnService))
             {
                 CashBank cashBank = _cashBankService.GetObjectById((int)cashSalesInvoice.CashBankId.GetValueOrDefault());
                 cashSalesInvoice.IsBank = cashBank.IsBank;
-                cashSalesInvoice.AmountPaid = AmountPaid;
-                cashSalesInvoice.Allowance = Allowance;
+                
                 if (cashSalesInvoice.AmountPaid == cashSalesInvoice.Total)
                 {
                     cashSalesInvoice.IsFullPayment = true;

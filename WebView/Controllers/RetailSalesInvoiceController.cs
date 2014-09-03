@@ -111,6 +111,7 @@ namespace WebView.Controllers
                              model.IsFullPayment,
                              model.Total,
                              model.CoGS,
+                             profitloss = (model.IsConfirmed ? (Nullable<decimal>)((model.Total * (100 - model.Tax)/100) - model.CoGS) : null),
                              model.WarehouseId,
                              warehouse = model.Warehouse.Name,
                              model.CreatedAt,
@@ -169,6 +170,7 @@ namespace WebView.Controllers
                             model.IsFullPayment,
                             model.Total,
                             model.CoGS,
+                            model.profitloss,
                             model.WarehouseId,
                             model.warehouse,
                             model.CreatedAt,
@@ -515,7 +517,9 @@ namespace WebView.Controllers
                 }
 
                 var data = _retailSalesInvoiceService.GetObjectById(model.Id);
-                model = _retailSalesInvoiceService.ConfirmObject(data, model.ConfirmationDate.Value, data.ContactId, _retailSalesInvoiceDetailService, 
+                data.Discount = model.Discount;
+                data.Tax = model.Tax;
+                model = _retailSalesInvoiceService.ConfirmObject(data, model.ConfirmationDate.GetValueOrDefault(), data.ContactId, _retailSalesInvoiceDetailService, 
                                                     _contactService, _priceMutationService, _receivableService, _retailSalesInvoiceService, _warehouseItemService, 
                                                     _warehouseService, _itemService, _barringService, _stockMutationService);
             }

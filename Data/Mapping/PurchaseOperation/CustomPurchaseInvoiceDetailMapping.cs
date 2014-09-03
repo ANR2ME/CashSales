@@ -16,10 +16,6 @@ namespace Data.Mapping
                 .WithMany(cpi => cpi.RetailPurchaseinvoiceDetails)
                 .HasForeignKey(cpid => cpid.CustomPurchaseInvoiceId)
                 .WillCascadeOnDelete(true); // Need to be True if CustomPurchaseInvoice table is deleted first (ie. when CashBank table deleted leading to CustomPurchaseInvoice deletion also)
-            HasRequired(cpid => cpid.PriceMutation)
-                .WithMany()
-                .HasForeignKey(cpid => cpid.PriceMutationId)
-                .WillCascadeOnDelete(false);
             Ignore(cpid => cpid.Errors);
         }
     }

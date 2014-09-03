@@ -11,12 +11,12 @@ namespace Core.Interface.Validation
     {
         CustomPurchaseInvoiceDetail VIsValidDiscount(CustomPurchaseInvoiceDetail customPurchaseInvoiceDetail);
         CustomPurchaseInvoiceDetail VIsValidListedUnitPrice(CustomPurchaseInvoiceDetail customPurchaseInvoiceDetail);
-        CustomPurchaseInvoiceDetail VIsNotConfirmed(CustomPurchaseInvoiceDetail customPurchaseInvoiceDetail, ICustomPurchaseInvoiceService _customPurchaseInvoiceService);
+        CustomPurchaseInvoiceDetail VIsParentNotConfirmed(CustomPurchaseInvoiceDetail customPurchaseInvoiceDetail, ICustomPurchaseInvoiceService _customPurchaseInvoiceService);
         CustomPurchaseInvoiceDetail VHasCustomPurchaseInvoice(CustomPurchaseInvoiceDetail customPurchaseInvoiceDetail, ICustomPurchaseInvoiceService _customPurchaseInvoiceService);
         CustomPurchaseInvoiceDetail VHasItem(CustomPurchaseInvoiceDetail customPurchaseInvoiceDetail, IItemService _itemService);
         CustomPurchaseInvoiceDetail VUniqueItem(CustomPurchaseInvoiceDetail customPurchaseInvoiceDetail, ICustomPurchaseInvoiceDetailService _customPurchaseInvoiceDetailService, IItemService _itemService);
-        CustomPurchaseInvoiceDetail VIsValidQuantityOrdered(CustomPurchaseInvoiceDetail customPurchaseInvoiceDetail, ICustomPurchaseInvoiceService _customPurchaseInvoiceService, IWarehouseItemService _warehouseItemService);
-        CustomPurchaseInvoiceDetail VIsValidQuantity(CustomPurchaseInvoiceDetail customPurchaseInvoiceDetail, ICustomPurchaseInvoiceService _customPurchaseInvoiceService, IWarehouseItemService _warehouseItemService);
+        //CustomPurchaseInvoiceDetail VIsValidQuantityOrdered(CustomPurchaseInvoiceDetail customPurchaseInvoiceDetail, ICustomPurchaseInvoiceService _customPurchaseInvoiceService, IWarehouseItemService _warehouseItemService);
+        CustomPurchaseInvoiceDetail VIsValidQuantity(CustomPurchaseInvoiceDetail customPurchaseInvoiceDetail);
 
         CustomPurchaseInvoiceDetail VConfirmObject(CustomPurchaseInvoiceDetail customPurchaseInvoiceDetail, ICustomPurchaseInvoiceService _customPurchaseInvoiceService, IWarehouseItemService _warehouseItemService);
         CustomPurchaseInvoiceDetail VUnconfirmObject(CustomPurchaseInvoiceDetail customPurchaseInvoiceDetail);

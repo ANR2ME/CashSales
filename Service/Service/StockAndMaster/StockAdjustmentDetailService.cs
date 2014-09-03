@@ -128,5 +128,7 @@ namespace Service.Service
             }
             return stockAdjustmentDetail;
         }
+        
+
     }
 }

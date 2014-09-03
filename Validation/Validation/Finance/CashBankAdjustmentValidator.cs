@@ -61,16 +61,16 @@ namespace Validation.Validation
             CashBank cashBank = _cashBankService.GetObjectById(cashBankAdjustment.CashBankId);
             if (CaseConfirm && cashBankAdjustment.Amount < 0)
             {
-                if (cashBank.Amount - cashBankAdjustment.Amount < 0)
+                if (cashBank.Amount + cashBankAdjustment.Amount < 0)
                 {
-                    cashBankAdjustment.Errors.Add("Generic", "CashBank.Amount tidak boleh kurang dari adjustment amount");
+                    cashBankAdjustment.Errors.Add("Generic", "Final CashBank Amount tidak boleh kurang dari 0");
                 }
             }
             else if (!CaseConfirm && cashBankAdjustment.Amount > 0)
             {
                 if (cashBank.Amount - cashBankAdjustment.Amount < 0)
                 {
-                    cashBankAdjustment.Errors.Add("Generic", "CashBank.Amount tidak boleh kurang dari adjustment amount");
+                    cashBankAdjustment.Errors.Add("Generic", "Adjustment Amount tidak boleh lebih besar dari CashBank Amount");
                 }
             }
             return cashBankAdjustment;

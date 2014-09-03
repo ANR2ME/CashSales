@@ -147,7 +147,7 @@ namespace Service.Service
             _repository.CreateObject(sourceCashMutation);
 
             CashMutation targetCashMutation = new CashMutation();
-            targetCashMutation.CashBankId = sourceCashBank.Id;
+            targetCashMutation.CashBankId = targetCashBank.Id;
             targetCashMutation.Amount = Math.Abs(cashBankMutation.Amount);
             targetCashMutation.MutationDate = (DateTime)cashBankMutation.ConfirmationDate.GetValueOrDefault();
             targetCashMutation.SourceDocumentType = Constant.SourceDocumentType.CashBankMutation;

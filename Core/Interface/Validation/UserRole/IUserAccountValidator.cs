@@ -15,6 +15,7 @@ namespace Core.Interface.Validation
         UserAccount VIsCorrectOldPassword(UserAccount userAccount, string OldPassword, IUserAccountService _userAccountService);
         UserAccount VIsCorrectNewPassword(UserAccount userAccount, string NewPassword, string ConfirmPassword);
         UserAccount VIsValidDeletedId(UserAccount userAccount, int LoggedId);
+        UserAccount VIsNonAdmin(UserAccount userAccount);
         UserAccount VHasUniqueUsername(UserAccount userAccount, IUserAccountService _userAccountService);
         UserAccount VCreateObject(UserAccount userAccount, IUserAccountService _userAccountService);
         UserAccount VUpdateObject(UserAccount userAccount, IUserAccountService _userAccountService);

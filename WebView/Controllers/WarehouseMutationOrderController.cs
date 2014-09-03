@@ -369,7 +369,7 @@ namespace WebView.Controllers
                 }
 
                 var data = _warehouseMutationOrderService.GetObjectById(model.Id);
-                model = _warehouseMutationOrderService.SoftDeleteObject(data);
+                model = _warehouseMutationOrderService.SoftDeleteObject(data, _warehouseMutationOrderDetailService);
             }
             catch (Exception ex)
             {

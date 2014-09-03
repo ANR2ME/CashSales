@@ -59,7 +59,17 @@ namespace Validation.Validation
             }
             return stockAdjustmentDetail;
         }
-        
+
+        public StockAdjustmentDetail VNonNegativeItemAvgPrice(StockAdjustmentDetail stockAdjustmentDetail, IItemService _itemService) 
+        {
+            Item item = _itemService.GetObjectById(stockAdjustmentDetail.ItemId);
+            decimal AvgPrice = _itemService.CalculateAvgPrice(item, stockAdjustmentDetail.Quantity, stockAdjustmentDetail.Price);
+            if (AvgPrice < 0)
+            {
+                stockAdjustmentDetail.Errors.Add("Generic", "Item AvgPrice Tidak boleh menjadi Negatif");
+            }
+            return stockAdjustmentDetail;
+        }
 
         public StockAdjustmentDetail VUniqueItem(StockAdjustmentDetail stockAdjustmentDetail, IStockAdjustmentDetailService _stockAdjustmentDetailService, IItemService _itemService)
         {
@@ -141,6 +151,8 @@ namespace Validation.Validation
             VNonZeroQuantity(stockAdjustmentDetail);
             if (!isValid(stockAdjustmentDetail)) { return stockAdjustmentDetail; }
             VNonNegativePrice(stockAdjustmentDetail); // VNonZeroNorNegativePrice
+            if (!isValid(stockAdjustmentDetail)) { return stockAdjustmentDetail; }
+            VNonNegativeItemAvgPrice(stockAdjustmentDetail, _itemService); // VNonZeroNorNegativePrice
             if (!isValid(stockAdjustmentDetail)) { return stockAdjustmentDetail; }
             VUniqueItem(stockAdjustmentDetail, _stockAdjustmentDetailService, _itemService);
             return stockAdjustmentDetail;

@@ -10,7 +10,7 @@ namespace Validation.Validation
 {
     public class RetailPurchaseInvoiceDetailValidator : IRetailPurchaseInvoiceDetailValidator
     {
-        public RetailPurchaseInvoiceDetail VIsNotConfirmed(RetailPurchaseInvoiceDetail retailPurchaseInvoiceDetail, IRetailPurchaseInvoiceService _retailPurchaseInvoiceService)
+        public RetailPurchaseInvoiceDetail VIsParentNotConfirmed(RetailPurchaseInvoiceDetail retailPurchaseInvoiceDetail, IRetailPurchaseInvoiceService _retailPurchaseInvoiceService)
         {
             RetailPurchaseInvoice retailPurchaseInvoice = _retailPurchaseInvoiceService.GetObjectById(retailPurchaseInvoiceDetail.RetailPurchaseInvoiceId);
             if (retailPurchaseInvoice != null)
@@ -95,6 +95,8 @@ namespace Validation.Validation
         public RetailPurchaseInvoiceDetail VCreateObject(RetailPurchaseInvoiceDetail retailPurchaseInvoiceDetail, IRetailPurchaseInvoiceService _retailPurchaseInvoiceService, 
                                                       IRetailPurchaseInvoiceDetailService _retailPurchaseInvoiceDetailService, IItemService _itemService, IWarehouseItemService _warehouseItemService)
         {
+            VIsParentNotConfirmed(retailPurchaseInvoiceDetail, _retailPurchaseInvoiceService);
+            if (!isValid(retailPurchaseInvoiceDetail)) { return retailPurchaseInvoiceDetail; }
             VHasRetailPurchaseInvoice(retailPurchaseInvoiceDetail, _retailPurchaseInvoiceService);
             if (!isValid(retailPurchaseInvoiceDetail)) { return retailPurchaseInvoiceDetail; }
             VIsValidQuantity(retailPurchaseInvoiceDetail, _retailPurchaseInvoiceService, _warehouseItemService);
@@ -113,7 +115,7 @@ namespace Validation.Validation
 
         public RetailPurchaseInvoiceDetail VDeleteObject(RetailPurchaseInvoiceDetail retailPurchaseInvoiceDetail, IRetailPurchaseInvoiceService _retailPurchaseInvoiceService)
         {
-            VIsNotConfirmed(retailPurchaseInvoiceDetail, _retailPurchaseInvoiceService);
+            VIsParentNotConfirmed(retailPurchaseInvoiceDetail, _retailPurchaseInvoiceService);
             return retailPurchaseInvoiceDetail;
         }
 

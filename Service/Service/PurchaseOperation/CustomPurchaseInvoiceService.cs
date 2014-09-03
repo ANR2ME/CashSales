@@ -116,11 +116,12 @@ namespace Service.Service
         public CustomPurchaseInvoice PaidObject(CustomPurchaseInvoice customPurchaseInvoice, decimal AmountPaid, ICashBankService _cashBankService, IPayableService _payableService, 
                                              IPaymentVoucherService _paymentVoucherService, IPaymentVoucherDetailService _paymentVoucherDetailService, IContactService _contactService, ICashMutationService _cashMutationService)
         {
+            customPurchaseInvoice.AmountPaid = AmountPaid;
             if (_validator.ValidPaidObject(customPurchaseInvoice, _cashBankService, _paymentVoucherService))
             {
                 CashBank cashBank = _cashBankService.GetObjectById((int)customPurchaseInvoice.CashBankId.GetValueOrDefault());
                 customPurchaseInvoice.IsBank = cashBank.IsBank;
-                customPurchaseInvoice.AmountPaid = AmountPaid;
+                
                 if (!customPurchaseInvoice.IsGBCH)
                 {
                     customPurchaseInvoice.GBCH_No = null;

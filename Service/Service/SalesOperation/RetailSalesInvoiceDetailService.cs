@@ -74,6 +74,7 @@ namespace Service.Service
                     retailSalesInvoiceDetail.PriceMutationId = item.PriceMutationId;
                     retailSalesInvoiceDetail.Amount = (priceMutation.Amount * retailSalesInvoiceDetail.Quantity) * (100 - retailSalesInvoiceDetail.Discount) / 100;
                 }
+                retailSalesInvoiceDetail.CoGS = retailSalesInvoiceDetail.Quantity * item.AvgPrice; 
 
                 retailSalesInvoiceDetail = _repository.CreateObject(retailSalesInvoiceDetail);
                 if (retailSalesInvoiceDetail.IsManualPriceAssignment)
@@ -83,6 +84,7 @@ namespace Service.Service
                 }
 
                 retailSalesInvoice.Total = CalculateTotal(retailSalesInvoice.Id);
+                retailSalesInvoice.Total = CalculateCoGS(retailSalesInvoice.Id);
                 _retailSalesInvoiceService.GetRepository().Update(retailSalesInvoice);
             }
             return retailSalesInvoiceDetail;
@@ -111,6 +113,7 @@ namespace Service.Service
                     retailSalesInvoiceDetail.PriceMutationId = item.PriceMutationId;
                     retailSalesInvoiceDetail.Amount = (priceMutation.Amount * retailSalesInvoiceDetail.Quantity) * (100 - retailSalesInvoiceDetail.Discount) / 100;
                 }
+                retailSalesInvoiceDetail.CoGS = retailSalesInvoiceDetail.Quantity * item.AvgPrice;
 
                 retailSalesInvoiceDetail = _repository.UpdateObject(retailSalesInvoiceDetail);
                 if (retailSalesInvoiceDetail.IsManualPriceAssignment)
@@ -120,6 +123,7 @@ namespace Service.Service
                 }
 
                 retailSalesInvoice.Total = CalculateTotal(retailSalesInvoice.Id);
+                retailSalesInvoice.Total = CalculateCoGS(retailSalesInvoice.Id);
                 _retailSalesInvoiceService.GetRepository().Update(retailSalesInvoice);
             }
             return retailSalesInvoiceDetail;
@@ -181,6 +185,7 @@ namespace Service.Service
                 RetailSalesInvoice retailSalesInvoice = _retailSalesInvoiceService.GetObjectById(retailSalesInvoiceDetail.RetailSalesInvoiceId);
                 _repository.SoftDeleteObject(retailSalesInvoiceDetail);
                 retailSalesInvoice.Total = CalculateTotal(retailSalesInvoice.Id);
+                retailSalesInvoice.Total = CalculateCoGS(retailSalesInvoice.Id);
                 _retailSalesInvoiceService.GetRepository().Update(retailSalesInvoice);
             }
             return retailSalesInvoiceDetail;
@@ -201,5 +206,17 @@ namespace Service.Service
             }
             return Total;
         }
+
+        public decimal CalculateCoGS(int RetailSalesInvoiceId)
+        {
+            IList<RetailSalesInvoiceDetail> retailSalesInvoiceDetails = GetObjectsByRetailSalesInvoiceId(RetailSalesInvoiceId);
+            decimal Total = 0;
+            foreach (var retailSalesInvoiceDetail in retailSalesInvoiceDetails)
+            {
+                Total += retailSalesInvoiceDetail.CoGS;
+            }
+            return Total;
+        }
+
     }
 }

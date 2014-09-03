@@ -240,8 +240,8 @@ namespace TestValidation
             };
             user = _userAccountService.CreateObject(user);
 
-            menudata = _userMenuService.CreateObject("Data", "Master");
-            menufinance = _userMenuService.CreateObject("Finance", "Master");
+            menudata = _userMenuService.CreateObject(Core.Constants.Constant.MenuName.Contact, Core.Constants.Constant.MenuGroupName.Master);
+            menufinance = _userMenuService.CreateObject(Core.Constants.Constant.MenuName.ItemType, Core.Constants.Constant.MenuGroupName.Master);
 
             admindata = new UserAccess()
             {

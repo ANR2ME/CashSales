@@ -32,17 +32,29 @@ namespace Validation.Validation
             return userAccess;
         }
 
-        public UserAccess VCreateObject(UserAccess userAccess, IUserAccountService _userAccountService, IUserMenuService _userMenuService)
+        public UserAccess VHasUniqueUserMenuAndUserAccountCombination(UserAccess userAccess, IUserAccessService _userAccessService)
+        {
+            UserAccess userAccess2 = _userAccessService.GetObjectByUserAccountIdAndUserMenuId(userAccess.UserAccountId, userAccess.UserMenuId);
+            if (userAccess2 != null)
+            {
+                userAccess.Errors.Add("Generic", "Kombinasi UserAccount dan UserMenu sudah ada");
+            }
+            return userAccess;
+        }
+
+        public UserAccess VCreateObject(UserAccess userAccess, IUserAccountService _userAccountService, IUserMenuService _userMenuService, IUserAccessService _userAccessService)
         {
             VIsValidUserAccount(userAccess, _userAccountService);
             if (!isValid(userAccess)) { return userAccess; }
             VIsValidUserMenu(userAccess, _userMenuService);
+            if (!isValid(userAccess)) { return userAccess; }
+            VHasUniqueUserMenuAndUserAccountCombination(userAccess, _userAccessService);
             return userAccess;
         }
 
-        public UserAccess VUpdateObject(UserAccess userAccess, IUserAccountService _userAccountService, IUserMenuService _userMenuService)
+        public UserAccess VUpdateObject(UserAccess userAccess, IUserAccountService _userAccountService, IUserMenuService _userMenuService, IUserAccessService _userAccessService)
         {
-            return VCreateObject(userAccess, _userAccountService, _userMenuService);
+            return VCreateObject(userAccess, _userAccountService, _userMenuService, _userAccessService);
         }
 
         public UserAccess VDeleteObject(UserAccess userAccess)
@@ -50,15 +62,15 @@ namespace Validation.Validation
             return userAccess;
         }
 
-        public bool ValidCreateObject(UserAccess userAccess, IUserAccountService _userAccountService, IUserMenuService _userMenuService)
+        public bool ValidCreateObject(UserAccess userAccess, IUserAccountService _userAccountService, IUserMenuService _userMenuService, IUserAccessService _userAccessService)
         {
-            VCreateObject(userAccess, _userAccountService, _userMenuService);
+            VCreateObject(userAccess, _userAccountService, _userMenuService, _userAccessService);
             return isValid(userAccess);
         }
 
-        public bool ValidUpdateObject(UserAccess userAccess, IUserAccountService _userAccountService, IUserMenuService _userMenuService)
+        public bool ValidUpdateObject(UserAccess userAccess, IUserAccountService _userAccountService, IUserMenuService _userMenuService, IUserAccessService _userAccessService)
         {
-            VUpdateObject(userAccess, _userAccountService, _userMenuService);
+            VUpdateObject(userAccess, _userAccountService, _userMenuService, _userAccessService);
             return isValid(userAccess);
         }
 

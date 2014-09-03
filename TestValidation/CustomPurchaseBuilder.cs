@@ -375,7 +375,7 @@ namespace TestValidation
                 Discount = 10,
                 ListedUnitPrice = 10000,
             };
-            _customPurchaseInvoiceDetailService.CreateObject(cpid1,_customPurchaseInvoiceService,_itemService,_warehouseItemService,_priceMutationService);
+            _customPurchaseInvoiceDetailService.CreateObject(cpid1,_customPurchaseInvoiceService,_itemService,_warehouseItemService);
 
             cpid2 = new CustomPurchaseInvoiceDetail()
             {
@@ -384,7 +384,7 @@ namespace TestValidation
                 ItemId = blanket1.Id,
                 ListedUnitPrice = 10000,
             };
-            _customPurchaseInvoiceDetailService.CreateObject(cpid2, _customPurchaseInvoiceService, _itemService, _warehouseItemService, _priceMutationService);
+            _customPurchaseInvoiceDetailService.CreateObject(cpid2, _customPurchaseInvoiceService, _itemService, _warehouseItemService);
 
             cpid3 = new CustomPurchaseInvoiceDetail()
             {
@@ -393,7 +393,7 @@ namespace TestValidation
                 ItemId = blanket1.Id,
                 ListedUnitPrice = 10000,
             };
-            _customPurchaseInvoiceDetailService.CreateObject(cpid3, _customPurchaseInvoiceService, _itemService, _warehouseItemService, _priceMutationService);
+            _customPurchaseInvoiceDetailService.CreateObject(cpid3, _customPurchaseInvoiceService, _itemService, _warehouseItemService);
 
             _customPurchaseInvoiceService.ConfirmObject(cpi1, cpi1.PurchaseDate, _customPurchaseInvoiceDetailService, _contactService, _priceMutationService, _payableService, _customPurchaseInvoiceService, _warehouseItemService, _warehouseService, _itemService, _barringService, _stockMutationService);
             _customPurchaseInvoiceService.ConfirmObject(cpi2, cpi2.PurchaseDate, _customPurchaseInvoiceDetailService, _contactService, _priceMutationService, _payableService, _customPurchaseInvoiceService, _warehouseItemService, _warehouseService, _itemService, _barringService, _stockMutationService);

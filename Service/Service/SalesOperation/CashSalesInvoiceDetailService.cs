@@ -74,12 +74,14 @@ namespace Service.Service
                     
                 }
                 cashSalesInvoiceDetail.Amount = (price * (100 - discount) / 100) * cashSalesInvoiceDetail.Quantity;
+                cashSalesInvoiceDetail.CoGS = cashSalesInvoiceDetail.Quantity * item.AvgPrice; 
 
                 CashSalesInvoice cashSalesInvoice = _cashSalesInvoiceService.GetObjectById(cashSalesInvoiceDetail.CashSalesInvoiceId);
                 cashSalesInvoiceDetail.PriceMutationId = item.PriceMutationId;
                 
                 cashSalesInvoiceDetail = _repository.CreateObject(cashSalesInvoiceDetail);
                 cashSalesInvoice.Total = CalculateTotal(cashSalesInvoice.Id);
+                cashSalesInvoice.CoGS = CalculateCoGS(cashSalesInvoice.Id);
                 _cashSalesInvoiceService.GetRepository().Update(cashSalesInvoice);
             }
             return cashSalesInvoiceDetail;
@@ -108,11 +110,13 @@ namespace Service.Service
 
                 }
                 cashSalesInvoiceDetail.Amount = (price * (100 - discount) / 100) * cashSalesInvoiceDetail.Quantity;
+                cashSalesInvoiceDetail.CoGS = cashSalesInvoiceDetail.Quantity * item.AvgPrice; 
 
                 CashSalesInvoice cashSalesInvoice = _cashSalesInvoiceService.GetObjectById(cashSalesInvoiceDetail.CashSalesInvoiceId);
                 cashSalesInvoiceDetail.PriceMutationId = item.PriceMutationId;
                 cashSalesInvoiceDetail = _repository.UpdateObject(cashSalesInvoiceDetail);
                 cashSalesInvoice.Total = CalculateTotal(cashSalesInvoice.Id);
+                cashSalesInvoice.CoGS = CalculateCoGS(cashSalesInvoice.Id);
                 _cashSalesInvoiceService.GetRepository().Update(cashSalesInvoice);
             }
             return cashSalesInvoiceDetail;
@@ -173,6 +177,7 @@ namespace Service.Service
                 CashSalesInvoice cashSalesInvoice = _cashSalesInvoiceService.GetObjectById(cashSalesInvoiceDetail.CashSalesInvoiceId);
                 _repository.SoftDeleteObject(cashSalesInvoiceDetail);
                 cashSalesInvoice.Total = CalculateTotal(cashSalesInvoice.Id);
+                cashSalesInvoice.CoGS = CalculateCoGS(cashSalesInvoice.Id);
                 _cashSalesInvoiceService.GetRepository().Update(cashSalesInvoice);
             };
             return cashSalesInvoiceDetail;
@@ -193,5 +198,17 @@ namespace Service.Service
             }
             return Total;
         }
+
+        public decimal CalculateCoGS(int CashSalesInvoiceId)
+        {
+            IList<CashSalesInvoiceDetail> cashSalesInvoiceDetails = GetObjectsByCashSalesInvoiceId(CashSalesInvoiceId);
+            decimal Total = 0;
+            foreach (var cashSalesInvoiceDetail in cashSalesInvoiceDetails)
+            {
+                Total += cashSalesInvoiceDetail.CoGS;
+            }
+            return Total;
+        }
+
     }
 }

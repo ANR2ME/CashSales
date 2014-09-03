@@ -75,7 +75,7 @@
                    'Is Confirmed', 'Confirmation Date', 'Amount Paid',
                    'Is GBCH', 'GBCH No.', 'GBCH Due Date',
 				   'CashBank ID', 'CashBank Name', 'Is Bank', 'Is Paid', 'Is Full Payment',
-				   'Total', 'CoGS', 'Warehouse ID', 'Warehouse Name',
+				   'Total', 'CoGS', 'Profit/Loss', 'Warehouse ID', 'Warehouse Name',
 				   'Created At', 'Updated At'],
 		colModel: [
 				  { name: 'id', index: 'id', width: 80, align: "center" },
@@ -101,6 +101,7 @@
 				  { name: 'isfullpayment', index: 'isfullpayment', width: 80, boolean: { defaultValue: 'false' } },
 				  { name: 'total', index: 'total', width: 80, formatter: 'currency' },
 				  { name: 'cogs', index: 'cogs', width: 80, formatter: 'currency' },
+                  { name: 'profitloss', index: 'profitloss', width: 80, formatter: 'currency' },
 				  { name: 'warehouseid', index: 'warehouseid', width: 80 },
 				  { name: 'warehouse', index: 'warehouse', width: 100 },
 				  { name: 'createdat', index: 'createdat', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },

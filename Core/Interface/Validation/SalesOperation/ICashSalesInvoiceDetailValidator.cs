@@ -9,7 +9,7 @@ namespace Core.Interface.Validation
 {
     public interface ICashSalesInvoiceDetailValidator
     {
-        CashSalesInvoiceDetail VIsNotConfirmed(CashSalesInvoiceDetail cashSalesInvoiceDetail, ICashSalesInvoiceService _cashSalesInvoiceService);
+        CashSalesInvoiceDetail VIsParentNotConfirmed(CashSalesInvoiceDetail cashSalesInvoiceDetail, ICashSalesInvoiceService _cashSalesInvoiceService);
         CashSalesInvoiceDetail VHasCashSalesInvoice(CashSalesInvoiceDetail cashSalesInvoiceDetail, ICashSalesInvoiceService _cashSalesInvoiceService);
         CashSalesInvoiceDetail VHasItem(CashSalesInvoiceDetail cashSalesInvoiceDetail, IItemService _itemService);
         CashSalesInvoiceDetail VUniqueItem(CashSalesInvoiceDetail cashSalesInvoiceDetail, ICashSalesInvoiceDetailService _cashSalesInvoiceDetailService, IItemService _itemService);

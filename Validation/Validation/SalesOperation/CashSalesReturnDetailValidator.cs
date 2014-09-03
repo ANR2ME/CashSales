@@ -10,7 +10,7 @@ namespace Validation.Validation
 {
     public class CashSalesReturnDetailValidator : ICashSalesReturnDetailValidator
     {
-        public CashSalesReturnDetail VIsNotConfirmed(CashSalesReturnDetail cashSalesReturnDetail, ICashSalesReturnService _cashSalesReturnService)
+        public CashSalesReturnDetail VIsParentNotConfirmed(CashSalesReturnDetail cashSalesReturnDetail, ICashSalesReturnService _cashSalesReturnService)
         {
             CashSalesReturn cashSalesReturn = _cashSalesReturnService.GetObjectById(cashSalesReturnDetail.CashSalesReturnId);
             if (cashSalesReturn != null)
@@ -95,14 +95,16 @@ namespace Validation.Validation
         public CashSalesReturnDetail VCreateObject(CashSalesReturnDetail cashSalesReturnDetail, ICashSalesReturnService _cashSalesReturnService,
                                                       ICashSalesReturnDetailService _cashSalesReturnDetailService, ICashSalesInvoiceDetailService _cashSalesInvoiceDetailService)
         {
+            VIsParentNotConfirmed(cashSalesReturnDetail, _cashSalesReturnService);
+            if (!isValid(cashSalesReturnDetail)) { return cashSalesReturnDetail; }
             VHasCashSalesReturn(cashSalesReturnDetail, _cashSalesReturnService);
             if (!isValid(cashSalesReturnDetail)) { return cashSalesReturnDetail; }
             VIsValidCashSalesInvoiceDetail(cashSalesReturnDetail, _cashSalesInvoiceDetailService, _cashSalesReturnService);
             if (!isValid(cashSalesReturnDetail)) { return cashSalesReturnDetail; }
             VIsValidQuantity(cashSalesReturnDetail, _cashSalesInvoiceDetailService, _cashSalesReturnDetailService);
             if (!isValid(cashSalesReturnDetail)) { return cashSalesReturnDetail; }
-            VIsNotConfirmed(cashSalesReturnDetail, _cashSalesReturnService);
-            if (!isValid(cashSalesReturnDetail)) { return cashSalesReturnDetail; }
+            VConfirmObject(cashSalesReturnDetail, _cashSalesInvoiceDetailService, _cashSalesReturnDetailService);
+            //if (!isValid(cashSalesReturnDetail)) { return cashSalesReturnDetail; }
             //VIsValidTotalPrice(cashSalesReturnDetail, _cashSalesInvoiceDetailService);
             return cashSalesReturnDetail;
         }
@@ -110,14 +112,14 @@ namespace Validation.Validation
         public CashSalesReturnDetail VUpdateObject(CashSalesReturnDetail cashSalesReturnDetail, ICashSalesReturnService _cashSalesReturnService,
                                                       ICashSalesReturnDetailService _cashSalesReturnDetailService, ICashSalesInvoiceDetailService _cashSalesInvoiceDetailService)
         {
-            //VIsNotConfirmed(cashSalesReturnDetail, _cashSalesReturnService);
+            //VIsParentNotConfirmed(cashSalesReturnDetail, _cashSalesReturnService);
             //if (!isValid(cashSalesReturnDetail)) { return cashSalesReturnDetail; }
             return VCreateObject(cashSalesReturnDetail, _cashSalesReturnService, _cashSalesReturnDetailService, _cashSalesInvoiceDetailService);
         }
 
         public CashSalesReturnDetail VDeleteObject(CashSalesReturnDetail cashSalesReturnDetail, ICashSalesReturnService _cashSalesReturnService)
         {
-            VIsNotConfirmed(cashSalesReturnDetail, _cashSalesReturnService);
+            VIsParentNotConfirmed(cashSalesReturnDetail, _cashSalesReturnService);
             if (!isValid(cashSalesReturnDetail)) { return cashSalesReturnDetail; }
             return cashSalesReturnDetail;
         }

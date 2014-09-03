@@ -18,7 +18,7 @@ namespace Core.Interface.Service
         Warehouse GetWarehouseTo(WarehouseMutationOrder warehouseMutationOrder);
         WarehouseMutationOrder CreateObject(WarehouseMutationOrder warehouseMutationOrder, IWarehouseService _warehouseService);
         WarehouseMutationOrder UpdateObject(WarehouseMutationOrder warehouseMutationOrder, IWarehouseService _warehouseService);
-        WarehouseMutationOrder SoftDeleteObject(WarehouseMutationOrder warehouseMutationOrder);
+        WarehouseMutationOrder SoftDeleteObject(WarehouseMutationOrder warehouseMutationOrder, IWarehouseMutationOrderDetailService _warehouseMutationOrderDetailService);
         bool DeleteObject(int Id);
         WarehouseMutationOrder ConfirmObject(WarehouseMutationOrder warehouseMutationOrder, DateTime ConfirmationDate, IWarehouseMutationOrderDetailService _warehouseMutationOrderDetailService,
                                              IItemService _itemService, IBarringService _barringService, IWarehouseItemService _warehouseItemService, IStockMutationService _stockMutationService);

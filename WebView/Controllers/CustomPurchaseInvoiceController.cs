@@ -205,7 +205,6 @@ namespace WebView.Controllers
                              model.Quantity,
                              model.Amount,
                              model.CoGS,
-                             model.PriceMutationId,
                          }).Where(filter).OrderBy(sidx + " " + sord); //.ToList();
 
             var list = query.AsEnumerable();
@@ -245,7 +244,6 @@ namespace WebView.Controllers
                             model.Quantity,
                             model.Amount,
                             model.CoGS,
-                            model.PriceMutationId,
                       }
                     }).ToArray()
             }, JsonRequestBehavior.AllowGet);
@@ -382,7 +380,7 @@ namespace WebView.Controllers
                     }, JsonRequestBehavior.AllowGet);
                 }
 
-                model = _customPurchaseInvoiceDetailService.CreateObject(model, _customPurchaseInvoiceService, _itemService, _warehouseItemService, _priceMutationService);
+                model = _customPurchaseInvoiceDetailService.CreateObject(model, _customPurchaseInvoiceService, _itemService, _warehouseItemService);
                 total = _customPurchaseInvoiceService.GetObjectById(model.CustomPurchaseInvoiceId).Total;
             }
             catch (Exception ex)
@@ -471,7 +469,7 @@ namespace WebView.Controllers
                 data.Discount = model.Discount;
                 data.ListedUnitPrice = model.ListedUnitPrice;
                 data.CustomPurchaseInvoiceId = model.CustomPurchaseInvoiceId;
-                model = _customPurchaseInvoiceDetailService.UpdateObject(data, _customPurchaseInvoiceService, _itemService, _warehouseItemService, _priceMutationService);
+                model = _customPurchaseInvoiceDetailService.UpdateObject(data, _customPurchaseInvoiceService, _itemService, _warehouseItemService);
                 total = _customPurchaseInvoiceService.GetObjectById(model.CustomPurchaseInvoiceId).Total;
             }
             catch (Exception ex)

@@ -50,7 +50,7 @@ namespace TestValidation
 
             it["deletes_warehousemutationorder"] = () =>
             {
-                d.warehouseMutationOrder = d._warehouseMutationOrderService.SoftDeleteObject(d.warehouseMutationOrder);
+                d.warehouseMutationOrder = d._warehouseMutationOrderService.SoftDeleteObject(d.warehouseMutationOrder, d._warehouseMutationOrderDetailService);
                 d.warehouseMutationOrder.Errors.Count().should_be(0);
             };
 
@@ -104,7 +104,7 @@ namespace TestValidation
             it["deletes_whendetailisfinished"] = () =>
             {
                 d.warehouseMutationOrder = d._warehouseMutationOrderService.ConfirmObject(d.warehouseMutationOrder, DateTime.Today, d._warehouseMutationOrderDetailService, d._itemService, d._barringService, d._warehouseItemService, d._stockMutationService);
-                d.warehouseMutationOrder = d._warehouseMutationOrderService.SoftDeleteObject(d.warehouseMutationOrder);
+                d.warehouseMutationOrder = d._warehouseMutationOrderService.SoftDeleteObject(d.warehouseMutationOrder, d._warehouseMutationOrderDetailService);
                 d.warehouseMutationOrder.IsDeleted.should_be(false);
                 d.warehouseMutationOrder.Errors.Count().should_not_be(0);
             };

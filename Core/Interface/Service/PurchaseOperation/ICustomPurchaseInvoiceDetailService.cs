@@ -27,6 +27,6 @@ namespace Core.Interface.Service
         bool DeleteObject(int Id);
         decimal CalculateTotal(int CustomPurchaseInvoiceId);
         decimal CalculateCoGS(int CustomPurchaseInvoiceId);
-        decimal GetHighestPrice(int CustomPurchaseInvoiceId, int ItemId);
+        decimal GetHighestPrice(/*int CustomPurchaseInvoiceId,*/ int ItemId);
     }
 }

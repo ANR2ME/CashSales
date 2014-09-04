@@ -10,6 +10,7 @@ namespace Core.Interface.Validation
 {
     public interface IReceivableValidator
     {
+        Receivable VReceivableSource(Receivable receivable);
         Receivable VCreateObject(Receivable receivable, IReceivableService _receivableService);
         Receivable VUpdateObject(Receivable receivable, IReceivableService _receivableService);
         Receivable VDeleteObject(Receivable receivable);

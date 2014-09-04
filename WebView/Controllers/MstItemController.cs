@@ -84,6 +84,7 @@ namespace WebView.Controllers
                              model.Quantity,
                              model.SellingPrice,
                              model.AvgPrice,
+                             model.Margin,
                              model.PendingReceival,
                              model.PendingDelivery,
                              model.CreatedAt,
@@ -130,6 +131,7 @@ namespace WebView.Controllers
                             model.Quantity,
                             model.SellingPrice,
                             model.AvgPrice,
+                            model.Margin,
                             model.PendingReceival,
                             model.PendingDelivery,
                             model.CreatedAt,
@@ -242,6 +244,7 @@ namespace WebView.Controllers
                  model.PendingDelivery,
                  model.PendingReceival,
                  model.Category,
+                 model.Margin,
                  model.Errors
              }, JsonRequestBehavior.AllowGet); 
             }
@@ -318,6 +321,7 @@ namespace WebView.Controllers
                 data.UoMId = model.UoMId;
                 data.ItemTypeId = model.ItemTypeId;
                 data.SellingPrice = model.SellingPrice;
+                data.Margin = model.Margin;
                 model = _itemService.UpdateObject(data,_uoMService,_itemTypeService,_priceMutationService,_contactGroupService);
 
                 return Json(new

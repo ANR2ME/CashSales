@@ -16,6 +16,7 @@ namespace Core.Interface.Validation
         Item VHasCategory(Item item);
         Item VHasUoM(Item item, IUoMService _uomService);
         Item VNonNegativeQuantity(Item item);
+        Item VIsValidMargin(Item item);
         Item VWarehouseQuantityMustBeZero(Item item, IWarehouseItemService _warehouseItemService);
         Item VHasNoStockMutations(Item item, IStockMutationService _stockMutationService);
         Item VHasNoPurchaseOrderDetails(Item item, IPurchaseOrderDetailService _purchaseOrderDetailService);

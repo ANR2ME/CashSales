@@ -345,19 +345,24 @@ namespace Validation.Validation
             return retailSalesInvoice;
         }
 
-        public RetailSalesInvoice VUpdateObject(RetailSalesInvoice retailSalesInvoice, IRetailSalesInvoiceDetailService _retailSalesInvoiceDetailService)
+        public RetailSalesInvoice VUpdateObject(RetailSalesInvoice retailSalesInvoice, IWarehouseService _warehouseService)
         {
             VIsNotDeleted(retailSalesInvoice);
             if (!isValid(retailSalesInvoice)) { return retailSalesInvoice; }
-            VHasNoRetailSalesInvoiceDetails(retailSalesInvoice, _retailSalesInvoiceDetailService);
-            if (!isValid(retailSalesInvoice)) { return retailSalesInvoice; }
             VIsNotConfirmed(retailSalesInvoice);
+            if (!isValid(retailSalesInvoice)) { return retailSalesInvoice; }
+            VCreateObject(retailSalesInvoice, _warehouseService);
             return retailSalesInvoice;
         }
 
         public RetailSalesInvoice VDeleteObject(RetailSalesInvoice retailSalesInvoice, IRetailSalesInvoiceDetailService _retailSalesInvoiceDetailService)
         {
-            return VUpdateObject(retailSalesInvoice, _retailSalesInvoiceDetailService);
+            VIsNotDeleted(retailSalesInvoice);
+            if (!isValid(retailSalesInvoice)) { return retailSalesInvoice; }
+            VIsNotConfirmed(retailSalesInvoice);
+            if (!isValid(retailSalesInvoice)) { return retailSalesInvoice; }
+            VHasNoRetailSalesInvoiceDetails(retailSalesInvoice, _retailSalesInvoiceDetailService);
+            return retailSalesInvoice;
         }
 
         public bool ValidCreateObject(RetailSalesInvoice retailSalesInvoice, IWarehouseService _warehouseService)
@@ -396,10 +401,10 @@ namespace Validation.Validation
             return isValid(retailSalesInvoice);
         }
 
-        public bool ValidUpdateObject(RetailSalesInvoice retailSalesInvoice, IRetailSalesInvoiceDetailService _retailSalesInvoiceDetailService)
+        public bool ValidUpdateObject(RetailSalesInvoice retailSalesInvoice, IWarehouseService _warehouseService)
         {
             retailSalesInvoice.Errors.Clear();
-            VUpdateObject(retailSalesInvoice, _retailSalesInvoiceDetailService);
+            VUpdateObject(retailSalesInvoice, _warehouseService);
             return isValid(retailSalesInvoice);
         }
 

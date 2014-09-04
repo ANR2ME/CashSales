@@ -77,9 +77,10 @@ namespace Service.Service
             return _repository.DeleteObject(Id);
         }
 
-        public bool CreateDefaultAccess(int UserAccountId, IUserMenuService _userMenuService, IUserAccountService _userAccountService)
+        public int CreateDefaultAccess(int UserAccountId, IUserMenuService _userMenuService, IUserAccountService _userAccountService)
         {
             var userMenus = _userMenuService.GetAll();
+            int count = 0;
             foreach (var userMenu in userMenus)
             {
                 UserAccess userAccess = new UserAccess()
@@ -87,9 +88,26 @@ namespace Service.Service
                     UserAccountId = UserAccountId,
                     UserMenuId = userMenu.Id,
                 };
+                UserAccount userAccount = _userAccountService.GetObjectById(UserAccountId);
+                if (userAccount.IsAdmin)
+                {
+                    userAccess.AllowConfirm = true;
+                    userAccess.AllowCreate = true;
+                    userAccess.AllowDelete = true;
+                    userAccess.AllowEdit = true;
+                    userAccess.AllowPaid = true;
+                    userAccess.AllowPrint = true;
+                    userAccess.AllowReconcile = true;
+                    userAccess.AllowUnconfirm = true;
+                    userAccess.AllowUndelete = true;
+                    userAccess.AllowUnpaid = true;
+                    userAccess.AllowUnreconcile = true;
+                    userAccess.AllowView = true;
+                }
                 CreateObject(userAccess, _userAccountService, _userMenuService);
+                if (!userAccess.Errors.Any()) count++;
             }
-            return true;
+            return count;
         }
 
     }

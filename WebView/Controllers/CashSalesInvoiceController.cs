@@ -420,7 +420,7 @@ namespace WebView.Controllers
                 data.Allowance = model.Allowance;
                 data.CashBankId = model.CashBankId;
                 data.WarehouseId = model.WarehouseId;
-                model = _cashSalesInvoiceService.UpdateObject(data, _cashSalesInvoiceDetailService);
+                model = _cashSalesInvoiceService.UpdateObject(data, _warehouseService);
             }
             catch (Exception ex)
             {

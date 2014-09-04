@@ -599,7 +599,7 @@
         viewrecords: true,
         scrollrows: true,
         shrinkToFit: false,
-        sortorder: "ASC",
+        sortorder: "DESC",
         width: $(window).width() - 700,
         height: $(window).height() - 500,
         gridComplete:
@@ -899,7 +899,7 @@
         viewrecords: true,
         scrollrows: true,
         shrinkToFit: false,
-        sortorder: "ASC",
+        sortorder: "DESC",
         width: $("#lookup_div_receivable").width() - 10,
         height: $("#lookup_div_receivable").height() - 110,
     });

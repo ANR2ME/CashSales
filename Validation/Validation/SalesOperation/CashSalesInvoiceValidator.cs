@@ -333,7 +333,17 @@ namespace Validation.Validation
             return cashSalesInvoice;
         }
 
-        public CashSalesInvoice VUpdateObject(CashSalesInvoice cashSalesInvoice, ICashSalesInvoiceDetailService _cashSalesInvoiceDetailService)
+        public CashSalesInvoice VUpdateObject(CashSalesInvoice cashSalesInvoice, IWarehouseService _warehouseService)
+        {
+            VIsNotDeleted(cashSalesInvoice);
+            if (!isValid(cashSalesInvoice)) { return cashSalesInvoice; }
+            VIsNotConfirmed(cashSalesInvoice);
+            if (!isValid(cashSalesInvoice)) { return cashSalesInvoice; }
+            VCreateObject(cashSalesInvoice, _warehouseService);
+            return cashSalesInvoice;
+        }
+
+        public CashSalesInvoice VDeleteObject(CashSalesInvoice cashSalesInvoice, ICashSalesInvoiceDetailService _cashSalesInvoiceDetailService)
         {
             VIsNotDeleted(cashSalesInvoice);
             if (!isValid(cashSalesInvoice)) { return cashSalesInvoice; }
@@ -341,11 +351,6 @@ namespace Validation.Validation
             if (!isValid(cashSalesInvoice)) { return cashSalesInvoice; }
             VHasNoCashSalesInvoiceDetails(cashSalesInvoice, _cashSalesInvoiceDetailService);
             return cashSalesInvoice;
-        }
-
-        public CashSalesInvoice VDeleteObject(CashSalesInvoice cashSalesInvoice, ICashSalesInvoiceDetailService _cashSalesInvoiceDetailService)
-        {
-            return VUpdateObject(cashSalesInvoice, _cashSalesInvoiceDetailService);
         }
 
         public bool ValidCreateObject(CashSalesInvoice cashSalesInvoice, IWarehouseService _warehouseService)
@@ -384,10 +389,10 @@ namespace Validation.Validation
             return isValid(cashSalesInvoice);
         }
 
-        public bool ValidUpdateObject(CashSalesInvoice cashSalesInvoice, ICashSalesInvoiceDetailService _cashSalesInvoiceDetailService)
+        public bool ValidUpdateObject(CashSalesInvoice cashSalesInvoice, IWarehouseService _warehouseService)
         {
             cashSalesInvoice.Errors.Clear();
-            VUpdateObject(cashSalesInvoice, _cashSalesInvoiceDetailService);
+            VUpdateObject(cashSalesInvoice, _warehouseService);
             return isValid(cashSalesInvoice);
         }
 

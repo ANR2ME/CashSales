@@ -54,7 +54,10 @@ namespace Validation.Validation
 
         public UserAccess VUpdateObject(UserAccess userAccess, IUserAccountService _userAccountService, IUserMenuService _userMenuService, IUserAccessService _userAccessService)
         {
-            return VCreateObject(userAccess, _userAccountService, _userMenuService, _userAccessService);
+            VIsValidUserAccount(userAccess, _userAccountService);
+            if (!isValid(userAccess)) { return userAccess; }
+            VIsValidUserMenu(userAccess, _userMenuService);
+            return userAccess;
         }
 
         public UserAccess VDeleteObject(UserAccess userAccess)

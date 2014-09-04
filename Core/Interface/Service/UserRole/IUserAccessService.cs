@@ -20,6 +20,6 @@ namespace Core.Interface.Service
         UserAccess UpdateObject(UserAccess userAccess, IUserAccountService _userAccountService, IUserMenuService _userMenuService);
         UserAccess SoftDeleteObject(UserAccess userAccess);
         bool DeleteObject(int Id);
-        bool CreateDefaultAccess(int UserAccountId, IUserMenuService _userMenuService, IUserAccountService _userAccountService);
+        int CreateDefaultAccess(int UserAccountId, IUserMenuService _userMenuService, IUserAccountService _userAccountService);
     }
 }

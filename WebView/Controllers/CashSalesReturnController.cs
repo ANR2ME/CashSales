@@ -389,7 +389,7 @@ namespace WebView.Controllers
                 data.ReturnDate = model.ReturnDate;
                 data.Allowance = model.Allowance;
                 data.CashBankId = model.CashBankId;
-                model = _cashSalesReturnService.UpdateObject(data, _cashSalesReturnDetailService);
+                model = _cashSalesReturnService.UpdateObject(data, _cashSalesInvoiceService, _cashBankService);
             }
             catch (Exception ex)
             {

@@ -80,7 +80,7 @@
             viewrecords: true,
             scrollrows: true,
             shrinkToFit: false,
-            sortorder: "asc",
+            sortorder: "DESC",
             width: $("#detail_toolbar").width(),
             height: $(window).height() - 200,
             gridComplete:

@@ -613,7 +613,7 @@
         viewrecords: true,
         scrollrows: true,
         shrinkToFit: false,
-        sortorder: "ASC",
+        sortorder: "DESC",
         width: $("#lookup_div_salesorder").width() - 10,
         height: $("#lookup_div_salesorder").height() - 110,
     });

@@ -40,7 +40,7 @@ namespace Core.Interface.Validation
         CashSalesInvoice VUnpaidObject(CashSalesInvoice cashSalesInvoice, ICashSalesReturnService _cashSalesReturnService);
 
         CashSalesInvoice VCreateObject(CashSalesInvoice cashSalesInvoice, IWarehouseService _warehouseService);
-        CashSalesInvoice VUpdateObject(CashSalesInvoice cashSalesInvoice, ICashSalesInvoiceDetailService _cashSalesInvoiceDetailService);
+        CashSalesInvoice VUpdateObject(CashSalesInvoice cashSalesInvoice, IWarehouseService _warehouseService);
         CashSalesInvoice VDeleteObject(CashSalesInvoice cashSalesInvoice, ICashSalesInvoiceDetailService _cashSalesInvoiceDetailService);
 
         bool ValidConfirmObject(CashSalesInvoice cashSalesInvoice, ICashSalesInvoiceDetailService _cashSalesInvoiceDetailService, ICashSalesInvoiceService _cashSalesInvoiceService,
@@ -51,7 +51,7 @@ namespace Core.Interface.Validation
         bool ValidUnpaidObject(CashSalesInvoice cashSalesInvoice, ICashSalesReturnService _cashSalesReturnService);
 
         bool ValidCreateObject(CashSalesInvoice cashSalesInvoice, IWarehouseService _warehouseService);
-        bool ValidUpdateObject(CashSalesInvoice cashSalesInvoice, ICashSalesInvoiceDetailService _cashSalesInvoiceDetailService);
+        bool ValidUpdateObject(CashSalesInvoice cashSalesInvoice, IWarehouseService _warehouseService);
         bool ValidDeleteObject(CashSalesInvoice cashSalesInvoice, ICashSalesInvoiceDetailService _cashSalesInvoiceDetailService);
         bool isValid(CashSalesInvoice cashSalesInvoice);
         string PrintError(CashSalesInvoice cashSalesInvoice);

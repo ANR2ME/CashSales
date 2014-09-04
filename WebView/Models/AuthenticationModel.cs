@@ -44,9 +44,11 @@ namespace WebView
             UserMenu userMenu = _userMenuService.GetObjectByNameAndGroupName(MenuName, MenuGroupName);
             if (userMenu != null) 
             {
-                UserAccess userAccess = _userAccessService.GetObjectByUserAccountIdAndUserMenuId(GetUserId(), userMenu.Id);
+                UserAccount userAccount = _userAccountService.GetObjectById(GetUserId());
+                UserAccess userAccess = _userAccessService.GetObjectByUserAccountIdAndUserMenuId(userAccount.Id, userMenu.Id);
                 if (userAccess != null) 
                 {
+                    if (userAccount.IsAdmin) return true;
                     switch (Role.ToLower()) {
                         case "view" : return userAccess.AllowView;
                         case "create" : return userAccess.AllowCreate;

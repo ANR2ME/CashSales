@@ -42,7 +42,7 @@ namespace Core.Interface.Validation
         RetailSalesInvoice VUnpaidObject(RetailSalesInvoice retailSalesInvoice);
 
         RetailSalesInvoice VCreateObject(RetailSalesInvoice retailSalesInvoice, IWarehouseService _warehouseService);
-        RetailSalesInvoice VUpdateObject(RetailSalesInvoice retailSalesInvoice, IRetailSalesInvoiceDetailService _retailSalesInvoiceDetailService);
+        RetailSalesInvoice VUpdateObject(RetailSalesInvoice retailSalesInvoice, IWarehouseService _warehouseService);
         RetailSalesInvoice VDeleteObject(RetailSalesInvoice retailSalesInvoice, IRetailSalesInvoiceDetailService _retailSalesInvoiceDetailService);
 
         bool ValidConfirmObject(RetailSalesInvoice retailSalesInvoice, IRetailSalesInvoiceDetailService _retailSalesInvoiceDetailService,
@@ -53,7 +53,7 @@ namespace Core.Interface.Validation
         bool ValidUnpaidObject(RetailSalesInvoice retailSalesInvoice);
 
         bool ValidCreateObject(RetailSalesInvoice retailSalesInvoice, IWarehouseService _warehouseService);
-        bool ValidUpdateObject(RetailSalesInvoice retailSalesInvoice, IRetailSalesInvoiceDetailService _retailSalesInvoiceDetailService);
+        bool ValidUpdateObject(RetailSalesInvoice retailSalesInvoice, IWarehouseService _warehouseService);
         bool ValidDeleteObject(RetailSalesInvoice retailSalesInvoice, IRetailSalesInvoiceDetailService _retailSalesInvoiceDetailService);
         bool isValid(RetailSalesInvoice retailSalesInvoice);
         string PrintError(RetailSalesInvoice retailSalesInvoice);

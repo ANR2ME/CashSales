@@ -413,7 +413,7 @@
         viewrecords: true,
         scrollrows: true,
         shrinkToFit: false,
-        sortorder: "ASC",
+        sortorder: "DESC",
         width: $(window).width() - 700,
         height: $(window).height() - 500,
         gridComplete:

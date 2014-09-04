@@ -10,6 +10,19 @@ namespace Validation.Validation
 {
     public class PayableValidator : IPayableValidator
     {
+        public Payable VPayableSource(Payable payable)
+        {
+            if (!payable.PayableSource.Equals(Core.Constants.Constant.PayableSource.CashSalesReturn) &&
+                !payable.PayableSource.Equals(Core.Constants.Constant.PayableSource.CustomPurchaseInvoice) &&
+                !payable.PayableSource.Equals(Core.Constants.Constant.PayableSource.RetailPurchaseInvoice) &&
+                !payable.PayableSource.Equals(Core.Constants.Constant.PayableSource.PurchaseInvoice) &&
+                !payable.PayableSource.Equals(Core.Constants.Constant.PayableSource.PaymentRequest))
+            {
+                payable.Errors.Add("Generic", "Harus merupakan bagian dari Constant.PayableSource");
+            }
+            return payable;
+        }
+
         public Payable VCreateObject(Payable payable, IPayableService _payableService)
         {
             return payable;

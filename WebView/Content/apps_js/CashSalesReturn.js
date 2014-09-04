@@ -794,7 +794,7 @@
 		viewrecords: true,
 		scrollrows: true,
 		shrinkToFit: false,
-		sortorder: "ASC",
+		sortorder: "DESC",
 		width: $("#lookup_div_cashsalesinvoice").width() - 10,
 		height: $("#lookup_div_cashsalesinvoice").height() - 110,
 	});
@@ -856,7 +856,7 @@
 		viewrecords: true,
 		scrollrows: true,
 		shrinkToFit: false,
-		sortorder: "ASC",
+		sortorder: "DESC",
 		width: $("#lookup_div_cashsalesinvoicedetail").width() - 10,
 		height: $("#lookup_div_cashsalesinvoicedetail").height() - 110,
 	});

@@ -350,7 +350,9 @@ namespace Validation.Validation
         public CustomPurchaseInvoice VUpdateObject(CustomPurchaseInvoice customPurchaseInvoice, ICustomPurchaseInvoiceDetailService _customPurchaseInvoiceDetailService,
                                                    IWarehouseService _warehouseService, IContactService _contactService)
         {
-            VDeleteObject(customPurchaseInvoice, _customPurchaseInvoiceDetailService);
+            VIsNotDeleted(customPurchaseInvoice);
+            if (!isValid(customPurchaseInvoice)) { return customPurchaseInvoice; }
+            VIsNotConfirmed(customPurchaseInvoice);
             if (!isValid(customPurchaseInvoice)) { return customPurchaseInvoice; }
             VCreateObject(customPurchaseInvoice, _warehouseService, _contactService);
             return customPurchaseInvoice;
@@ -360,9 +362,9 @@ namespace Validation.Validation
         {
             VIsNotDeleted(customPurchaseInvoice);
             if (!isValid(customPurchaseInvoice)) { return customPurchaseInvoice; }
-            VHasNoCustomPurchaseInvoiceDetails(customPurchaseInvoice, _customPurchaseInvoiceDetailService);
-            if (!isValid(customPurchaseInvoice)) { return customPurchaseInvoice; }
             VIsNotConfirmed(customPurchaseInvoice);
+            if (!isValid(customPurchaseInvoice)) { return customPurchaseInvoice; }
+            VHasNoCustomPurchaseInvoiceDetails(customPurchaseInvoice, _customPurchaseInvoiceDetailService);
             return customPurchaseInvoice;
         }
 

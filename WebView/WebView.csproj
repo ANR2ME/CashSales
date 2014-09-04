@@ -239,7 +239,7 @@
     <Content Include="Content\apps_js\SalesOrder.js" />
     <Content Include="Content\apps_js\StockAdjustment.js" />
     <Content Include="Content\apps_js\tools.js" />
-    <Content Include="Content\apps_js\useraccess.js" />
+    <Content Include="Content\apps_js\UserAccess.js" />
     <Content Include="Content\apps_js\WarehouseItem.js" />
     <Content Include="Content\apps_js\WarehouseMutationOrder.js" />
     <Content Include="Content\assets\images\emkl.png" />
@@ -978,6 +978,7 @@
     <Content Include="Content\themes\easyui\metro\images\Thumbs.db" />
     <Content Include="Content\uploadify\check.php" />
     <Content Include="Content\uploadify\uploadify.php" />
+    <None Include="Properties\PublishProfiles\cashsales.pubxml" />
     <None Include="Properties\PublishProfiles\ftp_laptop.pubxml" />
     <None Include="Properties\PublishProfiles\package.pubxml" />
     <None Include="Properties\PublishProfiles\sampleapp.pubxml" />
@@ -1180,7 +1181,7 @@
     <VisualStudio>
       <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
         <WebProjectProperties>
-          <UseIIS>False</UseIIS>
+          <UseIIS>True</UseIIS>
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>52383</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>

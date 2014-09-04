@@ -101,6 +101,15 @@ namespace Validation.Validation
             return item;
         }
 
+        public Item VIsValidMargin(Item item)
+        {
+            if (item.Margin < 0 /*|| item.Margin > 100*/)
+            {
+                item.Errors.Add("Margin", "Harus lebih besar atau sama dengan 0");
+            }
+            return item;
+        }
+
         public Item VWarehouseQuantityMustBeZero(Item item, IWarehouseItemService _warehouseItemService)
         {
             IList<WarehouseItem> warehouseitems = _warehouseItemService.GetObjectsByItemId(item.Id);
@@ -168,6 +177,8 @@ namespace Validation.Validation
             VHasCategory(item);
             if (!isValid(item)) { return item; }
             VNonNegativePrice(item);
+            if (!isValid(item)) { return item; }
+            VIsValidMargin(item);
             return item;
         }
 
@@ -184,6 +195,8 @@ namespace Validation.Validation
             VHasCategory(item);
             if (!isValid(item)) { return item; }
             VNonNegativePrice(item);
+            if (!isValid(item)) { return item; }
+            VIsValidMargin(item);
             return item;
         }
 

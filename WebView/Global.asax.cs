@@ -102,8 +102,9 @@ namespace WebView
             {
                 userAccount = _userAccountService.CreateObject(Core.Constants.Constant.UserType.Admin, "sysadmin", "Administrator", "Administrator", true);
             }
+            _userAccessService.CreateDefaultAccess(userAccount.Id, _userMenuService, _userAccountService);
 
-            var userMenus = _userMenuService.GetAll();
+            /*var userMenus = _userMenuService.GetAll();
             foreach (var userMenu in userMenus)
             {
                 UserAccess userAccess = new UserAccess() 
@@ -124,7 +125,7 @@ namespace WebView
                     AllowView = true,
                 };
                 _userAccessService.CreateObject(userAccess, _userAccountService, _userMenuService);
-            }
+            }*/
         }
 
     }

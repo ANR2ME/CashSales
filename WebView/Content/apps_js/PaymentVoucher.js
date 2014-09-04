@@ -599,14 +599,14 @@
         viewrecords: true,
         scrollrows: true,
         shrinkToFit: false,
-        sortorder: "ASC",
+        sortorder: "DESC",
         width: $(window).width() - 700,
         height: $(window).height() - 500,
         gridComplete:
 		  function () {
 		  }
     });//END GRID Detail
-    $("#listdetail").jqGrid('navGrid', '#pagerdetail1', { del: false, add: false, edit: false, search: true });
+    $("#listdetail").jqGrid('navGrid', '#pagerdetail1', { del: false, add: false, edit: false, search: true })
                     .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: true });
 
     $('#btn_add_new_detail').click(function () {
@@ -900,7 +900,7 @@
         viewrecords: true,
         scrollrows: true,
         shrinkToFit: false,
-        sortorder: "ASC",
+        sortorder: "DESC",
         width: $("#lookup_div_payable").width() - 10,
         height: $("#lookup_div_payable").height() - 110,
     });

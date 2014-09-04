@@ -10,6 +10,7 @@ namespace Core.Interface.Validation
 {
     public interface IPayableValidator
     {
+        Payable VPayableSource(Payable payable);
         Payable VCreateObject(Payable payable, IPayableService _payableService);
         Payable VUpdateObject(Payable payable, IPayableService _payableService);
         Payable VDeleteObject(Payable payable);

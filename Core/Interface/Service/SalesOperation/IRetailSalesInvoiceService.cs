@@ -16,7 +16,7 @@ namespace Core.Interface.Service
         IList<RetailSalesInvoice> GetAll();
         RetailSalesInvoice GetObjectById(int Id);
         RetailSalesInvoice CreateObject(RetailSalesInvoice retailSalesInvoice, IWarehouseService _warehouseService);
-        RetailSalesInvoice UpdateObject(RetailSalesInvoice retailSalesInvoice, IRetailSalesInvoiceDetailService _retailSalesInvoiceDetailService);
+        RetailSalesInvoice UpdateObject(RetailSalesInvoice retailSalesInvoice, IWarehouseService _warehouseService);
         RetailSalesInvoice SoftDeleteObject(RetailSalesInvoice retailSalesInvoice, IRetailSalesInvoiceDetailService _retailSalesInvoiceDetailService);
         RetailSalesInvoice ConfirmObject(RetailSalesInvoice retailSalesInvoice, DateTime ConfirmationDate, int ContactId,
                                          IRetailSalesInvoiceDetailService _retailSalesInvoiceDetailService, IContactService _contactService,

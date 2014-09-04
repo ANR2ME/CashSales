@@ -42,7 +42,7 @@ namespace Core.Interface.Validation
         RetailPurchaseInvoice VUnpaidObject(RetailPurchaseInvoice retailPurchaseInvoice);
 
         RetailPurchaseInvoice VCreateObject(RetailPurchaseInvoice retailPurchaseInvoice, IWarehouseService _warehouseService);
-        RetailPurchaseInvoice VUpdateObject(RetailPurchaseInvoice retailPurchaseInvoice, IRetailPurchaseInvoiceDetailService _retailPurchaseInvoiceDetailService);
+        RetailPurchaseInvoice VUpdateObject(RetailPurchaseInvoice retailPurchaseInvoice, IWarehouseService _warehouseService);
         RetailPurchaseInvoice VDeleteObject(RetailPurchaseInvoice retailPurchaseInvoice, IRetailPurchaseInvoiceDetailService _retailPurchaseInvoiceDetailService);
 
         bool ValidConfirmObject(RetailPurchaseInvoice retailPurchaseInvoice, IRetailPurchaseInvoiceDetailService _retailPurchaseInvoiceDetailService,
@@ -53,7 +53,7 @@ namespace Core.Interface.Validation
         bool ValidUnpaidObject(RetailPurchaseInvoice retailPurchaseInvoice);
 
         bool ValidCreateObject(RetailPurchaseInvoice retailPurchaseInvoice, IWarehouseService _warehouseService);
-        bool ValidUpdateObject(RetailPurchaseInvoice retailPurchaseInvoice, IRetailPurchaseInvoiceDetailService _retailPurchaseInvoiceDetailService);
+        bool ValidUpdateObject(RetailPurchaseInvoice retailPurchaseInvoice, IWarehouseService _warehouseService);
         bool ValidDeleteObject(RetailPurchaseInvoice retailPurchaseInvoice, IRetailPurchaseInvoiceDetailService _retailPurchaseInvoiceDetailService);
         bool isValid(RetailPurchaseInvoice retailPurchaseInvoice);
         string PrintError(RetailPurchaseInvoice retailPurchaseInvoice);

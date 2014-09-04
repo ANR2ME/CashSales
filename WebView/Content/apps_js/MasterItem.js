@@ -32,7 +32,7 @@
         datatype: "json",
         colNames: ['ID', 'Name', 'Item Type Id', 'Item Type Name', 'SKU',
                    'Category', 'UoM Id','UoM','Quantity',
-                   'Selling Price', 'AvgPrice',
+                   'Selling Price', 'AvgPrice', 'Margin',
                    'Pending Receival', 'Pending Delivery', 'Created At', 'Updated At'],
         colModel: [
     			  { name: 'id', index: 'id', width: 80, align: "center" },
@@ -46,6 +46,7 @@
                   { name: 'quantity', index: 'quantity', width: 80, formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' } },
                   { name: 'sellingprice', index: 'sellingprice', width: 80, formatter: 'currency', formatoptions: { thousandsSeparator: ",", defaultValue: '0' } },
                   { name: 'avgprice', index: 'avgprice', width: 80, formatter: 'currency', formatoptions: { thousandsSeparator: ",", defaultValue: '0' } },
+                  { name: 'margin', index: 'margin', width: 80, formatter: 'currency', formatoptions: { thousandsSeparator: ",", defaultValue: '0' } },
                   { name: 'pendingreceival', index: 'pendingreceival', width: 105, formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' } },
                   { name: 'pendingdelivery', index: 'pendingdelivery', width: 105, formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' } },
 				  { name: 'createdat', index: 'createdat', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
@@ -59,7 +60,7 @@
         viewrecords: true,
         scrollrows: true,
         shrinkToFit: false,
-        sortorder: "ASC",
+        sortorder: "DESC",
         width: $("#toolbar").width(),
         height: $(window).height() - 200,
         gridComplete:
@@ -118,8 +119,9 @@
                             $('#UoMName').val(result.UoM);
                             $('#Quantity').numberbox('setValue', (result.Quantity));
                             $('#SellingPrice').numberbox('setValue', (result.SellingPrice));
-                            $('#PendingDelivery').numberbox('setValue', (result.PendingDelivery));
-                            $('#PendingReceival').numberbox('setValue', (result.PendingReceival));
+                            $('#Margin').numberbox('setValue', (result.Margin));
+                            //$('#PendingDelivery').numberbox('setValue', (result.PendingDelivery));
+                            //$('#PendingReceival').numberbox('setValue', (result.PendingReceival));
                             $('#form_div').dialog('open');
                         }
                     }
@@ -207,7 +209,7 @@
             url: submitURL,
             data: JSON.stringify({
                 Id: id, Name: $("#Name").val(), ItemTypeId: $("#ItemTypeId").val(), SellingPrice : $("#SellingPrice").val(),
-                Sku: $("#SKU").val(), Category: $("#Category").val(), UoMId: $("#UoMId").val(),
+                Sku: $("#SKU").val(), Category: $("#Category").val(), UoMId: $("#UoMId").val(), Margin: $("#Margin").val()
             }),
             async: false,
             cache: false,

@@ -16,7 +16,7 @@ namespace Core.Interface.Service
         IList<CashSalesInvoice> GetAll();
         CashSalesInvoice GetObjectById(int Id);
         CashSalesInvoice CreateObject(CashSalesInvoice cashSalesInvoice, IWarehouseService _warehouseService);
-        CashSalesInvoice UpdateObject(CashSalesInvoice cashSalesInvoice, ICashSalesInvoiceDetailService _cashSalesInvoiceDetailService);
+        CashSalesInvoice UpdateObject(CashSalesInvoice cashSalesInvoice, IWarehouseService _warehouseService);
         CashSalesInvoice SoftDeleteObject(CashSalesInvoice cashSalesInvoice, ICashSalesInvoiceDetailService _cashSalesInvoiceDetailService);
         CashSalesInvoice ConfirmObject(CashSalesInvoice cashSalesInvoice, DateTime ConfirmationDate, decimal Discount, decimal Tax,
                                                 ICashSalesInvoiceDetailService _cashSalesInvoiceDetailService, IContactService _contactService,

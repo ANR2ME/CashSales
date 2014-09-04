@@ -10,6 +10,17 @@ namespace Validation.Validation
 {
     public class ReceivableValidator : IReceivableValidator
     {
+        public Receivable VReceivableSource(Receivable receivable)
+        {
+            if (!receivable.ReceivableSource.Equals(Core.Constants.Constant.ReceivableSource.CashSalesInvoice) &&
+                !receivable.ReceivableSource.Equals(Core.Constants.Constant.ReceivableSource.RetailSalesInvoice) &&
+                !receivable.ReceivableSource.Equals(Core.Constants.Constant.ReceivableSource.SalesInvoice))
+            {
+                receivable.Errors.Add("Generic", "Harus merupakan bagian dari Constant.ReceivableSource");
+            }
+            return receivable;
+        }
+
         public Receivable VCreateObject(Receivable receivable, IReceivableService _receivableService)
         {
             return receivable;

@@ -17,7 +17,7 @@ namespace Core.Interface.Service
         IList<CashSalesReturn> GetObjectsByCashSalesInvoiceId(int CashSalesInvoiceId);
         CashSalesReturn GetObjectById(int Id);
         CashSalesReturn CreateObject(CashSalesReturn cashSalesReturn, ICashSalesInvoiceService _cashSalesInvoiceService, ICashBankService _cashBankService);
-        CashSalesReturn UpdateObject(CashSalesReturn cashSalesReturn, ICashSalesReturnDetailService _cashSalesReturnDetailService);
+        CashSalesReturn UpdateObject(CashSalesReturn cashSalesReturn, ICashSalesInvoiceService _cashSalesInvoiceService, ICashBankService _cashBankService);
         CashSalesReturn SoftDeleteObject(CashSalesReturn cashSalesReturn, ICashSalesReturnDetailService _cashSalesReturnDetailService);
         CashSalesReturn ConfirmObject(CashSalesReturn cashSalesReturn, DateTime ConfirmationDate, decimal Allowance,
                                                 ICashSalesReturnDetailService _cashSalesReturnDetailService, IContactService _contactService,

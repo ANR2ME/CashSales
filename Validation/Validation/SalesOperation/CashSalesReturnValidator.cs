@@ -284,19 +284,24 @@ namespace Validation.Validation
             return cashSalesReturn;
         }
 
-        public CashSalesReturn VUpdateObject(CashSalesReturn cashSalesReturn, ICashSalesReturnDetailService _cashSalesReturnDetailService)
+        public CashSalesReturn VUpdateObject(CashSalesReturn cashSalesReturn, ICashSalesInvoiceService _cashSalesInvoiceService, ICashBankService _cashBankService)
         {
             VIsNotDeleted(cashSalesReturn);
             if (!isValid(cashSalesReturn)) { return cashSalesReturn; }
-            VHasNoCashSalesReturnDetails(cashSalesReturn, _cashSalesReturnDetailService);
-            if (!isValid(cashSalesReturn)) { return cashSalesReturn; }
             VIsNotConfirmed(cashSalesReturn);
+            if (!isValid(cashSalesReturn)) { return cashSalesReturn; }
+            VCreateObject(cashSalesReturn, _cashSalesInvoiceService, _cashBankService);
             return cashSalesReturn;
         }
 
         public CashSalesReturn VDeleteObject(CashSalesReturn cashSalesReturn, ICashSalesReturnDetailService _cashSalesReturnDetailService)
         {
-            return VUpdateObject(cashSalesReturn, _cashSalesReturnDetailService);
+            VIsNotDeleted(cashSalesReturn);
+            if (!isValid(cashSalesReturn)) { return cashSalesReturn; }
+            VIsNotConfirmed(cashSalesReturn);
+            if (!isValid(cashSalesReturn)) { return cashSalesReturn; }
+            VHasNoCashSalesReturnDetails(cashSalesReturn, _cashSalesReturnDetailService);
+            return cashSalesReturn;
         }
 
         public bool ValidCreateObject(CashSalesReturn cashSalesReturn, ICashSalesInvoiceService _cashSalesInvoiceService, ICashBankService _cashBankService)
@@ -335,10 +340,10 @@ namespace Validation.Validation
             return isValid(cashSalesReturn);
         }
 
-        public bool ValidUpdateObject(CashSalesReturn cashSalesReturn, ICashSalesReturnDetailService _cashSalesReturnDetailService)
+        public bool ValidUpdateObject(CashSalesReturn cashSalesReturn, ICashSalesInvoiceService _cashSalesInvoiceService, ICashBankService _cashBankService)
         {
             cashSalesReturn.Errors.Clear();
-            VUpdateObject(cashSalesReturn, _cashSalesReturnDetailService);
+            VUpdateObject(cashSalesReturn, _cashSalesInvoiceService, _cashBankService);
             return isValid(cashSalesReturn);
         }
 

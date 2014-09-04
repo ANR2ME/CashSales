@@ -45,7 +45,7 @@
         viewrecords: true,
         scrollrows: true,
         shrinkToFit: false,
-        sortorder: "ASC",
+        sortorder: "DESC",
         width: $("#toolbar").width(),
         height: $(window).height() - 200,
         gridComplete:

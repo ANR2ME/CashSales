@@ -468,7 +468,7 @@
         viewrecords: true,
         scrollrows: true,
         shrinkToFit: false,
-        sortorder: "ASC",
+        sortorder: "DESC",
         width: $(window).width() - 700,
         height: $(window).height() - 500,
         gridComplete:
@@ -657,7 +657,7 @@
         viewrecords: true,
         scrollrows: true,
         shrinkToFit: false,
-        sortorder: "ASC",
+        sortorder: "DESC",
         width: $("#lookup_div_deliveryorder").width() - 10,
         height: $("#lookup_div_deliveryorder").height() - 110,
     });
@@ -718,7 +718,7 @@
         viewrecords: true,
         scrollrows: true,
         shrinkToFit: false,
-        sortorder: "ASC",
+        sortorder: "DESC",
         width: $("#lookup_div_item").width() - 10,
         height: $("#lookup_div_item").height() - 110,
     });

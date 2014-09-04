@@ -51,9 +51,9 @@ namespace Service.Service
             return (_validator.ValidCreateObject(cashSalesInvoice, _warehouseService) ? _repository.CreateObject(cashSalesInvoice) : cashSalesInvoice);
         }
 
-        public CashSalesInvoice UpdateObject(CashSalesInvoice cashSalesInvoice, ICashSalesInvoiceDetailService _cashSalesInvoiceDetailService)
+        public CashSalesInvoice UpdateObject(CashSalesInvoice cashSalesInvoice, IWarehouseService _warehouseService)
         {
-            return (cashSalesInvoice = _validator.ValidUpdateObject(cashSalesInvoice, _cashSalesInvoiceDetailService) ? _repository.UpdateObject(cashSalesInvoice) : cashSalesInvoice);
+            return (cashSalesInvoice = _validator.ValidUpdateObject(cashSalesInvoice, _warehouseService) ? _repository.UpdateObject(cashSalesInvoice) : cashSalesInvoice);
         }
 
         public CashSalesInvoice ConfirmObject(CashSalesInvoice cashSalesInvoice, DateTime ConfirmationDate, decimal Discount, decimal Tax, 

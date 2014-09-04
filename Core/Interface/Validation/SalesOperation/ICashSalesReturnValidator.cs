@@ -37,7 +37,7 @@ namespace Core.Interface.Validation
         CashSalesReturn VUnpaidObject(CashSalesReturn cashSalesReturn);
 
         CashSalesReturn VCreateObject(CashSalesReturn cashSalesReturn, ICashSalesInvoiceService _cashSalesInvoiceService, ICashBankService _cashBankService);
-        CashSalesReturn VUpdateObject(CashSalesReturn cashSalesReturn, ICashSalesReturnDetailService _cashSalesReturnDetailService);
+        CashSalesReturn VUpdateObject(CashSalesReturn cashSalesReturn, ICashSalesInvoiceService _cashSalesInvoiceService, ICashBankService _cashBankService);
         CashSalesReturn VDeleteObject(CashSalesReturn cashSalesReturn, ICashSalesReturnDetailService _cashSalesReturnDetailService);
 
         bool ValidConfirmObject(CashSalesReturn cashSalesReturn, ICashSalesReturnDetailService _cashSalesReturnDetailService, ICashSalesReturnService _cashSalesReturnService,
@@ -48,7 +48,7 @@ namespace Core.Interface.Validation
         bool ValidUnpaidObject(CashSalesReturn cashSalesReturn);
 
         bool ValidCreateObject(CashSalesReturn cashSalesReturn, ICashSalesInvoiceService _cashSalesInvoiceService, ICashBankService _cashBankService);
-        bool ValidUpdateObject(CashSalesReturn cashSalesReturn, ICashSalesReturnDetailService _cashSalesReturnDetailService);
+        bool ValidUpdateObject(CashSalesReturn cashSalesReturn, ICashSalesInvoiceService _cashSalesInvoiceService, ICashBankService _cashBankService);
         bool ValidDeleteObject(CashSalesReturn cashSalesReturn, ICashSalesReturnDetailService _cashSalesReturnDetailService);
         bool isValid(CashSalesReturn cashSalesReturn);
         string PrintError(CashSalesReturn cashSalesReturn);

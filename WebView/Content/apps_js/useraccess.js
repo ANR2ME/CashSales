@@ -74,6 +74,12 @@
                 newData.edit = objUserAccess.model[i].AllowEdit;
                 newData.delete = objUserAccess.model[i].AllowDelete;
                 newData.undelete = objUserAccess.model[i].AllowUndelete;
+                newData.confirm = objUserAccess.model[i].AllowConfirm;
+                newData.unconfirm = objUserAccess.model[i].AllowUnconfirm;
+                newData.paid = objUserAccess.model[i].AllowPaid;
+                newData.unpaid = objUserAccess.model[i].AllowUnpaid;
+                newData.reconcile = objUserAccess.model[i].AllowReconcile;
+                newData.unreconcile = objUserAccess.model[i].AllowUnreconcile;
                 newData.print = objUserAccess.model[i].AllowPrint;
 
                 // New Record
@@ -613,11 +619,11 @@
     jQuery("#tbl_users").jqGrid({
         url: base_url + 'User/GetList',
         datatype: "json",
-        colNames: ['Code', 'Name', 'Department', 'Title', 'Is Admin'],
+        colNames: ['Code', 'UserName', 'Name', 'Description', 'Is Admin'],
         colModel: [{ name: 'usercode', index: 'usercode', width: 80 },
-                  { name: 'username', index: 'username', width: 200 },
-                  { name: 'department', index: 'department', width: 80 },
-                  { name: 'title', index: 'title', width: 100 },
+                  { name: 'username', index: 'username', width: 100 },
+                  { name: 'department', index: 'department', width: 150 },
+                  { name: 'title', index: 'title', width: 150 },
                   {
                       name: 'isadmin', index: 'isadmin', width: 60, align: 'center', sortable: false,
                       editable: true,
@@ -630,7 +636,6 @@
             //var url = window.location.href.split('#');
             //if (url[1] != undefined && url[1] != '')
             //    group = url[1].substr(5, url[1].length - 5);
-
 
             // Clear and Reload all grid
             $("#tbl_access_master").jqGrid("clearGridData", true).trigger("reloadGrid");
@@ -646,7 +651,7 @@
         gridview: true,
         shrinkToFit: false,
         scroll: 1,
-        sortorder: "asc",
+        sortorder: "DESC",
         width: 450,
         height: 420
     });

@@ -434,7 +434,7 @@ namespace WebView.Controllers
                 data.CashBankId = model.CashBankId;
                 data.WarehouseId = model.WarehouseId;
                 //data.Discount = model.Discount;
-                model = _retailSalesInvoiceService.UpdateObject(data, _retailSalesInvoiceDetailService);
+                model = _retailSalesInvoiceService.UpdateObject(data, _warehouseService);
             }
             catch (Exception ex)
             {

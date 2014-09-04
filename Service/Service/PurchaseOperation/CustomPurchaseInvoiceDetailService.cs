@@ -109,16 +109,16 @@ namespace Service.Service
                     WarehouseItemId = warehouseItem.Id
                 };
 
-                decimal hiPrice = GetHighestPrice(customPurchaseInvoice.Id, customPurchaseInvoiceDetail.ItemId);
-                decimal oldSellingPrice = item.SellingPrice;
-                item.SellingPrice = ((hiPrice > customPurchaseInvoiceDetail.Price) ? hiPrice : customPurchaseInvoiceDetail.Price) * (100 + item.Margin) / 100;
+                decimal hiPrice = GetHighestPrice(/*customPurchaseInvoice.Id,*/ customPurchaseInvoiceDetail.ItemId);
+                decimal newPrice = hiPrice * (100 + item.Margin) / 100;
+                if (newPrice > item.SellingPrice)
+                {
+                    item.SellingPrice = newPrice;
+                    PriceMutation priceMutation = _priceMutationService.CreateObject(item.Id, item.SellingPrice, DateTime.Now);
+                    item.PriceMutationId = priceMutation.Id;
+                }
                 decimal itemPrice = customPurchaseInvoiceDetail.Amount / customPurchaseInvoiceDetail.Quantity;
                 item.AvgPrice = _itemService.CalculateAndUpdateAvgPrice(item, customPurchaseInvoiceDetail.Quantity, itemPrice);
-
-                if (item.SellingPrice != oldSellingPrice)
-                {
-                    PriceMutation priceMutation = _priceMutationService.CreateObject(item.Id, item.SellingPrice, DateTime.Now);
-                }
 
                 stockMutation = _stockMutationService.CreateObject(stockMutation, _warehouseService, _warehouseItemService, _itemService, _barringService);
                 stockMutation.CreatedAt = (DateTime)customPurchaseInvoice.ConfirmationDate.GetValueOrDefault();
@@ -137,17 +137,16 @@ namespace Service.Service
             {
                 Item item = _itemService.GetObjectById(customPurchaseInvoiceDetail.ItemId);
                 //CustomPurchaseInvoiceDetail hiCustomPurchaseInvoiceDetail = GetAll().Where(x => x.ItemId == item.Id).OrderByDescending(x => x.Price).FirstOrDefault();
-                decimal hiPrice = GetHighestPrice(customPurchaseInvoiceDetail.CustomPurchaseInvoiceId, customPurchaseInvoiceDetail.ItemId);
-                decimal oldSellingPrice = item.SellingPrice;
-                
-                item.SellingPrice = hiPrice * (100 + item.Margin) / 100;
+                decimal hiPrice = GetHighestPrice(/*customPurchaseInvoiceDetail.CustomPurchaseInvoiceId,*/ customPurchaseInvoiceDetail.ItemId);
+                decimal newPrice = hiPrice * (100 + item.Margin) / 100;
+                if (newPrice > item.SellingPrice)
+                {
+                    item.SellingPrice = newPrice;
+                    PriceMutation priceMutation = _priceMutationService.CreateObject(item.Id, item.SellingPrice, DateTime.Now);
+                    item.PriceMutationId = priceMutation.Id;
+                }
                 decimal itemPrice = customPurchaseInvoiceDetail.Amount / customPurchaseInvoiceDetail.Quantity;
                 item.AvgPrice = _itemService.CalculateAndUpdateAvgPrice(item, customPurchaseInvoiceDetail.Quantity * (-1), itemPrice);
-
-                if (item.SellingPrice != oldSellingPrice)
-                {
-                    PriceMutation priceMutation = _priceMutationService.CreateObject(item.Id, item.SellingPrice, DateTime.Now);
-                }
 
                 IList<StockMutation> stockMutations = _stockMutationService.GetObjectsBySourceDocumentDetailForItem(customPurchaseInvoiceDetail.ItemId, Core.Constants.Constant.SourceDocumentDetailType.CustomPurchaseInvoiceDetail, customPurchaseInvoiceDetail.Id);
                 foreach (var stockMutation in stockMutations)
@@ -202,9 +201,9 @@ namespace Service.Service
             return Total;
         }
 
-        public decimal GetHighestPrice(int CustomPurchaseInvoiceId, int ItemId)
+        public decimal GetHighestPrice(/*int CustomPurchaseInvoiceId,*/ int ItemId)
         {
-            IList<CustomPurchaseInvoiceDetail> customPurchaseInvoiceDetails = GetObjectsByCustomPurchaseInvoiceId(CustomPurchaseInvoiceId);
+            //IList<CustomPurchaseInvoiceDetail> customPurchaseInvoiceDetails = GetObjectsByCustomPurchaseInvoiceId(CustomPurchaseInvoiceId);
             
             decimal Price = 0;
             /*foreach (var customPurchaseInvoiceDetail in customPurchaseInvoiceDetails)

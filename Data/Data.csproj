@@ -68,6 +68,7 @@
     <Compile Include="Mapping\SalesOperation\CashSalesReturnMapping.cs" />
     <Compile Include="Mapping\SalesOperation\CashSalesReturnDetailMapping.cs" />
     <Compile Include="Mapping\StockAndMaster\ContactGroupMapping.cs" />
+    <Compile Include="Mapping\StockAndMaster\CompanyMapping.cs" />
     <Compile Include="Mapping\StockAndMaster\QuantityPricingMapping.cs" />
     <Compile Include="Mapping\StockAndMaster\GroupItemPriceMapping.cs" />
     <Compile Include="Mapping\StockAndMaster\PriceMutationMapping.cs" />
@@ -141,6 +142,7 @@
     <Compile Include="Repository\SalesOperation\CashSalesReturnDetailRepository.cs" />
     <Compile Include="Repository\SalesOperation\RetailSalesInvoiceDetailRepository.cs" />
     <Compile Include="Repository\SalesOperation\RetailSalesInvoiceRepository.cs" />
+    <Compile Include="Repository\StockAndMaster\CompanyRepository.cs" />
     <Compile Include="Repository\StockAndMaster\QuantityPricingRepository.cs" />
     <Compile Include="Repository\StockAndMaster\GroupItemPriceRepository.cs" />
     <Compile Include="Repository\StockAndMaster\ContactGroupRepository.cs" />

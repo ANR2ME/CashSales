@@ -634,7 +634,10 @@ namespace WebView
                 {
                     if (!String.IsNullOrEmpty(conditions[i]))
                     {
-                        string[] temp = conditions[i].TrimEnd().TrimStart().Split(' ');
+                        //string[] temp = conditions[i].TrimEnd().TrimStart().Split(' ');
+                        string temporary = conditions[i].TrimEnd().TrimStart();
+                        char[] delimiter = " ".ToCharArray();
+                        string[] temp = temporary.Split(delimiter, 3);
                         // 0 : fieldName
                         // 1 : operator
                         // 2 : fieldValue
@@ -711,7 +714,9 @@ namespace WebView
                 {
                     if (!String.IsNullOrEmpty(conditions[i]))
                     {
-                        string[] temp = conditions[i].TrimEnd().TrimStart().Split(' ');
+                        string temporary = conditions[i].TrimEnd().TrimStart();
+                        char[] delimiter = ",".ToCharArray();
+                        string[] temp = temporary.Split(delimiter, 3);
                         // 0 : fieldName
                         // 1 : operator
                         // 2 : fieldValue
@@ -789,7 +794,10 @@ namespace WebView
                 {
                     if (!String.IsNullOrEmpty(conditions[i]))
                     {
-                        string[] temp = conditions[i].TrimEnd().TrimStart().Split(' ');
+                        //string[] temp = conditions[i].TrimEnd().TrimStart().Split(' ');
+                        string temporary = conditions[i].TrimEnd().TrimStart();
+                        char[] delimiter = " ".ToCharArray();
+                        string[] temp = temporary.Split(delimiter, 3);
                         // 0 : fieldName
                         // 1 : operator
                         // 2 : fieldValue

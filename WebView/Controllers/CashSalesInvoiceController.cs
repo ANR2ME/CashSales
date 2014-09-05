@@ -228,17 +228,18 @@ namespace WebView.Controllers
                     {
                         id = model.Id,
                         cell = new object[] {
-                            model.Code,
-                            model.CashSalesInvoiceId,
-                            _cashSalesInvoiceService.GetObjectById(model.CashSalesInvoiceId).Code,
-                            model.ItemId,
-                            _itemService.GetObjectById(model.ItemId).Name,
-                            model.Quantity,
-                            model.Amount,
-                            model.CoGS,
-                            model.PriceMutationId,
-                            model.IsManualPriceAssignment,
-                            model.AssignedPrice,
+                             model.Code,
+                             model.CashSalesInvoiceId,
+                             model.cashsalesinvoice,
+                             model.ItemId,
+                             model.item,
+                             model.Quantity,
+                             model.Amount,
+                             model.CoGS,
+                             model.PriceMutationId,
+                             model.Discount,
+                             model.IsManualPriceAssignment,
+                             model.AssignedPrice,
                       }
                     }).ToArray()
             }, JsonRequestBehavior.AllowGet);
@@ -370,8 +371,7 @@ namespace WebView.Controllers
                     {
                         Errors
                     }, JsonRequestBehavior.AllowGet);
-                }
-
+               }
                 model = _cashSalesInvoiceDetailService.CreateObject(model, _cashSalesInvoiceService, _itemService, _warehouseItemService, _quantityPricingService);
                 total = _cashSalesInvoiceService.GetObjectById(model.CashSalesInvoiceId).Total;
             }

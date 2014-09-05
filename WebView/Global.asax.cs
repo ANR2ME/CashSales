@@ -24,8 +24,10 @@ namespace WebView
         private IUserMenuService _userMenuService;
         private IUserAccountService _userAccountService;
         private IUserAccessService _userAccessService;
+        private ICompanyService _companyService;
         private ContactGroup baseContactGroup;
         private Contact baseContact;
+        private Company baseCompany;
 
         protected void Application_Start()
         {
@@ -47,9 +49,15 @@ namespace WebView
             _userMenuService = new UserMenuService(new UserMenuRepository(), new UserMenuValidator());
             _userAccountService = new UserAccountService(new UserAccountRepository(), new UserAccountValidator());
             _userAccessService = new UserAccessService(new UserAccessRepository(), new UserAccessValidator());
+            _companyService = new CompanyService(new CompanyRepository(), new CompanyValidator());
 
-            baseContactGroup = _contactGroupService.CreateObject(Core.Constants.Constant.GroupType.Base, "Base Group", true);
-            baseContact = _contactService.CreateObject(Core.Constants.Constant.BaseContact, "BaseAddr", "123456", "PIC", "123", "Base@email.com", _contactGroupService);
+            baseContactGroup = _contactGroupService.FindOrCreateBaseContactGroup(); // .CreateObject(Core.Constants.Constant.GroupType.Base, "Base Group", true);
+            baseContact = _contactService.FindOrCreateBaseContact(_contactGroupService); // _contactService.CreateObject(Core.Constants.Constant.BaseContact, "BaseAddr", "123456", "PIC", "123", "Base@email.com", _contactGroupService);
+            baseCompany = _companyService.GetObjectByName("Toko Sepeda");
+            if (baseCompany == null)
+            {
+                baseCompany = _companyService.CreateObject("Toko Sepeda", "Jl. Raya No.10", "021-5556677", "", "tokosepeda@gmail.com");
+            }
 
             CreateUserMenus();
             CreateSysAdmin();
@@ -93,6 +101,7 @@ namespace WebView
 
             _userMenuService.CreateObject(Core.Constants.Constant.MenuName.User, Core.Constants.Constant.MenuGroupName.Setting);
             _userMenuService.CreateObject(Core.Constants.Constant.MenuName.UserAccessRight, Core.Constants.Constant.MenuGroupName.Setting);
+            _userMenuService.CreateObject(Core.Constants.Constant.MenuName.CompanyInfo, Core.Constants.Constant.MenuGroupName.Setting);
         }
 
         public void CreateSysAdmin()
@@ -104,28 +113,6 @@ namespace WebView
             }
             _userAccessService.CreateDefaultAccess(userAccount.Id, _userMenuService, _userAccountService);
 
-            /*var userMenus = _userMenuService.GetAll();
-            foreach (var userMenu in userMenus)
-            {
-                UserAccess userAccess = new UserAccess() 
-                {
-                    UserAccountId = userAccount.Id,
-                    UserMenuId = userMenu.Id,
-                    AllowConfirm = true,
-                    AllowCreate = true,
-                    AllowDelete = true,
-                    AllowEdit = true,
-                    AllowPaid = true,
-                    AllowPrint = true,
-                    AllowReconcile = true,
-                    AllowUnconfirm = true,
-                    AllowUndelete = true,
-                    AllowUnpaid = true,
-                    AllowUnreconcile = true,
-                    AllowView = true,
-                };
-                _userAccessService.CreateObject(userAccess, _userAccountService, _userMenuService);
-            }*/
         }
 
     }

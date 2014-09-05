@@ -18,6 +18,7 @@ namespace Core.Interface.Service
         ContactGroup CreateObject(ContactGroup contactGroup);
         ContactGroup CreateObject(string Name, string Description);
         ContactGroup CreateObject(string Name, string Description, bool IsLegacy);
+        ContactGroup FindOrCreateBaseContactGroup();
         ContactGroup UpdateObject(ContactGroup contactGroup);
         ContactGroup SoftDeleteObject(ContactGroup contactGroup);
         bool DeleteObject(int Id);

@@ -55,11 +55,11 @@ namespace Validation.Validation
             CashSalesInvoice cashSalesInvoice = _cashSalesInvoiceService.GetObjectById(cashSalesReturn.CashSalesInvoiceId);
             if (cashSalesInvoice == null)
             {
-                cashSalesReturn.Errors.Add("CashSalesInvoiceId", "Tidak valid");
+                cashSalesReturn.Errors.Add("Generic", "CashSalesInvoice Tidak valid");
             }
             else if (!(cashSalesInvoice.IsConfirmed && cashSalesInvoice.IsPaid))
             {
-                cashSalesReturn.Errors.Add("CashSalesInvoice", "Harus sudah terkonfirmasi dan terbayar");
+                cashSalesReturn.Errors.Add("Generic", "CashSalesInvoice Harus sudah terkonfirmasi dan terbayar");
             }
             return cashSalesReturn;
         }
@@ -186,7 +186,7 @@ namespace Validation.Validation
             return cashSalesReturn;
         }
 
-        public CashSalesReturn VIsCashBankTypeNotBank(CashSalesReturn cashSalesReturn, ICashBankService _cashBankService)
+        /*public CashSalesReturn VIsCashBankTypeNotBank(CashSalesReturn cashSalesReturn, ICashBankService _cashBankService)
         {
             CashBank cashBank = _cashBankService.GetObjectById((int)cashSalesReturn.CashBankId.GetValueOrDefault());
             if (cashBank.IsBank)
@@ -195,7 +195,7 @@ namespace Validation.Validation
                 return cashSalesReturn;
             }
             return cashSalesReturn;
-        }
+        }*/
 
         public CashSalesReturn VHasNoPaymentVoucherDetails(CashSalesReturn cashSalesReturn, IPayableService _payableService, IPaymentVoucherDetailService _paymentVoucherDetailService)
         {
@@ -259,8 +259,8 @@ namespace Validation.Validation
             VIsConfirmed(cashSalesReturn);
             if (!isValid(cashSalesReturn)) { return cashSalesReturn; }
             VHasCashBank(cashSalesReturn, _cashBankService);
-            if (!isValid(cashSalesReturn)) { return cashSalesReturn; }
-            VIsCashBankTypeNotBank(cashSalesReturn, _cashBankService);
+            //if (!isValid(cashSalesReturn)) { return cashSalesReturn; }
+            //VIsCashBankTypeNotBank(cashSalesReturn, _cashBankService);
             if (!isValid(cashSalesReturn)) { return cashSalesReturn; }
             VIsValidTotal(cashSalesReturn);
             if (!isValid(cashSalesReturn)) { return cashSalesReturn; }

@@ -156,9 +156,9 @@
 		$('#Description').removeAttr('disabled');
 		$('#btnCashBank').removeAttr('disabled');
 		$('#btnWarehouse').removeAttr('disabled');
-		$('#Discount').removeAttr('disabled');
-		$('#Tax').removeAttr('disabled');
-		$('#Allowance').removeAttr('disabled');
+		//$('#Discount').removeAttr('disabled');
+		//$('#Tax').removeAttr('disabled');
+		//$('#Allowance').removeAttr('disabled');
 		$('#SalesDateDiv2').hide();
 		$('#SalesDateDiv').show();
 		$('#DueDateDiv2').hide();
@@ -256,9 +256,9 @@
 							$('#Description').val(result.Description);
 							$('#SalesDate').datebox('setValue', dateEnt(result.SalesDate));
 							$('#DueDate').datebox('setValue', dateEnt(result.DueDate));
-							$('#Discount').numberbox('setValue', (result.Discount));
-							$('#Tax').numberbox('setValue', (result.Tax));
-							$('#Allowance').numberbox('setValue', (result.Allowance));
+							//$('#Discount').numberbox('setValue', (result.Discount));
+							//$('#Tax').numberbox('setValue', (result.Tax));
+							//$('#Allowance').numberbox('setValue', (result.Allowance));
 							$('#Total').numberbox('setValue', (result.Total));
 							$('#CashBankId').val(result.CashBankId);
 							$('#CashBankName').val(result.CashBank);
@@ -267,9 +267,9 @@
 							$('#Description').removeAttr('disabled');
 							$('#btnCashBank').removeAttr('disabled');
 							$('#btnWarehouse').removeAttr('disabled');
-							$('#Discount').removeAttr('disabled');
-							$('#Tax').removeAttr('disabled');
-							$('#Allowance').removeAttr('disabled');
+							//$('#Discount').removeAttr('disabled');
+							//$('#Tax').removeAttr('disabled');
+							//$('#Allowance').removeAttr('disabled');
 							$('#SalesDateDiv2').hide();
 							$('#SalesDateDiv').show();
 							$('#DueDateDiv2').hide();
@@ -540,8 +540,8 @@
 			data: JSON.stringify({
 				Id: id, Code: $("#Code").val(), Description: $("#Description").val(),
 				SalesDate: $("#SalesDate").datebox('getValue'), DueDate: $("#DueDate").datebox('getValue'),
-				Discount: $("#Discount").numberbox('getValue'), Tax: $('#Tax').numberbox('getValue'),
-				Allowance: $('#Allowance').numberbox('getValue'),
+				//Discount: $("#Discount").numberbox('getValue'), Tax: $('#Tax').numberbox('getValue'),
+				//Allowance: $('#Allowance').numberbox('getValue'),
 				CashBankId: $('#CashBankId').val(), WarehouseId: $('#WarehouseId').val(),
 			}),
 			async: false,

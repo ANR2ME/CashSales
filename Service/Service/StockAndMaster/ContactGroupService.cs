@@ -76,6 +76,16 @@ namespace Service.Service
             return (_validator.ValidCreateObject(contactGroup, this) ? _repository.CreateObject(contactGroup) : contactGroup);
         }
 
+        public ContactGroup FindOrCreateBaseContactGroup()
+        {
+            ContactGroup contactGroup = GetObjectByIsLegacy(true);
+            if (contactGroup == null)
+            {
+                contactGroup = CreateObject(Core.Constants.Constant.GroupType.Base, "Base Group", true);
+            }
+            return contactGroup;
+        }
+
         public ContactGroup UpdateObject(ContactGroup contactGroup)
         {
             return (contactGroup = _validator.ValidUpdateObject(contactGroup, this) ? _repository.UpdateObject(contactGroup) : contactGroup);

@@ -61,6 +61,7 @@ namespace Core.Constants
 
             public static string User = "User";
             public static string UserAccessRight = "User Access Right";
+            public static string CompanyInfo = "Company Info";
 
         }
 

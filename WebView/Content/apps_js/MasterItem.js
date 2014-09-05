@@ -25,23 +25,42 @@
     $("#lookup_div_uom").dialog('close');
     $("#delete_confirm_div").dialog('close');
 
+    $("#ItemTypeId").hide();
+    $("#UoMId").hide();
+
+    $('#SellingPrice').bind('keypress', function (e) {
+        if ($('#SellingPrice').val().length != 0) {
+            if (e.which == 45) { // minus
+                e.preventDefault();
+            }
+        }
+    });
+
+    $('#Margin').bind('keypress', function (e) {
+        if ($('#Margin').val().length != 0) {
+            if (e.which == 45) { // minus
+                e.preventDefault();
+            }
+        }
+    });
+
+    //$(document).ready(function() {
+    //    $('.QuantityInput').keypress(function(key) {
+    //        if(key.charCode == 45) return false;
+    //    });
 
     //GRID +++++++++++++++
     $("#list").jqGrid({
         url: base_url + 'MstItem/GetList',
         datatype: "json",
-        colNames: ['ID', 'Name', 'Item Type Id', 'Item Type Name', 'SKU',
-                   'Category', 'UoM Id','UoM','Quantity',
+        colNames: ['ID', 'SKU', 'Name', 'Item Type Name', 'UoM', 'Quantity',
                    'Selling Price', 'AvgPrice', 'Margin',
                    'Pending Receival', 'Pending Delivery', 'Created At', 'Updated At'],
         colModel: [
     			  { name: 'id', index: 'id', width: 80, align: "center" },
-				  { name: 'name', index: 'name', width: 100 },
-                  { name: 'itemtypeid', index: 'itemtypeid', width: 80 },
-                  { name: 'itemtype', index: 'itemtype', width: 100 },
                   { name: 'sku', index: 'sku', width: 100 },
-                  { name: 'category', index: 'category', width: 100 },
-                  { name: 'uomid', index: 'uomid', width: 80 },
+                  { name: 'name', index: 'name', width: 100 },
+                  { name: 'itemtype', index: 'itemtype', width: 100 },
                   { name: 'uom', index: 'uom', width: 100 },
                   { name: 'quantity', index: 'quantity', width: 80, formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' } },
                   { name: 'sellingprice', index: 'sellingprice', width: 80, formatter: 'currency', formatoptions: { thousandsSeparator: ",", defaultValue: '0' } },
@@ -77,7 +96,8 @@
     });
 
     $('#btn_print').click(function () {
-        window.open(base_url + 'Print_Forms/Printmstbank.aspx');
+        //window.open(base_url + 'Print_Forms/Printmstbank.aspx');
+        window.open(base_url + 'Report/ReportItem');
     });
 
     $('#btn_add_new').click(function () {

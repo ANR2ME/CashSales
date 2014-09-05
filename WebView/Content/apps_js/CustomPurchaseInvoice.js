@@ -356,7 +356,7 @@
 			$('#ConfirmationDate').datebox('setValue', $.datepicker.formatDate('mm/dd/yy', new Date()));
 			$('#confirmDiscount').numberbox('setValue', ret.discount);
 			$('#confirmTax').numberbox('setValue', ret.tax);
-			$('#confirmAllowance').numberbox('setValue', ret.allowance);
+			//$('#confirmAllowance').numberbox('setValue', ret.allowance);
 			$('#idconfirm').val(ret.id);
 			$("#confirm_div").dialog("open");
 		} else {
@@ -410,7 +410,8 @@
 			contentType: "application/json",
 			data: JSON.stringify({
 				Id: $('#idconfirm').val(), ConfirmationDate: $('#ConfirmationDate').datebox('getValue'),
-				Discount: $('#confirmDiscount').numberbox('getValue'), Tax: $('#confirmTax').numberbox('getValue'), Allowance: $('#confirmAllowance').numberbox('getValue'),
+				Discount: $('#confirmDiscount').numberbox('getValue'), Tax: $('#confirmTax').numberbox('getValue'),
+				//Allowance: $('#confirmAllowance').numberbox('getValue'),
 			}),
 			success: function (result) {
 				if (JSON.stringify(result.Errors) != '{}') {

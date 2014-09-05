@@ -66,6 +66,7 @@
     <Compile Include="Service\SalesOperation\CashSalesReturnService.cs" />
     <Compile Include="Service\SalesOperation\RetailSalesInvoiceDetailService.cs" />
     <Compile Include="Service\SalesOperation\RetailSalesInvoiceService.cs" />
+    <Compile Include="Service\StockAndMaster\CompanyService.cs" />
     <Compile Include="Service\StockAndMaster\QuantityPricingService.cs" />
     <Compile Include="Service\StockAndMaster\GroupItemPriceService.cs" />
     <Compile Include="Service\StockAndMaster\PriceMutationService.cs" />

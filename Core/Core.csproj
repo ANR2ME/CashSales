@@ -66,6 +66,7 @@
     <Compile Include="DomainModel\SalesOperation\CashSalesReturn.cs" />
     <Compile Include="DomainModel\SalesOperation\CashSalesReturnDetail.cs" />
     <Compile Include="DomainModel\StockAndMaster\ContactGroup.cs" />
+    <Compile Include="DomainModel\StockAndMaster\Company.cs" />
     <Compile Include="DomainModel\StockAndMaster\QuantityPricing.cs" />
     <Compile Include="DomainModel\StockAndMaster\GroupItemPrice.cs" />
     <Compile Include="DomainModel\StockAndMaster\PriceMutation.cs" />
@@ -133,6 +134,7 @@
     <Compile Include="Interface\Repository\SalesOperation\ICashSalesReturnRepository.cs" />
     <Compile Include="Interface\Repository\SalesOperation\ICashSalesInvoiceRepository.cs" />
     <Compile Include="Interface\Repository\SalesOperation\ICashSalesInvoiceDetailRepository.cs" />
+    <Compile Include="Interface\Repository\StockAndMaster\ICompanyRepository.cs" />
     <Compile Include="Interface\Repository\StockAndMaster\IQuantityPricingRepository.cs" />
     <Compile Include="Interface\Repository\StockAndMaster\IGroupItemPriceRepository.cs" />
     <Compile Include="Interface\Repository\StockAndMaster\IContactGroupRepository.cs" />
@@ -204,6 +206,7 @@
     <Compile Include="Interface\Service\SalesOperation\ICashSalesReturnService.cs" />
     <Compile Include="Interface\Service\SalesOperation\ICashSalesInvoiceService.cs" />
     <Compile Include="Interface\Service\SalesOperation\ICashSalesInvoiceDetailService.cs" />
+    <Compile Include="Interface\Service\StockAndMaster\ICompanyService.cs" />
     <Compile Include="Interface\Service\StockAndMaster\IQuantityPricingService.cs" />
     <Compile Include="Interface\Service\StockAndMaster\IGroupItemPriceService.cs" />
     <Compile Include="Interface\Service\StockAndMaster\IContactGroupService.cs" />
@@ -273,6 +276,7 @@
     <Compile Include="Interface\Validation\SalesOperation\ICashSalesReturnValidator.cs" />
     <Compile Include="Interface\Validation\SalesOperation\ICashSalesInvoiceValidator.cs" />
     <Compile Include="Interface\Validation\SalesOperation\ICashSalesInvoiceDetailValidator.cs" />
+    <Compile Include="Interface\Validation\StockAndMaster\ICompanyValidator.cs" />
     <Compile Include="Interface\Validation\StockAndMaster\IQuantityPricingValidator.cs" />
     <Compile Include="Interface\Validation\StockAndMaster\IGroupItemPriceValidator.cs" />
     <Compile Include="Interface\Validation\StockAndMaster\IContactGroupValidator.cs" />

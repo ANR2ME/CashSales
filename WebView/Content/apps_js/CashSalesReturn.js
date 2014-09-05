@@ -120,7 +120,7 @@
 		$('#Description').removeAttr('disabled');
 		$('#btnCashBank').removeAttr('disabled');
 		$('#btnCashSalesInvoice').removeAttr('disabled');
-		$('#Allowance').removeAttr('disabled');
+		//$('#Allowance').removeAttr('disabled');
 		$('#ReturnDateDiv2').hide();
 		$('#ReturnDateDiv').show();
 		vStatusSaving = 0; //add data mode
@@ -208,7 +208,7 @@
 							$('#Code').val(result.Code);
 							$('#Description').val(result.Description);
 							$('#ReturnDate').datebox('setValue', dateEnt(result.ReturnDate));
-							$('#Allowance').numberbox('setValue', (result.Allowance));
+							//$('#Allowance').numberbox('setValue', (result.Allowance));
 							$('#Total').numberbox('setValue', (result.Total));
 							$('#CashBankId').val(result.CashBankId);
 							$('#CashBankName').val(result.CashBank);
@@ -217,7 +217,7 @@
 							$('#Description').removeAttr('disabled');
 							$('#btnCashBank').removeAttr('disabled');
 							$('#btnCashSalesInvoice').removeAttr('disabled');
-							$('#Allowance').removeAttr('disabled');
+							//$('#Allowance').removeAttr('disabled');
 							$('#ReturnDateDiv2').hide();
 							$('#ReturnDateDiv').show();
 							$('#tabledetail_div').hide();
@@ -237,7 +237,7 @@
 		if (id) {
 			var ret = jQuery("#list").jqGrid('getRowData', id);
 			$('#ConfirmationDate').datebox('setValue', $.datepicker.formatDate('mm/dd/yy', new Date()));
-			$('#confirmAllowance').numberbox('setValue', ret.allowance);
+			//$('#confirmAllowance').numberbox('setValue', ret.allowance);
 			$('#idconfirm').val(ret.id);
 			$("#confirm_div").dialog("open");
 		} else {
@@ -291,7 +291,7 @@
 			contentType: "application/json",
 			data: JSON.stringify({
 				Id: $('#idconfirm').val(), ConfirmationDate: $('#ConfirmationDate').datebox('getValue'),
-				Allowance: $('#confirmAllowance').numberbox('getValue'),
+				//Allowance: $('#confirmAllowance').numberbox('getValue'),
 			}),
 			success: function (result) {
 				if (JSON.stringify(result.Errors) != '{}') {
@@ -482,8 +482,9 @@
 			url: submitURL,
 			data: JSON.stringify({
 				Id: id, Code: $("#Code").val(), Description: $("#Description").val(),
-				ReturnDate: $("#ReturnDate").datebox('getValue'), Allowance: $('#Allowance').numberbox('getValue'),
+				ReturnDate: $("#ReturnDate").datebox('getValue'), 
 				CashBankId: $('#CashBankId').val(), CashSalesInvoiceId: $('#CashSalesInvoiceId').val(),
+				//Allowance: $('#Allowance').numberbox('getValue'),
 			}),
 			async: false,
 			cache: false,

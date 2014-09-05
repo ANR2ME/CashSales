@@ -41,14 +41,15 @@ namespace WebView
             IUserAccessService _userAccessService = new UserAccessService(new UserAccessRepository(), new UserAccessValidator());
             IUserMenuService _userMenuService = new UserMenuService(new UserMenuRepository(), new UserMenuValidator());
 
+            UserAccount userAccount = _userAccountService.GetObjectById(GetUserId());
+            if (userAccount == null) return false;
+            if (userAccount.IsAdmin) return true;
             UserMenu userMenu = _userMenuService.GetObjectByNameAndGroupName(MenuName, MenuGroupName);
             if (userMenu != null) 
             {
-                UserAccount userAccount = _userAccountService.GetObjectById(GetUserId());
                 UserAccess userAccess = _userAccessService.GetObjectByUserAccountIdAndUserMenuId(userAccount.Id, userMenu.Id);
                 if (userAccess != null) 
                 {
-                    if (userAccount.IsAdmin) return true;
                     switch (Role.ToLower()) {
                         case "view" : return userAccess.AllowView;
                         case "create" : return userAccess.AllowCreate;

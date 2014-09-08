@@ -56,14 +56,14 @@ namespace Validation.Validation
             return item;
         }
 
-        public Item VHasCategory(Item item)
+        /*public Item VHasCategory(Item item)
         {
             if (String.IsNullOrEmpty(item.Category) || item.Category.Trim() == "")
             {
                 item.Errors.Add("Category", "Tidak boleh kosong");
             }
             return item;
-        }
+        }*/
 
         public Item VHasUoM(Item item, IUoMService _uomService)
         {
@@ -173,8 +173,8 @@ namespace Validation.Validation
             VHasUniqueSku(item, _itemService);
             if (!isValid(item)) { return item; }
             VHasName(item);
-            if (!isValid(item)) { return item; }
-            VHasCategory(item);
+            //if (!isValid(item)) { return item; }
+            //VHasCategory(item);
             if (!isValid(item)) { return item; }
             VNonNegativePrice(item);
             if (!isValid(item)) { return item; }
@@ -191,8 +191,8 @@ namespace Validation.Validation
             VHasUniqueSku(item, _itemService);
             if (!isValid(item)) { return item; }
             VHasName(item);
-            if (!isValid(item)) { return item; }
-            VHasCategory(item);
+            //if (!isValid(item)) { return item; }
+            //VHasCategory(item);
             if (!isValid(item)) { return item; }
             VNonNegativePrice(item);
             if (!isValid(item)) { return item; }

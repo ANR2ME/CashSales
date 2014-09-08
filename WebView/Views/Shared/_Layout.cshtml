@@ -330,9 +330,9 @@
 										<ul>
 											 <li><a href="#">Purchase</a>
 												<ul>
-													<li><a href="@Url.Action("Index", "PurchaseOrder")">Purchase Order</a></li>
+													@*<li><a href="@Url.Action("Index", "PurchaseOrder")">Purchase Order</a></li>
 													<li><a href="@Url.Action("Index", "PurchaseReceival")">Purchase Receival</a></li>
-													<li><a href="@Url.Action("Index", "PurchaseInvoice")">Purchase Invoice</a></li>
+													<li><a href="@Url.Action("Index", "PurchaseInvoice")">Purchase Invoice</a></li>*@
 													<li><a href="@Url.Action("Index", "PaymentVoucher")">Payment Voucher</a></li>
                                                     <li><a href="@Url.Action("Index", "Payable")">Payable</a></li>
                                                     <li><a href="@Url.Action("Index", "CustomPurchaseInvoice")">Custom Purchase Invoice</a></li>
@@ -340,32 +340,29 @@
 											</li>
 											   <li><a href="#">Sales</a>
 												<ul>
-													<li><a href="@Url.Action("Index", "SalesOrder")">Sales Order</a></li>
+													@*<li><a href="@Url.Action("Index", "SalesOrder")">Sales Order</a></li>
 													<li><a href="@Url.Action("Index", "DeliveryOrder")">Delivery Order</a></li>
-													<li><a href="@Url.Action("Index", "SalesInvoice")">Sales Invoice</a></li>
+													<li><a href="@Url.Action("Index", "SalesInvoice")">Sales Invoice</a></li>*@
 													<li><a href="@Url.Action("Index", "ReceiptVoucher")">Receipt Voucher</a></li>
                                                     <li><a href="@Url.Action("Index", "Receivable")">Receivable</a></li>
 													<li><a href="@Url.Action("Index", "CashSalesInvoice")">Cash Sales Invoice</a></li>
                                                     <li><a href="@Url.Action("Index", "CashSalesReturn")">Cash Sales Return</a></li>
-                                                    <li><a href="@Url.Action("Index", "RetailSalesInvoice")">Retail Sales Invoice</a></li>
+                                                    @*<li><a href="@Url.Action("Index", "RetailSalesInvoice")">Retail Sales Invoice</a></li>*@
 												</ul>
 											</li>
 										</ul>
 									</li>
 									<li><a href="#">Report</a>
 										<ul>
-											   <li><a href="#">Data</a>
+											   @*<li><a href="#">Data</a>
 												<ul>
 											   <li><a href="@Url.Action("Index", "MstContact")">Contact</a> </li>
-											   @*<li><a href="@Url.Action("Index", "MstContactGroup")">Contact Group</a> </li>
-											   <li><a href="@Url.Action("Index", "MstRollerType")">RollerType</a> </li>
-											   <li><a href="@Url.Action("Index", "MstMachine")">Machine</a> </li>*@
 											   <li><a href="@Url.Action("Index", "MstItemType")">ItemType</a> </li>
                                                <li><a href="@Url.Action("Index", "MstUom")">UoM</a> </li>
                                                <li><a href="@Url.Action("Index", "QuantityPricing")">Quantity Pricing</a> </li>
 												</ul>
-											</li>
-												<li><a href="#">Finance</a>
+											</li>*@
+												@*<li><a href="#">Finance</a>
 												<ul>
 													<li><a href="@Url.Action("Index", "MstCashBank")">CashBank</a> </li>
 													<li><a href="@Url.Action("Index", "CashMutation")">Cash Mutation</a></li>
@@ -373,22 +370,21 @@
 													<li><a href="@Url.Action("Index", "CashBankMutation")">CashBank Mutation</a></li>
 													<li><a href="@Url.Action("Index", "PaymentRequest")">Payment Request</a></li>
 												</ul>
-											</li>
+											</li>*@
 											   <li><a href="#">Stock</a>
 												<ul>
-													@*<li><a href="@Url.Action("Index", "MstBarring")">Barring</a> </li>
-													<li><a href="@Url.Action("Index", "MstCoreBuilder")">CoreBuilder</a> </li>
-												   <li><a href="@Url.Action("Index", "MstRollerBuilder")">RollerBuilder</a> </li>*@
 													<li><a href="@Url.Action("Item", "Report")">Item </a> </li>
-                                                    <li><a href="@Url.Action("Index", "StockAdjustment")">Stock Adjustment</a></li>
-                                                    <li><a href="@Url.Action("Index", "StockMutation")">Stock Mutation</a></li>
-												   <li><a href="@Url.Action("Index", "MstWarehouse")">Warehouse</a> </li>
-													<li><a href="@Url.Action("Index", "WarehouseItem")">Warehouse Item</a> </li>
-												   <li><a href="@Url.Action("Index", "WarehouseMutationOrder")">Warehouse Mutation</a></li>
+												</ul>
+											</li>
+                                            <li><a href="#">Transaction</a>
+												<ul>
+													<li><a href="@Url.Action("Sales", "Report")">Sales </a> </li>
+                                                    <li><a href="@Url.Action("ProfitLoss", "Report")">Profit/Loss </a> </li>
                                                     
 												</ul>
 											</li>
 										</ul>
+
 									</li>
 									<li id="menu-item-51"><a href="#">Setting</a>
 										<ul>

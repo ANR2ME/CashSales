@@ -47,7 +47,7 @@ namespace Validation.Validation
                 CashBank cashBank = _cashBankService.GetObjectById(paymentVoucher.CashBankId);
                 if (!cashBank.IsBank)
                 {
-                    paymentVoucher.Errors.Add("IsBank", "Jika GBCH Harus IsBank");
+                    paymentVoucher.Errors.Add("Generic", "Jika GBCH Harus IsBank");
                 }
             }
             return paymentVoucher;
@@ -134,6 +134,7 @@ namespace Validation.Validation
             IList<PaymentVoucherDetail> details = _paymentVoucherDetailService.GetObjectsByPaymentVoucherId(paymentVoucher.Id);
             foreach (var detail in details)
             {
+                detail.Errors = new Dictionary<string, string>();
                 detail.ConfirmationDate = paymentVoucher.ConfirmationDate;
                 if (!_paymentVoucherDetailService.GetValidator().ValidConfirmObject(detail, _payableService))
                 {

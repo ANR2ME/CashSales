@@ -9,13 +9,13 @@
     }
 
     function ReloadGrid() {
-        $("#list").setGridParam({ url: base_url + 'MstItem/GetList', postData: { filters: null }, page: 'first' }).trigger("reloadGrid");
+        //$("#list").setGridParam({ url: base_url + 'MstItem/GetList', postData: { filters: null }, page: 'first' }).trigger("reloadGrid");
     }
 
     function ClearData() {
-        $('#Description').val('').text('').removeClass('errormessage');
-        $('#Name').val('').text('').removeClass('errormessage');
-        $('#form_btn_save').data('kode', '');
+        //$('#Description').val('').text('').removeClass('errormessage');
+        //$('#Name').val('').text('').removeClass('errormessage');
+        //$('#form_btn_save').data('kode', '');
 
         ClearErrorMessage();
     }

@@ -1,0 +1,9 @@
+StartDate	Date		
+EndDate	Date
+TotalSales	Currency
+TotalCoGS	Currency
+TotalSalesReturn	Currency		
+TotalExpense	Currency		
+CompanyName	String	80
+CompanyAddress	String	255
+CompanyContactNo	String	100

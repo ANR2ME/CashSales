@@ -78,7 +78,8 @@ namespace Service.Service
 
         public ContactGroup FindOrCreateBaseContactGroup()
         {
-            ContactGroup contactGroup = GetObjectByIsLegacy(true);
+            //ContactGroup contactGroup = GetObjectByIsLegacy(true);
+            ContactGroup contactGroup = GetObjectByName(Core.Constants.Constant.GroupType.Base);
             if (contactGroup == null)
             {
                 contactGroup = CreateObject(Core.Constants.Constant.GroupType.Base, "Base Group", true);

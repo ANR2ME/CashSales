@@ -193,7 +193,7 @@ namespace Service.Service
         {
             decimal Amount = (cashMutation.Status == Constant.MutationStatus.Deduction) ? cashMutation.Amount : (-1) * cashMutation.Amount;
             CashBank cashBank = _cashBankService.GetObjectById(cashMutation.CashBankId);
-            cashBank.Amount -= Amount;
+            cashBank.Amount += Amount;
             _cashBankService.UpdateObject(cashBank);
         }
     }

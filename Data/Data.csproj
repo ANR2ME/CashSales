@@ -115,6 +115,7 @@
     <Compile Include="Mapping\UserRole\UserAccessMapping.cs" />
     <Compile Include="Mapping\UserRole\UserMenuMapping.cs" />
     <Compile Include="Mapping\UserRole\UserAccountMapping.cs" />
+    <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repository\Accounting\AccountRepository.cs" />
     <Compile Include="Repository\Accounting\ClosingRepository.cs" />

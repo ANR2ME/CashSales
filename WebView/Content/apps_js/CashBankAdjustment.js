@@ -5,10 +5,15 @@
     }
 
     function ReloadGrid() {
-        $("#list").setGridParam({ url: base_url + 'CashBankAdjustment/GetList', postData: { filters: null }, page: 'first' }).trigger("reloadGrid");
+        $("#list").setGridParam({ url: base_url + 'CashBankAdjustment/GetList', page: 'first' }).trigger("reloadGrid");
     }
 
     function ClearData() {
+        $('#id').val('').text('').removeClass('errormessage');
+        $('#Code').val('').text('').removeClass('errormessage');
+        $('#CashBankId').val('').text('').removeClass('errormessage');
+        $('#CashBank').val('').text('').removeClass('errormessage');
+        $('#Amount').numberbox('setValue', '').removeClass('errormessage');
         $('#form_btn_save').data('kode', '');
         ClearErrorMessage();
     }
@@ -18,6 +23,9 @@
     $("#confirm_div").dialog('close');
     $("#delete_confirm_div").dialog('close');
 
+    datePick = function (elem) {
+        $(elem).datepicker();
+    }
 
     //GRID +++++++++++++++
     $("#list").jqGrid({
@@ -28,12 +36,12 @@
         colModel: [
     			  { name: 'id', index: 'id', width: 80, align: "center" },
 				  { name: 'code', index: 'code', width: 100 },
-                  { name: 'cashbankid', index: 'cashbankid', width: 80 },
+                  { name: 'cashbankid', index: 'cashbankid', width: 80, hidden: true },
                   { name: 'cashbank', index: 'cashbank', width: 100 },
                   { name: 'amount', index: 'amount', width: 100, formatter: 'currency', formatoptions: { decimalSeparator: ".", thousandsSeparator: ",", decimalPlaces: 2, prefix: "", suffix: "", defaultValue: '0.00' } },
-                  { name: 'adjustmentdate', index: 'adjustmentdate', width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
-                  { name: 'isconfirmed', index: 'isconfirmed', width: 80 },
-                  { name: 'confirmationdate', index: 'confirmationdate', width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
+                  { name: 'adjustmentdate', index: 'adjustmentdate', width: 100, align: "center", formatter: 'date', search:false, formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y', dataInit: datePick, attr: { title: 'Select Date' } } },
+                  { name: 'isconfirmed', index: 'isconfirmed', width: 100, stype: 'select', editoptions: { value: ':All;true:Yes;false:No' } },
+                  { name: 'confirmationdate', index: 'confirmationdate', hidden: true, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
 				  { name: 'createdat', index: 'createdat', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
 				  { name: 'updateat', index: 'updateat', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
         ],
@@ -55,7 +63,7 @@
 		           var cl = ids[i];
 		           rowIsConfirmed = $(this).getRowData(cl).isconfirmed;
 		           if (rowIsConfirmed == 'true') {
-		               rowIsConfirmed = "YES";
+		               rowIsConfirmed = "YES, " + $(this).getRowData(cl).confirmationdate;
 		           } else {
 		               rowIsConfirmed = "NO";
 		           }
@@ -64,8 +72,8 @@
 		   }
 
     });//END GRID
-    $("#list").jqGrid('navGrid', '#toolbar_cont', { del: false, add: false, edit: false, search: false })
-           .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: false });
+    $("#list").jqGrid('navGrid', '#toolbar_cont', { del: false, add: false, edit: false, search: true })
+           .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: true });
 
     //TOOL BAR BUTTON
     $('#btn_reload').click(function () {
@@ -99,7 +107,7 @@
                         if (JSON.stringify(result.Errors) != '{}') {
                             var error = '';
                             for (var key in result.Errors) {
-                                error = error + "<br>" + key + " " + result.model.Errors[key];
+                                error = error + "<br>" + key + " " + result.Errors[key];
                             }
                             $.messager.alert('Warning', error, 'warning');
                         }
@@ -127,6 +135,8 @@
             var ret = jQuery("#list").jqGrid('getRowData', id);
             $('#ConfirmationDate').datebox('setValue', $.datepicker.formatDate('mm/dd/yy', new Date()));
             $('#idconfirm').val(ret.id);
+            $('#confirmCode').val(ret.code);
+            $('#confirmAmount').numberbox('setValue', ret.amount);
             $("#confirm_div").dialog("open");
         } else {
             $.messager.alert('Information', 'Please Select Data...!!', 'info');

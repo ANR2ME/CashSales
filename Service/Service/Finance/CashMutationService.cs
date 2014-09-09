@@ -75,6 +75,7 @@ namespace Service.Service
             cashMutation.MutationDate = paymentVoucher.IsGBCH ? (DateTime) paymentVoucher.ReconciliationDate.GetValueOrDefault() : (DateTime) paymentVoucher.ConfirmationDate.GetValueOrDefault();
             cashMutation.SourceDocumentType = Constant.SourceDocumentType.PaymentVoucher;
             cashMutation.SourceDocumentId = paymentVoucher.Id;
+            cashMutation.SourceDocumentCode = paymentVoucher.Code;
             cashMutation.Status = Constant.MutationStatus.Deduction;
             return _repository.CreateObject(cashMutation);
         }
@@ -97,6 +98,7 @@ namespace Service.Service
             cashMutation.MutationDate = receiptVoucher.IsGBCH ? (DateTime) receiptVoucher.ReconciliationDate.GetValueOrDefault() : (DateTime) receiptVoucher.ConfirmationDate.GetValueOrDefault();
             cashMutation.SourceDocumentType = Constant.SourceDocumentType.ReceiptVoucher;
             cashMutation.SourceDocumentId = receiptVoucher.Id;
+            cashMutation.SourceDocumentCode = receiptVoucher.Code;
             cashMutation.Status = Constant.MutationStatus.Addition;
             return _repository.CreateObject(cashMutation);
         }
@@ -119,6 +121,7 @@ namespace Service.Service
             cashMutation.MutationDate = (DateTime) cashBankAdjustment.ConfirmationDate.GetValueOrDefault();
             cashMutation.SourceDocumentType = Constant.SourceDocumentType.CashBankAdjustment;
             cashMutation.SourceDocumentId = cashBankAdjustment.Id;
+            cashMutation.SourceDocumentCode = cashBankAdjustment.Code;
             cashMutation.Status = (cashBankAdjustment.Amount >= 0) ? Constant.MutationStatus.Addition : Constant.MutationStatus.Deduction;
             return _repository.CreateObject(cashMutation);
         }
@@ -143,6 +146,7 @@ namespace Service.Service
             sourceCashMutation.MutationDate = (DateTime) cashBankMutation.ConfirmationDate.GetValueOrDefault();
             sourceCashMutation.SourceDocumentType = Constant.SourceDocumentType.CashBankMutation;
             sourceCashMutation.SourceDocumentId = cashBankMutation.Id;
+            sourceCashMutation.SourceDocumentCode = cashBankMutation.Code;
             sourceCashMutation.Status = Constant.MutationStatus.Deduction;
             _repository.CreateObject(sourceCashMutation);
 
@@ -152,6 +156,7 @@ namespace Service.Service
             targetCashMutation.MutationDate = (DateTime)cashBankMutation.ConfirmationDate.GetValueOrDefault();
             targetCashMutation.SourceDocumentType = Constant.SourceDocumentType.CashBankMutation;
             targetCashMutation.SourceDocumentId = cashBankMutation.Id;
+            targetCashMutation.SourceDocumentCode = cashBankMutation.Code;
             targetCashMutation.Status = Constant.MutationStatus.Addition;
             _repository.CreateObject(targetCashMutation);
 

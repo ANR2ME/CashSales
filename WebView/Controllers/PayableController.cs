@@ -30,7 +30,7 @@ namespace WebView.Controllers
         {
             if (!AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.Payable, Core.Constants.Constant.MenuGroupName.Transaction))
             {
-                return Content("You are not allowed to View this Page.");
+                return Content(Core.Constants.Constant.PageViewNotAllowed);
             }
 
             return View();
@@ -56,6 +56,7 @@ namespace WebView.Controllers
                              model.Code,
                              model.PayableSource,
                              model.PayableSourceId,
+                             model.PayableSourceCode,
                              model.Amount,
                              model.RemainingAmount,
                              model.PendingClearanceAmount,
@@ -140,6 +141,7 @@ namespace WebView.Controllers
                              model.Code,
                              model.PayableSource,
                              model.PayableSourceId,
+                             model.PayableSourceCode,
                              model.Amount,
                              model.RemainingAmount,
                              model.PendingClearanceAmount,

@@ -80,7 +80,7 @@ namespace Service.Service
                 }
                 // Tax dihitung setelah discount
                 retailPurchaseInvoice.Total = (retailPurchaseInvoice.Total * (100 - retailPurchaseInvoice.Discount) / 100) * (100 - retailPurchaseInvoice.Tax) / 100;
-                Payable payable = _payableService.CreateObject(retailPurchaseInvoice.ContactId, Core.Constants.Constant.PayableSource.RetailPurchaseInvoice, retailPurchaseInvoice.Id, retailPurchaseInvoice.Total, (DateTime)retailPurchaseInvoice.DueDate.GetValueOrDefault());
+                Payable payable = _payableService.CreateObject(retailPurchaseInvoice.ContactId, Core.Constants.Constant.PayableSource.RetailPurchaseInvoice, retailPurchaseInvoice.Id, retailPurchaseInvoice.Code, retailPurchaseInvoice.Total, (DateTime)retailPurchaseInvoice.DueDate.GetValueOrDefault());
                 retailPurchaseInvoice = _repository.ConfirmObject(retailPurchaseInvoice);
             }
             else

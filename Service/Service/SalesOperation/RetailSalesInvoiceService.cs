@@ -79,7 +79,7 @@ namespace Service.Service
                 }
                 // Tax dihitung setelah Discount
                 retailSalesInvoice.Total = (retailSalesInvoice.Total * ((100 - retailSalesInvoice.Discount) / 100) * ((100 + retailSalesInvoice.Tax) / 100));
-                Receivable receivable = _receivableService.CreateObject(retailSalesInvoice.ContactId, Core.Constants.Constant.ReceivableSource.RetailSalesInvoice, retailSalesInvoice.Id, retailSalesInvoice.Total, (DateTime)retailSalesInvoice.DueDate.GetValueOrDefault());
+                Receivable receivable = _receivableService.CreateObject(retailSalesInvoice.ContactId, Core.Constants.Constant.ReceivableSource.RetailSalesInvoice, retailSalesInvoice.Id, retailSalesInvoice.Code, retailSalesInvoice.Total, (DateTime)retailSalesInvoice.DueDate.GetValueOrDefault());
                 retailSalesInvoice = _repository.ConfirmObject(retailSalesInvoice);
             }
             else

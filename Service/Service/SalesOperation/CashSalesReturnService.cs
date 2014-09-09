@@ -81,7 +81,7 @@ namespace Service.Service
                 }
                 // DueDate untuk Payable dari mana ?
                 Contact contact = _contactService.GetObjectByName(Core.Constants.Constant.BaseContact);
-                Payable payable = _payableService.CreateObject(contact.Id, Core.Constants.Constant.PayableSource.CashSalesReturn, cashSalesReturn.Id, cashSalesReturn.Total, ConfirmationDate.Add(Core.Constants.Constant.PaymentDueDateTimeSpan));
+                Payable payable = _payableService.CreateObject(contact.Id, Core.Constants.Constant.PayableSource.CashSalesReturn, cashSalesReturn.Id, cashSalesReturn.Code, cashSalesReturn.Total, ConfirmationDate.Add(Core.Constants.Constant.PaymentDueDateTimeSpan));
                 cashSalesReturn = _repository.ConfirmObject(cashSalesReturn);
             }
             else

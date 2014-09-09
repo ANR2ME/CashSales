@@ -598,7 +598,7 @@ namespace WebView
 
                         if (isifilter.field.ToString().ToUpper().Contains("DATE"))
                         {
-                            strField = "convert(varchar(10)," + isifilter.field + ",120)";
+                            strField = "convert(nvarchar(10)," + isifilter.field + ",120)"; // varchar
                         }
                         else
                         {

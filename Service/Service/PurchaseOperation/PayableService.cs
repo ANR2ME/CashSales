@@ -62,13 +62,14 @@ namespace Service.Service
             return (_validator.ValidCreateObject(payable, this) ? _repository.CreateObject(payable) : payable);
         }
 
-        public Payable CreateObject(int contactId, string payableSource, int payableSourceId, decimal amount, DateTime dueDate)
+        public Payable CreateObject(int contactId, string payableSource, int payableSourceId, string payableSourceCode, decimal amount, DateTime dueDate)
         {
             Payable payable = new Payable
             {
                 ContactId = contactId,
                 PayableSource = payableSource,
                 PayableSourceId = payableSourceId,
+                PayableSourceCode = payableSourceCode,
                 Amount = amount,
                 RemainingAmount = amount,
                 DueDate = dueDate

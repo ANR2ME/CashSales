@@ -88,7 +88,7 @@ namespace Service.Service
 
         public PurchaseOrder ConfirmObject(PurchaseOrder purchaseOrder, DateTime ConfirmationDate, IPurchaseOrderDetailService _purchaseOrderDetailService,
                                     IStockMutationService _stockMutationService, IItemService _itemService, IBarringService _barringService,
-                                    IWarehouseItemService _warehouseItemService)
+                                    IWarehouseItemService _warehouseItemService, IPurchaseOrderService _purchaseOrderService)
         {
             purchaseOrder.ConfirmationDate = ConfirmationDate;
             if (_validator.ValidConfirmObject(purchaseOrder, _purchaseOrderDetailService))
@@ -97,7 +97,7 @@ namespace Service.Service
                 foreach (var detail in purchaseOrderDetails)
                 {
                     detail.Errors = new Dictionary<string, string>();
-                    _purchaseOrderDetailService.ConfirmObject(detail, ConfirmationDate, _stockMutationService, _itemService, _barringService, _warehouseItemService);
+                    _purchaseOrderDetailService.ConfirmObject(detail, ConfirmationDate, _stockMutationService, _itemService, _barringService, _warehouseItemService, _purchaseOrderService);
                 }
                 _repository.ConfirmObject(purchaseOrder);
             }

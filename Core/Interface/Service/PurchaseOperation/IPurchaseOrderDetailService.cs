@@ -23,7 +23,7 @@ namespace Core.Interface.Service
         PurchaseOrderDetail SoftDeleteObject(PurchaseOrderDetail purchaseOrderDetail);
         bool DeleteObject(int Id);
         PurchaseOrderDetail ConfirmObject(PurchaseOrderDetail purchaseOrderDetail, DateTime ConfirmationDate, IStockMutationService _stockMutationService,
-                                         IItemService _itemService, IBarringService _barringService, IWarehouseItemService _warehouseItemService);
+                                         IItemService _itemService, IBarringService _barringService, IWarehouseItemService _warehouseItemService, IPurchaseOrderService _purchaseOrderService);
         PurchaseOrderDetail UnconfirmObject(PurchaseOrderDetail purchaseOrderDetail, IPurchaseReceivalDetailService _purchaseReceivalDetailService,
                                            IStockMutationService _stockMutationService, IItemService _itemService, IBarringService _barringService,
                                            IWarehouseItemService _warehouseItemService);

@@ -18,6 +18,8 @@ namespace Core.DomainModel
         public string SourceDocumentDetailType { get; set; }
         public int SourceDocumentId { get; set; }
         public int SourceDocumentDetailId { get; set; }
+        public string SourceDocumentCode { get; set; }
+        public string SourceDocumentDetailCode { get; set; }
 
         public int Quantity { get; set; }
 

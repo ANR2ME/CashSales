@@ -32,7 +32,7 @@
     			  { name: 'id', index: 'id', width: 80, align: "center" },
 				  { name: 'name', index: 'name', width: 80 },
                   { name: 'description', index: 'description', width: 250 },
-                  { name: 'amount', index: 'amount', width: 100, align: "right", formatter: 'currency', formatoptions: { decimalSeparator: ".", thousandsSeparator: ",", decimalPlaces: 2, prefix: "", suffix: "", defaultValue: '0.00' } },
+                  { name: 'amount', index: 'amount', width: 150, align: "right", formatter: 'currency', formatoptions: { decimalSeparator: ".", thousandsSeparator: ",", decimalPlaces: 2, prefix: "", suffix: "", defaultValue: '0.00' } },
                   { name: 'isbank', index: 'isbank', width: 100 },
 				  { name: 'createdat', index: 'createdat', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
 				  { name: 'updateat', index: 'updateat', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
@@ -62,18 +62,6 @@
 		          $(this).jqGrid('setRowData', ids[i], { isbank: rowIsBank });
 
 		      }
-		      //var ids = $(this).jqGrid('getDataIDs');
-		      //for (var i = 0; i < ids.length; i++) {
-		      //    var cl = ids[i];
-		      //    rowDel = $(this).getRowData(cl).deletedimg;
-		      //    if (rowDel == 'true') {
-		      //        img = "<img src ='" + base_url + "content/assets/images/remove.png' title='Data has been deleted !' width='16px' height='16px'>";
-
-		      //    } else {
-		      //        img = "";
-		      //    }
-		      //    $(this).jqGrid('setRowData', ids[i], { deletedimg: img });
-		      //}
 		  }
 
     });//END GRID

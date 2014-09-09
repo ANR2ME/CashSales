@@ -27,23 +27,24 @@
     $("#list").jqGrid({
         url: base_url + 'Payable/GetList',
         datatype: "json",
-        colNames: ['ID', 'Contact Id', 'Contact Name', 'Code', 'Source', 'Source Id',
+        colNames: ['ID', 'Contact Id', 'Contact Name', 'Code', 'Source', 'Source Id', 'Source Code',
                    'Amount', 'Remaining Amount', 'Pending Clearance Amount', 'Allowance Amount',
                    'Due Date', 'Is Completed', 'Completion Date', 'Created At'],
         colModel: [
-    			  { name: 'id', index: 'id', width: 35, align: "center" },
+    			  { name: 'id', index: 'id', width: 60, align: "center" },
     			  { name: 'contactid', index: 'contactid', width: 35, align: "center", hidden: true},
 				  { name: 'contact', index: 'contact', width: 120, search: true },
-                  { name: 'code', index: 'code', width: 120 },
+                  { name: 'code', index: 'code', width: 80 },
 				  { name: 'payablesource', index: 'payablesource', width: 120, align: 'right' },
-				  { name: 'payablesourceid', index: 'payablesourceid', width: 60 },
+				  { name: 'payablesourceid', index: 'payablesourceid', width: 60, hidden: true },
+                  { name: 'payablesourcecode', index: 'payablesourcecode', width: 80 },
                   { name: 'amount', index: 'amount', width: 150, align: 'right', formatter: 'currency', formatoptions: { thousandsSeparator: ",", defaultValue: '0' } },
-                  { name: 'remainingamount', index: 'amount', width: 150, align: 'right', formatter: 'currency', formatoptions: { thousandsSeparator: ",", defaultValue: '0' } },
+                  { name: 'remainingamount', index: 'amount', width: 125, align: 'right', formatter: 'currency', formatoptions: { thousandsSeparator: ",", defaultValue: '0' } },
                   { name: 'pendingclearanceamount', index: 'pendingclearanceamount', width: 160, align: 'right', formatter: 'currency', formatoptions: { thousandsSeparator: ",", defaultValue: '0' } },
-                  { name: 'allowanceamount', index: 'allowanceamount', width: 150, align: 'right', formatter: 'currency', formatoptions: { thousandsSeparator: ",", defaultValue: '0' } },
+                  { name: 'allowanceamount', index: 'allowanceamount', width: 125, align: 'right', formatter: 'currency', formatoptions: { thousandsSeparator: ",", defaultValue: '0' } },
                   { name: 'duedate', index: 'duedate', search: false, width: 80, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
-                  { name: 'iscompleted', index: 'iscompleted', width: 100 },
-                  { name: 'completiondate', index: 'completiondate', search: false, width: 105, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
+                  { name: 'iscompleted', index: 'iscompleted', width: 100, stype: 'select', editoptions: { value: ':All;true:Yes;false:No' } },
+                  { name: 'completiondate', index: 'completiondate', hidden: true, search: false, width: 105, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
                   { name: 'createdat', index: 'createdat', search: false, width: 80, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
         ],
         page: '1',
@@ -64,7 +65,7 @@
 		          var cl = ids[i];
 		          rowIsCompleted = $(this).getRowData(cl).iscompleted;
 		          if (rowIsCompleted == 'true') {
-		              rowIsCompleted = "YES";
+		              rowIsCompleted = "YES, " + $(this).getRowData(cl).completiondate;
 		          } else {
 		              rowIsCompleted = "NO";
 		          }

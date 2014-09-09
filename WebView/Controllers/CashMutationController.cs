@@ -29,7 +29,7 @@ namespace WebView.Controllers
         {
             if (!AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.CashMutation, Core.Constants.Constant.MenuGroupName.Master))
             {
-                return Content("You are not allowed to View this Page.");
+                return Content(Core.Constants.Constant.PageViewNotAllowed);
             }
 
             return View();
@@ -55,6 +55,7 @@ namespace WebView.Controllers
                             amount = (model.Status == Core.Constants.Constant.MutationStatus.Addition) ? model.Amount : model.Amount * (-1),
                             model.SourceDocumentType,
                             model.SourceDocumentId,
+                            model.SourceDocumentCode,
                             model.CreatedAt,
                             model.MutationDate
                          }).Where(filter).OrderBy(sidx + " " + sord); //.ToList();
@@ -123,6 +124,7 @@ namespace WebView.Controllers
                              amount = (model.Status == Core.Constants.Constant.MutationStatus.Addition) ? model.Amount : model.Amount * (-1),
                              model.SourceDocumentType,
                              model.SourceDocumentId,
+                             model.SourceDocumentCode,
                              model.CreatedAt,
                              model.MutationDate
                          }).Where(filter, startdate.Date, enddate.Date.AddDays(1)).OrderBy(sidx + " " + sord); // Need to add 1 day due to hour/minute difference

@@ -27,7 +27,7 @@ namespace WebView.Controllers
         {
             if (!AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.Receivable, Core.Constants.Constant.MenuGroupName.Transaction))
             {
-                return Content("You are not allowed to View this Page.");
+                return Content(Core.Constants.Constant.PageViewNotAllowed);
             }
 
             return View();
@@ -77,6 +77,7 @@ namespace WebView.Controllers
                             receivable.Code,
                             receivable.ReceivableSource,
                             receivable.ReceivableSourceId,
+                            receivable.ReceivableSourceCode,
                             receivable.Amount,
                             receivable.RemainingAmount,
                             receivable.PendingClearanceAmount,
@@ -134,6 +135,7 @@ namespace WebView.Controllers
                             receivable.Code,
                             receivable.ReceivableSource,
                             receivable.ReceivableSourceId,
+                            receivable.ReceivableSourceCode,
                             receivable.Amount,
                             receivable.RemainingAmount,
                             receivable.PendingClearanceAmount,

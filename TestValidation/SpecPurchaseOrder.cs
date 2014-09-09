@@ -167,7 +167,7 @@ namespace NSpec
 
                     it["must not allow PO confirmation if there is no PO Detail"] = () =>
                     {
-                        newPO = poService.ConfirmObject(newPO, DateTime.Today, poDetailService, stockMutationService, itemService, _barringService, _warehouseItemService);
+                        newPO = poService.ConfirmObject(newPO, DateTime.Today, poDetailService, stockMutationService, itemService, _barringService, _warehouseItemService, poService);
                         newPO.Errors.Count().should_not_be(0);
                     };
 
@@ -277,7 +277,7 @@ namespace NSpec
 
                 it["allows confirmation"] = () =>
                 {
-                    newPO = poService.ConfirmObject(newPO, DateTime.Today, poDetailService, stockMutationService, itemService, _barringService, _warehouseItemService);
+                    newPO = poService.ConfirmObject(newPO, DateTime.Today, poDetailService, stockMutationService, itemService, _barringService, _warehouseItemService, poService);
                     newPO.IsConfirmed.should_be(true);
                 };
 
@@ -289,7 +289,7 @@ namespace NSpec
                         item2 = itemService.GetObjectById(item2.Id);
                         Quantity1 = item1.PendingReceival;
                         Quantity2 = item2.PendingReceival;
-                        newPO = poService.ConfirmObject(newPO, DateTime.Today, poDetailService, stockMutationService, itemService, _barringService, _warehouseItemService);
+                        newPO = poService.ConfirmObject(newPO, DateTime.Today, poDetailService, stockMutationService, itemService, _barringService, _warehouseItemService, poService);
                     };
 
                     it["should increase pending receival in item"] = () =>

@@ -14,7 +14,7 @@ namespace Validation.Validation
         {
             if (cashBankMutation.SourceCashBankId == cashBankMutation.TargetCashBankId)
             {
-                cashBankMutation.Errors.Add("Generic", "CashBank sebelum dan sesudah tidak boleh sama");
+                cashBankMutation.Errors.Add("Generic", "Source CashBank dan Target CashBank tidak boleh sama");
             }
             return cashBankMutation;
         }

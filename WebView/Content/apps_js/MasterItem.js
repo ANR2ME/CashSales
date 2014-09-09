@@ -13,8 +13,17 @@
     }
 
     function ClearData() {
-        $('#Description').val('').text('').removeClass('errormessage');
+        $('#id').val('').text('').removeClass('errormessage');
+        $('#SKU').val('').text('').removeClass('errormessage');
         $('#Name').val('').text('').removeClass('errormessage');
+        $('#Category').val('').text('').removeClass('errormessage');
+        $('#ItemTypeId').val('').text('').removeClass('errormessage');
+        $('#ItemTypeName').val('').text('').removeClass('errormessage');
+        $('#UoMId').val('').text('').removeClass('errormessage');
+        $('#UoMName').val('').text('').removeClass('errormessage');
+        $('#Quantity').numberbox('setValue', '').removeClass('errormessage');
+        $('#SellingPrice').numberbox('setValue', '').removeClass('errormessage');
+        $('#Margin').numberbox('setValue', '').removeClass('errormessage');
         $('#form_btn_save').data('kode', '');
 
         ClearErrorMessage();
@@ -123,7 +132,7 @@
                         if (JSON.stringify(result.Errors) != '{}') {
                             var error = '';
                             for (var key in result.Errors) {
-                                error = error + "<br>" + key + " " + result.model.Errors[key];
+                                error = error + "<br>" + key + " " + result.Errors[key];
                             }
                             $.messager.alert('Warning', error, 'warning');
                         }
@@ -286,11 +295,11 @@
         url: base_url,
         datatype: "json",
         mtype: 'GET',
-        colNames: ['Id', 'Name', 'Description'],
+        colNames: ['ID', 'Name', 'Description'],
         colModel: [
-                  { name: 'id', index: 'id', width: 80, align: 'right' },
+                  { name: 'id', index: 'id', width: 80, align: 'right', hidden: true },
                   { name: 'name', index: 'name', width: 200 },
-                  { name: 'address', index: 'address', width: 200 }],
+                  { name: 'description', index: 'description', width: 200 }],
         page: '1',
         pager: $('#lookup_pager_itemtype'),
         rowNum: 20,
@@ -303,8 +312,8 @@
         width: $("#lookup_div_itemtype").width() - 10,
         height: $("#lookup_div_itemtype").height() - 110,
     });
-    $("#lookup_table_itemtype").jqGrid('navGrid', '#lookup_toolbar_itemtype', { del: false, add: false, edit: false, search: false })
-           .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: false });
+    $("#lookup_table_itemtype").jqGrid('navGrid', '#lookup_toolbar_itemtype', { del: false, add: false, edit: false, search: true })
+           .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: true });
 
     // Cancel or CLose
     $('#lookup_btn_cancel_itemtype').click(function () {
@@ -345,7 +354,7 @@
         mtype: 'GET',
         colNames: ['Id', 'Name'],
         colModel: [
-                  { name: 'id', index: 'id', width: 80, align: 'right' },
+                  { name: 'id', index: 'id', width: 80, align: 'right', hidden: true },
                   { name: 'name', index: 'name', width: 200 }],
         page: '1',
         pager: $('#lookup_pager_uom'),

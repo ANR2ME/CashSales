@@ -52,7 +52,7 @@ namespace WebView.Controllers
         {
             if (!AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.CashSalesInvoice, Core.Constants.Constant.MenuGroupName.Transaction))
             {
-                return Content("You are not allowed to View this Page.");
+                return Content(Core.Constants.Constant.PageViewNotAllowed);
             }
 
             return View();
@@ -162,6 +162,7 @@ namespace WebView.Controllers
                              contact = model.Contact.Name,
                              model.PayableSource,
                              model.PayableSourceId,
+                             model.PayableSourceCode,
                              model.DueDate,
                              model.Amount,
                              model.RemainingAmount,

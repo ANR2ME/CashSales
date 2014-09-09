@@ -38,7 +38,7 @@ namespace WebView.Controllers
         {
             if (!AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.StockMutation, Core.Constants.Constant.MenuGroupName.Master))
             {
-                return Content("You are not allowed to View this Page.");
+                return Content(Core.Constants.Constant.PageViewNotAllowed);
             }
 
             return View();
@@ -74,8 +74,10 @@ namespace WebView.Controllers
                             uom = model.Item.UoM.Name,
                             model.SourceDocumentType,
                             model.SourceDocumentId,
+                            model.SourceDocumentCode,
                             model.SourceDocumentDetailType,
                             model.SourceDocumentDetailId,
+                            model.SourceDocumentDetailCode,
                             model.CreatedAt,
                          }).Where(filter).OrderBy(sidx + " " + sord); //.ToList();
 
@@ -164,8 +166,10 @@ namespace WebView.Controllers
                              uom = model.Item.UoM.Name,
                              model.SourceDocumentType,
                              model.SourceDocumentId,
+                             model.SourceDocumentCode,
                              model.SourceDocumentDetailType,
                              model.SourceDocumentDetailId,
+                             model.SourceDocumentDetailCode,
                              model.CreatedAt,
                          }).Where(filter, startdate.GetValueOrDefault().Date, enddate.GetValueOrDefault().AddDays(1).Date).OrderBy(sidx + " " + sord); //.ToList();
 

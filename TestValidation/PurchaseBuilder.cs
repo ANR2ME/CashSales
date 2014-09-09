@@ -345,8 +345,8 @@ namespace TestValidation
             };
             _purchaseOrderDetailService.CreateObject(po2b, _purchaseOrderService, _itemService);
 
-            _purchaseOrderService.ConfirmObject(po1, po1.PurchaseDate, _purchaseOrderDetailService, _stockMutationService, _itemService, _barringService, _warehouseItemService);
-            _purchaseOrderService.ConfirmObject(po2, po2.PurchaseDate, _purchaseOrderDetailService, _stockMutationService, _itemService, _barringService, _warehouseItemService);
+            _purchaseOrderService.ConfirmObject(po1, po1.PurchaseDate, _purchaseOrderDetailService, _stockMutationService, _itemService, _barringService, _warehouseItemService, _purchaseOrderService);
+            _purchaseOrderService.ConfirmObject(po2, po2.PurchaseDate, _purchaseOrderDetailService, _stockMutationService, _itemService, _barringService, _warehouseItemService, _purchaseOrderService);
 
             pr1 = new PurchaseReceival()
             {

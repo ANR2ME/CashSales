@@ -15,7 +15,7 @@ namespace Data.Context
         public OffsetPrintingSuppliesEntities() : base("CashSales")
         {
             //Database.SetInitializer<OffsetPrintingSuppliesEntities>(new DropCreateDatabaseIfModelChanges<OffsetPrintingSuppliesEntities>());
-            Database.SetInitializer<OffsetPrintingSuppliesEntities>(new MigrateDatabaseToLatestVersion<OffsetPrintingSuppliesEntities, Configuration>());
+            Database.SetInitializer<OffsetPrintingSuppliesEntities>(new MigrateDatabaseToLatestVersion<OffsetPrintingSuppliesEntities, Configuration>()); // Is this suppose to be inside OnModelCreating ?
        
         }
 

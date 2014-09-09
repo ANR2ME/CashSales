@@ -51,9 +51,9 @@ namespace WebView.Controllers
                          select new
                          {
                              model.Id,
+                             model.Code,
                              model.ContactId,
                              contact = model.Contact.Name,
-                             model.Code,
                              model.PayableSource,
                              model.PayableSourceId,
                              model.PayableSourceCode,
@@ -61,9 +61,9 @@ namespace WebView.Controllers
                              model.RemainingAmount,
                              model.PendingClearanceAmount,
                              model.AllowanceAmount,
-                             model.DueDate,
                              model.IsCompleted,
                              model.CompletionDate,
+                             model.DueDate,
                              model.CreatedAt,
                          }).Where(filter).OrderBy(sidx + " " + sord); //.ToList();
 
@@ -97,18 +97,18 @@ namespace WebView.Controllers
                         id = model.Id,
                         cell = new object[] {
                             model.Id,
+                            model.Code,
                             model.ContactId,
                             model.contact,
-                            model.Code,
                             model.PayableSource,
                             model.PayableSourceId,
                             model.Amount,
                             model.RemainingAmount,
                             model.PendingClearanceAmount,
                             model.AllowanceAmount,
-                            model.DueDate,
                             model.IsCompleted,
                             model.CompletionDate,
+                            model.DueDate,
                             model.CreatedAt,
                       }
                     }).ToArray()

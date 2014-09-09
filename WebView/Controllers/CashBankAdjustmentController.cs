@@ -56,9 +56,9 @@ namespace WebView.Controllers
                              model.CashBankId,
                              cashbank = model.CashBank.Name,
                              model.Amount,
-                             model.AdjustmentDate,
                              model.IsConfirmed,
                              model.ConfirmationDate,
+                             model.AdjustmentDate,
                              model.CreatedAt,
                              model.UpdatedAt,
                          }).Where(filter).OrderBy(sidx + " " + sord); //.ToList();
@@ -97,9 +97,9 @@ namespace WebView.Controllers
                             model.CashBankId,
                             model.cashbank,
                             model.Amount,
-                            model.AdjustmentDate,
                             model.IsConfirmed,
                             model.ConfirmationDate,
+                            model.AdjustmentDate,
                             model.CreatedAt,
                             model.UpdatedAt,
                       }

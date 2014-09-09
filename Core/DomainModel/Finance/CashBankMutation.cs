@@ -11,6 +11,8 @@ namespace Core.DomainModel
         
         public int SourceCashBankId { get; set; }
         public int TargetCashBankId { get; set; }
+        public string SourceCashBankName { get; set; }
+        public string TargetCashBankName { get; set; }
         public int Amount { get; set; }
         public string Code { get; set; }
 

@@ -48,18 +48,18 @@
     $("#list").jqGrid({
         url: base_url + 'StockAdjustment/GetList',
         datatype: "json",
-        colNames: ['ID', 'Code', 'Warehouse Id', 'Warehouse Name', 'AdjusmentDate', 'Description',
-                    'Is Confirmed', 'Confirmation Date', 'Created At', 'Updated At'],
+        colNames: ['ID', 'Code', 'Description', 'Warehouse Id', 'Warehouse Name', 
+                    'Is Confirmed', 'Confirmation Date', 'AdjustmentDate', 'Created At', 'Updated At'],
         colModel: [
     			  { name: 'id', index: 'id', width: 80, align: "center" },
                   { name: 'code', index: 'code', width: 100 },
-				  { name: 'warehouseid', index: 'warehouseid', width: 100 },
-                  { name: 'warehouse', index: 'warehouse', width: 80 },
-                  { name: 'adjustmentdate', index: 'adjustmentdate', width: 100 ,search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
                   { name: 'description', index: 'description', width: 100 },
-                  { name: 'isconfirmed', index: 'isconfirmed', width: 100 },
-                  { name: 'confirmationdate', index: 'confirmationdate', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
-				  { name: 'createdat', index: 'createdat', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
+                  { name: 'warehouseid', index: 'warehouseid', width: 100, hidden: true },
+                  { name: 'warehouse', index: 'warehouse', width: 100 },
+                  { name: 'isconfirmed', index: 'isconfirmed', width: 100, stype: 'select', editoptions: { value: ':All;true:Yes;false:No' } },
+                  { name: 'confirmationdate', index: 'confirmationdate', hidden: true, search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
+                  { name: 'adjustmentdate', index: 'adjustmentdate', width: 100, search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
+                  { name: 'createdat', index: 'createdat', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
 				  { name: 'updateat', index: 'updateat', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
         ],
         page: '1',
@@ -80,7 +80,7 @@
 		          var cl = ids[i];
 		          rowIsConfirmed = $(this).getRowData(cl).isconfirmed;
 		          if (rowIsConfirmed == 'true') {
-		              rowIsConfirmed = "YES";
+		              rowIsConfirmed = "YES, " + $(this).getRowData(cl).confirmationdate;
 		          } else {
 		              rowIsConfirmed = "NO";
 		          }

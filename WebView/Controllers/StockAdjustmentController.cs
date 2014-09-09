@@ -62,12 +62,12 @@ namespace WebView.Controllers
                          {
                              model.Id,
                              model.Code,
+                             model.Description,
                              model.WarehouseId,
                              warehouse = model.Warehouse.Name,
-                             model.AdjustmentDate,
-                             model.Description,
                              model.IsConfirmed,
                              model.ConfirmationDate,
+                             model.AdjustmentDate,
                              model.CreatedAt,
                              model.UpdatedAt,
                          }).Where(filter).OrderBy(sidx + " " + sord); //.ToList();
@@ -103,12 +103,12 @@ namespace WebView.Controllers
                         cell = new object[] {
                             model.Id,
                             model.Code,
+                            model.Description,
                             model.WarehouseId,
                             model.warehouse,
-                            model.AdjustmentDate,
-                            model.Description,
                             model.IsConfirmed,
                             model.ConfirmationDate,
+                            model.AdjustmentDate,
                             model.CreatedAt,
                             model.UpdatedAt,
                       }

@@ -56,8 +56,8 @@ namespace WebView.Controllers
                             model.SourceDocumentType,
                             model.SourceDocumentId,
                             model.SourceDocumentCode,
+                            model.MutationDate,
                             model.CreatedAt,
-                            model.MutationDate
                          }).Where(filter).OrderBy(sidx + " " + sord); //.ToList();
 
             var list = query.AsEnumerable();
@@ -95,8 +95,9 @@ namespace WebView.Controllers
                             model.amount,
                             model.SourceDocumentType,
                             model.SourceDocumentId,
+                            model.SourceDocumentCode,
+                            model.MutationDate,
                             model.CreatedAt,
-                            model.MutationDate
                       }
                     }).ToArray()
             }, JsonRequestBehavior.AllowGet);
@@ -125,8 +126,8 @@ namespace WebView.Controllers
                              model.SourceDocumentType,
                              model.SourceDocumentId,
                              model.SourceDocumentCode,
+                             model.MutationDate,
                              model.CreatedAt,
-                             model.MutationDate
                          }).Where(filter, startdate.Date, enddate.Date.AddDays(1)).OrderBy(sidx + " " + sord); // Need to add 1 day due to hour/minute difference
 
             var list = query.AsEnumerable();
@@ -164,8 +165,9 @@ namespace WebView.Controllers
                             model.amount,
                             model.SourceDocumentType,
                             model.SourceDocumentId,
+                            model.SourceDocumentCode,
+                            model.MutationDate,
                             model.CreatedAt,
-                            model.MutationDate
                       }
                     }).ToArray()
             }, JsonRequestBehavior.AllowGet);

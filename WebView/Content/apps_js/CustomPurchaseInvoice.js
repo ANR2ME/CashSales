@@ -41,7 +41,29 @@
     document.getElementById('IsGBCH').onchange = function ()
 	{
 	    onGBCH();
-	};
+    };
+
+    // Arguments :
+    //  verb : 'GET'|'POST'
+    // example: open('POST', 'fileServer.jsp', {request: {key:"42", cols:[2, 3, 34]}}, '_blank');
+    // Not: This will override window.open function
+    //open = function (verb, url, data, target) {
+    //    var form = document.createElement("form");
+    //    form.action = url;
+    //    form.method = verb;
+    //    form.target = target || "_self";
+    //    if (data) {
+    //        for (var key in data) {
+    //            var input = document.createElement("textarea");
+    //            input.name = key;
+    //            input.value = typeof data[key] === "object" ? JSON.stringify(data[key]) : data[key];
+    //            form.appendChild(input);
+    //        }
+    //    }
+    //    form.style.display = 'none';
+    //    document.body.appendChild(form);
+    //    form.submit();
+    //};
 
 	$("#form_div").dialog('close');
 	$("#item_div").dialog('close');
@@ -308,16 +330,17 @@
 	        $('#checkTax').numberbox('setValue', ret.tax);
 	        $('#checkAllowance').numberbox('setValue', ret.allowance);
 	        $('#idcheck').val(ret.id);
+	        $('#checkCode').val(ret.code);
 	        $("#check_div").dialog("open");
 	    } else {
 	        $.messager.alert('Information', 'Please Select Data...!!', 'info');
 	    }
 	});
-
+   
 	$('#check_btn_submit').click(function () {
 	    ClearErrorMessage();
 	    $.ajax({
-	        url: base_url + "CustomPurchaseInvoice/Check",
+	        url: base_url + "CustomPurchaseInvoice/Check?DailySalesProjection=" + $('#DailySalesProjection').numberbox('getValue') + "&IncludeSaturdaySales=" + document.getElementById('IncludeSaturdaySales').checked + "&IncludeSundaySales=" + document.getElementById('IncludeSundaySales').checked,
 	        type: "POST",
 	        contentType: "application/json",
 	        data: JSON.stringify({
@@ -344,6 +367,13 @@
 	        }
 	    });
 	});
+
+	$('#check_btn_print').click(function () {
+	    window.open(base_url + "Report/ReportFunds?DailySalesProjection=" + $('#DailySalesProjection').numberbox('getValue') + "&IncludeSaturdaySales=" + document.getElementById('IncludeSaturdaySales').checked + "&IncludeSundaySales=" + document.getElementById('IncludeSundaySales').checked +
+	        "&Id=" + $('#idcheck').val() + "&DueDate=" + $('#checkDueDate').datebox('getValue') +
+	        "&Discount=" + $('#checkDiscount').numberbox('getValue') + "&Tax=" + $('#checkTax').numberbox('getValue') + "&Allowance=" + $('#checkAllowance').numberbox('getValue'));
+	});
+
 
 	$('#check_btn_cancel').click(function () {
 	    $('#check_div').dialog('close');

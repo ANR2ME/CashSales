@@ -24,11 +24,12 @@ namespace WebView.Controllers
         private IItemTypeService _itemTypeService;
         private IUoMService _uoMService;
         private ICompanyService _companyService;
+        private ICashBankService _cashBankService;
         private IPayableService _payableService;
         private IReceivableService _receivableService;
         private ICashSalesInvoiceService _cashSalesInvoiceService;
         private ICashSalesReturnService _cashSalesReturnService;
-
+        private ICustomPurchaseInvoiceService _customPurchaseInvoiceService;
 
         public class ModelProfitLoss
         {
@@ -43,16 +44,32 @@ namespace WebView.Controllers
            public string CompanyContactNo { get; set; }
         }
 
+        public class ModelFund
+        {
+            public DateTime FromDueDate { get; set; }
+            public DateTime ToDueDate { get; set; }
+            public DateTime CurDate { get; set; }
+            public decimal cashBank { get; set; }
+            public decimal receivable { get; set; }
+            public decimal payable { get; set; }
+            public decimal dailySalesProjection { get; set; }
+            public string CompanyName { get; set; }
+            public string CompanyAddress { get; set; }
+            public string CompanyContactNo { get; set; }
+        }
+
         public ReportController()
         {
             _itemService = new ItemService(new ItemRepository(), new ItemValidator());
             _itemTypeService = new ItemTypeService(new ItemTypeRepository(), new ItemTypeValidator());
             _uoMService = new UoMService(new UoMRepository(), new UoMValidator());
             _companyService = new CompanyService(new CompanyRepository(), new CompanyValidator());
+            _cashBankService = new CashBankService(new CashBankRepository(), new CashBankValidator());
             _payableService = new PayableService(new PayableRepository(), new PayableValidator());
             _receivableService = new ReceivableService(new ReceivableRepository(), new ReceivableValidator());
             _cashSalesInvoiceService = new CashSalesInvoiceService(new CashSalesInvoiceRepository(), new CashSalesInvoiceValidator());
             _cashSalesReturnService = new CashSalesReturnService(new CashSalesReturnRepository(), new CashSalesReturnValidator());
+            _customPurchaseInvoiceService = new CustomPurchaseInvoiceService(new CustomPurchaseInvoiceRepository(), new CustomPurchaseInvoiceValidator());
         }
 
         public ActionResult Item()
@@ -180,6 +197,8 @@ namespace WebView.Controllers
             var query = (from model in q
                          select new
                          {
+                             StartDate = startDate,
+                             EndDate = endDate,
                              model.Code,
                              model.Description,
                              model.SalesDate,
@@ -209,6 +228,80 @@ namespace WebView.Controllers
             return File(stream, "application/pdf");
         }
 
+        public ActionResult Funds()
+        {
+            return View();
+        }
+
+        public ActionResult ReportFunds(int Id, DateTime DueDate, decimal Discount, decimal Tax, decimal Allowance, decimal DailySalesProjection, bool IncludeSaturdaySales, bool IncludeSundaySales)
+        {
+            var company = _companyService.GetQueryable().FirstOrDefault();
+            DateTime startDate = DateTime.Today;
+            DateTime endDate = DueDate.Date;
+
+            var data = _customPurchaseInvoiceService.GetObjectById(Id);
+            data.DueDate = DueDate;
+            data.Discount = Discount;
+            data.Tax = Tax;
+            data.Allowance = Allowance;
+            decimal total = _customPurchaseInvoiceService.CalculateTotalAmountAfterDiscountAndTax(data) - Allowance;
+            decimal totalcashbank = _cashBankService.GetTotalCashBank();
+
+            DateTime curDate = startDate;
+            decimal funds = totalcashbank;
+            var query = new List<ModelFund>();
+            while (curDate <= endDate)
+            {
+                decimal receivable = _receivableService.GetTotalRemainingAmountByDueDate(curDate, curDate);
+                decimal payable = _payableService.GetTotalRemainingAmountByDueDate(curDate, curDate);
+                decimal sales = 0;
+                if ((curDate.DayOfWeek != DayOfWeek.Saturday && curDate.DayOfWeek != DayOfWeek.Sunday) ||
+                    (curDate.DayOfWeek == DayOfWeek.Saturday && IncludeSaturdaySales) ||
+                    (curDate.DayOfWeek == DayOfWeek.Sunday && IncludeSundaySales))
+                {
+                    sales = DailySalesProjection;
+                }
+
+                var curFund = new ModelFund()
+                {
+                    FromDueDate = startDate,
+                    ToDueDate = endDate,
+                    CurDate = curDate,
+                    cashBank = funds,
+                    payable = payable,
+                    receivable = receivable,
+                    dailySalesProjection = sales,
+                    CompanyName = company.Name,
+                    CompanyAddress = company.Address,
+                    CompanyContactNo = company.ContactNo
+                };
+                query.Add(curFund);
+
+                funds += sales;
+                funds += receivable;
+                funds -= payable;
+
+                curDate = curDate.AddDays(1);
+            }
+
+            var rd = new ReportDocument();
+
+            //Loading Report
+            rd.Load(Server.MapPath("~/") + "Reports/Funds.rpt");
+
+            // Setting report data source
+            rd.SetDataSource(query);
+
+            var stream = rd.ExportToStream(CrystalDecisions.Shared.ExportFormatType.PortableDocFormat);
+
+            //var response = Request.CreateResponse(HttpStatusCode.OK);
+            //response.Headers.Clear();
+            //response.Content = new StreamContent(pdf);
+            //response.Content.Headers.ContentType = new MediaTypeHeaderValue("application/pdf");
+            //return response;
+            
+            return File(stream, "application/pdf");
+        }
 
     }
 }

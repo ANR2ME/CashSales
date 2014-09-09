@@ -12,7 +12,7 @@ namespace Core.Interface.Repository
         IList<Receivable> GetAll();
         IList<Receivable> GetAllByMonthCreated();
         IList<Receivable> GetObjectsByContactId(int contactId);
-        IList<Receivable> GetObjectsByDueDate(DateTime DueDate);
+        IList<Receivable> GetObjectsByDueDate(DateTime fromDueDate, DateTime toDueDate);
         Receivable GetObjectBySource(string ReceivableSource, int ReceivableSourceId); 
         Receivable GetObjectById(int Id);
         Receivable CreateObject(Receivable receivable);

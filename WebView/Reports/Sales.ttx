@@ -1,3 +1,5 @@
+StartDate	Date		
+EndDate	Date
 Code	String	50	
 Description	String	150	
 SalesDate	Date		

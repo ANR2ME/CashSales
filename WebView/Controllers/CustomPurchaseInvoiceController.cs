@@ -492,18 +492,35 @@ namespace WebView.Controllers
         }
 
         [HttpPost]
-        public dynamic Check(CustomPurchaseInvoice model)
+        public dynamic Check(CustomPurchaseInvoice model, decimal DailySalesProjection, bool IncludeSaturdaySales, bool IncludeSundaySales)
         {
             Dictionary<string, string> Errors = new Dictionary<string, string>();
             try
             {
+                DateTime startDate = DateTime.Today;
+                DateTime endDate = model.DueDate.GetValueOrDefault();
+
                 var data = _customPurchaseInvoiceService.GetObjectById(model.Id);
                 decimal total = _customPurchaseInvoiceService.CalculateTotalAmountAfterDiscountAndTax(data) - model.Allowance;
-                decimal cashbank = _cashBankService.GetTotalCashBank();
-                decimal receivable = _receivableService.GetTotalRemainingAmountByDueDate(model.DueDate.GetValueOrDefault());
-                decimal payable = _payableService.GetTotalRemainingAmountByDueDate(model.DueDate.GetValueOrDefault());
+                decimal totalcashbank = _cashBankService.GetTotalCashBank();
 
-                if ((cashbank + receivable) - payable < total)
+                DateTime curDate = startDate;
+                decimal funds = totalcashbank;
+                while (curDate <= endDate)
+                {
+                    if ((curDate.DayOfWeek != DayOfWeek.Saturday && curDate.DayOfWeek != DayOfWeek.Sunday) ||
+                        (curDate.DayOfWeek == DayOfWeek.Saturday && IncludeSaturdaySales) ||
+                        (curDate.DayOfWeek == DayOfWeek.Sunday && IncludeSundaySales))
+                    {
+                        funds += DailySalesProjection;
+                    }
+                    funds += _receivableService.GetTotalRemainingAmountByDueDate(curDate, curDate);
+                    funds -= _payableService.GetTotalRemainingAmountByDueDate(curDate, curDate);
+
+                    curDate = curDate.AddDays(1);
+                }
+
+                if (funds < total)
                 {
                     Errors.Add("Generic", "Dana tidak tersedia");
                 }

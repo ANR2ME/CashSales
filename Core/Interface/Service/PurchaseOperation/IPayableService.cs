@@ -13,7 +13,7 @@ namespace Core.Interface.Service
         IPayableValidator GetValidator();
         IList<Payable> GetAll();
         IList<Payable> GetObjectsByContactId(int contactId);
-        IList<Payable> GetObjectsByDueDate(DateTime DueDate);
+        IList<Payable> GetObjectsByDueDate(DateTime fromDueDate, DateTime toDueDate);
         Payable GetObjectBySource(string PayableSource, int PayableSourceId); 
         Payable GetObjectById(int Id);
         Payable CreateObject(Payable payable);
@@ -21,6 +21,6 @@ namespace Core.Interface.Service
         Payable UpdateObject(Payable payable);
         Payable SoftDeleteObject(Payable payable);
         bool DeleteObject(int Id);
-        decimal GetTotalRemainingAmountByDueDate(DateTime DueDate);
+        decimal GetTotalRemainingAmountByDueDate(DateTime fromDueDate, DateTime toDueDate);
     }
 }

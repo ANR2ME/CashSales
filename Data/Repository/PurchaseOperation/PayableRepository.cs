@@ -37,9 +37,9 @@ namespace Data.Repository
             return FindAll(p => p.ContactId == contactId && !p.IsDeleted).ToList();
         }
 
-        public IList<Payable> GetObjectsByDueDate(DateTime DueDate)
+        public IList<Payable> GetObjectsByDueDate(DateTime fromDueDate, DateTime toDueDate)
         {
-            return FindAll(x => !x.IsDeleted && x.DueDate <= DueDate).ToList();
+            return FindAll(x => !x.IsDeleted && x.DueDate >= fromDueDate && x.DueDate <= toDueDate).ToList();
         }
 
         public Payable GetObjectBySource(string PayableSource, int PayableSourceId)

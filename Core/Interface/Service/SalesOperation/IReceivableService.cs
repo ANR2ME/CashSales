@@ -13,7 +13,7 @@ namespace Core.Interface.Service
         IReceivableValidator GetValidator();
         IList<Receivable> GetAll();
         IList<Receivable> GetObjectsByContactId(int contactId);
-        IList<Receivable> GetObjectsByDueDate(DateTime DueDate);
+        IList<Receivable> GetObjectsByDueDate(DateTime fromDueDate, DateTime toDueDate);
         Receivable GetObjectBySource(string ReceivableSource, int ReceivableSourceId); 
         Receivable GetObjectById(int Id);
         Receivable CreateObject(Receivable receivable);
@@ -21,6 +21,6 @@ namespace Core.Interface.Service
         Receivable UpdateObject(Receivable receivable);
         Receivable SoftDeleteObject(Receivable receivable);
         bool DeleteObject(int Id);
-        decimal GetTotalRemainingAmountByDueDate(DateTime DueDate);
+        decimal GetTotalRemainingAmountByDueDate(DateTime fromDueDate, DateTime toDueDate);
     }
 }

@@ -41,9 +41,9 @@ namespace Service.Service
             return _repository.GetObjectsByContactId(contactId);
         }
 
-        public IList<Payable> GetObjectsByDueDate(DateTime DueDate)
+        public IList<Payable> GetObjectsByDueDate(DateTime fromDueDate, DateTime toDueDate)
         {
-            return _repository.GetObjectsByDueDate(DueDate);
+            return _repository.GetObjectsByDueDate(fromDueDate, toDueDate);
         }
 
         public Payable GetObjectBySource(string PayableSource, int PayableSourceId)
@@ -91,9 +91,9 @@ namespace Service.Service
             return _repository.DeleteObject(Id);
         }
 
-        public decimal GetTotalRemainingAmountByDueDate(DateTime DueDate)
+        public decimal GetTotalRemainingAmountByDueDate(DateTime fromDueDate, DateTime toDueDate)
         {
-            IList<Payable> payables = GetObjectsByDueDate(DueDate);
+            IList<Payable> payables = GetObjectsByDueDate(fromDueDate, toDueDate);
             decimal Total = 0;
             foreach (var payable in payables)
             {

@@ -199,11 +199,12 @@
 
         <div id="check_toolbar" class="form_toolbar">
             <a id="check_btn_submit" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-save'">Submit</a>
+            <a id="check_btn_print" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-print'">Print Data</a>
             <a id="check_btn_cancel" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-remove'">Close</a>
         </div>
         <div id="check_info">
               <table  width="100%" border="0" cellpadding="5" cellspacing="5" class="input_form_tbl">
-                  <tr>
+                  <tr class="hideme">
                       <td width="139" nowrap style="width: 100px">
                           Id
                       </td>
@@ -213,7 +214,15 @@
                   </tr>
                   <tr>
                       <td>
-                          Due Date :
+                          Code 
+                      </td>
+                      <td>
+                         <input id="checkCode" type="text" size="10" disabled="disabled"/>
+                      </td>
+                  </tr>
+                  <tr>
+                      <td>
+                          Due Date 
                       </td>
                       <td>
                          <input id="checkDueDate"class="easyui-datebox" title="mm/dd/yyyy" type="text" size="10" value="@DateTime.Today.ToShortDateString()"/>
@@ -237,6 +246,26 @@
                                 <label>Allowance</label></td>
                             <td colspan="3">
                         <input id="checkAllowance" name="Allowance" type="text" size="15" maxlength="20" class="textright easyui-numberbox" data-options="groupSeparator:','" value="0" />
+                        </tr>
+                        <tr>
+                            <td>
+                                <label>Daily Sales Projection</label></td>
+                            <td colspan="3">
+                        <input id="DailySalesProjection" name="DailySalesProjection" type="text" size="15" maxlength="20" class="textright easyui-numberbox" data-options="groupSeparator:','" value="0" />
+                        </tr>
+                        <tr>
+                            <td >
+                                <label for="IncludeSaturdaySales">Include Saturday Sales</label></td>
+                            <td colspan="3">
+                            <input type="checkbox" name="IncludeSaturdaySales" id="IncludeSaturdaySales" />
+                            @*<input type="hidden" name="IncludeSaturdaySales" value="false" />*@
+                        </tr>
+                        <tr>
+                            <td >
+                                <label for="IncludeSundaySales">Include Sunday Sales</label></td>
+                            <td colspan="3">
+                            <input type="checkbox" name="IncludeSundaySales" id="IncludeSundaySales" />
+                            @*<input type="hidden" name="IncludeSundaySales" value="false" />*@
                         </tr>
               </table>
           

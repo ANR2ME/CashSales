@@ -99,7 +99,6 @@ namespace Service.Service
         {
             if (_validator.ValidUnconfirmObject(cashSalesInvoice, _cashSalesInvoiceDetailService, _receivableService, _receiptVoucherDetailService))
             {
-                cashSalesInvoice = _repository.UnconfirmObject(cashSalesInvoice);
                 IList<CashSalesInvoiceDetail> cashSalesInvoiceDetails = _cashSalesInvoiceDetailService.GetObjectsByCashSalesInvoiceId(cashSalesInvoice.Id);
                 foreach (var cashSalesInvoiceDetail in cashSalesInvoiceDetails)
                 {
@@ -112,6 +111,7 @@ namespace Service.Service
                 cashSalesInvoice.Total = 0;
                 cashSalesInvoice.Discount = 0;
                 cashSalesInvoice.Tax = 0;
+                cashSalesInvoice = _repository.UnconfirmObject(cashSalesInvoice);
             }
             return cashSalesInvoice;
         }

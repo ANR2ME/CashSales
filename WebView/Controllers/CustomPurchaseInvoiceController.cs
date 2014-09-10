@@ -554,6 +554,8 @@ namespace WebView.Controllers
                 }
 
                 var data = _customPurchaseInvoiceService.GetObjectById(model.Id);
+                data.Discount = model.Discount;
+                data.Tax = model.Tax;
                 model = _customPurchaseInvoiceService.ConfirmObject(data, model.ConfirmationDate.Value, _customPurchaseInvoiceDetailService, 
                                                     _contactService, _priceMutationService, _payableService, _customPurchaseInvoiceService, _warehouseItemService, 
                                                     _warehouseService, _itemService, _barringService, _stockMutationService);

@@ -28,8 +28,11 @@ namespace WebView.Controllers
         private IPayableService _payableService;
         private IReceivableService _receivableService;
         private ICashSalesInvoiceService _cashSalesInvoiceService;
+        private ICashSalesInvoiceDetailService _cashSalesInvoiceDetailService;
         private ICashSalesReturnService _cashSalesReturnService;
+        private ICashSalesReturnDetailService _cashSalesReturnDetailService;
         private ICustomPurchaseInvoiceService _customPurchaseInvoiceService;
+        private ICustomPurchaseInvoiceDetailService _customPurchaseInvoiceDetailService;
 
         public class ModelProfitLoss
         {
@@ -67,9 +70,13 @@ namespace WebView.Controllers
             _cashBankService = new CashBankService(new CashBankRepository(), new CashBankValidator());
             _payableService = new PayableService(new PayableRepository(), new PayableValidator());
             _receivableService = new ReceivableService(new ReceivableRepository(), new ReceivableValidator());
+
             _cashSalesInvoiceService = new CashSalesInvoiceService(new CashSalesInvoiceRepository(), new CashSalesInvoiceValidator());
+            _cashSalesInvoiceDetailService = new CashSalesInvoiceDetailService(new CashSalesInvoiceDetailRepository(), new CashSalesInvoiceDetailValidator());
             _cashSalesReturnService = new CashSalesReturnService(new CashSalesReturnRepository(), new CashSalesReturnValidator());
+            _cashSalesReturnDetailService = new CashSalesReturnDetailService(new CashSalesReturnDetailRepository(), new CashSalesReturnDetailValidator());
             _customPurchaseInvoiceService = new CustomPurchaseInvoiceService(new CustomPurchaseInvoiceRepository(), new CustomPurchaseInvoiceValidator());
+            _customPurchaseInvoiceDetailService = new CustomPurchaseInvoiceDetailService(new CustomPurchaseInvoiceDetailRepository(), new CustomPurchaseInvoiceDetailValidator());
         }
 
         public ActionResult Item()
@@ -300,6 +307,142 @@ namespace WebView.Controllers
             //response.Content.Headers.ContentType = new MediaTypeHeaderValue("application/pdf");
             //return response;
             
+            return File(stream, "application/pdf");
+        }
+
+        public ActionResult PurchaseInvoice()
+        {
+            return View();
+        }
+
+        public ActionResult ReportPurchaseInvoice(int Id)
+        {
+            var company = _companyService.GetQueryable().FirstOrDefault();
+            var q = _customPurchaseInvoiceDetailService.GetQueryableObjectsByCustomPurchaseInvoiceId(Id).Include("CustomPurchaseInvoice").Include("Item").Include("UoM");
+            string user = AuthenticationModel.GetUserName();
+
+            var query = (from model in q
+                         select new
+                         {
+                             SKU = model.Item.Sku,
+                             Name = model.Item.Name,
+                             UoM = model.Item.UoM.Name,
+                             model.Quantity,
+                             Price = model.ListedUnitPrice,
+                             model.Discount,
+                             GlobalDiscount = model.CustomPurchaseInvoice.Discount,
+                             Tax = model.CustomPurchaseInvoice.Tax,
+                             Allowance = model.CustomPurchaseInvoice.Allowance,
+                             Code = model.CustomPurchaseInvoice.Code,
+                             Date = model.CustomPurchaseInvoice.ConfirmationDate.Value,
+                             contact = "",
+                             CompanyName = company.Name,
+                             CompanyAddress = company.Address,
+                             CompanyContactNo = company.ContactNo,
+                             User = user,
+                         }).ToList();
+
+            var rd = new ReportDocument();
+
+            //Loading Report
+            rd.Load(Server.MapPath("~/") + "Reports/PurchaseInvoice.rpt");
+
+            // Setting report data source
+            rd.SetDataSource(query);
+
+            var stream = rd.ExportToStream(CrystalDecisions.Shared.ExportFormatType.PortableDocFormat);
+            return File(stream, "application/pdf");
+        }
+
+        public ActionResult SalesInvoice()
+        {
+            return View();
+        }
+
+        public ActionResult ReportSalesInvoice(int Id)
+        {
+            var company = _companyService.GetQueryable().FirstOrDefault();
+            //var cashSalesInvoice = _cashSalesInvoiceService.GetObjectById(Id);
+            var q = _cashSalesInvoiceDetailService.GetQueryableObjectsByCashSalesInvoiceId(Id).Include("CashSalesInvoice").Include("Item").Include("UoM");
+            string user = AuthenticationModel.GetUserName();
+
+            var query = (from model in q
+                         select new
+                         {
+                             SKU = model.Item.Sku,
+                             Name = model.Item.Name,
+                             UoM = model.Item.UoM.Name,
+                             model.Quantity,
+                             Price = model.IsManualPriceAssignment? model.AssignedPrice : model.Item.SellingPrice,
+                             model.Discount,
+                             GlobalDiscount = model.CashSalesInvoice.Discount,
+                             Tax = model.CashSalesInvoice.Tax,
+                             Allowance = model.CashSalesInvoice.Allowance,
+                             Code = model.CashSalesInvoice.Code,
+                             Date = model.CashSalesInvoice.ConfirmationDate.Value,
+                             contact = "",
+                             CompanyName = company.Name,
+                             CompanyAddress = company.Address,
+                             CompanyContactNo = company.ContactNo,
+                             User = user,
+                         }).ToList();
+
+            var rd = new ReportDocument();
+
+            //Loading Report
+            rd.Load(Server.MapPath("~/") + "Reports/SalesInvoice.rpt");
+
+            // Setting report data source
+            rd.SetDataSource(query);
+
+            var stream = rd.ExportToStream(CrystalDecisions.Shared.ExportFormatType.PortableDocFormat);
+            return File(stream, "application/pdf");
+        }
+
+        public ActionResult SalesReturnInvoice()
+        {
+            return View();
+        }
+
+        public ActionResult ReportSalesReturnInvoice(int Id)
+        {
+            var company = _companyService.GetQueryable().FirstOrDefault();
+            //var cashSalesReturnInvoice = _cashSalesInvoiceService.GetObjectById(Id);
+            var q = _cashSalesReturnDetailService.GetQueryableObjectsByCashSalesReturnId(Id).Include("CashSalesReturn").Include("CashSalesInvoiceDetail").Include("CashSalesInvoice").Include("Item").Include("UoM");
+            string user = AuthenticationModel.GetUserName();
+
+            var query = (from model in q
+                         select new
+                         {
+                             SKU = model.CashSalesInvoiceDetail.Item.Sku,
+                             Name = model.CashSalesInvoiceDetail.Item.Name,
+                             UoM = model.CashSalesInvoiceDetail.Item.UoM.Name,
+                             Quantity = model.Quantity,
+                             Price = model.CashSalesInvoiceDetail.IsManualPriceAssignment ? model.CashSalesInvoiceDetail.AssignedPrice : model.CashSalesInvoiceDetail.Item.SellingPrice,
+                             Amount = model,
+                             Discount = model.CashSalesInvoiceDetail.Discount,
+                             GlobalDiscount = model.CashSalesInvoiceDetail.CashSalesInvoice.Discount,
+                             Tax = model.CashSalesInvoiceDetail.CashSalesInvoice.Tax,
+                             Allowance = model.CashSalesReturn.Allowance,
+                             Code = model.CashSalesReturn.Code,
+                             SalesCode = model.CashSalesInvoiceDetail.CashSalesInvoice.Code,
+                             Date = model.CashSalesReturn.ConfirmationDate.Value,
+                             contact = "",
+                             CompanyName = company.Name,
+                             CompanyAddress = company.Address,
+                             CompanyContactNo = company.ContactNo,
+                             User = user,
+                         }).ToList();
+
+            var rd = new ReportDocument();
+
+            //Loading Report
+            rd.Load(Server.MapPath("~/") + "Reports/SalesReturnInvoice.rpt");
+
+            // Setting report data source
+            rd.SetDataSource(query);
+
+            var stream = rd.ExportToStream(CrystalDecisions.Shared.ExportFormatType.PortableDocFormat);
             return File(stream, "application/pdf");
         }
 

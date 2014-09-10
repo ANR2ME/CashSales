@@ -110,7 +110,13 @@
 	});
 
 	$('#btn_print').click(function () {
-		window.open(base_url + 'Print_Forms/Printmstbank.aspx');
+	    //window.open(base_url + 'Print_Forms/Printmstbank.aspx');
+	    var id = jQuery("#list").jqGrid('getGridParam', 'selrow');
+	    if (id) {
+	        window.open(base_url + "Report/ReportSalesReturnInvoice?Id=" + id);
+	    } else {
+	        $.messager.alert('Information', 'Please Select Data...!!', 'info');
+	    }
 	});
 
 	$('#btn_add_new').click(function () {

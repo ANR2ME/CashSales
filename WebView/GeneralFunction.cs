@@ -828,6 +828,7 @@ namespace WebView
                         {
                             //filterValues.Add(value);
                             filter += temp[0].Trim() + " " + temp[1].Trim() + value.ToString() + "";
+                            //filter += "String(" + temp[0].Trim() + ").Contains(\"" + filterValue.ToLower() + "\")";
                         }
                         // FieldValue as Date
                         else if (DateTime.TryParse(filterValue, out date))

@@ -41,34 +41,34 @@
   <ItemGroup>
     <Reference Include="CrystalDecisions.CrystalReports.Engine, Version=11.5.3700.0, Culture=neutral, PublicKeyToken=692fbea5521e1304, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\References\CrystalDecisions.CrystalReports.Engine.dll</HintPath>
+      <HintPath>..\..\Johna\OffsetPrintingSupplies\packages\References\CrystalDecisions.CrystalReports.Engine.dll</HintPath>
     </Reference>
     <Reference Include="CrystalDecisions.ReportSource, Version=11.5.3700.0, Culture=neutral, PublicKeyToken=692fbea5521e1304, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\References\CrystalDecisions.ReportSource.dll</HintPath>
+      <HintPath>..\..\Johna\OffsetPrintingSupplies\packages\References\CrystalDecisions.ReportSource.dll</HintPath>
     </Reference>
     <Reference Include="CrystalDecisions.Shared, Version=11.5.3700.0, Culture=neutral, PublicKeyToken=692fbea5521e1304, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\References\CrystalDecisions.Shared.dll</HintPath>
+      <HintPath>..\..\Johna\OffsetPrintingSupplies\packages\References\CrystalDecisions.Shared.dll</HintPath>
     </Reference>
     <Reference Include="CrystalDecisions.Web, Version=11.5.3700.0, Culture=neutral, PublicKeyToken=692fbea5521e1304, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\References\CrystalDecisions.Web.dll</HintPath>
+      <HintPath>..\..\Johna\OffsetPrintingSupplies\packages\References\CrystalDecisions.Web.dll</HintPath>
     </Reference>
     <Reference Include="log4net, Version=1.2.9.0, Culture=neutral, PublicKeyToken=b32731d11ce58905">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\References\log4net.dll</HintPath>
+      <HintPath>..\..\Johna\OffsetPrintingSupplies\packages\References\log4net.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Recaptcha">
-      <HintPath>..\packages\References\Recaptcha.dll</HintPath>
+      <HintPath>..\..\Johna\OffsetPrintingSupplies\packages\References\Recaptcha.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Data.Entity" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Linq.Dynamic">
-      <HintPath>..\packages\References\System.Linq.Dynamic.dll</HintPath>
+      <HintPath>..\..\Johna\OffsetPrintingSupplies\WebView\bin\System.Linq.Dynamic.dll</HintPath>
     </Reference>
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
@@ -154,6 +154,8 @@
     <Compile Include="Controllers\CashBankMutationController.cs" />
     <Compile Include="Controllers\CashMutationController.cs" />
     <Compile Include="Controllers\CashSalesReturnController.cs" />
+    <Compile Include="Controllers\GeneralLedgerController.cs" />
+    <Compile Include="Controllers\MstCOAController.cs" />
     <Compile Include="Controllers\ReceivableController.cs" />
     <Compile Include="Controllers\PayableController.cs" />
     <Compile Include="Controllers\RetailSalesInvoiceController.cs" />
@@ -205,9 +207,12 @@
     <Content Include="Content\apps_js\CashBankMutation.js" />
     <Content Include="Content\apps_js\CashMutation.js" />
     <Content Include="Content\apps_js\CashSalesReturn.js" />
+    <Content Include="Content\apps_js\closingmonthly.js" />
+    <Content Include="Content\apps_js\GeneralLedgerJournal.js" />
     <Content Include="Content\apps_js\MasterUser.js" />
     <Content Include="Content\apps_js\Receivable.js" />
     <Content Include="Content\apps_js\Payable.js" />
+    <Content Include="Content\apps_js\restoreclosingmonthly.js" />
     <Content Include="Content\apps_js\StockMutation.js" />
     <Content Include="Content\apps_js\RetailSalesInvoice.js" />
     <Content Include="Content\apps_js\PaymentRequest.js" />
@@ -240,6 +245,14 @@
     <Content Include="Content\apps_js\StockAdjustment.js" />
     <Content Include="Content\apps_js\tools.js" />
     <Content Include="Content\apps_js\UserAccess.js" />
+    <Content Include="Content\apps_js\validcombinationbankcompany.js" />
+    <Content Include="Content\apps_js\validcombinationbankregional.js" />
+    <Content Include="Content\apps_js\validcombinationcashadvancecompany.js" />
+    <Content Include="Content\apps_js\validcombinationcashadvanceregional.js" />
+    <Content Include="Content\apps_js\validcombinationcashcompany.js" />
+    <Content Include="Content\apps_js\validcombinationcashregional.js" />
+    <Content Include="Content\apps_js\validcombinationcontact.js" />
+    <Content Include="Content\apps_js\validcombinationgl.js" />
     <Content Include="Content\apps_js\WarehouseItem.js" />
     <Content Include="Content\apps_js\WarehouseMutationOrder.js" />
     <Content Include="Content\assets\images\emkl.png" />
@@ -565,6 +578,7 @@
     <Content Include="Content\infoss_home.css" />
     <Content Include="Content\jquery.tabs-ie.css" />
     <Content Include="Content\jquery.tabs.css" />
+    <Content Include="Content\apps_js\mstcoa.js" />
     <Content Include="Content\plupload\js\i18n\ar.js" />
     <Content Include="Content\plupload\js\i18n\az.js" />
     <Content Include="Content\plupload\js\i18n\bs.js" />
@@ -982,6 +996,8 @@
     <None Include="Properties\PublishProfiles\ftp_laptop.pubxml" />
     <None Include="Properties\PublishProfiles\package.pubxml" />
     <None Include="Properties\PublishProfiles\sampleapp.pubxml" />
+    <Content Include="Views\Report\DailyGL.rpt" />
+    <Content Include="Views\Report\rptBalanceSheet.rpt" />
     <None Include="Scripts\jquery-1.7.1.intellisense.js" />
     <Content Include="Scripts\collapsiblePanel.js" />
     <Content Include="Scripts\jquery-1.1.3.1.pack.js" />
@@ -1139,6 +1155,26 @@
     <Content Include="Views\Authentication\Login.cshtml" />
     <Content Include="Views\UserAccess\Index.cshtml" />
     <Content Include="Views\User\Index.cshtml" />
+    <Content Include="Views\ValidCombinationBalanceCashCompany\Index.cshtml" />
+    <Content Include="Views\ValidCombinationBalanceCashRegional\Index.cshtml" />
+    <Content Include="Views\ValidCombinationBankCompany\Index.cshtml" />
+    <Content Include="Views\ValidCombinationBankRegional\Index.cshtml" />
+    <Content Include="Views\ValidCombinationCashCompany\Index.cshtml" />
+    <Content Include="Views\ValidCombinationCashRegional\Index.cshtml" />
+    <Content Include="Views\ValidCombinationContact\Index.cshtml" />
+    <Content Include="Views\ValidCombination\Index.cshtml" />
+    <Content Include="Views\FinanceReport\BalanceSheet.cshtml" />
+    <Content Include="Views\FinanceReport\ChartOfAccount.cshtml" />
+    <Content Include="Views\FinanceReport\DailyReport.cshtml" />
+    <Content Include="Views\FinanceReport\GeneralLedger.cshtml" />
+    <Content Include="Views\FinanceReport\GeneralTrialBalance.cshtml" />
+    <Content Include="Views\FinanceReport\IncomeStatement.cshtml" />
+    <Content Include="Views\FinanceReport\OutStandingARAP.cshtml" />
+    <Content Include="Views\FinanceReport\SummaryGeneralJurnal.cshtml" />
+    <Content Include="Views\GeneralLedger\Index.cshtml" />
+    <Content Include="Views\ClosingMonthly\Index.cshtml" />
+    <Content Include="Views\ClosingMonthly\Restore.cshtml" />
+    <Content Include="Views\MstCOA\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

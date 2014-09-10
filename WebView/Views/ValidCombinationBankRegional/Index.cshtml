@@ -1,0 +1,112 @@
+﻿@{
+    ViewBag.Title = "Valid Combination Bank Regional List";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section Head {
+    <link rel="stylesheet" type="text/css" href="@Url.Content("~/Content/jquery.tabs.css")">
+    <!-- Additional IE/Win specific style sheet (Conditional Comments) -->
+    <!--[if lte IE 7]>
+    <link rel="stylesheet" type="text/css" href="@Url.Content("~/Content/jquery.tabs-ie.css")">
+        <![endif]-->
+}
+@section Scripts {
+
+    <script type="text/javascript" src="@Url.Content("~/Scripts/jquery.maskedinput-1.2.2.js")"></script>
+
+    <script type="text/javascript" src="@Url.Content("~/Content/apps_js/tools.js")"></script>
+    <script type="text/javascript" src="@Url.Content("~/Content/apps_js/validcombinationbankregional.js")"></script>
+}
+
+<div id="container_validcombinationbankregional" style="margin: 10px;">
+    <div id="validcombinationbankregional" class="easyui-panel" style="text-align: left;"
+            data-options="modal:true" title="@ViewBag.Title">
+
+        <div id="validcombinationbankregional_form_toolbar" class="form_toolbar">
+            <a id="validcombinationbankregional_form_btn_reload" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-reload'">Reload</a>
+            <a id="validcombinationbankregional_form_btn_add" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-add'">Add New</a>
+        </div>
+
+        <div id="list_validcombinationbankregional_content" style="overflow: auto;">
+            <form id="frmor">
+                <div style="display: inline-block; padding: 5px 10px" id="shipmentorder_content">
+                    <div class="easyui-panel" style="width: auto !important; border: none !important;">
+                        <div id="validcombinationbankregional_panel">
+                            <table id="list_validcombinationbankregional" class="scroll list_master" cellpadding="0" cellspacing="0"></table>
+                        </div>
+                        <div id="pager_list_validcombinationbankregional" class="scroll" style="text-align: center;"></div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Dialog Valid Combination Bank Regional Detail -->
+<div id="lookup_div_validcombinationbankregional_detail" class="easyui-dialog" title="Valid Combination Bank Regional Detail" style="padding: 0px 5px; height: 250px; width: 400px;"
+    data-options="iconCls:'icon-tip',modal:true">
+    <div id="lookup_toolbar_validcombinationbankregional_detail" class="grid_toolbar">
+        <a id="lookup_btn_add_validcombinationbankregional_detail" href="javascript:void(0)" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-save'">Save</a>
+        <a id="lookup_btn_cancel_validcombinationbankregional_detail" href="javascript:void(0)" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-remove'">Close Window</a>
+    </div>
+    <table>
+        <tr>
+            <td>Account Code 
+            </td>
+            <td>
+                <input name="txtaccountcode" type="text" id="txtaccountcode" size="10" maxlength="20" disabled="disabled" />
+                <input type="button" name="btncoa" id="btncoa" style="cursor: pointer;"
+                    class="ui-corner-all ui-state-default" value="..." />
+            </td>
+        </tr>
+        <tr>
+            <td></td>
+            <td>
+                <input name="txtaccountname" type="text" id="txtaccountname" size="35" maxlength="20" disabled="disabled" /></td>
+        </tr>
+        <tr>
+            <td>Date</td>
+            <td>
+                <input id="txtdate" type="text" size="10" maxlength="20" class="editable easyui-datebox textright" title="mm/dd/yyyy" value="@DateTime.Today.ToShortDateString()" />
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                <fieldset>
+                    <legend>Balance</legend>
+                    <table>
+                        <tr>
+                            <td>Beginning Balance USD</td>
+                            <td>
+                                <input id="txtbeginningbalanceusd" class="textright easyui-numberbox" size="15" data-options="precision:2,groupSeparator:','" type="text" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Beginning Balance IDR</td>
+                            <td>
+                                <input id="txtbeginningbalanceidr" class="textright easyui-numberbox" size="15" data-options="precision:2,groupSeparator:','" type="text" />
+                            </td>
+                        </tr>
+                    </table>
+                </fieldset>
+            </td>
+        </tr>
+    </table>
+
+</div>
+
+<!-- END Dialog Valid Combination Bank Company Detail -->
+
+<!-- Look Up COA -->
+<div id="lookup_mstcoa_div" class="easyui-dialog" style="padding-left: 5px; width: 530px; height: 480px;"
+    title="Master Data COA" data-options="modal:true">
+
+    <div class="form_toolbar">
+        <a id="mstcoa_lookup_add" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-add'">Select Data</a>
+        <a id="mstcoa_lookup_cancel" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-remove'">Close Window</a>
+    </div>
+
+    <table id="lookup_mstcoa" class="scroll" cellpadding="0" cellspacing="0"></table>
+    <div id="pager_lookup_mstcoa" class="scroll" style="text-align: center;"></div>
+</div>
+<!-- END Look Up COA -->

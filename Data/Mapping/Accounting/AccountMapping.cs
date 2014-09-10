@@ -15,6 +15,9 @@ namespace Data.Mapping
             //HasMany(a => a.GeneralLedgerJournals);
             //HasOptional(a => a.ValidComb);
             //HasOptional(a => a.Closing);
+            HasOptional(a => a.Parent)
+                .WithMany()
+                .HasForeignKey(a => a.ParentId);
             Ignore(a => a.Errors);
         }
     }

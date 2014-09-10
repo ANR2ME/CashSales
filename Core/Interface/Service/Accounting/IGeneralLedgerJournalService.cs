@@ -18,13 +18,21 @@ namespace Core.Interface.Service
         GeneralLedgerJournal CreateObject(GeneralLedgerJournal generalLedgerJournal, IAccountService _accountService);
         GeneralLedgerJournal SoftDeleteObject(GeneralLedgerJournal generalLedgerJournal);
         bool DeleteObject(int Id);
-        //GeneralLedgerJournal CreateGeneralLedgerJournalForPaymentVoucher(PaymentVoucher paymentVoucher, CashBank cashBank);
-        //GeneralLedgerJournal CreateGeneralLedgerJournalForReceiptVoucher(ReceiptVoucher receiptVoucher, CashBank cashBank);
-        //GeneralLedgerJournal CreateGeneralLedgerJournalForCashBankAdjustment(CashBankAdjustment cashBankAdjustment, CashBank cashBank);
-        //IList<GeneralLedgerJournal> CreateGeneralLedgerJournalForCashBankMutation(CashBankMutation cashBankMutation, CashBank sourceCashBank, CashBank targetCashBank);
-        //IList<GeneralLedgerJournal> SoftDeleteGeneralLedgerJournalForPaymentVoucher(PaymentVoucher paymentVoucher, CashBank cashBank);
-        //IList<GeneralLedgerJournal> SoftDeleteGeneralLedgerJournalForReceiptVoucher(ReceiptVoucher receiptVoucher, CashBank cashBank);
-        //IList<GeneralLedgerJournal> SoftDeleteGeneralLedgerJournalForCashBankAdjustment(CashBankAdjustment cashBankAdjustment, CashBank cashBank);
-        //IList<GeneralLedgerJournal> SoftDeleteGeneralLedgerJournalForCashBankMutation(CashBankMutation cashBankMutation, CashBank sourceCashBank, CashBank targetCashBank);
+        IList<GeneralLedgerJournal> CreateConfirmationJournalForPaymentVoucher(PaymentVoucher paymentVoucher, CashBank cashBank, IAccountService _accountService);
+        IList<GeneralLedgerJournal> CreateUnconfirmationJournalForPaymentVoucher(PaymentVoucher paymentVoucher, CashBank cashBank, IAccountService _accountService);
+        IList<GeneralLedgerJournal> CreateConfirmationJournalForReceiptVoucher(ReceiptVoucher receiptVoucher, CashBank cashBank, IAccountService _accountService);
+        IList<GeneralLedgerJournal> CreateUnconfirmationJournalForReceiptVoucher(ReceiptVoucher receiptVoucher, CashBank cashBank, IAccountService _accountService);
+        IList<GeneralLedgerJournal> CreateConfirmationJournalForCashBankAdjustment(CashBankAdjustment cashBankAdjustment, CashBank cashBank, IAccountService _accountService);
+        IList<GeneralLedgerJournal> CreateUnconfirmationJournalForCashBankAdjustment(CashBankAdjustment cashBankAdjustment, CashBank cashBank, IAccountService _accountService);
+        IList<GeneralLedgerJournal> CreateConfirmationJournalForCashBankMutation(CashBankMutation cashBankMutation, CashBank sourceCashBank, CashBank targetCashBank, IAccountService _accountService);
+        IList<GeneralLedgerJournal> CreateUnconfirmationJournalForCashBankMutation(CashBankMutation cashBankMutation, CashBank sourceCashBank, CashBank targetCashBank, IAccountService _accountService);
+        IList<GeneralLedgerJournal> CreateConfirmationJournalForCashSalesInvoice(CashSalesInvoice cashSalesInvoice, IAccountService _accountService);
+        IList<GeneralLedgerJournal> CreateUnconfirmationJournalForCashSalesInvoice(CashSalesInvoice cashSalesInvoice, IAccountService _accountService);
+        IList<GeneralLedgerJournal> CreatePaidJournalForCashSalesInvoice(CashSalesInvoice cashSalesInvoice, IAccountService _accountService);
+        IList<GeneralLedgerJournal> CreateUnpaidJournalForCashSalesInvoice(CashSalesInvoice cashSalesInvoice, IAccountService _accountService);
+        IList<GeneralLedgerJournal> CreateConfirmationJournalForStockAdjustment(StockAdjustment stockAdjustment, IAccountService _accountService);
+        IList<GeneralLedgerJournal> CreateUnconfirmationJournalForStockAdjustment(StockAdjustment stockAdjustment, IAccountService _accountService);
+        IList<GeneralLedgerJournal> CreateConfirmationJournalForCustomPurchaseInvoice(CustomPurchaseInvoice customPurchaseInvoice, IAccountService _accountService);
+        IList<GeneralLedgerJournal> CreateUnconfirmationJournalForCustomPurchaseInvoice(CustomPurchaseInvoice customPurchaseInvoice, IAccountService _accountService);
     }
 }

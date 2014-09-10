@@ -1,0 +1,217 @@
+﻿@{
+    ViewBag.Title = "Daily Report";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+@section Head {
+    <link rel="stylesheet" type="text/css" href="@Url.Content("~/Content/jquery.tabs.css")">
+    <!-- Additional IE/Win specific style sheet (Conditional Comments) -->
+    <!--[if lte IE 7]>
+    <link rel="stylesheet" type="text/css" href="@Url.Content("~/Content/jquery.tabs-ie.css")">
+        <![endif]-->
+}
+@section Scripts {
+    <script type="text/javascript" src="@Url.Content("~/Scripts/jquery.maskedinput-1.2.2.js")"></script>
+    <script type="text/javascript" src="@Url.Content("~/Content/apps_js/tools.js")"></script>
+    <script type="text/javascript" src="@Url.Content("~/Content/apps_js/financereportdaily.js")"></script>
+}
+
+
+<div id="container_DailyReport" style="margin: 10px;">
+    <div id="dailyreport" class="easyui-panel" style="text-align: left;"
+            data-options="modal:true" title="@ViewBag.Title">
+
+        <div id="dailyreport_form_toolbar" class="form_toolbar">
+            <a id="dailyreport_form_btn_print" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-print'">Print</a>
+        </div>
+
+        <div id="dailyreport_content" style="overflow: auto;">
+            <form id="frmdailyreport">
+                <div style="display: inline-block; padding: 10px" id="shipmentorder_content">
+                    <div class="easyui-panel" style="width: auto !important; border: none !important;">
+                          <table width="100%" border="0">
+                            <tr>
+                             <td colspan="2">
+                               <fieldset class="ui-widget-content ui-corner-all" style="background: #DCFFCA;">
+                                     <legend>Custom Company</legend>
+                                   <table>
+                                       <tr>
+                                           <td>
+                                              <label>
+                                              <input type="radio" name="rbCustomCompany" id="rbPerCompany" value="Company" checked="checked" />Per Company</label>
+                                           </td>
+                                           <td>
+                                              <label>
+                                              <input type="radio" name="rbCustomCompany" id="rbPerRegional" value="Regional" />Per Regional</label>
+                                           </td>
+                                       </tr>
+                                   </table>
+                               </fieldset>
+                               </td>
+                            </tr>
+                            
+                            <tr>
+                                <td colspan="2">
+                                <fieldset class="ui-widget-content ui-corner-all" style="background: #DCFFCA;">
+                                    <legend>Transaction Date</legend>
+                                   <table>
+                                       <tr>
+                                           <td>
+                                                <label>
+                                                <input type="radio" name="rbCustomPeriod" id="rbPeriod" value="Period" checked="checked" />Per Closing Period</label>
+                                                <input id="btnPeriod" name="buttonactivated" type="button" style="cursor: pointer;" class="ui-corner-all" value=".." />
+                                           </td>
+                                       </tr>
+                                       <tr>
+                                           <td>
+                                               Period
+                                               <input id="txtPeriod" type="text" size="3" maxlength="7" disabled="disabled" />
+                                            </td>
+                                            <td align="right">
+                                               Year
+                                               <input id="txtYearPeriod" type="text" size="8" maxlength="10" disabled="disabled" />
+                                           </td>
+                                       </tr>
+                                       <tr>
+                                           <td>
+                                               Beginning Period
+                                           </td>
+                                           <td align ="right">
+                                                <input id="txtBeginPeriod" type="text" size="10" maxlength="7" disabled="disabled" />
+                                           </td>
+                                       </tr>
+                                        <tr>
+                                           <td>
+                                               Ending Period
+                                           </td>
+                                            <td align ="right">
+                                                  <input id="txtEndPeriod" type="text" size="10" maxlength="7" disabled="disabled" />
+                                            </td>
+                                       </tr>
+                                       <tr>
+                                           <td>
+                                             <label>
+                                                 <input type="radio" name="rbCustomPeriod" id="rbDate" value="Custom"  />Custom Date</label>
+                                           </td>
+                                           <td align ="right">
+                                                Transaction Date <input id="txtBeginDate" class="editable easyui-datebox" title="mm/dd/yyyy" type="text" size="10" maxlength="20" />
+                                           </td>
+                                       </tr>
+                                       <tr>
+                                           <td></td>
+                                           <td align ="right"> 
+                                                TO <input id="txtEndDate" class="editable easyui-datebox" title="mm/dd/yyyy" type="text" size="10" maxlength="20" />
+                                           </td>
+                                       </tr>
+                                   </table>
+                               </fieldset>
+                               </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <fieldset class="ui-widget-content ui-corner-all" style="background: #DCFFCA;">
+                                    <legend>Account Code</legend>
+                                    <table>
+                                        <tr>
+                                            <td>
+                                                   <input id="txtAccountCode" type="text" size="10" maxlength="10" disabled="disabled" />
+                                                   <input id="btnAccountCode" name="buttonactivated" type="button" style="cursor: pointer;" class="ui-corner-all" value=".." />
+                                                   <input id="txtAccountDesc" type="text" size="40" maxlength="40" disabled="disabled" />
+                                            </td>
+                                        </tr>
+                                    </table>
+                                  </fieldset>
+                                </td>
+                            </tr>
+                              <tr>
+                                  <td>
+                                    <fieldset class="ui-widget-content ui-corner-all" style="background: #DCFFCA;">
+                                    <legend>Beginning Balance</legend>
+                                      <table>
+                                        <tr>
+                                            <td>
+                                            </td>
+                                            <td>
+                                                USD :
+                                            </td>
+                                            <td>
+                                                IDR : 
+                                            </td>
+                                            <td>
+                                                In IDR:
+                                            </td>
+                                        </tr>
+                                          <tr>
+                                              <td>
+                                                  Debit
+                                              </td>
+                                              <td>
+                                                   <input id="txtDebitUSD" type="text" class="easyui-numberbox" precision="2" groupSeparator=" " decimalSeparator="." value = "0" size="30" maxlength="200"  />
+                                              </td>
+                                              <td>
+                                                   <input id="txtDebitIDR" type="text"  class="easyui-numberbox" precision="2" groupSeparator=" " decimalSeparator="." value = "0" size="30" maxlength="200"  />
+                                              </td>
+                                              <td>
+                                                   <input id="txtDebitInIDR" type="text"  class="easyui-numberbox" precision="2" groupSeparator=" " decimalSeparator="." value = "0" size="30" maxlength="200"  />
+                                              </td>
+                                          </tr>
+                                          <tr>
+                                              <td>
+                                                  Credit
+                                              </td>
+                                              <td>
+                                                   <input id="txtCreditUSD" type="text"  class="easyui-numberbox" precision="2" groupSeparator=" " decimalSeparator="." value = "0" size="30" maxlength="200"  />
+                                              </td>
+                                              <td>
+                                                   <input id="txtCreditIDR" type="text"  class="easyui-numberbox" precision="2" groupSeparator=" " decimalSeparator="." value = "0" size="30" maxlength="200"  />
+                                              </td>
+                                              <td>
+                                                   <input id="txtCreditInIDR" type="text"  class="easyui-numberbox" precision="2" groupSeparator=" " decimalSeparator="." value = "0" size="30" maxlength="200"  />
+                                              </td>
+                                          </tr>
+                                      </table>
+                                    </fieldset>
+                                  </td>
+                              </tr>
+                             
+                        </table>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <!-- Look Up Customer -->
+<div id="lookup_div_account" class="easyui-dialog" title="Chart Of Account List" style="padding: 0px 5px; height: 490px; width: 480px;"
+    data-options="iconCls:'icon-tip',modal:true">
+
+    <div id="lookup_toolbar_account" class="grid_toolbar">
+        <a id="lookup_btn_add_account" href="javascript:void(0)" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-add'">Select Data</a>
+        <a id="lookup_btn_cancel_account" href="javascript:void(0)" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-remove'">Close Window</a>
+    </div>
+
+    <table id="lookup_table_account" class="scroll" cellpadding="0" cellspacing="0"></table>
+    <div id="lookup_pager_account" class="scroll" style="text-align: center;"></div>
+</div>
+<!-- End Look Up Customer -->
+
+
+<!-- Look Up Period -->
+<div id="lookup_period_div" class="easyui-dialog" style="padding-left: 5px; width: 530px; height: 480px;"
+    title="Period" data-options="modal:true">
+
+    <div id="lookup_toolbar_period" class="grid_toolbar">
+        <a id="period_lookup_add" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-add'">Select Data</a>
+        <a id="period_lookup_cancel" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-remove'">Close Window</a>
+    </div>
+
+    <table id="lookup_period" class="scroll" cellpadding="0" cellspacing="0"></table>
+    <div id="pager_lookup_period" class="scroll" style="text-align: center;"></div>
+</div>
+<!-- End Look Up Period -->
+    
+
+   
+
+   
+</div>

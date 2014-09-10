@@ -126,6 +126,7 @@ namespace Validation.Validation
         public WarehouseMutationOrder VDeleteObject(WarehouseMutationOrder warehouseMutationOrder, IWarehouseMutationOrderDetailService _warehouseMutationOrderDetailService)
         {
             VHasNotBeenConfirmed(warehouseMutationOrder);
+            if (!isValid(warehouseMutationOrder)) { return warehouseMutationOrder; }
             VDontHaveDetails(warehouseMutationOrder, _warehouseMutationOrderDetailService);
             return warehouseMutationOrder;
         }

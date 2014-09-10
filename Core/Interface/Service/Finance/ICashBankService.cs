@@ -14,8 +14,7 @@ namespace Core.Interface.Service
         IList<CashBank> GetAll();
         CashBank GetObjectById(int Id);
         CashBank GetObjectByName(string Name);
-        CashBank CreateObject(CashBank cashBank);
-        CashBank CreateObject(string name, string description, bool IsBank);
+        CashBank CreateObject(CashBank cashBank, IAccountService _accountService);
         CashBank UpdateObject(CashBank cashBank);
         CashBank SoftDeleteObject(CashBank cashBank, ICashMutationService _cashMutationService);
         bool DeleteObject(int Id);

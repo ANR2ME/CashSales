@@ -1,0 +1,63 @@
+﻿@{
+    ViewBag.Title = "Chart Of Account";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+@section Head {
+    <link rel="stylesheet" type="text/css" href="@Url.Content("~/Content/jquery.tabs.css")">
+    <!-- Additional IE/Win specific style sheet (Conditional Comments) -->
+    <!--[if lte IE 7]>
+    <link rel="stylesheet" type="text/css" href="@Url.Content("~/Content/jquery.tabs-ie.css")">
+        <![endif]-->
+}
+@section Scripts {
+    <script type="text/javascript" src="@Url.Content("~/Scripts/jquery.maskedinput-1.2.2.js")"></script>
+    <script type="text/javascript" src="@Url.Content("~/Content/apps_js/tools.js")"></script>
+    <script type="text/javascript" src="@Url.Content("~/Content/apps_js/financereportchartofaccount.js")"></script>
+}
+
+
+<div id="container_paymentvoucher" style="margin: 10px;">
+    <div id="paymentvoucher" class="easyui-panel" style="text-align: left;"
+            data-options="modal:true" title="@ViewBag.Title">
+
+        <div id="paymentvoucher_form_toolbar" class="form_toolbar">
+            <a id="paymentvoucher_form_btn_print" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-print'">Print</a>
+        </div>
+
+        <div id="paymentvoucher_content" style="overflow: auto;">
+            <form id="frmpaymentvoucher">
+                <div style="display: inline-block; padding: 10px" id="shipmentorder_content">
+                    <div class="easyui-panel" style="width: auto !important; border: none !important;">
+                          <table width="100%" border="0">
+                            <tr>
+                             <td>
+                               <fieldset class="ui-widget-content ui-corner-all" style="background: #DCFFCA;">
+                                     <legend>Account Level</legend>
+                                   <table>
+                                       <tr>
+                                           <td>
+                                              <label>
+                                              <input type="radio" name="rbAccountLevel" id="rbAccountLevel15" value="15" checked="checked" />1 up to 5</label>
+                                           </td>
+                                           <td>
+                                              <label>
+                                              <input type="radio" name="rbAccountLevel" id="rbPerRegional1" value="5" />5 Only</label>
+                                           </td>
+                                       </tr>
+                                   </table>
+                               </fieldset>
+                               </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+  
+
+   
+</div>

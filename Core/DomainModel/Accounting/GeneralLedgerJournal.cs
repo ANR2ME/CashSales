@@ -8,10 +8,13 @@ namespace Core.DomainModel
     public partial class GeneralLedgerJournal
     {
         public int Id { get; set; }
+        public int AccountId { get; set; }
+        
         public string SourceDocument { get; set; }
         public int SourceDocumentId { get; set; }
         public int Status { get; set; }
         public DateTime TransactionDate { get; set; }
+        public decimal Amount { get; set; }
 
         public DateTime CreatedAt { get; set; }
         public bool IsDeleted { get; set; }

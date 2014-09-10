@@ -1,0 +1,185 @@
+﻿@{
+    ViewBag.Title = "OutStanding AR & AP";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+@section Head {
+    <link rel="stylesheet" type="text/css" href="@Url.Content("~/Content/jquery.tabs.css")">
+    <!-- Additional IE/Win specific style sheet (Conditional Comments) -->
+    <!--[if lte IE 7]>
+    <link rel="stylesheet" type="text/css" href="@Url.Content("~/Content/jquery.tabs-ie.css")">
+        <![endif]-->
+}
+@section Scripts {
+    <script type="text/javascript" src="@Url.Content("~/Scripts/jquery.maskedinput-1.2.2.js")"></script>
+    <script type="text/javascript" src="@Url.Content("~/Content/apps_js/tools.js")"></script>
+    <script type="text/javascript" src="@Url.Content("~/Content/apps_js/financereportoutstandingarap.js")"></script>
+}
+
+
+<div id="container_paymentvoucher" style="margin: 10px;">
+    <div id="paymentvoucher" class="easyui-panel" style="text-align: left;"
+            data-options="modal:true" title="@ViewBag.Title">
+
+        <div id="paymentvoucher_form_toolbar" class="form_toolbar">
+            <a id="paymentvoucher_form_btn_print" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-print'">Print</a>
+        </div>
+
+        <div id="paymentvoucher_content" style="overflow: auto;">
+            <form id="frmpaymentvoucher">
+                <div style="display: inline-block; padding: 10px" id="shipmentorder_content">
+                    <div class="easyui-panel" style="width: auto !important; border: none !important;">
+                          <table width="100%" border="0">
+                            <tr>
+                             <td>
+                               <fieldset class="ui-widget-content ui-corner-all" style="background: #DCFFCA;">
+                                     <legend>Custom Company</legend>
+                                   <table>
+                                       <tr>
+                                           <td>
+                                              <label>
+                                              <input type="radio" name="rbCustomCompany" id="rbPerCompany" value="Company" checked="checked" />Per Company</label>
+                                           </td>
+                                           <td>
+                                              <label>
+                                              <input type="radio" name="rbCustomCompany" id="rbPerRegional" value="Regional" />Per Regional</label>
+                                           </td>
+                                       </tr>
+                                   </table>
+                               </fieldset>
+                               </td>
+                            </tr>
+                           <tr>
+                                  <td>
+                                    <fieldset class="ui-widget-content ui-corner-all" style="background: #DCFFCA;">
+                                    <legend>By Customer</legend>
+                                      <table>
+                                        <tr>
+                                            <td>
+                                                <label>
+                                                 <input type="radio" name="rbCustomer" id="rbCustomerShipper" value="Shipper" checked ="checked" />Shipper</label>
+                                            </td>
+                                            <td>
+                                                <label>
+                                                 <input type="radio" name="rbCustomer" id="rbCustomerSSline" value="SSLine"/>SSLine</label>
+                                            </td>
+                                              <td>
+                                                <label>
+                                                 <input type="radio" name="rbCustomer" id="rbCustomerIATA" value="IATA"  />IATA</label>
+                                            </td>
+                                        </tr>
+                                           <tr>
+                                            <td>
+                                                <label>
+                                                 <input type="radio" name="rbCustomer" id="rbCustomerConsignee" value="Consignee"  />Consignee</label>
+                                            </td>
+                                                <td>
+                                                <label>
+                                                 <input type="radio" name="rbCustomer" id="rbCustomerEMKL" value="EMKL"  />EMKL</label>
+                                            </td>
+                                            <td>
+                                                <label>
+                                                 <input type="radio" name="rbCustomer" id="rbCustomerRebateShipper" value="RebateShipper"  />Rebate Shipper</label>
+                                            </td>
+                                        </tr>
+                                           <tr>
+                                            <td>
+                                                <label>
+                                                 <input type="radio" name="rbCustomer" id="rbCustomerAgent" value="Agent"  />Agent</label>
+                                            </td>
+                                               <td>
+                                                <label>
+                                                 <input type="radio" name="rbCustomer" id="rbCustomerDEPO" value="DEPO"  />DEPO</label>
+                                            </td>
+                                             <td>
+                                                <label>
+                                                 <input type="radio" name="rbCustomer" id="rbCustomerRebateConsignee" value="RebateConsignee"  />Rebate Consignee</label>
+                                            </td>
+                                        </tr>
+                                      </table>
+                                    </fieldset>
+                                  </td>
+                              </tr>
+                            <tr>
+                                <td>
+                                    <fieldset class="ui-widget-content ui-corner-all" style="background: #DCFFCA;">
+                                    <legend>Customer Change</legend>
+                                    <table>
+                                        <tr>
+                                            <td>
+                                                 <label>
+                                                 <input type="radio" name="rbCustomCustomer" id="rbAllCustomer" value="All" checked ="checked" />All Per Customer</label>
+                                            </td>
+                                            <td>
+                                                 <label>
+                                                 <input type="radio" name="rbCustomCustomer" id="rbCustomCustomer" value="Customer"  />Custom Per Customer</label>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                Code
+                                            </td>
+                                            <td>
+                                                 <input id="txtCustomerCode" type="text" size="5" maxlength="7" disabled="disabled" />
+                                                 <input id="btnCustomerCode" name="buttonactivated" type="button" style="cursor: pointer;" class="ui-corner-all" value=".." />
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td></td>
+                                            <td>
+                                                <input id="txtCustomerName" type="text" size="56" maxlength="50" class="editable upper" disabled="disabled" />
+                                            </td>
+                                        </tr>
+                                    </table>
+                                  </fieldset>
+                                </td>
+                            </tr>
+                              
+                              <tr>
+                                  <td>
+                                      As Per Date
+                                     <input id="txtDate" class="editable easyui-datebox" title="mm/dd/yyyy" type="text" size="10" maxlength="20" value ="@DateTime.Now.ToShortDateString()"/>
+                                  </td>
+                              </tr>
+                        </table>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Look Up Customer -->
+<div id="lookup_div_agent" class="easyui-dialog" title="Customer List" style="padding: 0px 5px; height: 490px; width: 480px;"
+    data-options="iconCls:'icon-tip',modal:true">
+
+    <div id="lookup_toolbar_agent" class="grid_toolbar">
+        <a id="lookup_btn_add_agent" href="javascript:void(0)" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-add'">Select Data</a>
+        <a id="lookup_btn_cancel_agent" href="javascript:void(0)" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-remove'">Close Window</a>
+    </div>
+
+    <table id="lookup_table_agent" class="scroll" cellpadding="0" cellspacing="0"></table>
+    <div id="lookup_pager_agent" class="scroll" style="text-align: center;"></div>
+</div>
+
+ <div id="lookup_div_consignee" class="easyui-dialog" title="Customer List" style="padding: 0px 5px; height: 490px; width: 480px;"
+    data-options="iconCls:'icon-tip',modal:true">
+
+    <div id="lookup_toolbar_consignee" class="grid_toolbar">
+        <a id="lookup_btn_add_consignee" href="javascript:void(0)" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-add'">Select Data</a>
+        <a id="lookup_btn_cancel_consignee" href="javascript:void(0)" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-remove'">Close Window</a>
+    </div>
+
+    <table id="lookup_table_consignee" class="scroll" cellpadding="0" cellspacing="0"></table>
+    <div id="lookup_pager_consignee" class="scroll" style="text-align: center;"></div>
+</div>
+<!-- End Look Up Customer -->
+
+
+
+    
+
+   
+
+   
+</div>

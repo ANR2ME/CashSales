@@ -1,0 +1,131 @@
+﻿@{
+    ViewBag.Title = "Closing Process Per Period";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section Head {
+    <link rel="stylesheet" type="text/css" href="@Url.Content("~/Content/jquery.tabs.css")">
+    <!-- Additional IE/Win specific style sheet (Conditional Comments) -->
+    <!--[if lte IE 7]>
+    <link rel="stylesheet" type="text/css" href="@Url.Content("~/Content/jquery.tabs-ie.css")">
+        <![endif]-->
+}
+@section Scripts {
+
+    <script type="text/javascript" src="@Url.Content("~/Scripts/jquery.maskedinput-1.2.2.js")"></script>
+
+    <script type="text/javascript" src="@Url.Content("~/Content/apps_js/tools.js")"></script>
+    <script type="text/javascript" src="@Url.Content("~/Content/apps_js/closingmonthly.js")"></script>
+}
+
+<div id="container_posting" style="margin: 10px;">
+    <div id="posting" class="easyui-panel" style="text-align: left;"
+            data-options="modal:true" title="@ViewBag.Title">
+
+        <div id="posting_form_toolbar" class="form_toolbar">
+            <a id="posting_form_btn_save" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-save'">Process</a>
+        </div>
+
+        <div id="postingdetail_content" style="overflow: auto;">
+            <form id="frmor">
+                <div style="display: inline-block; padding: 5px 10px" id="shipmentorder_content">
+                    <div class="easyui-panel" style="width: auto !important; border: none !important;">
+                        <table width="100%" border="0">
+                            <tr>
+                                <td valign="top">
+                                    <fieldset class="ui-widget-content ui-corner-all">
+                                        <legend>Closing Region</legend>
+                                        <table>
+                                            <tr>
+                                                <td>
+                                                    <label>
+                                                        <input type="radio" name="rbpostingregion" id="rbpercompany" value="Company" checked="checked" />Per Company</label>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <label>
+                                                        <input type="radio" name="rbpostingregion" id="rbperregional" value="Regional" disabled="disabled" />Per Regional</label>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </fieldset>
+                                </td>
+                                <td rowspan="2" valign="top">
+                                    <fieldset class="ui-widget-content ui-corner-all">
+                                        <legend>Closing Period</legend>
+                                        <table>
+                                            <tr>
+                                                <td>Period
+                                                </td>
+                                                <td>
+                                                    <input id="txtmonthperiod" type="text" disabled="disabled" size="1" maxlength="10">
+                                                </td>
+                                                <td>Year Period
+                                                </td>
+                                                <td>
+                                                    <input id="txtyearperiod" type="text" disabled="disabled" size="2" maxlength="10">
+                                                    <input type="button" name="btnperiod" id="btnperiod" style="cursor: pointer;"
+                                                        class="ui-corner-all ui-state-default" value="..." />
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td colspan="3">Beginning Period
+                                                </td>
+                                                <td>
+                                                    <input id="txtbeginningperiod" type="text" disabled="disabled" size="10" maxlength="20">
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td colspan="3">Ending Period
+                                                </td>
+                                                <td>
+                                                    <input id="txtendingperiod" type="text" disabled="disabled" size="10" maxlength="20">
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </fieldset>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td valign="top">
+                                    <fieldset class="ui-widget-content ui-corner-all">
+                                        <legend>Closing Type</legend>
+                                        <table>
+                                            <tr>
+                                                <td>
+                                                    <label>
+                                                        <input type="radio" name="rbclosingtype" id="rbgeneralledger" value="GeneralLedger" checked="checked" />General Ledger</label>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <label>
+                                                        <input type="radio" name="rbclosingtype" id="rbarap" value="ARAP" />A/R & A/P</label>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </fieldset>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Look Up Period -->
+<div id="lookup_period_div" class="easyui-dialog" style="padding-left: 5px; width: 530px; height: 480px;"
+    title="Period" data-options="modal:true">
+
+    <div class="form_toolbar">
+        <a id="period_lookup_add" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-add'">Select Data</a>
+        <a id="period_lookup_cancel" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-remove'">Close Window</a>
+    </div>
+
+    <table id="lookup_period" class="scroll" cellpadding="0" cellspacing="0"></table>
+    <div id="pager_lookup_period" class="scroll" style="text-align: center;"></div>
+</div>
+<!-- End Look Up Period -->

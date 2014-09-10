@@ -1,0 +1,204 @@
+﻿@{
+    ViewBag.Title = "Trial Balance";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+@section Head {
+    <link rel="stylesheet" type="text/css" href="@Url.Content("~/Content/jquery.tabs.css")">
+    <!-- Additional IE/Win specific style sheet (Conditional Comments) -->
+    <!--[if lte IE 7]>
+    <link rel="stylesheet" type="text/css" href="@Url.Content("~/Content/jquery.tabs-ie.css")">
+        <![endif]-->
+}
+@section Scripts {
+    <script type="text/javascript" src="@Url.Content("~/Scripts/jquery.maskedinput-1.2.2.js")"></script>
+    <script type="text/javascript" src="@Url.Content("~/Content/apps_js/tools.js")"></script>
+    <script type="text/javascript" src="@Url.Content("~/Content/apps_js/financereportgeneraltrialbalance.js")"></script>
+}
+
+
+<div id="container_paymentvoucher" style="margin: 10px;">
+    <div id="paymentvoucher" class="easyui-panel" style="text-align: left;"
+            data-options="modal:true" title="@ViewBag.Title">
+
+        <div id="paymentvoucher_form_toolbar" class="form_toolbar">
+            <a id="paymentvoucher_form_btn_print" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-print'">Print</a>
+        </div>
+
+        <div id="paymentvoucher_content" style="overflow: auto;">
+            <form id="frmpaymentvoucher">
+                <div style="display: inline-block; padding: 10px" id="shipmentorder_content">
+                    <div class="easyui-panel" style="width: auto !important; border: none !important;">
+                          <table width="100%" border="0">
+                            <tr>
+                             <td>
+                               <fieldset class="ui-widget-content ui-corner-all" style="background: #DCFFCA;">
+                                     <legend>Custom Company</legend>
+                                   <table>
+                                       <tr>
+                                           <td>
+                                              <label>
+                                              <input type="radio" name="rbCustomCompany" id="rbPerCompany" value="Company" checked="checked" />Per Company</label>
+                                           </td>
+                                           <td>
+                                              <label>
+                                              <input type="radio" name="rbCustomCompany" id="rbPerRegional" value="Regional" />Per Regional</label>
+                                           </td>
+                                       </tr>
+                                   </table>
+                               </fieldset>
+                               </td>
+                            </tr>
+                            <tr>
+                             <td>
+                               <fieldset class="ui-widget-content ui-corner-all" style="background: #DCFFCA;">
+                                     <legend>Account Level</legend>
+                                   <table>
+                                       <tr>
+                                           <td>
+                                              <label>
+                                              <input type="radio" name="rbAccountLevel" id="rbAccountLevel15" value="15" checked="checked" />1 up to 5</label>
+                                           </td>
+                                           <td>
+                                              <label>
+                                              <input type="radio" name="rbAccountLevel" id="rbAccountLevel1" value="1" />1 Only</label>
+                                           </td>
+                                           <td>
+                                              <label>
+                                              <input type="radio" name="rbAccountLevel" id="rbPerRegional1" value="5" />5 Only</label>
+                                           </td>
+                                       </tr>
+                                   </table>
+                               </fieldset>
+                               </td>
+                            </tr>
+                            <tr>
+                             <td>
+                               <fieldset class="ui-widget-content ui-corner-all" style="background: #DCFFCA;">
+                                     <legend>Period Type</legend>
+                                   <table>
+                                       <tr>
+                                           <td>
+                                              <label>
+                                              <input type="radio" name="rbPeriodType" id="rbPeriodTypeSingle" value="Single" checked="checked" />Single Period</label>
+                                           </td>
+                                           <td>
+                                              <label>
+                                              <input type="radio" name="rbPeriodType" id="rbPeriodTypeRange" value="Range" />Range Period</label>
+                                           </td>
+                                       </tr>
+                                   </table>
+                               </fieldset>
+                               </td>
+                            </tr>
+                            <tr>
+                            <tr>
+                                <td>
+                                <fieldset class="ui-widget-content ui-corner-all" style="background: #DCFFCA;">
+                                    <legend>Closing Period</legend>
+                                   <table>
+                                       <tr>
+                                           <td>
+                                                Closing Period List
+                                                <input id="btnPeriod" name="buttonactivated" type="button" style="cursor: pointer;" class="ui-corner-all" value=".." />
+                                           </td>
+                                       </tr>
+                                       <tr>
+                                           <td>
+                                               Period
+                                               <input id="txtPeriod" type="text" size="3" maxlength="7" disabled="disabled" />
+                                            </td>
+                                            <td align="right">
+                                               Year
+                                               <input id="txtYearPeriod" type="text" size="8" maxlength="10" disabled="disabled" />
+                                           </td>
+                                       </tr>
+                                       <tr>
+                                           <td>
+                                               Beginning Period
+                                           </td>
+                                           <td align ="right">
+                                                <input id="txtBeginPeriod" type="text" size="10" maxlength="7" disabled="disabled" />
+                                           </td>
+                                       </tr>
+                                        <tr>
+                                           <td>
+                                               Ending Period
+                                           </td> 
+                                            <td align ="right">
+                                                  <input id="txtEndPeriod" type="text" size="10" maxlength="7" disabled="disabled" />
+                                            </td>
+                                       </tr>
+                                   </table>
+                               </fieldset>
+                               </td>
+                            </tr>
+                            <tr>
+                                <td colspan="2">
+                                <fieldset class="ui-widget-content ui-corner-all" style="background: #DCFFCA;">
+                                    <legend>Last Closing Period</legend>
+                                   <table>
+                                       <tr>
+                                           <td>
+                                                Closing Period List
+                                                <input id="btnLastPeriod" name="buttonactivated" type="button" style="cursor: pointer;" class="ui-corner-all" value=".." />
+                                           </td>
+                                       </tr>
+                                       <tr>
+                                           <td>
+                                               Period
+                                               <input id="txtLastPeriod" type="text" size="3" maxlength="7" disabled="disabled" />
+                                            </td>
+                                            <td align="right">
+                                               Year
+                                               <input id="txtLastYearPeriod" type="text" size="8" maxlength="10" disabled="disabled" />
+                                           </td>
+                                       </tr>
+                                       <tr>
+                                           <td>
+                                               Beginning Period
+                                           </td>
+                                           <td align ="right">
+                                                <input id="txtLastBeginPeriod" type="text" size="10" maxlength="7" disabled="disabled" />
+                                           </td>
+                                       </tr>
+                                        <tr>
+                                           <td>
+                                               Ending Period
+                                           </td>
+                                            <td align ="right">
+                                                  <input id="txtLastEndPeriod" type="text" size="10" maxlength="7" disabled="disabled" />
+                                            </td>
+                                       </tr>
+                                   </table>
+                               </fieldset>
+                               </td>
+                            
+                        </table>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+  
+<!-- Look Up Period -->
+<div id="lookup_period_div" class="easyui-dialog" style="padding-left: 5px; width: 530px; height: 480px;"
+    title="Period Closing List" data-options="modal:true">
+
+    <div id="lookup_toolbar_period" class="grid_toolbar">
+        <a id="period_lookup_add" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-add'">Select Data</a>
+        <a id="period_lookup_cancel" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-remove'">Close Window</a>
+    </div>
+
+    <table id="lookup_period" class="scroll" cellpadding="0" cellspacing="0"></table>
+    <div id="pager_lookup_period" class="scroll" style="text-align: center;"></div>
+</div>
+<!-- End Look Up Period -->
+    
+
+   
+
+   
+</div>

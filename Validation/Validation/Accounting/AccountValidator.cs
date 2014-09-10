@@ -24,7 +24,7 @@ namespace Validation.Validation
 
         public Account VHasCode(Account account)
         {
-            if (account.Code == null || account.Code.Trim() == "")
+            if (account.Code == null)
             {
                 account.Errors.Add("Code", "Tidak boleh kosong");
             }
@@ -43,7 +43,7 @@ namespace Validation.Validation
         public Account VIsValidGroup(Account account)
         {
             if (!account.Group.Equals(Constant.AccountGroup.Asset) &&
-                !account.Group.Equals(Constant.AccountGroup.Expenses) &&
+                !account.Group.Equals(Constant.AccountGroup.Expense) &&
                 !account.Group.Equals(Constant.AccountGroup.Liability) &&
                 !account.Group.Equals(Constant.AccountGroup.Equity) &&
                 !account.Group.Equals(Constant.AccountGroup.Revenue))
@@ -64,10 +64,20 @@ namespace Validation.Validation
 
         public Account VIsValidParent(Account account, IAccountService _accountService)
         {
-            Account parent = _accountService.GetObjectById(account.Id);
-            if (parent == null)
+            if (account.Level > 1)
             {
-                account.Errors.Add("Parent", "Tidak ada");
+                if (account.ParentId == null)
+                {
+                    account.Errors.Add("Parent", "Tidak boleh null");
+                }
+                else
+                {
+                    Account parent = _accountService.GetObjectById((int)account.ParentId);
+                    if (parent == null)
+                    {
+                        account.Errors.Add("Parent", "Tidak ada");
+                    }
+                }
             }
             return account;
         }
@@ -88,6 +98,12 @@ namespace Validation.Validation
             return account;
         }
 
+        public Account VUpdateObject(Account account, IAccountService _accountService)
+        {
+            VCreateObject(account, _accountService);
+            return account;
+        }
+
         public Account VDeleteObject(Account account)
         {
             return account;
@@ -96,6 +112,12 @@ namespace Validation.Validation
         public bool ValidCreateObject(Account account, IAccountService _accountService)
         {
             VCreateObject(account, _accountService);
+            return isValid(account);
+        }
+
+        public bool ValidUpdateObject(Account account, IAccountService _accountService)
+        {
+            VUpdateObject(account, _accountService);
             return isValid(account);
         }
 

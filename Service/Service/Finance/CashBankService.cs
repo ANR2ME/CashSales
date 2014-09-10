@@ -1,4 +1,5 @@
 ﻿using Core.DomainModel;
+using Core.Constants;
 using Core.Interface.Repository;
 using System;
 using System.Collections.Generic;
@@ -45,22 +46,30 @@ namespace Service.Service
             return _repository.GetObjectByName(Name);
         }
 
-        public CashBank CreateObject(string name, string description, bool IsBank)
-        {
-            CashBank cashBank = new CashBank
-            {
-                Name = name,
-                Description = description,
-                IsBank = IsBank,
-                Amount = 0
-            };
-            return this.CreateObject(cashBank);
-        }
-
-        public CashBank CreateObject(CashBank cashBank)
+        public CashBank CreateObject(CashBank cashBank, IAccountService _accountService)
         {
             cashBank.Errors = new Dictionary<string, string>();
-            return (_validator.ValidCreateObject(cashBank, this) ? _repository.CreateObject(cashBank) : cashBank);
+            if (_validator.ValidCreateObject(cashBank, this))
+            {
+                // Create Leaf Cash Bank Account
+                string Code = GenerateAccountCode(_accountService);
+                Account account = new Account()
+                {
+                    Name = cashBank.Name,
+                    Level = 3,
+                    Group = Constant.AccountGroup.Asset,
+                    Code = Code,
+                    IsCashBankAccount = true,
+                    IsLeaf = true,
+                    ParentId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.CashBank).Id
+                };
+                _accountService.CreateCashBankAccount(account, _accountService);
+                account.LegacyCode = Constant.AccountLegacyCode.CashBank + account.Id;
+                _accountService.UpdateObject(account, _accountService);
+
+                _repository.CreateObject(cashBank);
+            }
+            return cashBank;
         }
 
         public CashBank UpdateObject(CashBank cashBank)
@@ -95,5 +104,19 @@ namespace Service.Service
             return Total;
         }
 
+        public string GenerateAccountCode(IAccountService _accountService)
+        {
+            int ParentId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.CashBank).Id;
+            string parentCode = _accountService.GetObjectById(ParentId).Code;
+            int newId = _accountService.GetQueryable().Where(x => x.ParentId == ParentId).Count() + 1;
+            while (true)
+            {
+                if (_accountService.GetObjectByLegacyCode(parentCode + newId.ToString()) == null)
+                {
+                    return parentCode + newId.ToString();
+                }
+                newId += 1;
+            }
+        }
     }
 }

@@ -82,6 +82,7 @@ namespace Service.Service
                 {
                     detail.Errors = new Dictionary<string, string>();
                     _stockAdjustmentDetailService.ConfirmObject(detail, ConfirmationDate, this, _stockMutationService, _itemService, _barringService, _warehouseItemService);
+                    stockAdjustment.Total += (detail.Quantity * detail.Price);
                 }
                 _repository.ConfirmObject(stockAdjustment);
             }

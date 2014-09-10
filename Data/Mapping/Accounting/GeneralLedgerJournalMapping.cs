@@ -12,6 +12,9 @@ namespace Data.Mapping
         public GeneralLedgerJournalMapping()
         {
             HasKey(glj => glj.Id);
+            HasRequired(glj => glj.Account)
+                .WithMany(a => a.GeneralLedgerJournals)
+                .HasForeignKey(glj => glj.AccountId);
             Ignore(glj => glj.Errors);
         }
     }

@@ -59,6 +59,10 @@ namespace Service.Service
             quantityPricing.Errors = new Dictionary<String, String>();
             if (_validator.ValidCreateObject(quantityPricing, this, _itemTypeService))
             {
+                if (quantityPricing.IsInfiniteMaxQuantity)
+                {
+                    quantityPricing.MaxQuantity = 0;
+                }
                 quantityPricing = _repository.CreateObject(quantityPricing);
             }
             return quantityPricing;
@@ -68,6 +72,10 @@ namespace Service.Service
         {
             if (_validator.ValidUpdateObject(quantityPricing, oldItemTypeId, this, _itemTypeService))
             {
+                if (quantityPricing.IsInfiniteMaxQuantity)
+                {
+                    quantityPricing.MaxQuantity = 0;
+                }
                 quantityPricing = _repository.UpdateObject(quantityPricing);
             }
             return quantityPricing;

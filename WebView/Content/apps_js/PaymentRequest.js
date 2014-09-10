@@ -19,7 +19,7 @@
     }
 
     function clearForm(form) {
-
+        $('#Amount').numberbox('setValue', '');
         $(':input', form).each(function () {
             var type = this.type;
             var tag = this.tagName.toLowerCase(); // normalize case
@@ -42,21 +42,20 @@
     $("#list").jqGrid({
         url: base_url + 'PaymentRequest/GetList',
         datatype: "json",
-        colNames: ['ID', 'Code', 'Contact Id', 'Contact Name', 'Description', 
-                   'Requested Date','Due Date', 'Amount',
-                    'Is Confirmed', 'Confirmation Date', 'Created At', 'Updated At'],
+        colNames: ['ID', 'Code', 'Contact Id', 'Contact Name', 'Description', 'Amount',
+                   'Is Confirmed', 'Confirmation Date', 'Requested Date', 'Due Date', 'Created At', 'Updated At'],
         colModel: [
     			  { name: 'id', index: 'id', width: 80, align: "center" },
                   { name: 'code', index: 'code', width: 100 },
-				  { name: 'contactid', index: 'contactid', width: 100 },
+				  { name: 'contactid', index: 'contactid', width: 100, hidden: true },
                   { name: 'contact', index: 'contact', width: 100 },
-                  { name: 'description', index: 'description', width: 100 },
-                  { name: 'requesteddate', index: 'requesteddate', width: 100, search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
-                  { name: 'duedate', index: 'duedate', width: 100, search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
+                  { name: 'description', index: 'description', width: 200 },
                   { name: 'amount', index: 'amount', width: 100, formatter: 'currency', formatoptions: { decimalSeparator: ".", thousandsSeparator: ",", decimalPlaces: 2, prefix: "", suffix: "", defaultValue: '0.00' } },
-                  { name: 'isconfirmed', index: 'isconfirmed', width: 100 },
-                  { name: 'confirmationdate', index: 'confirmationdate', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
-				  { name: 'createdat', index: 'createdat', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
+                  { name: 'isconfirmed', index: 'isconfirmed', width: 100, stype: 'select', editoptions: { value: ':All;true:Yes;false:No' } },
+                  { name: 'confirmationdate', index: 'confirmationdate', hidden: true, search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
+                  { name: 'requesteddate', index: 'requesteddate', width: 110, search: false, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
+                  { name: 'duedate', index: 'duedate', width: 100, search: false, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
+                  { name: 'createdat', index: 'createdat', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
 				  { name: 'updateat', index: 'updateat', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
         ],
         page: '1',
@@ -77,7 +76,7 @@
 		          var cl = ids[i];
 		          rowIsConfirmed = $(this).getRowData(cl).isconfirmed;
 		          if (rowIsConfirmed == 'true') {
-		              rowIsConfirmed = "YES";
+		              rowIsConfirmed = "YES, " + $(this).getRowData(cl).confirmationdate;
 		          } else {
 		              rowIsConfirmed = "NO";
 		          }
@@ -173,6 +172,7 @@
             var ret = jQuery("#list").jqGrid('getRowData', id);
             $('#ConfirmationDate').datebox('setValue', $.datepicker.formatDate('mm/dd/yy', new Date()));
             $('#confirmAmount').numberbox('setValue', ret.amount);
+            $('#confirmCode').val(ret.code);
             $('#idconfirm').val(ret.id);
             $("#confirm_div").dialog("open");
         } else {
@@ -378,10 +378,13 @@
         url: base_url,
         datatype: "json",
         mtype: 'GET',
-        colNames: ['Id', 'Name'],
+        colNames: ['Id', 'Name', 'Address', 'Contact No.'],
         colModel: [
-                  { name: 'id', index: 'id', width: 80, align: 'right' },
-                  { name: 'name', index: 'name', width: 200 }],
+                  { name: 'id', index: 'id', hidden: true, width: 80, align: 'right' },
+                  { name: 'name', index: 'name', width: 200 },
+                  { name: 'address', index: 'address', width: 250 },
+                  { name: 'contactno', index: 'contactno', width: 150 },
+        ],
         page: '1',
         pager: $('#lookup_pager_contact'),
         rowNum: 20,

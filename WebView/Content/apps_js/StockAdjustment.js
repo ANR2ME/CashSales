@@ -53,12 +53,12 @@
         colModel: [
     			  { name: 'id', index: 'id', width: 80, align: "center" },
                   { name: 'code', index: 'code', width: 100 },
-                  { name: 'description', index: 'description', width: 100 },
+                  { name: 'description', index: 'description', width: 200 },
                   { name: 'warehouseid', index: 'warehouseid', width: 100, hidden: true },
-                  { name: 'warehouse', index: 'warehouse', width: 100 },
+                  { name: 'warehouse', index: 'warehouse', width: 130 },
                   { name: 'isconfirmed', index: 'isconfirmed', width: 100, stype: 'select', editoptions: { value: ':All;true:Yes;false:No' } },
                   { name: 'confirmationdate', index: 'confirmationdate', hidden: true, search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
-                  { name: 'adjustmentdate', index: 'adjustmentdate', width: 100, search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
+                  { name: 'adjustmentdate', index: 'adjustmentdate', width: 110, search: false, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
                   { name: 'createdat', index: 'createdat', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
 				  { name: 'updateat', index: 'updateat', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
         ],
@@ -217,6 +217,7 @@
             var ret = jQuery("#list").jqGrid('getRowData', id);
             $('#ConfirmationDate').datebox('setValue', $.datepicker.formatDate('mm/dd/yy', new Date()));
             $('#idconfirm').val(ret.id);
+            $('#confirmCode').val(ret.code);
             $("#confirm_div").dialog("open");
         } else {
             $.messager.alert('Information', 'Please Select Data...!!', 'info');
@@ -407,13 +408,17 @@
     $("#listdetail").jqGrid({
         url: base_url,
         datatype: "json",
+        //colNames: ['Code', 'Item Id', 'Item SKU', 'Item Name', 'Item Type', 'UoM', 'Quantity', 'Price'],
         colNames: ['Code', 'Item Id', 'Item Name', 'Quantity', 'Price'],
         colModel: [
-                  { name: 'code', index: 'code', width: 100, sortable: false },
-				  { name: 'itemid', index: 'itemid', width: 100, sortable: false },
-                  { name: 'item', index: 'item', width: 80, sortable: false },
-                  { name: 'quantity', index: 'quantity', width: 100, formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: false },
-                  { name: 'price', index: 'price', width: 100, formatter: 'currency' },
+                  { name: 'code', index: 'code', width: 100, sortable: true },
+				  { name: 'itemid', index: 'itemid', width: 100, hidden: true, sortable: true },
+                  //{ name: 'sku', index: 'sku', width: 100, sortable: true },
+                  { name: 'item', index: 'item', width: 100, sortable: true },
+                  //{ name: 'itemtype', index: 'itemtype', width: 100, sortable: true },
+                  //{ name: 'uom', index: 'uom', width: 100, sortable: true },
+                  { name: 'quantity', index: 'quantity', width: 100, formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: true },
+                  { name: 'price', index: 'price', width: 100, formatter: 'currency', sortable: true },
         ],
         //page: '1',
         //pager: $('#pagerdetail'),
@@ -587,10 +592,13 @@
         url: base_url,
         datatype: "json",
         mtype: 'GET',
-        colNames: ['Id', 'Name'],
+        colNames: ['Id', 'Code', 'Name', 'Description'],
         colModel: [
-                  { name: 'id', index: 'id', width: 80, align: 'right' },
-                  { name: 'name', index: 'name', width: 200 }],
+                  { name: 'id', index: 'id', hidden: true, width: 80, align: 'right' },
+                  { name: 'code', index: 'code', width: 100 },
+                  { name: 'name', index: 'name', width: 150 },
+                  { name: 'description', index: 'description', width: 200 }
+        ],
         page: '1',
         pager: $('#lookup_pager_warehouse'),
         rowNum: 20,
@@ -643,10 +651,15 @@
         url: base_url,
         datatype: "json",
         mtype: 'GET',
-        colNames: ['Id', 'Name'],
+        colNames: ['Id', 'SKU', 'Name', 'ItemType', 'UoM', 'Quantity'],
         colModel: [
-                  { name: 'id', index: 'id', width: 80, align: 'right' },
-                  { name: 'name', index: 'name', width: 200 }],
+                  { name: 'id', index: 'id', hidden: true, width: 80, align: 'right' },
+                  { name: 'sku', index: 'sku', width: 100 },
+                  { name: 'name', index: 'name', width: 100 },
+                  { name: 'itemtype', index: 'itemtype', width: 100 },
+                  { name: 'uom', index: 'uom', width: 100 },
+                  { name: 'quantity', index: 'quantity', width: 80, formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' } },
+        ],
         page: '1',
         pager: $('#lookup_pager_item'),
         rowNum: 20,

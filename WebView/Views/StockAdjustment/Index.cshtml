@@ -43,7 +43,7 @@
                @* <fieldset class="ui-widget-content ui-corner-all input_form_div">*@
                        
                     <table id = "tablefrm" width="100%" border="0" cellpadding="5" cellspacing="5" class="input_form_tbl">
-                        <tr nowrap>
+                        <tr nowrap hidden>
                             <td width="139" nowrap style="width: 100px">
                                 <label>ID</label></td>
                             <td width="550">
@@ -61,7 +61,7 @@
                             <td>
                                 <label>Warehouse</label></td>
                             <td>
-                                <input id="WarehouseId"  class="textright" type="text" size="10" maxlength="7" disabled="disabled" />
+                                <input id="WarehouseId" hidden class="textright" type="text" size="10" maxlength="7" disabled="disabled" />
                                 <input id="btnWarehouse" name="buttonactivated" type="button" style="cursor: pointer;" class="ui-corner-all ui-state-default" value=".." />
                                 <input id="Warehouse" name="WarehouseId" type="text" size="56" maxlength="50" class="editable upper" disabled="disabled" />
                         </tr>
@@ -114,7 +114,7 @@
                           Item
                       </td>
                       <td>
-                         <input id="ItemId"  class="textright" type="text" size="10" maxlength="7" disabled="disabled" />
+                         <input id="ItemId" hidden class="textright" type="text" size="10" maxlength="7" disabled="disabled" />
                          <input id="btnItem" name="buttonactivated" type="button" style="cursor: pointer;" class="ui-corner-all ui-state-default" value=".." />
                          <input id="Item" name="ItemId" type="text" size="56" maxlength="50" class="editable upper" disabled="disabled" />
                       </td>
@@ -151,7 +151,7 @@
         </div>
         <div id="confirm_info">
               <table  width="100%" border="0" cellpadding="5" cellspacing="5" class="input_form_tbl">
-                  <tr>
+                  <tr hidden>
                       <td width="139" nowrap style="width: 100px">
                           Id
                       </td>
@@ -159,6 +159,14 @@
                          <input id="idconfirm" type="text" size="10" disabled="disabled"/>
                       </td>
                   </tr>
+                  <tr>
+                            <td>
+                             <label>Code</label>
+                            </td>
+                            <td>
+                               <input id="confirmCode" name="Code" type="text" size="10" disabled="disabled"/>
+                            </td>
+                        </tr>
                   <tr>
                       <td>
                           Confirmation Date

@@ -60,7 +60,6 @@
 		              rowIsBank = "NO";
 		          }
 		          $(this).jqGrid('setRowData', ids[i], { isbank: rowIsBank });
-
 		      }
 		  }
 

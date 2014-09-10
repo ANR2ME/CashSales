@@ -27,9 +27,9 @@
     $("#list").jqGrid({
         url: base_url + 'MstContact/GetList',
         datatype: "json",
-        colNames: ['ID', 'Name', 'Address','Contact No','PIC','PIC Contact No','Email','ContactGroup Id','ContactGroup Name', 'Created At', 'Updated At'],
+        colNames: ['ID', 'Name', 'Address','Contact No.','PIC','PIC Contact No.','Email','ContactGroup Id','ContactGroup Name', 'Created At', 'Updated At'],
         colModel: [
-    			  { name: 'id', index: 'id', width: 80, align: "center", hidden: true },
+    			  { name: 'id', index: 'id', width: 50, align: "center" },
 				  { name: 'name', index: 'name', width: 180 },
                   { name: 'address', index: 'address', width: 250 },
                   { name: 'contactno', index: 'contactno', width: 150 },
@@ -38,8 +38,8 @@
                   { name: 'email', index: 'email', width: 180 },
                   { name: 'contactgroupid', index: 'contactgroupid', width: 180, hidden: true },
                   { name: 'contactgroup', index: 'contactgroup', width: 180, hidden: true },
-				  { name: 'createdat', index: 'createdat', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
-				  { name: 'updateat', index: 'updateat', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
+				  { name: 'createdat', index: 'createdat', search: false, width: 80, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
+				  { name: 'updateat', index: 'updateat', search: false, width: 80, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
         ],
         page: '1',
         pager: $('#pager'),

@@ -42,7 +42,7 @@
                   { name: 'amount', index: 'amount', width: 150, align: 'right', formatter: 'currency', formatoptions: { thousandsSeparator: ",", defaultValue: '0' } },
 				  { name: 'sourcedocumenttype', index: 'sourcedocumenttype', width: 120, align: 'right' },
 				  { name: 'sourcedocumentid', index: 'sourcedocumentid', width: 60, hidden: true },
-                  { name: 'sourcedocumentcode', index: 'sourcedocumentcode', width: 80, stype: 'text' },
+                  { name: 'sourcedocumentcode', index: 'sourcedocumentcode', width: 90, stype: 'text' },
                   { name: 'mutationdate', index: 'mutationdate', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' }, searchoptions: { sopt: ['eq'] } },
                   { name: 'createdat', index: 'createdat', search: false, width: 80, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
         ],

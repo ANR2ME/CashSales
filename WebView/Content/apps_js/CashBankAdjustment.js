@@ -37,11 +37,11 @@
     			  { name: 'id', index: 'id', width: 80, align: "center" },
 				  { name: 'code', index: 'code', width: 100 },
                   { name: 'cashbankid', index: 'cashbankid', width: 80, hidden: true },
-                  { name: 'cashbank', index: 'cashbank', width: 100 },
+                  { name: 'cashbank', index: 'cashbank', width: 120 },
                   { name: 'amount', index: 'amount', width: 100, formatter: 'currency', formatoptions: { decimalSeparator: ".", thousandsSeparator: ",", decimalPlaces: 2, prefix: "", suffix: "", defaultValue: '0.00' } },
                   { name: 'isconfirmed', index: 'isconfirmed', width: 100, stype: 'select', editoptions: { value: ':All;true:Yes;false:No' } },
                   { name: 'confirmationdate', index: 'confirmationdate', hidden: true, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
-                  { name: 'adjustmentdate', index: 'adjustmentdate', width: 100, align: "center", formatter: 'date', search: false, formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y', dataInit: datePick, attr: { title: 'Select Date' } } },
+                  { name: 'adjustmentdate', index: 'adjustmentdate', width: 120, align: "center", formatter: 'date', search: false, formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y', dataInit: datePick, attr: { title: 'Select Date' } } },
                   { name: 'createdat', index: 'createdat', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
 				  { name: 'updateat', index: 'updateat', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
         ],
@@ -347,11 +347,14 @@
         url: base_url,
         datatype: "json",
         mtype: 'GET',
-        colNames: ['Id', 'Name', 'Description'],
+        colNames: ['Id', 'Name', 'Description', 'Amount', 'Is Bank'],
         colModel: [
-                  { name: 'id', index: 'id', width: 80, align: 'right' },
+                  { name: 'id', index: 'id', width: 80, align: 'right', hidden: true },
                   { name: 'name', index: 'name', width: 200 },
-                  { name: 'address', index: 'address', width: 200 }],
+                  { name: 'address', index: 'address', width: 200 },
+                  { name: 'amount', index: 'amount', width: 150, align: "right", formatter: 'currency', formatoptions: { decimalSeparator: ".", thousandsSeparator: ",", decimalPlaces: 2, prefix: "", suffix: "", defaultValue: '0.00' } },
+                  { name: 'isbank', index: 'isbank', width: 100 },
+        ],
         page: '1',
         pager: $('#lookup_pager_cashbank'),
         rowNum: 20,
@@ -363,6 +366,20 @@
         sortorder: "ASC",
         width: $("#lookup_div_cashbank").width() - 10,
         height: $("#lookup_div_cashbank").height() - 110,
+        gridComplete:
+		  function () {
+		      var ids = $(this).jqGrid('getDataIDs');
+		      for (var i = 0; i < ids.length; i++) {
+		          var cl = ids[i];
+		          rowIsBank = $(this).getRowData(cl).isbank;
+		          if (rowIsBank == 'true') {
+		              rowIsBank = "YES";
+		          } else {
+		              rowIsBank = "NO";
+		          }
+		          $(this).jqGrid('setRowData', ids[i], { isbank: rowIsBank });
+		      }
+		  }
     });
     $("#lookup_table_cashbank").jqGrid('navGrid', '#lookup_toolbar_cashbank', { del: false, add: false, edit: false, search: true })
            .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: true });

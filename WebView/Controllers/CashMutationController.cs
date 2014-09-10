@@ -41,7 +41,7 @@ namespace WebView.Controllers
             string strWhere = GeneralFunction.ConstructWhere(filters);
             string filter = null;
             GeneralFunction.ConstructWhereInLinq(strWhere, out filter);
-            if (filter == "") filter = "true";
+            if (filter == "") filter = "true"; 
 
             // Get Data
             var q = _cashMutationService.GetQueryable().Include("CashBank");

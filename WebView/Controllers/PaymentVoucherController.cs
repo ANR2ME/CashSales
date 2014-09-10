@@ -29,6 +29,8 @@ namespace WebView.Controllers
         private ICashBankService _cashBankService;
         private ICashMutationService _cashMutationService;
         private IContactService _contactService;
+        private IAccountService _accountService;
+        private IGeneralLedgerJournalService _generalLedgerJournalService;
 
         public PaymentVoucherController()
         {
@@ -597,8 +599,8 @@ namespace WebView.Controllers
                 }
 
                 var data = _paymentVoucherService.GetObjectById(model.Id);
-                model = _paymentVoucherService.ConfirmObject(data,model.ConfirmationDate.Value,
-                    _paymentVoucherDetailService,_cashBankService,_payableService,_cashMutationService);
+                model = _paymentVoucherService.ConfirmObject(data,model.ConfirmationDate.Value,_paymentVoucherDetailService,_cashBankService,
+                                                             _payableService,_cashMutationService,_generalLedgerJournalService,_accountService);
             }
             catch (Exception ex)
             {
@@ -635,8 +637,8 @@ namespace WebView.Controllers
                 }
 
                 var data = _paymentVoucherService.GetObjectById(model.Id);
-                model = _paymentVoucherService.UnconfirmObject(data,_paymentVoucherDetailService,_cashBankService,
-                    _payableService,_cashMutationService);
+                model = _paymentVoucherService.UnconfirmObject(data,_paymentVoucherDetailService,_cashBankService,_payableService,
+                                                               _cashMutationService,_generalLedgerJournalService,_accountService);
             }
             catch (Exception ex)
             {
@@ -674,7 +676,7 @@ namespace WebView.Controllers
 
                 var data = _paymentVoucherService.GetObjectById(model.Id);
                 model = _paymentVoucherService.ReconcileObject(data,model.ReconciliationDate.Value,_paymentVoucherDetailService,
-                    _cashMutationService,_cashBankService,_payableService);
+                                                               _cashMutationService,_cashBankService,_payableService,_generalLedgerJournalService,_accountService);
             }
             catch (Exception ex)
             {
@@ -712,7 +714,7 @@ namespace WebView.Controllers
 
                 var data = _paymentVoucherService.GetObjectById(model.Id);
                 model = _paymentVoucherService.UnreconcileObject(data,_paymentVoucherDetailService,_cashMutationService,
-                    _cashBankService,_payableService
+                    _cashBankService,_payableService,_generalLedgerJournalService,_accountService
                     );
             }
             catch (Exception ex)

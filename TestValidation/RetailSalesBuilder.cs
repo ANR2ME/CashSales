@@ -28,6 +28,7 @@ namespace TestValidation
         public ICoreIdentificationService _coreIdentificationService;
         public ICoreIdentificationDetailService _coreIdentificationDetailService;
         public IContactService _contactService;
+        public IGeneralLedgerJournalService _generalLedgerJournalService;
         public IItemService _itemService;
         public IItemTypeService _itemTypeService;
         public IMachineService _machineService;
@@ -112,6 +113,7 @@ namespace TestValidation
             _contactService = new ContactService(new ContactRepository(), new ContactValidator());
             _deliveryOrderService = new DeliveryOrderService(new DeliveryOrderRepository(), new DeliveryOrderValidator());
             _deliveryOrderDetailService = new DeliveryOrderDetailService(new DeliveryOrderDetailRepository(), new DeliveryOrderDetailValidator());
+            _generalLedgerJournalService = new GeneralLedgerJournalService(new GeneralLedgerJournalRepository(), new GeneralLedgerJournalValidator());
             _itemService = new ItemService(new ItemRepository(), new ItemValidator());
             _itemTypeService = new ItemTypeService(new ItemTypeRepository(), new ItemTypeValidator());
             _machineService = new MachineService(new MachineRepository(), new MachineValidator());
@@ -355,8 +357,8 @@ namespace TestValidation
             };
             _cashBankAdjustmentService.CreateObject(cashBankAdjustment2, _cashBankService);
 
-            _cashBankAdjustmentService.ConfirmObject(cashBankAdjustment, DateTime.Now, _cashMutationService, _cashBankService);
-            _cashBankAdjustmentService.ConfirmObject(cashBankAdjustment2, DateTime.Now, _cashMutationService, _cashBankService);
+            _cashBankAdjustmentService.ConfirmObject(cashBankAdjustment, DateTime.Now, _cashMutationService, _cashBankService, _generalLedgerJournalService, _accountService);
+            _cashBankAdjustmentService.ConfirmObject(cashBankAdjustment2, DateTime.Now, _cashMutationService, _cashBankService, _generalLedgerJournalService, _accountService);
         }
 
         public void PopulateRetailSalesData()
@@ -431,9 +433,9 @@ namespace TestValidation
             _retailSalesInvoiceService.ConfirmObject(rsi2, rsi2.SalesDate, contact2.Id, _retailSalesInvoiceDetailService, _contactService, _priceMutationService, _receivableService, _retailSalesInvoiceService, _warehouseItemService, _warehouseService, _itemService, _barringService, _stockMutationService);
             _retailSalesInvoiceService.ConfirmObject(rsi3, rsi3.SalesDate, contact3.Id, _retailSalesInvoiceDetailService, _contactService, _priceMutationService, _receivableService, _retailSalesInvoiceService, _warehouseItemService, _warehouseService, _itemService, _barringService, _stockMutationService);
 
-            _retailSalesInvoiceService.PaidObject(rsi1, 200000, _cashBankService, _receivableService, _receiptVoucherService, _receiptVoucherDetailService, _contactService, _cashMutationService);
-            _retailSalesInvoiceService.PaidObject(rsi2, rsi2.Total, _cashBankService, _receivableService, _receiptVoucherService, _receiptVoucherDetailService, _contactService, _cashMutationService);
-            _retailSalesInvoiceService.PaidObject(rsi3, rsi3.Total, _cashBankService, _receivableService, _receiptVoucherService, _receiptVoucherDetailService, _contactService, _cashMutationService);
+            _retailSalesInvoiceService.PaidObject(rsi1, 200000, _cashBankService, _receivableService, _receiptVoucherService, _receiptVoucherDetailService, _contactService, _cashMutationService, _generalLedgerJournalService, _accountService);
+            _retailSalesInvoiceService.PaidObject(rsi2, rsi2.Total, _cashBankService, _receivableService, _receiptVoucherService, _receiptVoucherDetailService, _contactService, _cashMutationService, _generalLedgerJournalService, _accountService);
+            _retailSalesInvoiceService.PaidObject(rsi3, rsi3.Total, _cashBankService, _receivableService, _receiptVoucherService, _receiptVoucherDetailService, _contactService, _cashMutationService, _generalLedgerJournalService, _accountService);
         }
 
         

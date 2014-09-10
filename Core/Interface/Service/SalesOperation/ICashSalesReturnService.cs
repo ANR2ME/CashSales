@@ -31,10 +31,12 @@ namespace Core.Interface.Service
                                                   IWarehouseItemService _warehouseItemService, IWarehouseService _warehouseService, IItemService _itemService,
                                                   IBarringService _barringService, IStockMutationService _stockMutationService);
         CashSalesReturn PaidObject(CashSalesReturn cashSalesReturn, /*decimal Allowance,*/ ICashBankService _cashBankService, IPayableService _payableService,
-                                             IPaymentVoucherService _paymentVoucherService, IPaymentVoucherDetailService _paymentVoucherDetailService,
-                                             IContactService _contactService, ICashMutationService _cashMutationService);
+                                   IPaymentVoucherService _paymentVoucherService, IPaymentVoucherDetailService _paymentVoucherDetailService,
+                                   IContactService _contactService, ICashMutationService _cashMutationService,
+                                   IGeneralLedgerJournalService _generalLedgerJournalService, IAccountService _accountService);
         CashSalesReturn UnpaidObject(CashSalesReturn cashSalesReturn, IPaymentVoucherService _paymentVoucherService, IPaymentVoucherDetailService _paymentVoucherDetailService,
-                                               ICashBankService _cashBankService, IPayableService _payableService, ICashMutationService _cashMutationService);
+                                     ICashBankService _cashBankService, IPayableService _payableService, ICashMutationService _cashMutationService,
+                                     IGeneralLedgerJournalService _generalLedgerJournalService, IAccountService _accountService);
         bool DeleteObject(int Id);
     }
 }

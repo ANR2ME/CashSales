@@ -19,6 +19,8 @@ namespace WebView.Controllers
         private ICashBankService _cashBankService;
         private ICashBankAdjustmentService _cashBankAdjustmentService;
         private ICashMutationService _cashMutationService;
+        private IAccountService _accountService;
+        private IGeneralLedgerJournalService _generalLedgerJournalService;
 
         public CashBankAdjustmentController()
         {
@@ -269,7 +271,8 @@ namespace WebView.Controllers
                 }
 
                 var data = _cashBankAdjustmentService.GetObjectById(model.Id);
-                model = _cashBankAdjustmentService.ConfirmObject(data,model.ConfirmationDate.Value,_cashMutationService,_cashBankService);
+                model = _cashBankAdjustmentService.ConfirmObject(data,model.ConfirmationDate.Value,_cashMutationService,
+                                                                _cashBankService,_generalLedgerJournalService,_accountService);
             }
             catch (Exception ex)
             {
@@ -306,7 +309,7 @@ namespace WebView.Controllers
                 }
 
                 var data = _cashBankAdjustmentService.GetObjectById(model.Id);
-                model = _cashBankAdjustmentService.UnconfirmObject(data,_cashMutationService,_cashBankService);
+                model = _cashBankAdjustmentService.UnconfirmObject(data,_cashMutationService,_cashBankService,_generalLedgerJournalService,_accountService);
             }
             catch (Exception ex)
             {

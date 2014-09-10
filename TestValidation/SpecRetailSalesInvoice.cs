@@ -109,9 +109,12 @@ namespace TestValidation
             {
                 before = () =>
                 {
-                    rsb._retailSalesInvoiceService.UnpaidObject(rsb.rsi1, rsb._receiptVoucherService, rsb._receiptVoucherDetailService, rsb._cashBankService, rsb._receivableService, rsb._cashMutationService);
-                    rsb._retailSalesInvoiceService.UnpaidObject(rsb.rsi2, rsb._receiptVoucherService, rsb._receiptVoucherDetailService, rsb._cashBankService, rsb._receivableService, rsb._cashMutationService);
-                    rsb._retailSalesInvoiceService.UnpaidObject(rsb.rsi3, rsb._receiptVoucherService, rsb._receiptVoucherDetailService, rsb._cashBankService, rsb._receivableService, rsb._cashMutationService);
+                    rsb._retailSalesInvoiceService.UnpaidObject(rsb.rsi1, rsb._receiptVoucherService, rsb._receiptVoucherDetailService, rsb._cashBankService,
+                                                                rsb._receivableService, rsb._cashMutationService, rsb._generalLedgerJournalService, rsb._accountService);
+                    rsb._retailSalesInvoiceService.UnpaidObject(rsb.rsi2, rsb._receiptVoucherService, rsb._receiptVoucherDetailService, rsb._cashBankService,
+                                                                rsb._receivableService, rsb._cashMutationService, rsb._generalLedgerJournalService, rsb._accountService);
+                    rsb._retailSalesInvoiceService.UnpaidObject(rsb.rsi3, rsb._receiptVoucherService, rsb._receiptVoucherDetailService, rsb._cashBankService,
+                                                                rsb._receivableService, rsb._cashMutationService, rsb._generalLedgerJournalService, rsb._accountService);
                     rsb.rsi1.Errors.Count().should_be(0);
                     rsb.rsi2.Errors.Count().should_be(0);
                     rsb.rsi3.Errors.Count().should_be(0);

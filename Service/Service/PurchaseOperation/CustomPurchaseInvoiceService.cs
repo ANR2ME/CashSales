@@ -61,7 +61,8 @@ namespace Service.Service
                                                 ICustomPurchaseInvoiceDetailService _customPurchaseInvoiceDetailService, IContactService _contactService,
                                                 IPriceMutationService _priceMutationService, IPayableService _payableService, 
                                                 ICustomPurchaseInvoiceService _customPurchaseInvoiceService, IWarehouseItemService _warehouseItemService,
-                                                IWarehouseService _warehouseService, IItemService _itemService, IBarringService _barringService, IStockMutationService _stockMutationService)
+                                                IWarehouseService _warehouseService, IItemService _itemService, IBarringService _barringService, IStockMutationService _stockMutationService,
+                                                IGeneralLedgerJournalService _generalLedgerJournalService, IAccountService _accountService)
         {
             customPurchaseInvoice.ConfirmationDate = ConfirmationDate;
             if (_validator.ValidConfirmObject(customPurchaseInvoice, _customPurchaseInvoiceDetailService, _customPurchaseInvoiceService, _warehouseItemService, _contactService))
@@ -81,6 +82,7 @@ namespace Service.Service
                 //customPurchaseInvoice.Total = (customPurchaseInvoice.Total * (100 - customPurchaseInvoice.Discount) / 100) * (100 - customPurchaseInvoice.Tax) / 100;
                 customPurchaseInvoice.Total = CalculateTotalAmountAfterDiscountAndTax(customPurchaseInvoice);
                 Payable payable = _payableService.CreateObject(customPurchaseInvoice.ContactId, Core.Constants.Constant.PayableSource.CustomPurchaseInvoice, customPurchaseInvoice.Id, customPurchaseInvoice.Total, (DateTime)customPurchaseInvoice.DueDate.GetValueOrDefault());
+                _generalLedgerJournalService.CreateConfirmationJournalForCustomPurchaseInvoice(customPurchaseInvoice, _accountService);
                 customPurchaseInvoice = _repository.ConfirmObject(customPurchaseInvoice);
             }
             else
@@ -93,7 +95,8 @@ namespace Service.Service
         public CustomPurchaseInvoice UnconfirmObject(CustomPurchaseInvoice customPurchaseInvoice, ICustomPurchaseInvoiceDetailService _customPurchaseInvoiceDetailService,
                                                   IPayableService _payableService, IPaymentVoucherDetailService _paymentVoucherDetailService,
                                                   IWarehouseItemService _warehouseItemService, IWarehouseService _warehouseService, IItemService _itemService,
-                                                  IBarringService _barringService, IStockMutationService _stockMutationService, IPriceMutationService _priceMutationService)
+                                                  IBarringService _barringService, IStockMutationService _stockMutationService, IPriceMutationService _priceMutationService,
+                                                  IGeneralLedgerJournalService _generalLedgerJournalService, IAccountService _accountService)
         {
             if (_validator.ValidUnconfirmObject(customPurchaseInvoice, _customPurchaseInvoiceDetailService, _payableService, _paymentVoucherDetailService))
             {
@@ -108,13 +111,15 @@ namespace Service.Service
                 _payableService.SoftDeleteObject(payable);
                 customPurchaseInvoice.Total = 0;
                 customPurchaseInvoice.CoGS = 0;
+                _generalLedgerJournalService.CreateUnconfirmationJournalForCustomPurchaseInvoice(customPurchaseInvoice, _accountService);
                 customPurchaseInvoice = _repository.UnconfirmObject(customPurchaseInvoice);
             }
             return customPurchaseInvoice;
         }
 
         public CustomPurchaseInvoice PaidObject(CustomPurchaseInvoice customPurchaseInvoice, decimal AmountPaid, ICashBankService _cashBankService, IPayableService _payableService, 
-                                             IPaymentVoucherService _paymentVoucherService, IPaymentVoucherDetailService _paymentVoucherDetailService, IContactService _contactService, ICashMutationService _cashMutationService)
+                                                IPaymentVoucherService _paymentVoucherService, IPaymentVoucherDetailService _paymentVoucherDetailService, IContactService _contactService,
+                                                ICashMutationService _cashMutationService, IGeneralLedgerJournalService _generalLedgerJournalService, IAccountService _accountService)
         {
             customPurchaseInvoice.AmountPaid = AmountPaid;
             if (_validator.ValidPaidObject(customPurchaseInvoice, _cashBankService, _paymentVoucherService))
@@ -135,18 +140,22 @@ namespace Service.Service
                 payable.AllowanceAmount = customPurchaseInvoice.Allowance;
                 payable.RemainingAmount = payable.Amount - customPurchaseInvoice.Allowance;
                 _payableService.UpdateObject(payable);
-                PaymentVoucher paymentVoucher = _paymentVoucherService.CreateObject((int)customPurchaseInvoice.CashBankId.GetValueOrDefault(), customPurchaseInvoice.ContactId, DateTime.Now, payable.RemainingAmount,
-                                                                            customPurchaseInvoice.IsGBCH, (DateTime)customPurchaseInvoice.DueDate.GetValueOrDefault(), customPurchaseInvoice.IsBank, _paymentVoucherDetailService,
-                                                                            _payableService, _contactService, _cashBankService);
-                PaymentVoucherDetail paymentVoucherDetail = _paymentVoucherDetailService.CreateObject(paymentVoucher.Id, payable.Id, payable.RemainingAmount, 
-                                                                            "Automatic Payment", _paymentVoucherService, _cashBankService, _payableService);
+                PaymentVoucher paymentVoucher = _paymentVoucherService.CreateObject((int)customPurchaseInvoice.CashBankId.GetValueOrDefault(), customPurchaseInvoice.ContactId, DateTime.Now,
+                                                                        payable.RemainingAmount, customPurchaseInvoice.IsGBCH, (DateTime)customPurchaseInvoice.DueDate.GetValueOrDefault(),
+                                                                        customPurchaseInvoice.IsBank, _paymentVoucherDetailService, _payableService, _contactService, _cashBankService);
+                PaymentVoucherDetail paymentVoucherDetail = _paymentVoucherDetailService.CreateObject(paymentVoucher.Id, payable.Id, payable.RemainingAmount, "Automatic Payment",
+                                                                                                      _paymentVoucherService, _cashBankService, _payableService);
                 customPurchaseInvoice = _repository.PaidObject(customPurchaseInvoice);
-                _paymentVoucherService.ConfirmObject(paymentVoucher, (DateTime)customPurchaseInvoice.ConfirmationDate.GetValueOrDefault(), _paymentVoucherDetailService, _cashBankService, _payableService, _cashMutationService);
+                _generalLedgerJournalService.CreatePaidJournalForCustomPurchaseInvoice(customPurchaseInvoice, _accountService);
+                _paymentVoucherService.ConfirmObject(paymentVoucher, (DateTime)customPurchaseInvoice.ConfirmationDate.GetValueOrDefault(), _paymentVoucherDetailService,
+                                                     _cashBankService, _payableService, _cashMutationService,_generalLedgerJournalService, _accountService);
             }
             return customPurchaseInvoice;
         }
 
-        public CustomPurchaseInvoice UnpaidObject(CustomPurchaseInvoice customPurchaseInvoice, IPaymentVoucherService _paymentVoucherService, IPaymentVoucherDetailService _paymentVoucherDetailService, ICashBankService _cashBankService, IPayableService _payableService, ICashMutationService _cashMutationService)
+        public CustomPurchaseInvoice UnpaidObject(CustomPurchaseInvoice customPurchaseInvoice, IPaymentVoucherService _paymentVoucherService,
+                                                  IPaymentVoucherDetailService _paymentVoucherDetailService, ICashBankService _cashBankService, IPayableService _payableService,
+                                                  ICashMutationService _cashMutationService, IGeneralLedgerJournalService _generalLedgerJournalService, IAccountService _accountService)
         {
             if (_validator.ValidUnpaidObject(customPurchaseInvoice))
             {
@@ -157,7 +166,8 @@ namespace Service.Service
                     if (paymentVoucher.ContactId == customPurchaseInvoice.ContactId)
                     {
                         paymentVoucher.Errors = new Dictionary<string, string>();
-                        _paymentVoucherService.UnconfirmObject(paymentVoucher, _paymentVoucherDetailService, _cashBankService, _payableService, _cashMutationService);
+                        _paymentVoucherService.UnconfirmObject(paymentVoucher, _paymentVoucherDetailService, _cashBankService,
+                                                               _payableService, _cashMutationService,_generalLedgerJournalService,_accountService);
 
                         IList<PaymentVoucherDetail> paymentVoucherDetails = _paymentVoucherDetailService.GetObjectsByPaymentVoucherId(paymentVoucher.Id);
                         foreach (var paymentVoucherDetail in paymentVoucherDetails)
@@ -170,6 +180,7 @@ namespace Service.Service
                 }
                 customPurchaseInvoice.AmountPaid = 0;
                 customPurchaseInvoice.IsFullPayment = false;
+                _generalLedgerJournalService.CreateUnpaidJournalForCustomPurchaseInvoice(customPurchaseInvoice, _accountService);
                 customPurchaseInvoice = _repository.UnpaidObject(customPurchaseInvoice);
             }
             return customPurchaseInvoice;

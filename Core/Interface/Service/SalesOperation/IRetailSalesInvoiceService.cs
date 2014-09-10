@@ -29,9 +29,11 @@ namespace Core.Interface.Service
                                            IBarringService _barringService, IStockMutationService _stockMutationService);
         RetailSalesInvoice PaidObject(RetailSalesInvoice retailSalesInvoice, decimal AmountPaid, ICashBankService _cashBankService, IReceivableService _receivableService,
                                       IReceiptVoucherService _receiptVoucherService, IReceiptVoucherDetailService _receiptVoucherDetailService,
-                                      IContactService _contactService, ICashMutationService _cashMutationService);
+                                      IContactService _contactService, ICashMutationService _cashMutationService,
+                                      IGeneralLedgerJournalService _generalLedgerJournalService, IAccountService _accountService);
         RetailSalesInvoice UnpaidObject(RetailSalesInvoice retailSalesInvoice, IReceiptVoucherService _receiptVoucherService, IReceiptVoucherDetailService _receiptVoucherDetailService,
-                                        ICashBankService _cashBankService, IReceivableService _receivableService, ICashMutationService _cashMutationService);
+                                        ICashBankService _cashBankService, IReceivableService _receivableService, ICashMutationService _cashMutationService,
+                                        IGeneralLedgerJournalService _generalLedgerService, IAccountService _accountService);
         bool DeleteObject(int Id);
     }
 }

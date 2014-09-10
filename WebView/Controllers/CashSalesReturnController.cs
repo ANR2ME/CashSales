@@ -39,6 +39,9 @@ namespace WebView.Controllers
         private IPaymentVoucherService _paymentVoucherService;
         private IPaymentVoucherDetailService _paymentVoucherDetailService;
         private IStockAdjustmentDetailService _stockAdjustmentDetailService;
+        private IAccountService _accountService;
+        private IGeneralLedgerJournalService _generalLedgerJournalService;
+
         public CashSalesReturnController()
         {
             _contactService = new ContactService(new ContactRepository(), new ContactValidator());
@@ -549,7 +552,7 @@ namespace WebView.Controllers
                 var data = _cashSalesReturnService.GetObjectById(model.Id);
                 data.Allowance = model.Allowance;
                 model = _cashSalesReturnService.PaidObject(data, _cashBankService, _payableService, _paymentVoucherService, _paymentVoucherDetailService, 
-                                                    _contactService, _cashMutationService);
+                                                    _contactService, _cashMutationService, _generalLedgerJournalService, _accountService);
             }
             catch (Exception ex)
             {
@@ -587,7 +590,7 @@ namespace WebView.Controllers
 
                 var data = _cashSalesReturnService.GetObjectById(model.Id);
                 model = _cashSalesReturnService.UnpaidObject(data, _paymentVoucherService, _paymentVoucherDetailService, _cashBankService,
-                                                   _payableService, _cashMutationService);
+                                                   _payableService, _cashMutationService,_generalLedgerJournalService,_accountService);
 
             }
             catch (Exception ex)

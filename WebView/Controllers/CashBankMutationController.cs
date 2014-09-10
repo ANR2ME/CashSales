@@ -48,7 +48,7 @@ namespace WebView.Controllers
             if (filter == "") filter = "true";
 
             // Get Data
-            var query = _cashBankMutationService.GetQueryable().Where(filter).OrderBy(sidx + " " + sord);
+            var query = _cashBankMutationService.GetQueryable().Include("SourceCashBank").Include("TargetCashBank").Where(filter).OrderBy(sidx + " " + sord);
 
             var list = query as IEnumerable<CashBankMutation>;
 
@@ -82,9 +82,9 @@ namespace WebView.Controllers
                             model.Id,
                             model.Code,
                             model.SourceCashBankId,
-                            model.SourceCashBankName, //_cashBankService.GetObjectById(model.SourceCashBankId).Name,
+                            model.SourceCashBank.Name, //model.SourceCashBankName, //_cashBankService.GetObjectById(model.SourceCashBankId).Name,
                             model.TargetCashBankId,
-                            model.TargetCashBankName, //_cashBankService.GetObjectById(model.TargetCashBankId).Name,
+                            model.TargetCashBank.Name, //model.TargetCashBankName, //_cashBankService.GetObjectById(model.TargetCashBankId).Name,
                             model.Amount,
                             model.IsConfirmed,
                             model.ConfirmationDate,

@@ -11,8 +11,8 @@ namespace Core.DomainModel
         
         public int SourceCashBankId { get; set; }
         public int TargetCashBankId { get; set; }
-        public string SourceCashBankName { get; set; }
-        public string TargetCashBankName { get; set; }
+        //public string SourceCashBankName { get; set; }
+        //public string TargetCashBankName { get; set; }
         public int Amount { get; set; }
         public string Code { get; set; }
 
@@ -22,6 +22,9 @@ namespace Core.DomainModel
         public DateTime CreatedAt { get; set; }
         public Nullable<DateTime> UpdatedAt { get; set; }
         public Nullable<DateTime> DeletedAt { get; set; }
+
+        public virtual CashBank SourceCashBank { get; set; }
+        public virtual CashBank TargetCashBank { get; set; }
         public Dictionary<string, string> Errors { get; set; }
     }
 }

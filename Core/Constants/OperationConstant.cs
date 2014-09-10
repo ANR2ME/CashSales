@@ -161,6 +161,6 @@ namespace Core.Constants
             public static string CashSalesInvoice = "CashSalesInvoice";
         }
 
-        public static string PageViewNotAllowed = "You are not allowed to View this Page. <tr><td><a href='/Authentication/Logout'>[Home]</a></td></tr>";
+        public static string PageViewNotAllowed = "You are not allowed to View this Page. <tr><td><a href='/Authentication/Logout'>[Logout]</a></td></tr>";
     }
 }

@@ -55,7 +55,7 @@ namespace WebView.Controllers
             if (filter == "") filter = "true";
 
             // Get Data
-            var q = _warehouseMutationOrderService.GetQueryable().Include("Warehouse");
+            var q = _warehouseMutationOrderService.GetQueryable().Include("WarehouseFrom").Include("WarehouseTo");
 
             var query = (from model in q
                          select new

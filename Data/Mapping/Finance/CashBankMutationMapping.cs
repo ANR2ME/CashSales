@@ -12,6 +12,14 @@ namespace Data.Mapping
         public CashBankMutationMapping()
         {
             HasKey(cbm => cbm.Id);
+            HasRequired(cbm => cbm.SourceCashBank)
+                .WithMany()
+                .HasForeignKey(cbm => cbm.SourceCashBankId)
+                .WillCascadeOnDelete(false);
+            HasRequired(cbm => cbm.TargetCashBank)
+                .WithMany()
+                .HasForeignKey(cbm => cbm.TargetCashBankId)
+                .WillCascadeOnDelete(false);
             Ignore(cbm => cbm.Errors);
         }
     }

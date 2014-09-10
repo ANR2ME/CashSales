@@ -58,8 +58,8 @@ namespace Service.Service
         {
             cashBankMutation.Errors = new Dictionary<String, String>();
             if (_validator.ValidCreateObject(cashBankMutation, _cashBankService)) {
-                cashBankMutation.SourceCashBankName = _cashBankService.GetObjectById(cashBankMutation.SourceCashBankId).Name;
-                cashBankMutation.TargetCashBankName = _cashBankService.GetObjectById(cashBankMutation.TargetCashBankId).Name;
+                //cashBankMutation.SourceCashBankName = _cashBankService.GetObjectById(cashBankMutation.SourceCashBankId).Name;
+                //cashBankMutation.TargetCashBankName = _cashBankService.GetObjectById(cashBankMutation.TargetCashBankId).Name;
                 _repository.CreateObject(cashBankMutation);
             }
             return cashBankMutation;
@@ -68,8 +68,8 @@ namespace Service.Service
         public CashBankMutation UpdateObject(CashBankMutation cashBankMutation, ICashBankService _cashBankService)
         {
             if(_validator.ValidUpdateObject(cashBankMutation, _cashBankService)) {
-                cashBankMutation.SourceCashBankName = _cashBankService.GetObjectById(cashBankMutation.SourceCashBankId).Name;
-                cashBankMutation.TargetCashBankName = _cashBankService.GetObjectById(cashBankMutation.TargetCashBankId).Name;
+                //cashBankMutation.SourceCashBankName = _cashBankService.GetObjectById(cashBankMutation.SourceCashBankId).Name;
+                //cashBankMutation.TargetCashBankName = _cashBankService.GetObjectById(cashBankMutation.TargetCashBankId).Name;
                 _repository.UpdateObject(cashBankMutation);
             }
             return cashBankMutation;

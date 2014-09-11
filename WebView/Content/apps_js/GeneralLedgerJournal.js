@@ -9,11 +9,11 @@
     }
 
     function ReloadGrid() {
-        $("#list").setGridParam({ url: base_url + 'GeneralLedgerJournal/GetList', postData: { filters: null }, page: 'first' }).trigger("reloadGrid");
+        $("#list").setGridParam({ url: base_url + 'GeneralLedger/GetList', postData: { filters: null }, page: 'first' }).trigger("reloadGrid");
     }
 
     function ReloadGridByDate(StartDate, EndDate) {
-        $("#list").setGridParam({ url: base_url + 'GeneralLedgerJournal/GetListByDate', postData: { startdate: StartDate, enddate: EndDate } }).trigger("reloadGrid");
+        $("#list").setGridParam({ url: base_url + 'GeneralLedger/GetListByDate', postData: { startdate: StartDate, enddate: EndDate } }).trigger("reloadGrid");
     }
 
     function ClearData() {
@@ -25,19 +25,19 @@
 
     //GRID +++++++++++++++
     $("#list").jqGrid({
-        url: base_url + 'GeneralLedgerJournal/GetList',
+        url: base_url + 'GeneralLedger/GetList',
         datatype: "json",
         colNames: ['ID', 'Transaction Date', 'Status', 'Account Code', 'Account Name',
                    'Amount', 'Source Document', 'Id'],
         colModel: [
     			  { name: 'id', index: 'id', width: 35, align: "center" },
-				  { name: 'transactiondate', index: 'createdat', search: false, width: 120, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
-                  { name: 'status', index: 'sku', width: 70 },
-				  { name: 'accountcode', index: 'item', width: 120 },
-				  { name: 'accountname', index: 'warehouseid', width: 100 },
-				  { name: 'amount', index: 'warehouseitemid', width: 120, align: 'right', formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' } },
-                  { name: 'sourcedocument', index: 'ready', width: 120 },
-                  { name: 'sourcedocumentid', index: 'pendingreceival', width: 80, align: 'right', formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' } },
+				  { name: 'transactiondate', index: 'transactiondate', search: false, width: 120, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
+                  { name: 'status', index: 'status', width: 70, stype: 'select', editoptions: { value: ':;1:Debit;2:Credit' } },
+				  { name: 'accountcode', index: 'accountcode', width: 120 },
+				  { name: 'account', index: 'account', width: 100 },
+				  { name: 'amount', index: 'amount', width: 120, align: 'right', formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' } },
+                  { name: 'sourcedocument', index: 'sourcedocument', width: 120 },
+                  { name: 'sourcedocumentid', index: 'sourcedocumentid', width: 80, align: 'right', formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' } },
         ],
         page: '1',
         pager: $('#pager'),
@@ -52,6 +52,17 @@
         height: $(window).height() - 200,
         gridComplete:
 		  function () {
+		      var ids = $(this).jqGrid('getDataIDs');
+		      for (var i = 0; i < ids.length; i++) {
+		          var cl = ids[i];
+		          rowStatus = $(this).getRowData(cl).status;
+		          if (rowStatus == 1) {
+		              rowStatus = "Debit";
+		          } else {
+		              rowStatus = "Credit";
+		          }
+		          $(this).jqGrid('setRowData', ids[i], { status: rowStatus });
+		      }
 		  }
 
     });//END GRID

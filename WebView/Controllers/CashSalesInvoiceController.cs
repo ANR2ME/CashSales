@@ -43,6 +43,8 @@ namespace WebView.Controllers
 
         public CashSalesInvoiceController()
         {
+            _accountService = new AccountService(new AccountRepository(), new AccountValidator());
+            _generalLedgerJournalService = new GeneralLedgerJournalService(new GeneralLedgerJournalRepository(), new GeneralLedgerJournalValidator());
             _contactService = new ContactService(new ContactRepository(), new ContactValidator());
             _itemService = new ItemService(new ItemRepository(), new ItemValidator());
             _itemTypeService = new ItemTypeService(new ItemTypeRepository(),new ItemTypeValidator());

@@ -74,7 +74,7 @@ namespace Service.Service
             GeneralLedgerJournal debitaccountpayable = new GeneralLedgerJournal()
             {
                 AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.AccountPayable).Id,
-                SourceDocument = paymentVoucher.GetType().ToString(),
+                SourceDocument = Constant.GeneralLedgerSource.PaymentVoucher,
                 SourceDocumentId = paymentVoucher.Id,
                 TransactionDate = (DateTime)paymentVoucher.ConfirmationDate,
                 Status = Constant.GeneralLedgerStatus.Debit,
@@ -85,7 +85,7 @@ namespace Service.Service
             GeneralLedgerJournal creditcashbank = new GeneralLedgerJournal()
             {
                 AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.CashBank + cashBank.Id).Id,
-                SourceDocument = paymentVoucher.GetType().ToString(),
+                SourceDocument = Constant.GeneralLedgerSource.PaymentVoucher,
                 SourceDocumentId = paymentVoucher.Id,
                 TransactionDate = (DateTime)paymentVoucher.ConfirmationDate,
                 Status = Constant.GeneralLedgerStatus.Credit,
@@ -107,7 +107,7 @@ namespace Service.Service
             GeneralLedgerJournal creditaccountpayable = new GeneralLedgerJournal()
             {
                 AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.AccountPayable).Id,
-                SourceDocument = paymentVoucher.GetType().ToString(),
+                SourceDocument = Constant.GeneralLedgerSource.PaymentVoucher,
                 SourceDocumentId = paymentVoucher.Id,
                 TransactionDate = UnconfirmationDate,
                 Status = Constant.GeneralLedgerStatus.Credit,
@@ -118,7 +118,7 @@ namespace Service.Service
             GeneralLedgerJournal debitcashbank = new GeneralLedgerJournal()
             {
                 AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.CashBank + cashBank.Id).Id,
-                SourceDocument = paymentVoucher.GetType().ToString(),
+                SourceDocument = Constant.GeneralLedgerSource.PaymentVoucher,
                 SourceDocumentId = paymentVoucher.Id,
                 TransactionDate = UnconfirmationDate,
                 Status = Constant.GeneralLedgerStatus.Debit,
@@ -139,7 +139,7 @@ namespace Service.Service
             GeneralLedgerJournal debitcashbank = new GeneralLedgerJournal()
             {
                 AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.CashBank + cashBank.Id).Id,
-                SourceDocument = receiptVoucher.GetType().ToString(),
+                SourceDocument = Constant.GeneralLedgerSource.ReceiptVoucher,
                 SourceDocumentId = receiptVoucher.Id,
                 TransactionDate = (DateTime)receiptVoucher.ConfirmationDate,
                 Status = Constant.GeneralLedgerStatus.Debit,
@@ -150,7 +150,7 @@ namespace Service.Service
             GeneralLedgerJournal creditaccountreceivable = new GeneralLedgerJournal()
             {
                 AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.AccountReceivable).Id,
-                SourceDocument = receiptVoucher.GetType().ToString(),
+                SourceDocument = Constant.GeneralLedgerSource.ReceiptVoucher,
                 SourceDocumentId = receiptVoucher.Id,
                 TransactionDate = (DateTime)receiptVoucher.ConfirmationDate,
                 Status = Constant.GeneralLedgerStatus.Credit,
@@ -172,7 +172,7 @@ namespace Service.Service
             GeneralLedgerJournal creditcashbank = new GeneralLedgerJournal()
             {
                 AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.CashBank + cashBank.Id).Id,
-                SourceDocument = receiptVoucher.GetType().ToString(),
+                SourceDocument = Constant.GeneralLedgerSource.ReceiptVoucher,
                 SourceDocumentId = receiptVoucher.Id,
                 TransactionDate = UnconfirmationDate,
                 Status = Constant.GeneralLedgerStatus.Credit,
@@ -183,7 +183,7 @@ namespace Service.Service
             GeneralLedgerJournal debitaccountreceivable = new GeneralLedgerJournal()
             {
                 AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.AccountReceivable).Id,
-                SourceDocument = receiptVoucher.GetType().ToString(),
+                SourceDocument = Constant.GeneralLedgerSource.ReceiptVoucher,
                 SourceDocumentId = receiptVoucher.Id,
                 TransactionDate = UnconfirmationDate,
                 Status = Constant.GeneralLedgerStatus.Debit,
@@ -203,10 +203,12 @@ namespace Service.Service
 
             if (cashBankAdjustment.Amount >= 0)
             {
+                string LegacyCode = Constant.AccountLegacyCode.CashBank + cashBank.Id.ToString();
+                int AccountId = _accountService.GetObjectByLegacyCode(LegacyCode).Id;
                 GeneralLedgerJournal debitcashbank = new GeneralLedgerJournal()
                 {
-                    AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.CashBank + cashBank.Id).Id,
-                    SourceDocument = cashBankAdjustment.GetType().ToString(),
+                    AccountId = AccountId,
+                    SourceDocument = Constant.GeneralLedgerSource.CashBankAdjustment,
                     SourceDocumentId = cashBankAdjustment.Id,
                     TransactionDate = (DateTime)cashBankAdjustment.ConfirmationDate,
                     Status = Constant.GeneralLedgerStatus.Debit,
@@ -217,7 +219,7 @@ namespace Service.Service
                 GeneralLedgerJournal creditcashbankequityadjustment = new GeneralLedgerJournal()
                 {
                     AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.EquityAdjustment).Id,
-                    SourceDocument = cashBankAdjustment.GetType().ToString(),
+                    SourceDocument = Constant.GeneralLedgerSource.CashBankAdjustment,
                     SourceDocumentId = cashBankAdjustment.Id,
                     TransactionDate = (DateTime)cashBankAdjustment.ConfirmationDate,
                     Status = Constant.GeneralLedgerStatus.Credit,
@@ -233,7 +235,7 @@ namespace Service.Service
                 GeneralLedgerJournal debitcashbankadjustmentexpense = new GeneralLedgerJournal()
                 {
                     AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.CashBankAdjustmentExpense).Id,
-                    SourceDocument = cashBankAdjustment.GetType().ToString(),
+                    SourceDocument = Constant.GeneralLedgerSource.CashBankAdjustment,
                     SourceDocumentId = cashBankAdjustment.Id,
                     TransactionDate = (DateTime)cashBankAdjustment.ConfirmationDate,
                     Status = Constant.GeneralLedgerStatus.Debit,
@@ -244,7 +246,7 @@ namespace Service.Service
                 GeneralLedgerJournal creditcashbank = new GeneralLedgerJournal()
                 {
                     AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.CashBank + cashBank.Id).Id,
-                    SourceDocument = cashBankAdjustment.GetType().ToString(),
+                    SourceDocument = Constant.GeneralLedgerSource.CashBankAdjustment,
                     SourceDocumentId = cashBankAdjustment.Id,
                     TransactionDate = (DateTime)cashBankAdjustment.ConfirmationDate,
                     Status = Constant.GeneralLedgerStatus.Credit,
@@ -269,7 +271,7 @@ namespace Service.Service
                 GeneralLedgerJournal creditcashbank = new GeneralLedgerJournal()
                 {
                     AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.CashBank + cashBank.Id).Id,
-                    SourceDocument = cashBankAdjustment.GetType().ToString(),
+                    SourceDocument = Constant.GeneralLedgerSource.CashBankAdjustment,
                     SourceDocumentId = cashBankAdjustment.Id,
                     TransactionDate = UnconfirmationDate,
                     Status = Constant.GeneralLedgerStatus.Credit,
@@ -296,7 +298,7 @@ namespace Service.Service
                 GeneralLedgerJournal creditcashbankadjustmentexpense = new GeneralLedgerJournal()
                 {
                     AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.CashBankAdjustmentExpense).Id,
-                    SourceDocument = cashBankAdjustment.GetType().ToString(),
+                    SourceDocument = Constant.GeneralLedgerSource.CashBankAdjustment,
                     SourceDocumentId = cashBankAdjustment.Id,
                     TransactionDate = UnconfirmationDate,
                     Status = Constant.GeneralLedgerStatus.Credit,
@@ -307,7 +309,7 @@ namespace Service.Service
                 GeneralLedgerJournal debitcashbank = new GeneralLedgerJournal()
                 {
                     AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.CashBank + cashBank.Id).Id,
-                    SourceDocument = cashBankAdjustment.GetType().ToString(),
+                    SourceDocument = Constant.GeneralLedgerSource.CashBankAdjustment,
                     SourceDocumentId = cashBankAdjustment.Id,
                     TransactionDate = UnconfirmationDate,
                     Status = Constant.GeneralLedgerStatus.Debit,
@@ -329,7 +331,7 @@ namespace Service.Service
             GeneralLedgerJournal debittargetcashbank = new GeneralLedgerJournal()
             {
                 AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.CashBank + targetCashBank.Id).Id,
-                SourceDocument = cashBankMutation.GetType().ToString(),
+                SourceDocument = Constant.GeneralLedgerSource.CashBankMutation,
                 SourceDocumentId = cashBankMutation.Id,
                 TransactionDate = (DateTime)cashBankMutation.ConfirmationDate,
                 Status = Constant.GeneralLedgerStatus.Debit,
@@ -340,7 +342,7 @@ namespace Service.Service
             GeneralLedgerJournal creditsourcecashbank = new GeneralLedgerJournal()
             {
                 AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.CashBank + sourceCashBank.Id).Id,
-                SourceDocument = cashBankMutation.GetType().ToString(),
+                SourceDocument = Constant.GeneralLedgerSource.CashBankMutation,
                 SourceDocumentId = cashBankMutation.Id,
                 TransactionDate = (DateTime)cashBankMutation.ConfirmationDate,
                 Status = Constant.GeneralLedgerStatus.Credit,
@@ -362,7 +364,7 @@ namespace Service.Service
             GeneralLedgerJournal credittargetcashbank = new GeneralLedgerJournal()
             {
                 AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.CashBank + targetCashBank.Id).Id,
-                SourceDocument = cashBankMutation.GetType().ToString(),
+                SourceDocument = Constant.GeneralLedgerSource.CashBankMutation,
                 SourceDocumentId = cashBankMutation.Id,
                 TransactionDate = UnconfirmationDate,
                 Status = Constant.GeneralLedgerStatus.Credit,
@@ -373,7 +375,7 @@ namespace Service.Service
             GeneralLedgerJournal debitsourcecashbank = new GeneralLedgerJournal()
             {
                 AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.CashBank + sourceCashBank.Id).Id,
-                SourceDocument = cashBankMutation.GetType().ToString(),
+                SourceDocument = Constant.GeneralLedgerSource.CashBankMutation,
                 SourceDocumentId = cashBankMutation.Id,
                 TransactionDate = UnconfirmationDate,
                 Status = Constant.GeneralLedgerStatus.Debit,
@@ -394,7 +396,7 @@ namespace Service.Service
             GeneralLedgerJournal debitcogs = new GeneralLedgerJournal()
             {
                 AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.COGS).Id,
-                SourceDocument = cashSalesInvoice.GetType().ToString(),
+                SourceDocument = Constant.GeneralLedgerSource.CashSalesInvoice,
                 SourceDocumentId = cashSalesInvoice.Id,
                 TransactionDate = (DateTime)cashSalesInvoice.ConfirmationDate,
                 Status = Constant.GeneralLedgerStatus.Debit,
@@ -405,7 +407,7 @@ namespace Service.Service
             GeneralLedgerJournal creditinventory = new GeneralLedgerJournal()
             {
                 AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.Inventory).Id,
-                SourceDocument = cashSalesInvoice.GetType().ToString(),
+                SourceDocument = Constant.GeneralLedgerSource.CashSalesInvoice,
                 SourceDocumentId = cashSalesInvoice.Id,
                 TransactionDate = (DateTime)cashSalesInvoice.ConfirmationDate,
                 Status = Constant.GeneralLedgerStatus.Credit,
@@ -427,7 +429,7 @@ namespace Service.Service
             GeneralLedgerJournal creditcogs = new GeneralLedgerJournal()
             {
                 AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.COGS).Id,
-                SourceDocument = cashSalesInvoice.GetType().ToString(),
+                SourceDocument = Constant.GeneralLedgerSource.CashSalesInvoice,
                 SourceDocumentId = cashSalesInvoice.Id,
                 TransactionDate = UnconfirmationDate,
                 Status = Constant.GeneralLedgerStatus.Credit,
@@ -438,7 +440,7 @@ namespace Service.Service
             GeneralLedgerJournal debitinventory = new GeneralLedgerJournal()
             {
                 AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.Inventory).Id,
-                SourceDocument = cashSalesInvoice.GetType().ToString(),
+                SourceDocument = Constant.GeneralLedgerSource.CashSalesInvoice,
                 SourceDocumentId = cashSalesInvoice.Id,
                 TransactionDate = UnconfirmationDate,
                 Status = Constant.GeneralLedgerStatus.Debit,
@@ -459,7 +461,7 @@ namespace Service.Service
             GeneralLedgerJournal debittotal = new GeneralLedgerJournal()
             {
                 AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.AccountReceivable).Id,
-                SourceDocument = cashSalesInvoice.GetType().ToString(),
+                SourceDocument = Constant.GeneralLedgerSource.CashSalesInvoice,
                 SourceDocumentId = cashSalesInvoice.Id,
                 TransactionDate = (DateTime)cashSalesInvoice.ConfirmationDate,
                 Status = Constant.GeneralLedgerStatus.Debit,
@@ -470,7 +472,7 @@ namespace Service.Service
             GeneralLedgerJournal creditrevenue = new GeneralLedgerJournal()
             {
                 AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.Revenue).Id,
-                SourceDocument = cashSalesInvoice.GetType().ToString(),
+                SourceDocument = Constant.GeneralLedgerSource.CashSalesInvoice,
                 SourceDocumentId = cashSalesInvoice.Id,
                 TransactionDate = (DateTime)cashSalesInvoice.ConfirmationDate,
                 Status = Constant.GeneralLedgerStatus.Credit,
@@ -492,7 +494,7 @@ namespace Service.Service
             GeneralLedgerJournal credittotal = new GeneralLedgerJournal()
             {
                 AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.AccountReceivable).Id,
-                SourceDocument = cashSalesInvoice.GetType().ToString(),
+                SourceDocument = Constant.GeneralLedgerSource.CashSalesInvoice,
                 SourceDocumentId = cashSalesInvoice.Id,
                 TransactionDate = UnconfirmationDate,
                 Status = Constant.GeneralLedgerStatus.Credit,
@@ -503,7 +505,7 @@ namespace Service.Service
             GeneralLedgerJournal debitrevenue = new GeneralLedgerJournal()
             {
                 AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.Revenue).Id,
-                SourceDocument = cashSalesInvoice.GetType().ToString(),
+                SourceDocument = Constant.GeneralLedgerSource.CashSalesInvoice,
                 SourceDocumentId = cashSalesInvoice.Id,
                 TransactionDate = UnconfirmationDate,
                 Status = Constant.GeneralLedgerStatus.Debit,
@@ -526,7 +528,7 @@ namespace Service.Service
                 GeneralLedgerJournal debitinventory = new GeneralLedgerJournal()
                 {
                     AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.Inventory).Id,
-                    SourceDocument = stockAdjustment.GetType().ToString(),
+                    SourceDocument = Constant.GeneralLedgerSource.StockAdjustment,
                     SourceDocumentId = stockAdjustment.Id,
                     TransactionDate = (DateTime)stockAdjustment.ConfirmationDate,
                     Status = Constant.GeneralLedgerStatus.Debit,
@@ -537,7 +539,7 @@ namespace Service.Service
                 GeneralLedgerJournal creditstockequityadjustment = new GeneralLedgerJournal()
                 {
                     AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.EquityAdjustment).Id,
-                    SourceDocument = stockAdjustment.GetType().ToString(),
+                    SourceDocument = Constant.GeneralLedgerSource.StockAdjustment,
                     SourceDocumentId = stockAdjustment.Id,
                     TransactionDate = (DateTime)stockAdjustment.ConfirmationDate,
                     Status = Constant.GeneralLedgerStatus.Credit,
@@ -553,7 +555,7 @@ namespace Service.Service
                 GeneralLedgerJournal debitstockadjustmentexpense = new GeneralLedgerJournal()
                 {
                     AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.StockAdjustmentExpense).Id,
-                    SourceDocument = stockAdjustment.GetType().ToString(),
+                    SourceDocument = Constant.GeneralLedgerSource.StockAdjustment,
                     SourceDocumentId = stockAdjustment.Id,
                     TransactionDate = (DateTime)stockAdjustment.ConfirmationDate,
                     Status = Constant.GeneralLedgerStatus.Debit,
@@ -564,7 +566,7 @@ namespace Service.Service
                 GeneralLedgerJournal creditinventory = new GeneralLedgerJournal()
                 {
                     AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.Inventory).Id,
-                    SourceDocument = stockAdjustment.GetType().ToString(),
+                    SourceDocument = Constant.GeneralLedgerSource.StockAdjustment,
                     SourceDocumentId = stockAdjustment.Id,
                     TransactionDate = (DateTime)stockAdjustment.ConfirmationDate,
                     Status = Constant.GeneralLedgerStatus.Credit,
@@ -589,7 +591,7 @@ namespace Service.Service
                 GeneralLedgerJournal creditinventory = new GeneralLedgerJournal()
                 {
                     AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.Inventory).Id,
-                    SourceDocument = stockAdjustment.GetType().ToString(),
+                    SourceDocument = Constant.GeneralLedgerSource.StockAdjustment,
                     SourceDocumentId = stockAdjustment.Id,
                     TransactionDate = UnconfirmationDate,
                     Status = Constant.GeneralLedgerStatus.Credit,
@@ -600,7 +602,7 @@ namespace Service.Service
                 GeneralLedgerJournal debitstockequityadjustment = new GeneralLedgerJournal()
                 {
                     AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.EquityAdjustment).Id,
-                    SourceDocument = stockAdjustment.GetType().ToString(),
+                    SourceDocument = Constant.GeneralLedgerSource.StockAdjustment,
                     SourceDocumentId = stockAdjustment.Id,
                     TransactionDate = UnconfirmationDate,
                     Status = Constant.GeneralLedgerStatus.Debit,
@@ -616,7 +618,7 @@ namespace Service.Service
                 GeneralLedgerJournal creditstockadjustmentexpense = new GeneralLedgerJournal()
                 {
                     AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.StockAdjustmentExpense).Id,
-                    SourceDocument = stockAdjustment.GetType().ToString(),
+                    SourceDocument = Constant.GeneralLedgerSource.StockAdjustment,
                     SourceDocumentId = stockAdjustment.Id,
                     TransactionDate = UnconfirmationDate,
                     Status = Constant.GeneralLedgerStatus.Credit,
@@ -627,7 +629,7 @@ namespace Service.Service
                 GeneralLedgerJournal debitinventory = new GeneralLedgerJournal()
                 {
                     AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.Inventory).Id,
-                    SourceDocument = stockAdjustment.GetType().ToString(),
+                    SourceDocument = Constant.GeneralLedgerSource.StockAdjustment,
                     SourceDocumentId = stockAdjustment.Id,
                     TransactionDate = UnconfirmationDate,
                     Status = Constant.GeneralLedgerStatus.Debit,
@@ -649,7 +651,7 @@ namespace Service.Service
             GeneralLedgerJournal creditinventory = new GeneralLedgerJournal()
             {
                 AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.Inventory).Id,
-                SourceDocument = customPurchaseInvoice.GetType().ToString(),
+                SourceDocument = Constant.GeneralLedgerSource.CustomPurchaseInvoice,
                 SourceDocumentId = customPurchaseInvoice.Id,
                 TransactionDate = (DateTime)customPurchaseInvoice.ConfirmationDate,
                 Status = Constant.GeneralLedgerStatus.Credit,
@@ -660,7 +662,7 @@ namespace Service.Service
             GeneralLedgerJournal debitgoodsPendingclearance = new GeneralLedgerJournal()
             {
                 AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.GoodsPendingClearance).Id,
-                SourceDocument = customPurchaseInvoice.GetType().ToString(),
+                SourceDocument = Constant.GeneralLedgerSource.CustomPurchaseInvoice,
                 SourceDocumentId = customPurchaseInvoice.Id,
                 TransactionDate = (DateTime)customPurchaseInvoice.ConfirmationDate,
                 Status = Constant.GeneralLedgerStatus.Debit,
@@ -682,7 +684,7 @@ namespace Service.Service
             GeneralLedgerJournal creditinventory = new GeneralLedgerJournal()
             {
                 AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.Inventory).Id,
-                SourceDocument = customPurchaseInvoice.GetType().ToString(),
+                SourceDocument = Constant.GeneralLedgerSource.CustomPurchaseInvoice,
                 SourceDocumentId = customPurchaseInvoice.Id,
                 TransactionDate = UnconfirmationDate,
                 Status = Constant.GeneralLedgerStatus.Credit,
@@ -693,7 +695,7 @@ namespace Service.Service
             GeneralLedgerJournal debitgoodsPendingclearance = new GeneralLedgerJournal()
             {
                 AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.GoodsPendingClearance).Id,
-                SourceDocument = customPurchaseInvoice.GetType().ToString(),
+                SourceDocument = Constant.GeneralLedgerSource.CustomPurchaseInvoice,
                 SourceDocumentId = customPurchaseInvoice.Id,
                 TransactionDate = UnconfirmationDate,
                 Status = Constant.GeneralLedgerStatus.Debit,
@@ -714,7 +716,7 @@ namespace Service.Service
             GeneralLedgerJournal debitGoodsPendingClearance = new GeneralLedgerJournal()
             {
                 AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.GoodsPendingClearance).Id,
-                SourceDocument = customPurchaseInvoice.GetType().ToString(),
+                SourceDocument = Constant.GeneralLedgerSource.CustomPurchaseInvoice,
                 SourceDocumentId = customPurchaseInvoice.Id,
                 TransactionDate = (DateTime)customPurchaseInvoice.ConfirmationDate,
                 Status = Constant.GeneralLedgerStatus.Debit,
@@ -725,7 +727,7 @@ namespace Service.Service
             GeneralLedgerJournal creditaccountpayable = new GeneralLedgerJournal()
             {
                 AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.AccountPayable).Id,
-                SourceDocument = customPurchaseInvoice.GetType().ToString(),
+                SourceDocument = Constant.GeneralLedgerSource.CustomPurchaseInvoice,
                 SourceDocumentId = customPurchaseInvoice.Id,
                 TransactionDate = (DateTime)customPurchaseInvoice.ConfirmationDate,
                 Status = Constant.GeneralLedgerStatus.Credit,
@@ -747,7 +749,7 @@ namespace Service.Service
             GeneralLedgerJournal creditGoodsPendingClearance = new GeneralLedgerJournal()
             {
                 AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.GoodsPendingClearance).Id,
-                SourceDocument = customPurchaseInvoice.GetType().ToString(),
+                SourceDocument = Constant.GeneralLedgerSource.CustomPurchaseInvoice,
                 SourceDocumentId = customPurchaseInvoice.Id,
                 TransactionDate = UnconfirmationDate,
                 Status = Constant.GeneralLedgerStatus.Credit,
@@ -758,7 +760,7 @@ namespace Service.Service
             GeneralLedgerJournal debitaccountpayable = new GeneralLedgerJournal()
             {
                 AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.AccountPayable).Id,
-                SourceDocument = customPurchaseInvoice.GetType().ToString(),
+                SourceDocument = Constant.GeneralLedgerSource.CustomPurchaseInvoice,
                 SourceDocumentId = customPurchaseInvoice.Id,
                 TransactionDate = UnconfirmationDate,
                 Status = Constant.GeneralLedgerStatus.Debit,

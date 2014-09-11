@@ -27,7 +27,7 @@ namespace OffsetPrintingSupplies
                 //SalesBuilder s = new SalesBuilder();
                 //RetailPurchaseBuilder rpb = new RetailPurchaseBuilder();
                 //RetailSalesBuilder rsb = new RetailSalesBuilder();
-                //CashSalesBuilder csb = new CashSalesBuilder();
+                CashSalesBuilder csb = new CashSalesBuilder();
                 //CustomPurchaseBuilder cpb = new CustomPurchaseBuilder();
 
                 //DataFunction(d);
@@ -35,21 +35,9 @@ namespace OffsetPrintingSupplies
                 //SalesFunction(s);
                 //RetailPurchaseFunction(rpb);
                 //RetailSalesFunction(rsb);
-                //CashSalesFunction(csb);
+                CashSalesFunction(csb);
                 //CustomPurchaseFunction(cpb);
 
-                DataBuilder d = new DataBuilder();
-                d.PopulateWarehouse();
-                d.PopulateItem();
-                d.PopulateSingles();
-                d.PopulateBuilders();
-                d.PopulateBarring();
-                d.PopulateWarehouseMutationForRollerIdentificationAndRecovery();
-
-                d.warehouseMutationOrder = d._warehouseMutationOrderService.SoftDeleteObject(d.warehouseMutationOrder, d._warehouseMutationOrderDetailService);
-
-                d.warehouseMutationOrder = d._warehouseMutationOrderService.ConfirmObject(d.warehouseMutationOrder, DateTime.Today, d._warehouseMutationOrderDetailService, d._itemService, d._barringService, d._warehouseItemService, d._stockMutationService);
-                d.warehouseMutationOrder = d._warehouseMutationOrderService.SoftDeleteObject(d.warehouseMutationOrder, d._warehouseMutationOrderDetailService);
                 
             }
         }

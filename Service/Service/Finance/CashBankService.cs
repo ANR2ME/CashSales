@@ -64,10 +64,9 @@ namespace Service.Service
                     ParentId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.CashBank).Id
                 };
                 _accountService.CreateCashBankAccount(account, _accountService);
-                account.LegacyCode = Constant.AccountLegacyCode.CashBank + account.Id;
-                _accountService.UpdateObject(account, _accountService);
-
                 _repository.CreateObject(cashBank);
+                account.LegacyCode = Constant.AccountLegacyCode.CashBank + cashBank.Id;
+                _accountService.UpdateObject(account, _accountService);
             }
             return cashBank;
         }

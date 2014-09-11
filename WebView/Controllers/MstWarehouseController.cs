@@ -114,22 +114,24 @@ namespace WebView.Controllers
               catch (Exception ex)
               {
                   LOG.Error("GetInfo", ex);
-                  if (model != null)
-                  {
-                      model.Errors.Add("Generic", "Error" + ex);
-                  }
-                  //Dictionary<string, string> Errors = new Dictionary<string, string>();
-                  //Errors.Add("Generic", "Error " + ex);
+                  model.Errors = new Dictionary<string, string>();
+                  model.Errors.Add("Generic", "Error " + ex);
 
-                  //return Json(new
-                  //{
-                  //    Errors
-                  //}, JsonRequestBehavior.AllowGet);
+                  return Json(new
+                  {
+                      model.Errors
+                  }, JsonRequestBehavior.AllowGet); 
               }
 
               return Json(new
               {
-                 model
+                 model.Id,
+                 model.Code,
+                 model.Name,
+                 model.Description,
+                 model.CreatedAt,
+                 model.UpdatedAt,
+                 model.Errors
               }, JsonRequestBehavior.AllowGet);
           }
 

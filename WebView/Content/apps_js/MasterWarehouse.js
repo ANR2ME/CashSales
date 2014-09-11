@@ -107,23 +107,23 @@
                 dataType: "json",
                 url: base_url + "MstWarehouse/GetInfo?Id=" + id,
                 success: function (result) {
-                    if (result.model == null) {
+                    if (result.Id == null) {
                         $.messager.alert('Information', 'Data Not Found...!!', 'info');
                     }
                     else {
-                        if (JSON.stringify(result.model.Errors) != '{}') {
+                        if (JSON.stringify(result.Errors) != '{}') {
                             var error = '';
-                            for (var key in result.model.Errors) {
-                                error = error + "<br>" + key + " " + result.model.Errors[key];
+                            for (var key in result.Errors) {
+                                error = error + "<br>" + key + " " + result.Errors[key];
                             }
                             $.messager.alert('Warning', error, 'warning');
                         }
                         else {
-                            $("#form_btn_save").data('kode', result.model.Id);
-                            $('#id').val(result.model.Id);
-                            $('#Code').val(result.model.Code);
-                            $('#Name').val(result.model.Name);
-                            $('#Description').val(result.model.Description);
+                            $("#form_btn_save").data('kode', result.Id);
+                            $('#id').val(result.Id);
+                            $('#Code').val(result.Code);
+                            $('#Name').val(result.Name);
+                            $('#Description').val(result.Description);
                             $('#form_div').dialog('open');
                         }
                     }

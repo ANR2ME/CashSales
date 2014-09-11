@@ -57,10 +57,10 @@ namespace WebView.Controllers
                          {
                              model.Id,
                              model.ItemId,
+                             sku = model.Item.Sku,
                              item = model.Item.Name,
                              itemtypeid = model.Item.ItemTypeId,
                              itemtype = model.Item.ItemType.Name,
-                             sku = model.Item.Sku,
                              category = model.Item.Category,
                              uomid = model.Item.UoMId,
                              uom = model.Item.UoM.Name,
@@ -99,10 +99,10 @@ namespace WebView.Controllers
                         id = model.Id,
                         cell = new object[] {
                             model.ItemId,
+                            model.sku,
                             model.item,
                             model.itemtypeid,
                             model.itemtype,
-                            model.sku,
                             model.category,
                             model.uomid,
                             model.uom,

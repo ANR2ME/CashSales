@@ -21,7 +21,7 @@
         <a id="btn_confirm" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-approval'">Confirm</a>
         <a id="btn_unconfirm" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-undo'">Unconfirm</a>
         <a id="btn_del" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-remove'">Delete</a>
-        <a id="btn_print" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-print'">Print Data</a>
+        @*<a id="btn_print" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-print'">Print Data</a>*@
     </div>
 
     <div id="table_div">
@@ -30,7 +30,7 @@
     </div>
 
 <!-- Dialog Box -->
-    <div id="form_div" class="easyui-dialog" style="text-align: left; padding:0px 0px 10px" data-options="modal:true"  
+    <div id="form_div" class="easyui-dialog" style="text-align: left; padding:0px 0px 10px; top: 100px" data-options="modal:true"  
         title=".:  @ViewBag.Title :.">
 
         <div id="form_toolbar" class="form_toolbar">
@@ -43,7 +43,7 @@
                @* <fieldset class="ui-widget-content ui-corner-all input_form_div">*@
                        
                     <table id = "tablefrm" width="100%" border="0" cellpadding="5" cellspacing="5" class="input_form_tbl">
-                        <tr nowrap>
+                        <tr nowrap hidden>
                             <td width="139" nowrap style="width: 100px">
                                 <label>ID</label></td>
                             <td width="550">
@@ -68,7 +68,7 @@
                             <td>
                                 <label>Warehouse From</label></td>
                             <td>
-                                <input id="WarehouseFromId"  class="textright" type="text" size="10" maxlength="7" disabled="disabled" />
+                                <input id="WarehouseFromId" hidden class="textright" type="text" size="10" maxlength="7" disabled="disabled" />
                                 <input id="btnWarehouseFrom" name="buttonactivated" type="button" style="cursor: pointer;" class="ui-corner-all ui-state-default" value=".." />
                                 <input id="WarehouseFrom" name="WarehouseId" type="text" size="56" maxlength="50" class="editable upper" disabled="disabled" />
                         </tr>
@@ -76,7 +76,7 @@
                             <td>
                                 <label>Warehouse To</label></td>
                             <td>
-                                <input id="WarehouseToId"  class="textright" type="text" size="10" maxlength="7" disabled="disabled" />
+                                <input id="WarehouseToId" hidden class="textright" type="text" size="10" maxlength="7" disabled="disabled" />
                                 <input id="btnWarehouseTo" name="buttonactivated" type="button" style="cursor: pointer;" class="ui-corner-all ui-state-default" value=".." />
                                 <input id="WarehouseTo" name="WarehouseToId" type="text" size="56" maxlength="50" class="editable upper" disabled="disabled" />
                         </tr>
@@ -111,7 +111,7 @@
                           Item
                       </td>
                       <td>
-                         <input id="ItemId"  class="textright" type="text" size="10" maxlength="7" disabled="disabled" />
+                         <input id="ItemId" hidden class="textright" type="text" size="10" maxlength="7" disabled="disabled" />
                          <input id="btnItem" name="buttonactivated" type="button" style="cursor: pointer;" class="ui-corner-all ui-state-default" value=".." />
                          <input id="Item" name="ItemId" type="text" size="56" maxlength="50" class="editable upper" disabled="disabled" />
                       </td>
@@ -140,13 +140,21 @@
         </div>
         <div id="confirm_info">
               <table  width="100%" border="0" cellpadding="5" cellspacing="5" class="input_form_tbl">
-                  <tr>
+                  <tr hidden>
                       <td width="139" nowrap style="width: 100px">
                           Id
                       </td>
                       <td>
                          <input id="idconfirm" type="text" size="10" disabled="disabled"/>
                       </td>
+                  </tr>
+                  <tr>
+                            <td>
+                             <label>Code</label>
+                            </td>
+                            <td>
+                               <input id="confirmCode" name="Code" type="text" size="10" disabled="disabled"/>
+                            </td>
                   </tr>
                   <tr>
                       <td>

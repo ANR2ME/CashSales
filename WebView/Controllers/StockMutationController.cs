@@ -123,8 +123,10 @@ namespace WebView.Controllers
                             model.uom,
                             model.SourceDocumentType,
                             model.SourceDocumentId,
+                            model.SourceDocumentCode,
                             model.SourceDocumentDetailType,
                             model.SourceDocumentDetailId,
+                            model.SourceDocumentDetailCode,
                             model.CreatedAt,
                       }
                     }).ToArray()
@@ -215,8 +217,10 @@ namespace WebView.Controllers
                             model.uom,
                             model.SourceDocumentType,
                             model.SourceDocumentId,
+                            model.SourceDocumentCode,
                             model.SourceDocumentDetailType,
                             model.SourceDocumentDetailId,
+                            model.SourceDocumentDetailCode,
                             model.CreatedAt,
                       }
                     }).ToArray()

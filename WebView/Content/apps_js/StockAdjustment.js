@@ -23,7 +23,10 @@
     }
 
     function clearForm(form) {
-
+        $('#ItemId').val('');
+        $('#Item').val('');
+        $('#Quantity').numberbox('setValue','');
+        $('#Price').numberbox('setValue', '');
         $(':input', form).each(function () {
             var type = this.type;
             var tag = this.tagName.toLowerCase(); // normalize case
@@ -468,8 +471,8 @@
                             $("#item_btn_submit").data('kode', result.Id);
                             $('#ItemId').val(result.ItemId);
                             $('#Item').val(result.Item);
-                            $('#Quantity').val(result.Quantity);
-                            $('#Price').val(result.Price);
+                            $('#Quantity').numberbox('setValue', result.Quantity);
+                            $('#Price').numberbox('setValue', result.Price);
                             $('#item_div').dialog('open');
                         }
                     }

@@ -56,18 +56,18 @@
             url: base_url + 'MstItem/GetList',
             datatype: "json",
             mtype: 'GET',
-            colNames: ['ID', 'Name', 'Item Type Id', 'Item Type Name', 'SKU',
+            colNames: ['ID', 'SKU', 'Name', 'Item Type Id', 'Item Type Name',
                      'Category', 'UoM Id', 'UoM', 'Quantity',
                      'Selling Price', 'AvgPrice',
                      'Pending Receival', 'Pending Delivery', 'Created At', 'Updated At'],
             colModel: [
-                      { name: 'id', index: 'id', width: 80, align: "center" , frozen: true},
-                      { name: 'name', index: 'name', width: 200 },
-                      { name: 'itemtypeid', index: 'itemtypeid', width: 80 },
-                      { name: 'itemtype', index: 'itemtype', width: 200 },
+                      { name: 'id', index: 'id', width: 80, align: "center", frozen: true },
                       { name: 'sku', index: 'sku', width: 100 },
-                      { name: 'category', index: 'category', width: 100 },
-                      { name: 'uomid', index: 'uomid', width: 80 },
+                      { name: 'name', index: 'name', width: 200 },
+                      { name: 'itemtypeid', index: 'itemtypeid', width: 80, hidden: true },
+                      { name: 'itemtype', index: 'itemtype', width: 200 },
+                      { name: 'category', index: 'category', width: 100, hidden: true },
+                      { name: 'uomid', index: 'uomid', width: 80, hidden: true },
                       { name: 'uom', index: 'uom', width: 100 },
                       { name: 'quantity', index: 'quantity', width: 80, formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' } },
                       { name: 'sellingprice', index: 'sellingprice', width: 80, formatter: 'currency', formatoptions: { thousandsSeparator: ",", defaultValue: '0' } },
@@ -113,17 +113,17 @@
             url: base_url + 'WarehouseItem/GetListItem?Id=' + id,
             datatype: "json",
             mtype: 'GET',
-            colNames: ['Item ID', 'Item Name', 'Item Type Id', 'Item Type Name', 'Sku'
-                       , 'Category', 'Uom Id', 'UoM Name', 'Quantity', 'Pending Delivery', 'Pending Receival'
+            colNames: ['Item ID', 'SKU', 'Item Name', 'Item Type Id', 'Item Type Name',
+                       'Category', 'Uom Id', 'UoM Name', 'Quantity', 'Pending Delivery', 'Pending Receival'
             ],
             colModel: [
-                      { name: 'itemid', index: 'itemid', width: 80, align: "center", frozen: true },
-                      { name: 'item', index: 'item', width: 200, frozen: true },
-                      { name: 'itemtypeid', index: 'itemtypeid', width: 80, align: "center" },
-                      { name: 'itemtype', index: 'itemtype', width: 200 },
+                      { name: 'itemid', index: 'itemid', width: 80, align: "center", frozen: true, hidden: true },
                       { name: 'sku', index: 'sku', width: 80 },
-                      { name: 'category', index: 'category', width: 100 },
-                      { name: 'uomid', index: 'uomid', width: 100 },
+                      { name: 'item', index: 'item', width: 200, frozen: true },
+                      { name: 'itemtypeid', index: 'itemtypeid', width: 80, align: "center", hidden: true },
+                      { name: 'itemtype', index: 'itemtype', width: 200 },
+                      { name: 'category', index: 'category', width: 100, hidden: true },
+                      { name: 'uomid', index: 'uomid', width: 100, hidden: true },
                       { name: 'uom', index: 'uom', width: 100 },
                       { name: 'quantity', index: 'quantity', width: 100, formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: false },
                       { name: 'pendingdelivery', index: 'pendingdelivery', width: 100, formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: false },
@@ -200,7 +200,7 @@
 
     //GRID +++++++++++++++
     $("#list").jqGrid({
-        url: base_url + 'PaymentVoucher/GetList',
+        url: base_url + 'MstWarehouse/GetList', //'PaymentVoucher/GetList',
         datatype: "json",
         colNames: ['ID', 'Code', 'Name', 'Description', 'Created At', 'Updated At'],
         colModel: [

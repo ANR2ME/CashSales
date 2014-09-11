@@ -66,9 +66,9 @@ namespace WebView.Controllers
                              warehousefrom = model.WarehouseFrom.Name,
                              model.WarehouseToId,
                              warehouseto = model.WarehouseTo.Name,
-                             model.MutationDate,
                              model.IsConfirmed,
                              model.ConfirmationDate,
+                             model.MutationDate,
                              model.CreatedAt,
                              model.UpdatedAt,
                          }).Where(filter).OrderBy(sidx + " " + sord); //.ToList();
@@ -108,9 +108,9 @@ namespace WebView.Controllers
                             model.warehousefrom,
                             model.WarehouseToId,
                             model.warehouseto,
-                            model.MutationDate,
                             model.IsConfirmed,
                             model.ConfirmationDate,
+                            model.MutationDate,
                             model.CreatedAt,
                             model.UpdatedAt,
                       }

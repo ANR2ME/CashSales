@@ -50,33 +50,33 @@
 	$("#list").jqGrid({
 		url: base_url + 'CashSalesInvoice/GetList',
 		datatype: "json",
-		colNames: ['ID', 'Code', 'Description', 'Sales Date', 'Due Date',
-				   'Discount', 'Tax', 'Allowance', 'Is Confirmed', 'Confirmation Date', 'Amount Paid',
+		colNames: ['ID', 'Code', 'Description', 
+				   'Discount', 'Tax', 'Allowance', 'Amount Paid', 'Total', 'CoGS', 'Profit/Loss', 'Is Confirmed', 'Confirmation Date',
 				   'CashBank ID', 'CashBank Name', 'Is Bank', 'Is Paid', 'Is Full Payment',
-				   'Total', 'CoGS', 'Profit/Loss', 'Warehouse ID', 'Warehouse Name',
-				   'Created At', 'Updated At'],
+				   'Warehouse ID', 'Warehouse Name',
+				   'Sales Date', 'Due Date', 'Created At', 'Updated At'],
 		colModel: [
-				  { name: 'id', index: 'id', width: 80, align: "center" },
+				  { name: 'id', index: 'id', width: 50, align: "center" },
 				  { name: 'code', index: 'code', width: 100 },
-				  { name: 'description', index: 'description', width: 100 },
-				  { name: 'salesdate', index: 'salesdate', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
-				  { name: 'duedate', index: 'duedate', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
+				  { name: 'description', index: 'description', width: 150 },
 				  { name: 'discount', index: 'discount', width: 80, decimal: { thousandsSeparator: ",", defaultValue: '0' } },
 				  { name: 'tax', index: 'tax', width: 80, decimal: { thousandsSeparator: ",", defaultValue: '0' } },
 				  { name: 'allowance', index: 'allowance', width: 80, formatter: 'currency' },
-				  { name: 'isconfirmed', index: 'isconfirmed', width: 80, boolean: { defaultValue: 'false' } },
-				  { name: 'confirmationdate', index: 'confirmationdate', search: false, width: 120, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
-				  { name: 'amountpaid', index: 'amountpaid', width: 80, formatter: 'currency' },
-				  { name: 'cashbankid', index: 'cashbankid', width: 80 },
+                  { name: 'amountpaid', index: 'amountpaid', width: 80, formatter: 'currency' },
+                  { name: 'total', index: 'total', width: 80, formatter: 'currency' },
+				  { name: 'cogs', index: 'cogs', width: 80, formatter: 'currency' },
+                  { name: 'profitloss', index: 'profitloss', width: 80, formatter: 'currency' },
+                  { name: 'isconfirmed', index: 'isconfirmed', width: 80, boolean: { defaultValue: 'false' }, stype: 'select', editoptions: { value: ':All;true:Yes;false:No' } },
+				  { name: 'confirmationdate', index: 'confirmationdate', hidden:true, search: false, width: 120, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
+				  { name: 'cashbankid', index: 'cashbankid', width: 80, hidden:true },
 				  { name: 'cashbank', index: 'cashbank', width: 100 },
 				  { name: 'isbank', index: 'isbank', width: 80, boolean: { defaultValue: 'false' } },
 				  { name: 'ispaid', index: 'ispaid', width: 80, boolean: { defaultValue: 'false' } },
 				  { name: 'isfullpayment', index: 'isfullpayment', width: 100, boolean: { defaultValue: 'false' } },
-				  { name: 'total', index: 'total', width: 80, formatter: 'currency' },
-				  { name: 'cogs', index: 'cogs', width: 80, formatter: 'currency' },
-                  { name: 'profitloss', index: 'profitloss', width: 80, formatter: 'currency' },
-				  { name: 'warehouseid', index: 'warehouseid', width: 85 },
+				  { name: 'warehouseid', index: 'warehouseid', width: 85, hidden:true },
 				  { name: 'warehouse', index: 'warehouse', width: 100 },
+                  { name: 'salesdate', index: 'salesdate', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
+				  { name: 'duedate', index: 'duedate', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
 				  { name: 'createdat', index: 'createdat', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
 				  { name: 'updateat', index: 'updateat', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
 		],
@@ -98,7 +98,7 @@
 				  var cl = ids[i];
 				  rowIsConfirmed = $(this).getRowData(cl).isconfirmed;
 				  if (rowIsConfirmed == 'true') {
-					  rowIsConfirmed = "YES";
+				      rowIsConfirmed = "YES, " + $(this).getRowData(cl).confirmationdate;
 				  } else {
 					  rowIsConfirmed = "NO";
 				  }
@@ -299,6 +299,7 @@
 			$('#ConfirmationDate').datebox('setValue', $.datepicker.formatDate('mm/dd/yy', new Date()));
 			$('#confirmDiscount').numberbox('setValue', ret.discount);
 			$('#confirmTax').numberbox('setValue', ret.tax);
+			$('#confirmCode').val(ret.code);
 			$('#idconfirm').val(ret.id);
 			$("#confirm_div").dialog("open");
 		} else {
@@ -385,6 +386,7 @@
 	        $('#paidAllowance').numberbox('setValue', ret.allowance);
 	        $('#AmountPaid').numberbox('setValue', ret.amountpaid);
 	        $('#paidTotal').numberbox('setValue', ret.total);
+	        $('#paidCode').val(ret.code);
 	        $('#idpaid').val(ret.id);
 	        $("#paid_div").dialog("open");
 	    } else {
@@ -588,14 +590,14 @@
 		colNames: ['Code', 'CashSalesInvoice Id', 'CashSalesInvoice Code', 'Item Id', 'Item Name', 'Quantity', 'Amount', 'CoGS', 'PriceMutation Id', 'Discount', 'Is Manual Price Assignment', 'Assigned Price'],
 		colModel: [
 				  { name: 'code', index: 'code', width: 100, sortable: false },
-				  { name: 'cashsalesinvoiceid', index: 'cashsalesinvoiceid', width: 130, sortable: false },
+				  { name: 'cashsalesinvoiceid', index: 'cashsalesinvoiceid', hidden:true, width: 130, sortable: false },
 				  { name: 'cashsalesinvoice', index: 'cashsalesinvoice', width: 150, sortable: false },
-				  { name: 'itemid', index: 'itemid', width: 80, sortable: false },
+				  { name: 'itemid', index: 'itemid', width: 80, hidden:true, sortable: false },
 				  { name: 'item', index: 'item', width: 80, sortable: false },
 				  { name: 'quantity', index: 'quantity', width: 100, formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: false },
 				  { name: 'amount', index: 'amount', width: 100, formatter: 'currency', formatoptions: { decimalSeparator: ".", thousandsSeparator: ",", decimalPlaces: 2, prefix: "", suffix: "", defaultValue: '0.00' }, sortable: false },
 				  { name: 'cogs', index: 'cogs', width: 100, formatter: 'currency', formatoptions: { decimalSeparator: ".", thousandsSeparator: ",", decimalPlaces: 2, prefix: "", suffix: "", defaultValue: '0.00' }, sortable: false },
-				  { name: 'pricemutationid', index: 'pricemutationid', width: 105, sortable: false },
+				  { name: 'pricemutationid', index: 'pricemutationid', hidden:true, width: 105, sortable: false },
                   { name: 'discount', index: 'discount', width: 100, formatter: 'currency', formatoptions: { decimalSeparator: ".", thousandsSeparator: ",", decimalPlaces: 2, prefix: "", suffix: "", defaultValue: '0.00' }, sortable: false },
                   { name: 'ismanualpriceassignment', index: 'ismanualpriceassignment', width: 165, boolean: { defaultValue: 'false' } },
                   { name: 'assignedprice', index: 'assignedprice', width: 100, formatter: 'currency', formatoptions: { decimalSeparator: ".", thousandsSeparator: ",", decimalPlaces: 2, prefix: "", suffix: "", defaultValue: '0.00' }, sortable: false },
@@ -633,6 +635,11 @@
 	$('#btn_add_new_detail').click(function () {
 		ClearData();
 		clearForm('#item_div');
+		$('#Quantity').numberbox('setValue', '');
+		$('#detailDiscount').numberbox('setValue', '');
+		var e = document.getElementById("IsManualPriceAssignment");
+		e.selectedIndex = 0;
+		$('#AssignedPrice').numberbox('setValue', '');
 		onManualAssignedPrice();
 		$('#item_div').dialog('open');
 	});
@@ -661,8 +668,8 @@
 							$("#item_btn_submit").data('kode', result.Id);
 							$('#ItemId').val(result.ItemId);
 							$('#Item').val(result.Item);
-							$('#Quantity').val(result.Quantity);
-							$('#detailDiscount').val(result.Discount);
+							$('#Quantity').numberbox('setValue', result.Quantity);
+							$('#detailDiscount').numberbox('setValue', result.Discount);
 							var e = document.getElementById("IsManualPriceAssignment");
 							if (result.IsManualPriceAssignment == true) {
 							    e.selectedIndex = 1;
@@ -931,10 +938,14 @@
 		url: base_url,
 		datatype: "json",
 		mtype: 'GET',
-		colNames: ['Id', 'Name'],
+		colNames: ['Id', 'SKU', 'Name', 'Item Type', 'UoM'],
 		colModel: [
-				  { name: 'id', index: 'id', width: 80, align: 'right' },
-				  { name: 'name', index: 'name', width: 200 }],
+				  { name: 'id', index: 'id', width: 80, align: 'right', hidden:true },
+				  { name: 'sku', index: 'sku', width: 100 },
+                  { name: 'name', index: 'name', width: 100 },
+                  { name: 'itemtype', index: 'itemtype', width: 120 },
+                  { name: 'uom', index: 'uom', width: 100 },
+		],
 		page: '1',
 		pager: $('#lookup_pager_item'),
 		rowNum: 20,

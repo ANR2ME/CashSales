@@ -31,11 +31,11 @@
                    'Amount', 'Remaining Amount', 'Pending Clearance Amount', 'Allowance Amount',
                    'Is Completed', 'Completion Date', 'Due Date', 'Created At'],
         colModel: [
-    			  { name: 'id', index: 'id', width: 60, align: "center" },
+    			  { name: 'id', index: 'id', width: 50, align: "center" },
                   { name: 'code', index: 'code', width: 80 },
     			  { name: 'contactid', index: 'contactid', width: 35, align: "center", hidden: true},
 				  { name: 'contact', index: 'contact', width: 120, search: true },
-				  { name: 'payablesource', index: 'payablesource', width: 120, align: 'right' },
+				  { name: 'payablesource', index: 'payablesource', width: 130, align: 'right' },
 				  { name: 'payablesourceid', index: 'payablesourceid', width: 60, hidden: true },
                   { name: 'payablesourcecode', index: 'payablesourcecode', width: 80 },
                   { name: 'amount', index: 'amount', width: 150, align: 'right', formatter: 'currency', formatoptions: { thousandsSeparator: ",", defaultValue: '0' } },

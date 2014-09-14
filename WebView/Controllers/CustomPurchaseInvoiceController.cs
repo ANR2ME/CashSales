@@ -522,7 +522,7 @@ namespace WebView.Controllers
 
                 if (funds < total)
                 {
-                    Errors.Add("Generic", "Dana tidak tersedia");
+                    Errors.Add("Generic", "Dana Tidak tersedia");
                 }
             }
             catch (Exception ex)

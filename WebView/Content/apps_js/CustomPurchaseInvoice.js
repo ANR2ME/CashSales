@@ -366,7 +366,7 @@
 	                }
 	            }
 	            else {
-	                $.messager.alert('Check Funds', "Dana tersedia", 'info');
+	                $.messager.alert('Check Funds', "Dana Tersedia", 'info');
 	                $("#check_div").dialog('close');
 	                ReloadGrid();
 	            }

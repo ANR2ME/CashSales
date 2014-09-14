@@ -13,6 +13,10 @@ namespace Data.Mapping
         public UserAccountMapping()
         {
             HasKey(u => u.Id);
+            HasMany(u => u.UserAccesses)
+                .WithRequired(a => a.UserAccount)
+                .HasForeignKey(a => a.UserAccountId)
+                .WillCascadeOnDelete(true);
             Ignore(u => u.Errors);
         }
     }

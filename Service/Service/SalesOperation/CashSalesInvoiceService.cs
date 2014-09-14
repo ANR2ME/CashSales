@@ -135,10 +135,10 @@ namespace Service.Service
                 receivable.AllowanceAmount = Allowance;
                 receivable.RemainingAmount = receivable.Amount - receivable.AllowanceAmount;
                 _receivableService.UpdateObject(receivable);
-                ReceiptVoucher receiptVoucher = _receiptVoucherService.CreateObject((int)cashSalesInvoice.CashBankId.GetValueOrDefault(), receivable.ContactId, DateTime.Now, receivable.RemainingAmount,
+                ReceiptVoucher receiptVoucher = _receiptVoucherService.CreateObject((int)cashSalesInvoice.CashBankId.GetValueOrDefault(), receivable.ContactId, DateTime.Now, cashSalesInvoice.AmountPaid.GetValueOrDefault()/*receivable.RemainingAmount*/,
                                                                             false, (DateTime)cashSalesInvoice.DueDate.GetValueOrDefault(), cashSalesInvoice.IsBank, _receiptVoucherDetailService,
                                                                             _receivableService, _contactService, _cashBankService);
-                ReceiptVoucherDetail receiptVoucherDetail = _receiptVoucherDetailService.CreateObject(receiptVoucher.Id, receivable.Id, (decimal)receivable.RemainingAmount, 
+                ReceiptVoucherDetail receiptVoucherDetail = _receiptVoucherDetailService.CreateObject(receiptVoucher.Id, receivable.Id, cashSalesInvoice.AmountPaid.GetValueOrDefault(), 
                                                                             "Automatic Payment", _receiptVoucherService, _cashBankService, _receivableService);
                 cashSalesInvoice = _repository.PaidObject(cashSalesInvoice);
                 _receiptVoucherService.ConfirmObject(receiptVoucher, (DateTime)cashSalesInvoice.ConfirmationDate.GetValueOrDefault(), _receiptVoucherDetailService, _cashBankService, _receivableService, _cashMutationService);

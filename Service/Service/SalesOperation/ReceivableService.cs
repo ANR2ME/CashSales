@@ -98,7 +98,7 @@ namespace Service.Service
             decimal Total = 0;
             foreach (var receivable in receivables)
             {
-                Total += receivable.RemainingAmount;
+                Total += receivable.RemainingAmount + receivable.PendingClearanceAmount;
             }
             return Total;
         }

@@ -63,6 +63,10 @@ namespace Core.Constants
             public static string UserAccessRight = "User Access Right";
             public static string CompanyInfo = "Company Info";
 
+            //public static string Stock = "Stock";
+            public static string Sales = "Sales";
+            public static string ProfitLoss = "Profit/Loss";
+
         }
 
         public class ItemCase
@@ -162,5 +166,6 @@ namespace Core.Constants
         }
 
         public static string PageViewNotAllowed = "You are not allowed to View this Page. <tr><td><a href='/Authentication/Logout'>[Logout]</a></td></tr>";
+        public static string PagePrintNotAllowed = "You are not allowed to Print this Page. <tr><td><a href='/Authentication/Logout'>[Logout]</a></td></tr>";
     }
 }

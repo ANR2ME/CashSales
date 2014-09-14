@@ -67,6 +67,7 @@
         if (objUserAccess != null) {
             for (var i = 0; i < objUserAccess.model.length; i++) {
                 var newData = {};
+                newData.manualpricing = objUserAccess.model[i].AllowSpecialPricing;
                 newData.code = objUserAccess.model[i].Id;
                 newData.name = objUserAccess.model[i].Name;
                 newData.read = objUserAccess.model[i].AllowView;
@@ -146,6 +147,18 @@
     }
 
     // ---- END Edit
+
+    // ---- ManualPricing
+    $("input[name=cbAllowManualPricing]").live("click", function () {
+        UpdateAllow($(this).attr('rel'), $(this).is(":checked"), "ManualPricing");
+    });
+
+    function cboxAllowManualPricing(cellvalue, options, rowObject) {
+        return '<input name="cbAllowManualPricing" rel="' + rowObject.code + '" type="checkbox"' + (cellvalue ? ' checked="checked"' : '') +
+            '/>';
+    }
+
+    // ---- END ManualPricing
 
     // ---- Delete
     $("input[name=cbAllowDelete]").live("click", function () {
@@ -272,9 +285,9 @@
        // url: base_url + 'index.html',
         datatype: "json",
         mtype: 'GET',
-        colNames: ['Code', 'Name', 'View', 'Create', 'Edit', 'Delete', 'Confirm', 'UnConfirm', 'Paid', 'UnPaid', 'Reconcile', 'UnReconcile', 'Print'],
-        colModel: [{ name: 'code', index: 'code', width: 50, align: 'center' },
-                  { name: 'name', index: 'name', width: 160 },
+        colNames: ['Code', 'Name', 'View', 'Create', 'Edit', 'Delete', 'Confirm', 'UnConfirm', /*'Paid', 'UnPaid', 'Reconcile', 'UnReconcile',*/ 'Print'],
+        colModel: [{ name: 'code', index: 'code', width: 50, align: 'center', frozen: true },
+                  { name: 'name', index: 'name', width: 160, frozen: true },
                   {
                       name: 'read', index: 'read', width: 50, align: 'center', sortable: false,
                       editable: true,
@@ -311,30 +324,30 @@
                       edittype: 'checkbox', editoptions: { value: "1:0" },
                       formatter: cboxAllowUnConfirm, formatoptions: { disabled: false }
                   },
-                  {
-                      name: 'paid', index: 'paid', width: 60, align: 'center', sortable: false,
-                      editable: true,
-                      edittype: 'checkbox', editoptions: { value: "1:0" },
-                      formatter: cboxAllowPaid, formatoptions: { disabled: false }
-                  },
-                  {
-                      name: 'unpaid', index: 'unpaid', width: 60, align: 'center', sortable: false,
-                      editable: true,
-                      edittype: 'checkbox', editoptions: { value: "1:0" },
-                      formatter: cboxAllowUnPaid, formatoptions: { disabled: false }
-                  },
-                  {
-                      name: 'reconcile', index: 'reconcile', width: 60, align: 'center', sortable: false,
-                      editable: true,
-                      edittype: 'checkbox', editoptions: { value: "1:0" },
-                      formatter: cboxAllowReconcile, formatoptions: { disabled: false }
-                  },
-                  {
-                      name: 'unreconcile', index: 'unreconcile', width: 60, align: 'center', sortable: false,
-                      editable: true,
-                      edittype: 'checkbox', editoptions: { value: "1:0" },
-                      formatter: cboxAllowUnReconcile, formatoptions: { disabled: false }
-                  },
+                  //{
+                  //    name: 'paid', index: 'paid', width: 60, align: 'center', sortable: false,
+                  //    editable: true,
+                  //    edittype: 'checkbox', editoptions: { value: "1:0" },
+                  //    formatter: cboxAllowPaid, formatoptions: { disabled: false }
+                  //},
+                  //{
+                  //    name: 'unpaid', index: 'unpaid', width: 60, align: 'center', sortable: false,
+                  //    editable: true,
+                  //    edittype: 'checkbox', editoptions: { value: "1:0" },
+                  //    formatter: cboxAllowUnPaid, formatoptions: { disabled: false }
+                  //},
+                  //{
+                  //    name: 'reconcile', index: 'reconcile', width: 60, align: 'center', sortable: false,
+                  //    editable: true,
+                  //    edittype: 'checkbox', editoptions: { value: "1:0" },
+                  //    formatter: cboxAllowReconcile, formatoptions: { disabled: false }
+                  //},
+                  //{
+                  //    name: 'unreconcile', index: 'unreconcile', width: 60, align: 'center', sortable: false,
+                  //    editable: true,
+                  //    edittype: 'checkbox', editoptions: { value: "1:0" },
+                  //    formatter: cboxAllowUnReconcile, formatoptions: { disabled: false }
+                  //},
                   {
                       name: 'print', index: 'print', width: 50, align: 'center', sortable: false,
                       editable: true,
@@ -354,14 +367,14 @@
     $("#tbl_access_master").jqGrid('navGrid', '#toolbar_lookup_table_so_container', { del: false, add: false, edit: false, search: false });
     // END Table User Access Group - Master
 
-    // Table User Access Group - File
+    // Table User Access Group - Transaction
     jQuery("#tbl_access_transaction").jqGrid({
        // url: base_url + 'index.html',
         datatype: "json",
         mtype: 'GET',
-        colNames: ['Code', 'Name', 'View', 'Create', 'Edit', 'Delete', 'Confirm', 'UnConfirm', 'Paid', 'UnPaid', 'Reconcile', 'UnReconcile', 'Print'],
-        colModel: [{ name: 'code', index: 'code', width: 50, align: 'center' },
-                  { name: 'name', index: 'name', width: 160 },
+        colNames: ['Code', 'Name', 'View', 'Create', 'Edit', 'Delete', 'Confirm', 'UnConfirm', 'Paid', 'UnPaid', 'Reconcile', 'UnReconcile', 'Manual Pricing', 'Print'],
+        colModel: [{ name: 'code', index: 'code', width: 50, align: 'center', frozen: true },
+                  { name: 'name', index: 'name', width: 160, frozen: true },
                   {
                       name: 'read', index: 'read', width: 50, align: 'center', sortable: false,
                       editable: true,
@@ -417,10 +430,16 @@
                       formatter: cboxAllowReconcile, formatoptions: { disabled: false }
                   },
                   {
-                      name: 'unreconcile', index: 'unreconcile', width: 60, align: 'center', sortable: false,
+                      name: 'unreconcile', index: 'unreconcile', width: 65, align: 'center', sortable: false,
                       editable: true,
                       edittype: 'checkbox', editoptions: { value: "1:0" },
                       formatter: cboxAllowUnReconcile, formatoptions: { disabled: false }
+                  },
+                  {
+                      name: 'manualpricing', index: 'manualpricing', width: 85, align: 'center', sortable: false,
+                      editable: true,
+                      edittype: 'checkbox', editoptions: { value: "1:0" },
+                      formatter: cboxAllowManualPricing, formatoptions: { disabled: false }
                   },
                   {
                       name: 'print', index: 'print', width: 50, align: 'center', sortable: false,
@@ -446,9 +465,9 @@
       // url: base_url + 'index.html',
         datatype: "json",
         mtype: 'GET',
-        colNames: ['Code', 'Name', 'View', 'Create', 'Edit', 'Delete', 'Confirm', 'UnConfirm', 'Paid', 'UnPaid', 'Reconcile', 'UnReconcile', 'Print'],
-        colModel: [{ name: 'code', index: 'code', width: 50, align: 'center' },
-                  { name: 'name', index: 'name', width: 160 },
+        colNames: ['Code', 'Name', 'View', 'Create', 'Edit', 'Delete', 'Confirm', 'UnConfirm', /*'Paid', 'UnPaid', 'Reconcile', 'UnReconcile',*/ 'Print'],
+        colModel: [{ name: 'code', index: 'code', width: 50, align: 'center', frozen: true },
+                  { name: 'name', index: 'name', width: 160, frozen: true },
                   {
                       name: 'read', index: 'read', width: 50, align: 'center', sortable: false,
                       editable: true,
@@ -485,30 +504,30 @@
                       edittype: 'checkbox', editoptions: { value: "1:0" },
                       formatter: cboxAllowUnConfirm, formatoptions: { disabled: false }
                   },
-                  {
-                      name: 'paid', index: 'paid', width: 60, align: 'center', sortable: false,
-                      editable: true,
-                      edittype: 'checkbox', editoptions: { value: "1:0" },
-                      formatter: cboxAllowPaid, formatoptions: { disabled: false }
-                  },
-                  {
-                      name: 'unpaid', index: 'unpaid', width: 60, align: 'center', sortable: false,
-                      editable: true,
-                      edittype: 'checkbox', editoptions: { value: "1:0" },
-                      formatter: cboxAllowUnPaid, formatoptions: { disabled: false }
-                  },
-                  {
-                      name: 'reconcile', index: 'reconcile', width: 60, align: 'center', sortable: false,
-                      editable: true,
-                      edittype: 'checkbox', editoptions: { value: "1:0" },
-                      formatter: cboxAllowReconcile, formatoptions: { disabled: false }
-                  },
-                  {
-                      name: 'unreconcile', index: 'unreconcile', width: 60, align: 'center', sortable: false,
-                      editable: true,
-                      edittype: 'checkbox', editoptions: { value: "1:0" },
-                      formatter: cboxAllowUnReconcile, formatoptions: { disabled: false }
-                  },
+                  //{
+                  //    name: 'paid', index: 'paid', width: 60, align: 'center', sortable: false,
+                  //    editable: true,
+                  //    edittype: 'checkbox', editoptions: { value: "1:0" },
+                  //    formatter: cboxAllowPaid, formatoptions: { disabled: false }
+                  //},
+                  //{
+                  //    name: 'unpaid', index: 'unpaid', width: 60, align: 'center', sortable: false,
+                  //    editable: true,
+                  //    edittype: 'checkbox', editoptions: { value: "1:0" },
+                  //    formatter: cboxAllowUnPaid, formatoptions: { disabled: false }
+                  //},
+                  //{
+                  //    name: 'reconcile', index: 'reconcile', width: 60, align: 'center', sortable: false,
+                  //    editable: true,
+                  //    edittype: 'checkbox', editoptions: { value: "1:0" },
+                  //    formatter: cboxAllowReconcile, formatoptions: { disabled: false }
+                  //},
+                  //{
+                  //    name: 'unreconcile', index: 'unreconcile', width: 60, align: 'center', sortable: false,
+                  //    editable: true,
+                  //    edittype: 'checkbox', editoptions: { value: "1:0" },
+                  //    formatter: cboxAllowUnReconcile, formatoptions: { disabled: false }
+                  //},
                   {
                       name: 'print', index: 'print', width: 50, align: 'center', sortable: false,
                       editable: true,
@@ -533,7 +552,7 @@
         //url: base_url + 'index.html',
         datatype: "json",
         mtype: 'GET',
-        colNames: ['Code', 'Name', 'View', 'Create', 'Edit', 'Delete', 'Confirm', 'UnConfirm', 'Paid', 'UnPaid', 'Reconcile', 'UnReconcile', 'Print'],
+        colNames: ['Code', 'Name', 'View', 'Create', 'Edit', 'Delete', 'Confirm', 'UnConfirm', /*'Paid', 'UnPaid', 'Reconcile', 'UnReconcile',*/ 'Print'],
         colModel: [{ name: 'code', index: 'code', width: 50, align: 'center' },
                   { name: 'name', index: 'name', width: 160 },
                   {
@@ -572,30 +591,30 @@
                       edittype: 'checkbox', editoptions: { value: "1:0" },
                       formatter: cboxAllowUnConfirm, formatoptions: { disabled: false }
                   },
-                  {
-                      name: 'paid', index: 'paid', width: 60, align: 'center', sortable: false,
-                      editable: true,
-                      edittype: 'checkbox', editoptions: { value: "1:0" },
-                      formatter: cboxAllowPaid, formatoptions: { disabled: false }
-                  },
-                  {
-                      name: 'unpaid', index: 'unpaid', width: 60, align: 'center', sortable: false,
-                      editable: true,
-                      edittype: 'checkbox', editoptions: { value: "1:0" },
-                      formatter: cboxAllowUnPaid, formatoptions: { disabled: false }
-                  },
-                  {
-                      name: 'reconcile', index: 'reconcile', width: 60, align: 'center', sortable: false,
-                      editable: true,
-                      edittype: 'checkbox', editoptions: { value: "1:0" },
-                      formatter: cboxAllowReconcile, formatoptions: { disabled: false }
-                  },
-                  {
-                      name: 'unreconcile', index: 'unreconcile', width: 60, align: 'center', sortable: false,
-                      editable: true,
-                      edittype: 'checkbox', editoptions: { value: "1:0" },
-                      formatter: cboxAllowUnReconcile, formatoptions: { disabled: false }
-                  },
+                  //{
+                  //    name: 'paid', index: 'paid', width: 60, align: 'center', sortable: false,
+                  //    editable: true,
+                  //    edittype: 'checkbox', editoptions: { value: "1:0" },
+                  //    formatter: cboxAllowPaid, formatoptions: { disabled: false }
+                  //},
+                  //{
+                  //    name: 'unpaid', index: 'unpaid', width: 60, align: 'center', sortable: false,
+                  //    editable: true,
+                  //    edittype: 'checkbox', editoptions: { value: "1:0" },
+                  //    formatter: cboxAllowUnPaid, formatoptions: { disabled: false }
+                  //},
+                  //{
+                  //    name: 'reconcile', index: 'reconcile', width: 60, align: 'center', sortable: false,
+                  //    editable: true,
+                  //    edittype: 'checkbox', editoptions: { value: "1:0" },
+                  //    formatter: cboxAllowReconcile, formatoptions: { disabled: false }
+                  //},
+                  //{
+                  //    name: 'unreconcile', index: 'unreconcile', width: 60, align: 'center', sortable: false,
+                  //    editable: true,
+                  //    edittype: 'checkbox', editoptions: { value: "1:0" },
+                  //    formatter: cboxAllowUnReconcile, formatoptions: { disabled: false }
+                  //},
                   {
                       name: 'print', index: 'print', width: 50, align: 'center', sortable: false,
                       editable: true,
@@ -615,20 +634,25 @@
     $("#tbl_access_setting").jqGrid('navGrid', '#toolbar_lookup_table_so_container', { del: false, add: false, edit: false, search: false });
     // END Table User Access Group - Setting
 
+    function cboxIsAdmin(cellvalue, options, rowObject) {
+        return '<input name="cbIsAdmin" disabled rel="' + rowObject.code + '" type="checkbox"' + (cellvalue ? ' checked="checked"' : '') +
+            '/>';
+    }
+
     // Table User List
     jQuery("#tbl_users").jqGrid({
         url: base_url + 'User/GetList',
         datatype: "json",
-        colNames: ['Code', 'UserName', 'Name', 'Description', 'Is Admin'],
-        colModel: [{ name: 'usercode', index: 'usercode', width: 80 },
+        colNames: ['ID', 'UserName', 'Name', 'Description', 'Is Admin'],
+        colModel: [{ name: 'id', index: 'id', width: 50 },
                   { name: 'username', index: 'username', width: 100 },
-                  { name: 'department', index: 'department', width: 150 },
-                  { name: 'title', index: 'title', width: 150 },
+                  { name: 'name', index: 'name', width: 150 },
+                  { name: 'description', index: 'description', width: 150 },
                   {
                       name: 'isadmin', index: 'isadmin', width: 60, align: 'center', sortable: false,
                       editable: true,
                       edittype: 'checkbox', editoptions: { value: "1:0" },
-                      formatter: "checkbox", formatoptions: { disabled: true }
+                      formatter: cboxIsAdmin, formatoptions: { disabled: true }
                   }
         ],
         onSelectRow: function (id) {

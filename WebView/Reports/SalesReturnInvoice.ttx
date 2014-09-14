@@ -15,3 +15,4 @@ GlobalDiscount	Number
 Tax	Number		
 Allowance	Currency		
 User	String	80	
+Description	String	255	

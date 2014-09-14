@@ -51,6 +51,7 @@ namespace WebView
                 if (userAccess != null) 
                 {
                     switch (Role.ToLower()) {
+                        case "manualpricing": return userAccess.AllowSpecialPricing;
                         case "view" : return userAccess.AllowView;
                         case "create" : return userAccess.AllowCreate;
                         case "edit" : return userAccess.AllowEdit;

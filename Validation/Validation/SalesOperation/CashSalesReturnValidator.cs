@@ -25,10 +25,10 @@ namespace Validation.Validation
             {
                 cashSalesReturn.Errors.Add("ConfirmationDate", "Tidak ada");
             }
-            else if (cashSalesReturn.ConfirmationDate.GetValueOrDefault().Date < cashSalesReturn.ReturnDate.GetValueOrDefault().Date)
-            {
-                cashSalesReturn.Errors.Add("ConfirmationDate", "Harus lebih besar atau sama dengan Return Date");
-            }
+            //else if (cashSalesReturn.ConfirmationDate.GetValueOrDefault().Date.AddDays(1) < cashSalesReturn.ReturnDate.GetValueOrDefault().Date)
+            //{
+            //    cashSalesReturn.Errors.Add("ConfirmationDate", "Harus lebih besar atau sama dengan Return Date");
+            //}
             return cashSalesReturn;
         }
 

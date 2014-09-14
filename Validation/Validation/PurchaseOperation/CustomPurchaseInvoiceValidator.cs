@@ -38,10 +38,10 @@ namespace Validation.Validation
             {
                 customPurchaseInvoice.Errors.Add("ConfirmationDate", "Tidak ada");
             }
-            else if (customPurchaseInvoice.ConfirmationDate.GetValueOrDefault().Date < customPurchaseInvoice.PurchaseDate.Date)
-            {
-                customPurchaseInvoice.Errors.Add("ConfirmationDate", "Harus lebih besar atau sama dengan Purchase Date");
-            }
+            //else if (customPurchaseInvoice.ConfirmationDate.GetValueOrDefault().Date.AddDays(1) < customPurchaseInvoice.PurchaseDate.Date)
+            //{
+            //    customPurchaseInvoice.Errors.Add("ConfirmationDate", "Harus lebih besar atau sama dengan Purchase Date");
+            //}
             return customPurchaseInvoice;
         }
 

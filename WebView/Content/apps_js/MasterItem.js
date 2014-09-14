@@ -237,8 +237,8 @@
             type: 'POST',
             url: submitURL,
             data: JSON.stringify({
-                Id: id, Name: $("#Name").val(), ItemTypeId: $("#ItemTypeId").val(), SellingPrice : $("#SellingPrice").val(),
-                Sku: $("#SKU").val(), Category: $("#Category").val(), UoMId: $("#UoMId").val(), Margin: $("#Margin").val()
+                Id: id, Name: $("#Name").val(), ItemTypeId: $("#ItemTypeId").val(), SellingPrice : $("#SellingPrice").numberbox('getValue'),
+                Sku: $("#SKU").val(), Category: $("#Category").val(), UoMId: $("#UoMId").val(), Margin: $("#Margin").numberbox('getValue')
             }),
             async: false,
             cache: false,

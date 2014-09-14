@@ -372,6 +372,16 @@ namespace WebView.Controllers
                         Errors
                     }, JsonRequestBehavior.AllowGet);
                }
+                if((model.IsManualPriceAssignment || model.Discount > 0) && (!AuthenticationModel.IsAllowed("ManualPricing", Core.Constants.Constant.MenuName.CashSalesInvoice, Core.Constants.Constant.MenuGroupName.Transaction)))
+                {
+                    Dictionary<string, string> Errors = new Dictionary<string, string>();
+                    Errors.Add("Generic", "You are Not Allowed to Use Manual Pricing/Discount");
+
+                    return Json(new
+                    {
+                        Errors
+                    }, JsonRequestBehavior.AllowGet);
+               }
                 model = _cashSalesInvoiceDetailService.CreateObject(model, _cashSalesInvoiceService, _itemService, _warehouseItemService, _quantityPricingService);
                 total = _cashSalesInvoiceService.GetObjectById(model.CashSalesInvoiceId).Total;
             }
@@ -450,6 +460,16 @@ namespace WebView.Controllers
                 {
                     Dictionary<string, string> Errors = new Dictionary<string, string>();
                     Errors.Add("Generic", "You are Not Allowed to Edit record");
+
+                    return Json(new
+                    {
+                        Errors
+                    }, JsonRequestBehavior.AllowGet);
+                }
+                if ((model.IsManualPriceAssignment || model.Discount > 0) && (!AuthenticationModel.IsAllowed("ManualPricing", Core.Constants.Constant.MenuName.CashSalesInvoice, Core.Constants.Constant.MenuGroupName.Transaction)))
+                {
+                    Dictionary<string, string> Errors = new Dictionary<string, string>();
+                    Errors.Add("Generic", "You are Not Allowed to Use Manual Pricing/Discount");
 
                     return Json(new
                     {

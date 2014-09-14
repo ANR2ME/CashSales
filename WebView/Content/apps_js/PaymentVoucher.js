@@ -51,25 +51,25 @@
     $("#list").jqGrid({
         url: base_url + 'PaymentVoucher/GetList',
         datatype: "json",
-        colNames: ['ID', 'Code', 'Contact Id', 'Contact Name', 'CashBank Id', 'CashBank Name', 'Payment Date',
-                   'Is GBCH', 'Due Date', 'Is Bank','Total Amount','Is Reconciled','ReconciliationDate',
-                    'Is Confirmed', 'Confirmation Date', 'Created At', 'Updated At'],
+        colNames: ['ID', 'Code', 'Contact Id', 'Contact Name', 'Total Amount', 'CashBank Id', 'CashBank Name',
+                   'Is Bank', 'Is GBCH', 'Due Date', 'Is Reconciled', 'ReconciliationDate',
+                   'Is Confirmed', 'Confirmation Date', 'Payment Date', 'Created At', 'Updated At'],
         colModel: [
-    			  { name: 'id', index: 'id', width: 80, align: "center" },
+    			  { name: 'id', index: 'id', width: 50, align: "center" },
                   { name: 'code', index: 'code', width: 100 },
-				  { name: 'contactid', index: 'contactid', width: 100 },
+				  { name: 'contactid', index: 'contactid', width: 100, hidden: true },
                   { name: 'contact', index: 'contact', width: 100 },
-                  { name: 'cashbankid', index: 'cashbankid', width: 100 },
-                  { name: 'cashbank', index: 'cashbank', width: 100 },
-                  { name: 'paymentdate', index: 'paymentdate', width: 100, search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
-                  { name: 'isgbch', index: 'isgbch', width: 100 },
-                  { name: 'duedate', index: 'duedate', width: 100, search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
-                  { name: 'isbank', index: 'isbank', width: 100 },
                   { name: 'totalamount', index: 'totalamount', width: 100, formatter: 'currency', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: false },
-                  { name: 'isreconciled', index: 'isreconciled', width: 100 },
-                  { name: 'reconciliationdate', index: 'reconciliationdate', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
-                  { name: 'isconfirmed', index: 'isconfirmed', width: 100 },
-                  { name: 'confirmationdate', index: 'confirmationdate', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
+                  { name: 'cashbankid', index: 'cashbankid', width: 100, hidden: true },
+                  { name: 'cashbank', index: 'cashbank', width: 100 },
+                  { name: 'isbank', index: 'isbank', width: 100, stype: 'select', editoptions: { value: ':All;true:Yes;false:No' } },
+                  { name: 'isgbch', index: 'isgbch', width: 100, stype: 'select', editoptions: { value: ':All;true:Yes;false:No' } },
+                  { name: 'duedate', index: 'duedate', width: 100, search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
+                  { name: 'isreconciled', index: 'isreconciled', width: 100, stype: 'select', editoptions: { value: ':All;true:Yes;false:No' } },
+                  { name: 'reconciliationdate', index: 'reconciliationdate', hidden:true, search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
+                  { name: 'isconfirmed', index: 'isconfirmed', width: 100, stype: 'select', editoptions: { value: ':All;true:Yes;false:No' } },
+                  { name: 'confirmationdate', index: 'confirmationdate', hidden:true, search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
+                  { name: 'paymentdate', index: 'paymentdate', width: 100, search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
                   { name: 'createdat', index: 'createdat', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
 				  { name: 'updateat', index: 'updateat', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
         ],
@@ -91,7 +91,7 @@
 		          var cl = ids[i];
 		          rowIsConfirmed = $(this).getRowData(cl).isconfirmed;
 		          if (rowIsConfirmed == 'true') {
-		              rowIsConfirmed = "YES";
+		              rowIsConfirmed = "YES, " + $(this).getRowData(cl).confirmationdate;
 		          } else {
 		              rowIsConfirmed = "NO";
 		          }
@@ -115,7 +115,7 @@
 
 		          rowIsReconciled= $(this).getRowData(cl).isreconciled;
 		          if (rowIsReconciled == 'true') {
-		              rowIsReconciled = "YES";
+		              rowIsReconciled = "YES, " + $(this).getRowData(cl).reconciliationdate;
 		          } else {
 		              rowIsReconciled = "NO";
 		          }
@@ -141,7 +141,7 @@
     $('#btn_add_new').click(function () {
         ClearData();
         clearForm('#frm');
-
+        $('#TotalAmount').numberbox('setValue', '');
         $('#PaymentDate').datebox('setValue', $.datepicker.formatDate('mm/dd/yy', new Date()));
         $('#DueDate').datebox('setValue', $.datepicker.formatDate('mm/dd/yy', new Date()));
         $('#btnContact').removeAttr('disabled');
@@ -187,7 +187,7 @@
                             $('#Contact').val(result.Contact);
                             $('#CashBankId').val(result.CashBankId);
                             $('#CashBank').val(result.CashBank);
-                            $('#TotalAmount').val(result.TotalAmount);
+                            $('#TotalAmount').numberbox('setValue', result.TotalAmount);
                             var e = document.getElementById("IsGBCH");
                             if (result.IsGBCH == true) {
                                 e.selectedIndex = 0;
@@ -258,7 +258,7 @@
                             $('#Contact').val(result.Contact);
                             $('#CashBankId').val(result.CashBankId);
                             $('#CashBank').val(result.CashBank);
-                            $('#TotalAmount').val(result.TotalAmount);
+                            $('#TotalAmount').numberbox('setValue', result.TotalAmount);
                             var e = document.getElementById("IsGBCH");
                             if (result.IsGBCH == true) {
                                 e.selectedIndex = 0;
@@ -281,7 +281,7 @@
                             $('#PaymentDateDiv').hide();
                             $('#DueDateDiv2').show();
                             $('#DueDateDiv').hide();
-                            $('#form_btn_save').hide();
+                            //$('#form_btn_save').hide();
                             $('#btnContact').removeAttr('disabled');
                             $('#btnCashBank').removeAttr('disabled');
                             $('#TotalAmount').removeAttr('disabled');
@@ -304,6 +304,7 @@
             var ret = jQuery("#list").jqGrid('getRowData', id);
             $('#ConfirmationDate').datebox('setValue', $.datepicker.formatDate('mm/dd/yy', new Date()));
             $('#idconfirm').val(ret.id);
+            $('#confirmCode').val(ret.code);
             $("#confirm_div").dialog("open");
         } else {
             $.messager.alert('Information', 'Please Select Data...!!', 'info');
@@ -387,6 +388,7 @@
             var ret = jQuery("#list").jqGrid('getRowData', id);
             $('#ConfirmationDate').datebox('setValue', $.datepicker.formatDate('mm/dd/yy', new Date()));
             $('#idreconcile').val(ret.id);
+            $('#reconcileCode').val(ret.code);
             $("#reconcile_div").dialog("open");
         } else {
             $.messager.alert('Information', 'Please Select Data...!!', 'info');
@@ -589,7 +591,7 @@
                   { name: 'payableid', index: 'payableid', width: 130, sortable: false, hidden: true },
                   { name: 'payable', index: 'payable', width: 130, sortable: false },
                   { name: 'amount', index: 'amount', width: 100, formatter: 'currency', formatoptions: { decimalSeparator: ".", thousandsSeparator: ",", decimalPlaces: 2, prefix: "", suffix: "", defaultValue: '0.00' }, sortable: false },
-                  { name: 'description', index: 'itemname', width: 80, sortable: false }
+                  { name: 'description', index: 'description', width: 200, sortable: false }
         ],
         //page: '1',
         //pager: $('#pagerdetail'),
@@ -612,6 +614,7 @@
     $('#btn_add_new_detail').click(function () {
         ClearData();
         clearForm('#item_div');
+        $('#Amount').numberbox('setValue', '');
         $('#item_div').dialog('open');
     });
 
@@ -639,7 +642,8 @@
                             $("#item_btn_submit").data('kode', result.Id);
                             $('#PayableId').val(result.PayableId);
                             $('#Payable').val(result.Payable);
-                            $('#Amount').val(result.Amount);
+                            $('#detailCode').val(result.Code);
+                            $('#Amount').numberbox('setValue', result.Amount);
                             $('#Description').val(result.Description);
                             $('#PaymentVoucherDetailId').val(result.PaymentVoucherDetailId);
                             $('#item_div').dialog('open');
@@ -764,11 +768,16 @@
         url: base_url,
         datatype: "json",
         mtype: 'GET',
-        colNames: ['ID', 'Name'
+        colNames: ['ID', 'Name', 'Address', 'Contact No.', 'PIC', 'PIC Contact No.', 'Email'
         ],
         colModel: [
-    			  { name: 'id', index: 'id', width: 80, align: "center" },
+    			  { name: 'id', index: 'id', hidden:true, width: 50, align: "center" },
                   { name: 'name', index: 'name', width: 100 },
+                  { name: 'address', index: 'address', width: 250 },
+                  { name: 'contactno', index: 'contactno', width: 150 },
+                  { name: 'pic', index: 'pic', width: 180 },
+                  { name: 'piccontactno', index: 'piccontactno', width: 150 },
+                  { name: 'email', index: 'email', width: 180 },
         ],
         page: '1',
         pager: $('#lookup_pager_contact'),
@@ -821,11 +830,13 @@
         url: base_url,
         datatype: "json",
         mtype: 'GET',
-        colNames: ['ID', 'Name'
+        colNames: ['ID', 'Name', 'Description', 'Amount',
         ],
         colModel: [
-    			  { name: 'id', index: 'id', width: 80, align: "center" },
+    			  { name: 'id', index: 'id', hidden:true, width: 50, align: "center" },
                   { name: 'name', index: 'name', width: 100 },
+                  { name: 'description', index: 'description', width: 250 },
+                  { name: 'amount', index: 'amount', width: 150, align: "right", formatter: 'currency', formatoptions: { thousandsSeparator: ",", prefix: "", suffix: "", defaultValue: '0' } },
         ],
         page: '1',
         pager: $('#lookup_pager_cashbank'),
@@ -878,19 +889,20 @@
         url: base_url,
         datatype: "json",
         mtype: 'GET',
-        colNames: ['Code', 'Contact Id', 'Contact Name', 'Payable Source', 'Payable Source Id',
-                    'Due Date', 'Amount', 'Remaining Amount', 'PendingClearanceAmount'
+        colNames: ['Code', 'Contact Id', 'Contact Name', 'Payable Source', 'Payable Source Id', 'Payable Source Code',
+                   'Amount', 'Remaining Amount', 'PendingClearanceAmount', 'Due Date',
                   ],
         colModel: [
                   { name: 'code', index: 'code', width: 100, sortable: false },
-                  { name: 'contactid', index: 'contactid', width: 100, sortable: false },
+                  { name: 'contactid', index: 'contactid', hidden:true, width: 100, sortable: false },
                   { name: 'contact', index: 'contact', width: 100, sortable: false },
                   { name: 'payablesource', index: 'payablesource', width: 100, sortable: false },
-                  { name: 'payablesourceid', index: 'payablesourceid', width: 100, sortable: false },
-                  { name: 'duedate', index: 'duedate', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' }, sortable: false },
+                  { name: 'payablesourceid', index: 'payablesourceid', hidden: true, width: 100, sortable: false },
+                  { name: 'payablesourcecode', index: 'payablesourcecode', width: 100, sortable: false },
                   { name: 'amount', index: 'amount', width: 100, formatter: 'currency', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: false },
                   { name: 'remainingamount', index: 'remainingamount', width: 100, formatter: 'currency', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: false },
                   { name: 'pendingclearanceamount', index: 'pendingclearanceamount', width: 100, formatter: 'currency', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: false },
+                  { name: 'duedate', index: 'duedate', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' }, sortable: false },
         ],
         page: '1',
         pager: $('#lookup_pager_payable'),

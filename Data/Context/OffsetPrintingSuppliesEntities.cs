@@ -24,7 +24,7 @@ namespace Data.Context
             IList<String> tableNames = new List<String>();
 
             IList<String> userroleNames = new List<String>() 
-                                        { "UserAccess", "UserMenu", "UserAccount" };
+                                        { "UserMenu", "UserAccount", "UserAccess" };
 
             IList<String> accountingNames = new List<String>() 
                                         { "GeneralLedgerJournal", "Closing", "ValidComb", "Account" };

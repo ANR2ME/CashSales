@@ -58,9 +58,9 @@ namespace WebView.Controllers
                              model.Username,
                              model.Name,
                              model.Description,
+                             model.IsAdmin,
                              model.CreatedAt,
                              model.UpdatedAt,
-                             model.IsAdmin
                          }).Where(filter).OrderBy(sidx + " " + sord); //.ToList();
 
             var list = query.AsEnumerable();
@@ -96,9 +96,9 @@ namespace WebView.Controllers
                             model.Username,
                             model.Name,
                             model.Description,
+                            model.IsAdmin,
                             model.CreatedAt,
                             model.UpdatedAt,
-                            model.IsAdmin
                       }
                     }).ToArray()
             }, JsonRequestBehavior.AllowGet);

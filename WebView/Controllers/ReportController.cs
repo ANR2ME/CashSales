@@ -81,6 +81,11 @@ namespace WebView.Controllers
 
         public ActionResult Item()
         {
+            if (!AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.Item, Core.Constants.Constant.MenuGroupName.Report))
+            {
+                return Content(Core.Constants.Constant.PageViewNotAllowed);
+            }
+
             return View();
         }
 
@@ -131,6 +136,11 @@ namespace WebView.Controllers
 
         public ActionResult ProfitLoss()
         {
+            if (!AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.ProfitLoss, Core.Constants.Constant.MenuGroupName.Report))
+            {
+                return Content(Core.Constants.Constant.PageViewNotAllowed);
+            }
+
             return View();
         }
 
@@ -193,6 +203,11 @@ namespace WebView.Controllers
 
         public ActionResult Sales()
         {
+            if (!AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.Sales, Core.Constants.Constant.MenuGroupName.Report))
+            {
+                return Content(Core.Constants.Constant.PageViewNotAllowed);
+            }
+
             return View();
         }
 
@@ -224,6 +239,8 @@ namespace WebView.Controllers
                          }).ToList();
 
             var rd = new ReportDocument();
+
+            if (!query.Any()) return Content("");
 
             //Loading Report
             rd.Load(Server.MapPath("~/") + "Reports/Sales.rpt");
@@ -340,6 +357,7 @@ namespace WebView.Controllers
                              CompanyAddress = company.Address,
                              CompanyContactNo = company.ContactNo,
                              User = user,
+                             Description = model.CustomPurchaseInvoice.Description,
                          }).ToList();
 
             var rd = new ReportDocument();
@@ -385,6 +403,7 @@ namespace WebView.Controllers
                              CompanyAddress = company.Address,
                              CompanyContactNo = company.ContactNo,
                              User = user,
+                             Description = model.CashSalesInvoice.Description,
                          }).ToList();
 
             var rd = new ReportDocument();
@@ -432,6 +451,7 @@ namespace WebView.Controllers
                              CompanyAddress = company.Address,
                              CompanyContactNo = company.ContactNo,
                              User = user,
+                             Description = model.CashSalesReturn.Description,
                          }).ToList();
 
             var rd = new ReportDocument();

@@ -51,8 +51,8 @@ namespace WebView.Controllers
                              model.Name,
                              model.Address,
                              model.ContactNo,
-                             model.Logo,
                              model.Email,
+                             model.Logo,
                              model.CreatedAt,
                              model.UpdatedAt,
                          }).Where(filter).OrderBy(sidx + " " + sord); //.ToList();
@@ -90,8 +90,8 @@ namespace WebView.Controllers
                             model.Name,
                             model.Address,
                             model.ContactNo,
-                            model.Logo,
                             model.Email,
+                            model.Logo,
                             model.CreatedAt,
                             model.UpdatedAt,
                       }

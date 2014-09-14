@@ -990,6 +990,7 @@
     <None Include="Properties\PublishProfiles\sampleapp.pubxml" />
     <Content Include="Reports\Item.rpt" />
     <Content Include="Reports\Item.ttx" />
+    <Content Include="Reports\Logo.png" />
     <Content Include="Reports\ProfitLoss.rpt" />
     <Content Include="Reports\ProfitLoss.ttx" />
     <Content Include="Reports\Sales.rpt" />

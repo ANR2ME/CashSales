@@ -119,7 +119,7 @@ namespace Service.Service
             {
                 CashBank cashBank = _cashBankService.GetObjectById((int)retailPurchaseInvoice.CashBankId.GetValueOrDefault());
                 retailPurchaseInvoice.IsBank = cashBank.IsBank;
-                
+
                 if (!retailPurchaseInvoice.IsGBCH)
                 {
                     retailPurchaseInvoice.GBCH_No = null;
@@ -133,11 +133,12 @@ namespace Service.Service
                 PaymentVoucher paymentVoucher = _paymentVoucherService.CreateObject((int)retailPurchaseInvoice.CashBankId.GetValueOrDefault(), retailPurchaseInvoice.ContactId, DateTime.Now, retailPurchaseInvoice.Total,
                                                                             retailPurchaseInvoice.IsGBCH, (DateTime)retailPurchaseInvoice.DueDate.GetValueOrDefault(), retailPurchaseInvoice.IsBank, _paymentVoucherDetailService,
                                                                             _payableService, _contactService, _cashBankService);
-                PaymentVoucherDetail paymentVoucherDetail = _paymentVoucherDetailService.CreateObject(paymentVoucher.Id, payable.Id, (decimal)retailPurchaseInvoice.AmountPaid, 
+                PaymentVoucherDetail paymentVoucherDetail = _paymentVoucherDetailService.CreateObject(paymentVoucher.Id, payable.Id, (decimal)retailPurchaseInvoice.AmountPaid.GetValueOrDefault(),
                                                                             "Automatic Payment", _paymentVoucherService, _cashBankService, _payableService);
                 retailPurchaseInvoice = _repository.PaidObject(retailPurchaseInvoice);
                 _paymentVoucherService.ConfirmObject(paymentVoucher, (DateTime)retailPurchaseInvoice.ConfirmationDate.GetValueOrDefault(), _paymentVoucherDetailService, _cashBankService, _payableService, _cashMutationService);
             }
+            
             return retailPurchaseInvoice;
         }
 

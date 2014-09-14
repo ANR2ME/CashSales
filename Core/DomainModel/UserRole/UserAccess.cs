@@ -23,6 +23,7 @@ namespace Core.DomainModel
         public bool AllowUnreconcile { get; set; }
         public bool AllowPrint { get; set; }
         public bool AllowUndelete { get; set; }
+        public bool AllowSpecialPricing { get; set; }
 
         public bool IsDeleted { get; set; }
         public Nullable<DateTime> DeletedAt { get; set; }

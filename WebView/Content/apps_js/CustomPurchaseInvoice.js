@@ -486,7 +486,9 @@
 	        //document.getElementById('IsGBCH').value = 'true';
 	        $('#GBCH_No').val(ret.gbchno);
 	        $('#GBCHDueDate2').val(ret.gbchduedate);
-	        //$('#GBCHDueDate').datebox('setValue', dateEnt(ret.gbchduedate));
+	        if (ret.gbchduedate != null && $.trim(ret.gbchduedate) != "") {
+	            $('#GBCHDueDate').datebox('setValue', $.datepicker.formatDate('mm/dd/yy', new Date(ret.gbchduedate)));
+	        }
 	        $('#idpaid').val(ret.id);
 	        var e = document.getElementById("IsGBCH");
 	        if (ret.isgbch == "NO") {

@@ -103,6 +103,7 @@ namespace Service.Service
                     userAccess.AllowUnpaid = true;
                     userAccess.AllowUnreconcile = true;
                     userAccess.AllowView = true;
+                    userAccess.AllowSpecialPricing = true;
                 }
                 CreateObject(userAccess, _userAccountService, _userMenuService);
                 if (!userAccess.Errors.Any()) count++;

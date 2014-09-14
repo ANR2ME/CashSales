@@ -58,7 +58,8 @@ namespace WebView.Controllers
                                 m.AllowReconcile,
                                 m.AllowUnconfirm,
                                 m.AllowUnpaid,
-                                m.AllowUnreconcile
+                                m.AllowUnreconcile,
+                                m.AllowSpecialPricing,
                             }).ToList();
                return Json(new
               {
@@ -111,6 +112,7 @@ namespace WebView.Controllers
                     case "UnPaid": data.AllowUnpaid = isAllow; break;
                     case "Reconcile": data.AllowReconcile = isAllow; break;
                     case "UnReconcile": data.AllowUnreconcile = isAllow; break;
+                    case "ManualPricing": data.AllowSpecialPricing = isAllow; break;
                     case "Print": data.AllowPrint = isAllow; break;
                 }
                 model = _userAccessService.UpdateObject(data, _userAccountService, _userMenuService);

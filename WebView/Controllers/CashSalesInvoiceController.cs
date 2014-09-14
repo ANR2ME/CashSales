@@ -521,6 +521,16 @@ namespace WebView.Controllers
                         Errors
                     }, JsonRequestBehavior.AllowGet);
                 }
+                if ((model.Discount > 0) && (!AuthenticationModel.IsAllowed("ManualPricing", Core.Constants.Constant.MenuName.CashSalesInvoice, Core.Constants.Constant.MenuGroupName.Transaction)))
+                {
+                    Dictionary<string, string> Errors = new Dictionary<string, string>();
+                    Errors.Add("Generic", "You are Not Allowed to Use Manual Pricing/Discount/Allowance");
+
+                    return Json(new
+                    {
+                        Errors
+                    }, JsonRequestBehavior.AllowGet);
+                }
 
                 var data = _cashSalesInvoiceService.GetObjectById(model.Id);
                 model = _cashSalesInvoiceService.ConfirmObject(data, model.ConfirmationDate.Value, model.Discount, model.Tax, _cashSalesInvoiceDetailService, 
@@ -593,6 +603,16 @@ namespace WebView.Controllers
                 {
                     Dictionary<string, string> Errors = new Dictionary<string, string>();
                     Errors.Add("Generic", "You are Not Allowed to Paid record");
+
+                    return Json(new
+                    {
+                        Errors
+                    }, JsonRequestBehavior.AllowGet);
+                }
+                if ((model.Allowance > 0) && (!AuthenticationModel.IsAllowed("ManualPricing", Core.Constants.Constant.MenuName.CashSalesInvoice, Core.Constants.Constant.MenuGroupName.Transaction)))
+                {
+                    Dictionary<string, string> Errors = new Dictionary<string, string>();
+                    Errors.Add("Generic", "You are Not Allowed to Use Manual Pricing/Discount/Allowance");
 
                     return Json(new
                     {

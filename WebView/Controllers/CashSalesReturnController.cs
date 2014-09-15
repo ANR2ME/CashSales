@@ -167,7 +167,7 @@ namespace WebView.Controllers
             if (filter == "") filter = "true";
 
             // Get Data
-            var q = _cashSalesReturnDetailService.GetQueryableObjectsByCashSalesReturnId(id).Include("CashSalesInvoiceDetail").Include("CashSalesReturn");
+            var q = _cashSalesReturnDetailService.GetQueryableObjectsByCashSalesReturnId(id).Include("CashSalesInvoiceDetail").Include("CashSalesReturn").Include("Item");
 
             var query = (from model in q
                          select new
@@ -178,6 +178,7 @@ namespace WebView.Controllers
                              cashsalesreturn = model.CashSalesReturn.Code,
                              model.CashSalesInvoiceDetailId,
                              cashsalesinvoicedetail = model.CashSalesInvoiceDetail.Code,
+                             item = model.CashSalesInvoiceDetail.Item.Name,
                              model.Quantity,
                              model.TotalPrice,
                          }).Where(filter).OrderBy(sidx + " " + sord); //.ToList();
@@ -216,6 +217,7 @@ namespace WebView.Controllers
                             model.cashsalesreturn,
                             model.CashSalesInvoiceDetailId,
                             model.cashsalesinvoicedetail,
+                            model.item,
                             model.Quantity,
                             model.TotalPrice,
                       }

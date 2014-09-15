@@ -611,7 +611,7 @@
 		scrollrows: true,
 		shrinkToFit: false,
 		sortorder: "DESC",
-		width: $(window).width() - 700,
+		width: $(window).width() - 850,
 		height: $(window).height() - 500,
 		gridComplete:
 		  function () {

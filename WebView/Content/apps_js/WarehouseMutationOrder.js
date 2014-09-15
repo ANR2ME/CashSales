@@ -586,7 +586,7 @@
         mtype: 'GET',
         colNames: ['Id', 'Code', 'Name', 'Description'],
         colModel: [
-                  { name: 'id', index: 'id', width: 80, align: 'right' },
+                  { name: 'id', index: 'id', hidden:true, width: 80, align: 'right' },
                   { name: 'code', index: 'code', width: 80 },
 				  { name: 'name', index: 'name', width: 80 },
                   { name: 'description', index: 'description', width: 250 },
@@ -645,7 +645,7 @@
         mtype: 'GET',
         colNames: ['Id', 'Code', 'Name', 'Description'],
         colModel: [
-                  { name: 'id', index: 'id', width: 80, align: 'right' },
+                  { name: 'id', index: 'id', hidden:true, width: 80, align: 'right' },
                   { name: 'code', index: 'code', width: 80 },
 				  { name: 'name', index: 'name', width: 80 },
                   { name: 'description', index: 'description', width: 250 },

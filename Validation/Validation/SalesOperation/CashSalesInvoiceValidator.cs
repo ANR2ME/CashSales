@@ -325,21 +325,23 @@ namespace Validation.Validation
             return cashSalesInvoice;
         }
 
-        public CashSalesInvoice VCreateObject(CashSalesInvoice cashSalesInvoice, IWarehouseService _warehouseService)
+        public CashSalesInvoice VCreateObject(CashSalesInvoice cashSalesInvoice, IWarehouseService _warehouseService, ICashBankService _cashBankService)
         {
+            VHasCashBank(cashSalesInvoice, _cashBankService);
+            if (!isValid(cashSalesInvoice)) { return cashSalesInvoice; }
             VHasSalesDate(cashSalesInvoice);
             if (!isValid(cashSalesInvoice)) { return cashSalesInvoice; }
             VHasWarehouse(cashSalesInvoice, _warehouseService);
             return cashSalesInvoice;
         }
 
-        public CashSalesInvoice VUpdateObject(CashSalesInvoice cashSalesInvoice, IWarehouseService _warehouseService)
+        public CashSalesInvoice VUpdateObject(CashSalesInvoice cashSalesInvoice, IWarehouseService _warehouseService, ICashBankService _cashBankService)
         {
             VIsNotDeleted(cashSalesInvoice);
             if (!isValid(cashSalesInvoice)) { return cashSalesInvoice; }
             VIsNotConfirmed(cashSalesInvoice);
             if (!isValid(cashSalesInvoice)) { return cashSalesInvoice; }
-            VCreateObject(cashSalesInvoice, _warehouseService);
+            VCreateObject(cashSalesInvoice, _warehouseService, _cashBankService);
             return cashSalesInvoice;
         }
 
@@ -353,9 +355,9 @@ namespace Validation.Validation
             return cashSalesInvoice;
         }
 
-        public bool ValidCreateObject(CashSalesInvoice cashSalesInvoice, IWarehouseService _warehouseService)
+        public bool ValidCreateObject(CashSalesInvoice cashSalesInvoice, IWarehouseService _warehouseService, ICashBankService _cashBankService)
         {
-            VCreateObject(cashSalesInvoice, _warehouseService);
+            VCreateObject(cashSalesInvoice, _warehouseService, _cashBankService);
             return isValid(cashSalesInvoice);
         }
 
@@ -389,10 +391,10 @@ namespace Validation.Validation
             return isValid(cashSalesInvoice);
         }
 
-        public bool ValidUpdateObject(CashSalesInvoice cashSalesInvoice, IWarehouseService _warehouseService)
+        public bool ValidUpdateObject(CashSalesInvoice cashSalesInvoice, IWarehouseService _warehouseService, ICashBankService _cashBankService)
         {
             cashSalesInvoice.Errors.Clear();
-            VUpdateObject(cashSalesInvoice, _warehouseService);
+            VUpdateObject(cashSalesInvoice, _warehouseService, _cashBankService);
             return isValid(cashSalesInvoice);
         }
 

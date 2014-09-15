@@ -11,7 +11,7 @@
             colNames: ['ID', 'Code', 'Name', 'Description', 'Created At', 'Updated At'],
             colModel: [
                       { name: 'id', index: 'id', width: 80, align: "center", frozen: true },
-                      { name: 'code', index: 'code', width: 80 },
+                      { name: 'code', index: 'code', width: 80, frozen: true },
                       { name: 'name', index: 'name', width: 200},
                       { name: 'description', index: 'description', width: 250 },
                       { name: 'createdat', index: 'createdat', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
@@ -62,7 +62,7 @@
                      'Pending Receival', 'Pending Delivery', 'Created At', 'Updated At'],
             colModel: [
                       { name: 'id', index: 'id', width: 80, align: "center", frozen: true },
-                      { name: 'sku', index: 'sku', width: 100 },
+                      { name: 'sku', index: 'sku', width: 100, frozen: true },
                       { name: 'name', index: 'name', width: 200 },
                       { name: 'itemtypeid', index: 'itemtypeid', width: 80, hidden: true },
                       { name: 'itemtype', index: 'itemtype', width: 200 },

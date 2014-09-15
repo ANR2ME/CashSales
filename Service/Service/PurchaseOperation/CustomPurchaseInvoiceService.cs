@@ -45,16 +45,16 @@ namespace Service.Service
             return _repository.GetObjectById(Id);
         }
 
-        public CustomPurchaseInvoice CreateObject(CustomPurchaseInvoice customPurchaseInvoice, IWarehouseService _warehouseService, IContactService _contactService)
+        public CustomPurchaseInvoice CreateObject(CustomPurchaseInvoice customPurchaseInvoice, IWarehouseService _warehouseService, IContactService _contactService, ICashBankService _cashBankService)
         {
             customPurchaseInvoice.Errors = new Dictionary<String, String>();
-            return (_validator.ValidCreateObject(customPurchaseInvoice, _warehouseService, _contactService) ? _repository.CreateObject(customPurchaseInvoice) : customPurchaseInvoice);
+            return (_validator.ValidCreateObject(customPurchaseInvoice, _warehouseService, _contactService, _cashBankService) ? _repository.CreateObject(customPurchaseInvoice) : customPurchaseInvoice);
         }
 
         public CustomPurchaseInvoice UpdateObject(CustomPurchaseInvoice customPurchaseInvoice, ICustomPurchaseInvoiceDetailService _customPurchaseInvoiceDetailService,
-                                                  IWarehouseService _warehouseService, IContactService _contactService)
+                                                  IWarehouseService _warehouseService, IContactService _contactService, ICashBankService _cashBankService)
         {
-            return (customPurchaseInvoice = _validator.ValidUpdateObject(customPurchaseInvoice, _customPurchaseInvoiceDetailService, _warehouseService, _contactService) ? _repository.UpdateObject(customPurchaseInvoice) : customPurchaseInvoice);
+            return (customPurchaseInvoice = _validator.ValidUpdateObject(customPurchaseInvoice, _customPurchaseInvoiceDetailService, _warehouseService, _contactService, _cashBankService) ? _repository.UpdateObject(customPurchaseInvoice) : customPurchaseInvoice);
         }
 
         public CustomPurchaseInvoice ConfirmObject(CustomPurchaseInvoice customPurchaseInvoice, DateTime ConfirmationDate, 

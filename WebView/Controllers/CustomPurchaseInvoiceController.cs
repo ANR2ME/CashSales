@@ -347,7 +347,7 @@ namespace WebView.Controllers
                     }, JsonRequestBehavior.AllowGet);
                 }
 
-                model = _customPurchaseInvoiceService.CreateObject(model, _warehouseService, _contactService);
+                model = _customPurchaseInvoiceService.CreateObject(model, _warehouseService, _contactService, _cashBankService);
             }
             catch (Exception ex)
             {
@@ -430,7 +430,7 @@ namespace WebView.Controllers
                 data.ContactId = model.ContactId;
                 data.CashBankId = model.CashBankId;
                 data.WarehouseId = model.WarehouseId;
-                model = _customPurchaseInvoiceService.UpdateObject(data, _customPurchaseInvoiceDetailService, _warehouseService, _contactService);
+                model = _customPurchaseInvoiceService.UpdateObject(data, _customPurchaseInvoiceDetailService, _warehouseService, _contactService, _cashBankService);
             }
             catch (Exception ex)
             {

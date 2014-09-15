@@ -735,11 +735,13 @@
 		url: base_url,
 		datatype: "json",
 		mtype: 'GET',
-		colNames: ['Id', 'Name', 'Description'],
+		colNames: ['Id', 'Name', 'Description', 'Amount'],
 		colModel: [
 				  { name: 'id', index: 'id', width: 80, align: 'right', hidden:true },
 				  { name: 'name', index: 'name', width: 200 },
-				  { name: 'description', index: 'description', width: 200 }],
+				  { name: 'description', index: 'description', width: 200 },
+                  { name: 'amount', index: 'amount', width: 150, align: "right", formatter: 'currency', formatoptions: { decimalSeparator: ".", thousandsSeparator: ",", decimalPlaces: 0, prefix: "", suffix: "", defaultValue: '0.00' } },
+		],
 		page: '1',
 		pager: $('#lookup_pager_cashbank'),
 		rowNum: 20,
@@ -780,7 +782,7 @@
 
 	// -------------------------------------------------------Look Up CashSalesInvoice-------------------------------------------------------
 	$('#btnCashSalesInvoice').click(function () {
-		var lookUpURL = base_url + 'CashSalesInvoice/GetList';
+		var lookUpURL = base_url + 'CashSalesInvoice/GetPaidList';
 		var lookupGrid = $('#lookup_table_cashsalesinvoice');
 		lookupGrid.setGridParam({
 			url: lookUpURL
@@ -837,7 +839,7 @@
 
 	// -------------------------------------------------------Look Up cashsalesinvoicedetail-------------------------------------------------------
 	$('#btnCashSalesInvoiceDetail').click(function () {
-	    var lookUpURL = base_url + 'CashSalesInvoice/GetListDetail?Id=' + $('#CashSalesInvoiceId').val();
+	    var lookUpURL = base_url + 'CashSalesInvoice/GetPaidListDetail?Id=' + $('#CashSalesInvoiceId').val();
 		var lookupGrid = $('#lookup_table_cashsalesinvoicedetail');
 		lookupGrid.setGridParam({
 			url: lookUpURL

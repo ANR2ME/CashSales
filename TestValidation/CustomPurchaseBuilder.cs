@@ -337,7 +337,7 @@ namespace TestValidation
                 DueDate = DateTime.Today.Subtract(dueDate),
                 ContactId = contact.Id,
             };
-            _customPurchaseInvoiceService.CreateObject(cpi1, _warehouseService, _contactService);
+            _customPurchaseInvoiceService.CreateObject(cpi1, _warehouseService, _contactService, _cashBankService);
 
             // Cash with GroupPricing
             cpi2 = new CustomPurchaseInvoice()
@@ -351,7 +351,7 @@ namespace TestValidation
                 Tax = 10,
                 ContactId = contact2.Id,
             };
-            _customPurchaseInvoiceService.CreateObject(cpi2, _warehouseService, _contactService);
+            _customPurchaseInvoiceService.CreateObject(cpi2, _warehouseService, _contactService, _cashBankService);
 
             // Bank without GroupPricing
             cpi3 = new CustomPurchaseInvoice()
@@ -365,7 +365,7 @@ namespace TestValidation
                 GBCH_No = "G0001",
                 ContactId = contact3.Id,
             };
-            _customPurchaseInvoiceService.CreateObject(cpi3, _warehouseService, _contactService);
+            _customPurchaseInvoiceService.CreateObject(cpi3, _warehouseService, _contactService, _cashBankService);
 
             cpid1 = new CustomPurchaseInvoiceDetail()
             {

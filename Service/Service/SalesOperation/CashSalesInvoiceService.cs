@@ -45,15 +45,15 @@ namespace Service.Service
             return _repository.GetObjectById(Id);
         }
 
-        public CashSalesInvoice CreateObject(CashSalesInvoice cashSalesInvoice, IWarehouseService _warehouseService)
+        public CashSalesInvoice CreateObject(CashSalesInvoice cashSalesInvoice, IWarehouseService _warehouseService, ICashBankService _cashBankService)
         {
             cashSalesInvoice.Errors = new Dictionary<String, String>();
-            return (_validator.ValidCreateObject(cashSalesInvoice, _warehouseService) ? _repository.CreateObject(cashSalesInvoice) : cashSalesInvoice);
+            return (_validator.ValidCreateObject(cashSalesInvoice, _warehouseService, _cashBankService) ? _repository.CreateObject(cashSalesInvoice) : cashSalesInvoice);
         }
 
-        public CashSalesInvoice UpdateObject(CashSalesInvoice cashSalesInvoice, IWarehouseService _warehouseService)
+        public CashSalesInvoice UpdateObject(CashSalesInvoice cashSalesInvoice, IWarehouseService _warehouseService, ICashBankService _cashBankService)
         {
-            return (cashSalesInvoice = _validator.ValidUpdateObject(cashSalesInvoice, _warehouseService) ? _repository.UpdateObject(cashSalesInvoice) : cashSalesInvoice);
+            return (cashSalesInvoice = _validator.ValidUpdateObject(cashSalesInvoice, _warehouseService, _cashBankService) ? _repository.UpdateObject(cashSalesInvoice) : cashSalesInvoice);
         }
 
         public CashSalesInvoice ConfirmObject(CashSalesInvoice cashSalesInvoice, DateTime ConfirmationDate, decimal Discount, decimal Tax, 

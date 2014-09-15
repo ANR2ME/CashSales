@@ -15,9 +15,9 @@ namespace Core.Interface.Service
         ICustomPurchaseInvoiceRepository GetRepository();
         IList<CustomPurchaseInvoice> GetAll();
         CustomPurchaseInvoice GetObjectById(int Id);
-        CustomPurchaseInvoice CreateObject(CustomPurchaseInvoice customPurchaseInvoice, IWarehouseService _warehouseService, IContactService _contactService);
+        CustomPurchaseInvoice CreateObject(CustomPurchaseInvoice customPurchaseInvoice, IWarehouseService _warehouseService, IContactService _contactService, ICashBankService _cashBankService);
         CustomPurchaseInvoice UpdateObject(CustomPurchaseInvoice customPurchaseInvoice, ICustomPurchaseInvoiceDetailService _customPurchaseInvoiceDetailService,
-                                           IWarehouseService _warehouseService, IContactService _contactService);
+                                           IWarehouseService _warehouseService, IContactService _contactService, ICashBankService _cashBankService);
         CustomPurchaseInvoice SoftDeleteObject(CustomPurchaseInvoice customPurchaseInvoice, ICustomPurchaseInvoiceDetailService _customPurchaseInvoiceDetailService);
         CustomPurchaseInvoice ConfirmObject(CustomPurchaseInvoice customPurchaseInvoice, DateTime ConfirmationDate,
                                          ICustomPurchaseInvoiceDetailService _customPurchaseInvoiceDetailService, IContactService _contactService,

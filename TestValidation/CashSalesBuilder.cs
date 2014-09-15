@@ -379,7 +379,7 @@ namespace TestValidation
                 CashBankId = cashBank.Id,
                 DueDate = DateTime.Today.Subtract(dueDate),
             };
-            _cashSalesInvoiceService.CreateObject(csi1, _warehouseService);
+            _cashSalesInvoiceService.CreateObject(csi1, _warehouseService, _cashBankService);
 
             // Cash with Discount & Tax
             csi2 = new CashSalesInvoice()
@@ -391,7 +391,7 @@ namespace TestValidation
                 Discount = 25,
                 Tax = 10,
             };
-            _cashSalesInvoiceService.CreateObject(csi2, _warehouseService);
+            _cashSalesInvoiceService.CreateObject(csi2, _warehouseService, _cashBankService);
 
             // Bank without Discount & Tax
             csi3 = new CashSalesInvoice()
@@ -401,7 +401,7 @@ namespace TestValidation
                 CashBankId = cashBank2.Id,
                 DueDate = DateTime.Today.Subtract(dueDate),
             };
-            _cashSalesInvoiceService.CreateObject(csi3, _warehouseService);
+            _cashSalesInvoiceService.CreateObject(csi3, _warehouseService, _cashBankService);
 
             csid1 = new CashSalesInvoiceDetail()
             {

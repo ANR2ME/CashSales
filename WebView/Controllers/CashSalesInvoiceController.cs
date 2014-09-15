@@ -170,6 +170,102 @@ namespace WebView.Controllers
             }, JsonRequestBehavior.AllowGet);
         }
 
+        public dynamic GetPaidList(string _search, long nd, int rows, int? page, string sidx, string sord, string filters = "")
+        {
+            // Construct where statement
+            string strWhere = GeneralFunction.ConstructWhere(filters);
+            string filter = null;
+            GeneralFunction.ConstructWhereInLinq(strWhere, out filter);
+            if (filter == "") filter = "true";
+
+            // Get Data
+            var q = _cashSalesInvoiceService.GetQueryable().Include("CashBank").Include("Warehouse").Where(x => x.IsPaid);
+
+            var query = (from model in q
+                         select new
+                         {
+                             model.Id,
+                             model.Code,
+                             model.Description,
+                             model.Discount,
+                             model.Tax,
+                             model.Allowance,
+                             model.AmountPaid,
+                             model.Total,
+                             model.CoGS,
+                             profitloss = (model.IsConfirmed ? (Nullable<decimal>)((model.Total * (100 - model.Tax) / 100) - model.CoGS) : null),
+                             model.IsConfirmed,
+                             model.ConfirmationDate,
+                             model.CashBankId,
+                             cashbank = model.CashBank.Name,
+                             model.IsBank,
+                             model.IsPaid,
+                             model.IsFullPayment,
+                             model.WarehouseId,
+                             warehouse = model.Warehouse.Name,
+                             model.SalesDate,
+                             model.DueDate,
+                             model.CreatedAt,
+                             model.UpdatedAt,
+                         }).Where(filter).OrderBy(sidx + " " + sord); //.ToList();
+
+            var list = query.AsEnumerable();
+
+            var pageIndex = Convert.ToInt32(page) - 1;
+            var pageSize = rows;
+            var totalRecords = query.Count();
+            var totalPages = (int)Math.Ceiling((float)totalRecords / (float)pageSize);
+            // default last page
+            if (totalPages > 0)
+            {
+                if (!page.HasValue)
+                {
+                    pageIndex = totalPages - 1;
+                    page = totalPages;
+                }
+            }
+
+            list = list.Skip(pageIndex * pageSize).Take(pageSize);
+
+            return Json(new
+            {
+                total = totalPages,
+                page = page,
+                records = totalRecords,
+                rows = (
+                    from model in list
+                    select new
+                    {
+                        id = model.Id,
+                        cell = new object[] {
+                            model.Id,
+                            model.Code,
+                            model.Description,
+                            model.Discount,
+                            model.Tax,
+                            model.Allowance,
+                            model.AmountPaid,
+                            model.Total,
+                            model.CoGS,
+                            model.profitloss,
+                            model.IsConfirmed,
+                            model.ConfirmationDate,
+                            model.CashBankId,
+                            model.cashbank,
+                            model.IsBank,
+                            model.IsPaid,
+                            model.IsFullPayment,
+                            model.WarehouseId,
+                            model.warehouse,
+                            model.SalesDate,
+                            model.DueDate,
+                            model.CreatedAt,
+                            model.UpdatedAt,
+                      }
+                    }).ToArray()
+            }, JsonRequestBehavior.AllowGet);
+        }
+
         public dynamic GetListDetail(string _search, long nd, int rows, int? page, string sidx, string sord, int id, string filters = "")
         {
             // Construct where statement
@@ -180,6 +276,81 @@ namespace WebView.Controllers
 
             // Get Data
             var q = _cashSalesInvoiceDetailService.GetQueryableObjectsByCashSalesInvoiceId(id).Include("CashSalesInvoice").Include("Item");
+
+            var query = (from model in q
+                         select new
+                         {
+                             model.Id,
+                             model.Code,
+                             model.CashSalesInvoiceId,
+                             cashsalesinvoice = model.CashSalesInvoice.Code,
+                             model.ItemId,
+                             item = model.Item.Name,
+                             model.Quantity,
+                             model.Amount,
+                             model.CoGS,
+                             model.PriceMutationId,
+                             model.Discount,
+                             model.IsManualPriceAssignment,
+                             model.AssignedPrice,
+                         }).Where(filter).OrderBy(sidx + " " + sord); //.ToList();
+
+            var list = query.AsEnumerable();
+
+            var pageIndex = Convert.ToInt32(page) - 1;
+            var pageSize = rows;
+            var totalRecords = query.Count();
+            var totalPages = (int)Math.Ceiling((float)totalRecords / (float)pageSize);
+            // default last page
+            if (totalPages > 0)
+            {
+                if (!page.HasValue)
+                {
+                    pageIndex = totalPages - 1;
+                    page = totalPages;
+                }
+            }
+
+            list = list.Skip(pageIndex * pageSize).Take(pageSize);
+
+            return Json(new
+            {
+                total = totalPages,
+                page = page,
+                records = totalRecords,
+                rows = (
+                    from model in list
+                    select new
+                    {
+                        id = model.Id,
+                        cell = new object[] {
+                             model.Code,
+                             model.CashSalesInvoiceId,
+                             model.cashsalesinvoice,
+                             model.ItemId,
+                             model.item,
+                             model.Quantity,
+                             model.Amount,
+                             model.CoGS,
+                             model.PriceMutationId,
+                             model.Discount,
+                             model.IsManualPriceAssignment,
+                             model.AssignedPrice,
+                      }
+                    }).ToArray()
+            }, JsonRequestBehavior.AllowGet);
+        }
+
+        public dynamic GetPaidListDetail(string _search, long nd, int rows, int? page, string sidx, string sord, int id, string filters = "")
+        {
+            // Construct where statement
+            string strWhere = GeneralFunction.ConstructWhere(filters);
+            string filter = null;
+            GeneralFunction.ConstructWhereInLinq(strWhere, out filter);
+            if (filter == "") filter = "true";
+
+            // Get Data
+            var q = _cashSalesInvoiceDetailService.GetQueryableObjectsByCashSalesInvoiceId(id).Include("CashSalesInvoice").Include("Item").Where(x => x.CashSalesInvoice.IsPaid);
 
             var query = (from model in q
                          select new
@@ -336,7 +507,7 @@ namespace WebView.Controllers
                     }, JsonRequestBehavior.AllowGet);
                 }
 
-                model = _cashSalesInvoiceService.CreateObject(model, _warehouseService);
+                model = _cashSalesInvoiceService.CreateObject(model, _warehouseService, _cashBankService);
             }
             catch (Exception ex)
             {
@@ -430,7 +601,7 @@ namespace WebView.Controllers
                 data.Allowance = model.Allowance;
                 data.CashBankId = model.CashBankId;
                 data.WarehouseId = model.WarehouseId;
-                model = _cashSalesInvoiceService.UpdateObject(data, _warehouseService);
+                model = _cashSalesInvoiceService.UpdateObject(data, _warehouseService, _cashBankService);
             }
             catch (Exception ex)
             {

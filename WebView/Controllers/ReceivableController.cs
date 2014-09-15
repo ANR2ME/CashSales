@@ -50,9 +50,9 @@ namespace WebView.Controllers
                          select new
                          {
                              model.Id,
+                             model.Code,
                              model.ContactId,
                              contact = model.Contact.Name,
-                             model.Code,
                              model.ReceivableSource,
                              model.ReceivableSourceId,
                              model.ReceivableSourceCode,
@@ -96,9 +96,9 @@ namespace WebView.Controllers
                         id = model.Id,
                         cell = new object[] {
                             model.Id,
+                            model.Code,
                             model.ContactId,
                             model.contact,
-                            model.Code,
                             model.ReceivableSource,
                             model.ReceivableSourceId,
                             model.ReceivableSourceCode,

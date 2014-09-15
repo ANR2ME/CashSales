@@ -337,8 +337,10 @@ namespace Validation.Validation
             return customPurchaseInvoice;
         }
 
-        public CustomPurchaseInvoice VCreateObject(CustomPurchaseInvoice customPurchaseInvoice, IWarehouseService _warehouseService, IContactService _contactService)
+        public CustomPurchaseInvoice VCreateObject(CustomPurchaseInvoice customPurchaseInvoice, IWarehouseService _warehouseService, IContactService _contactService, ICashBankService _cashBankService)
         {
+            VHasCashBank(customPurchaseInvoice, _cashBankService);
+            if (!isValid(customPurchaseInvoice)) { return customPurchaseInvoice; }
             VHasPurchaseDate(customPurchaseInvoice);
             if (!isValid(customPurchaseInvoice)) { return customPurchaseInvoice; }
             VHasContact(customPurchaseInvoice, _contactService);
@@ -348,13 +350,13 @@ namespace Validation.Validation
         }
 
         public CustomPurchaseInvoice VUpdateObject(CustomPurchaseInvoice customPurchaseInvoice, ICustomPurchaseInvoiceDetailService _customPurchaseInvoiceDetailService,
-                                                   IWarehouseService _warehouseService, IContactService _contactService)
+                                                   IWarehouseService _warehouseService, IContactService _contactService, ICashBankService _cashBankService)
         {
             VIsNotDeleted(customPurchaseInvoice);
             if (!isValid(customPurchaseInvoice)) { return customPurchaseInvoice; }
             VIsNotConfirmed(customPurchaseInvoice);
             if (!isValid(customPurchaseInvoice)) { return customPurchaseInvoice; }
-            VCreateObject(customPurchaseInvoice, _warehouseService, _contactService);
+            VCreateObject(customPurchaseInvoice, _warehouseService, _contactService, _cashBankService);
             return customPurchaseInvoice;
         }
 
@@ -368,9 +370,9 @@ namespace Validation.Validation
             return customPurchaseInvoice;
         }
 
-        public bool ValidCreateObject(CustomPurchaseInvoice customPurchaseInvoice, IWarehouseService _warehouseService, IContactService _contactService)
+        public bool ValidCreateObject(CustomPurchaseInvoice customPurchaseInvoice, IWarehouseService _warehouseService, IContactService _contactService, ICashBankService _cashBankService)
         {
-            VCreateObject(customPurchaseInvoice, _warehouseService, _contactService);
+            VCreateObject(customPurchaseInvoice, _warehouseService, _contactService, _cashBankService);
             return isValid(customPurchaseInvoice);
         }
 
@@ -405,10 +407,10 @@ namespace Validation.Validation
         }
 
         public bool ValidUpdateObject(CustomPurchaseInvoice customPurchaseInvoice, ICustomPurchaseInvoiceDetailService _customPurchaseInvoiceDetailService,
-                                      IWarehouseService _warehouseService, IContactService _contactService)
+                                      IWarehouseService _warehouseService, IContactService _contactService, ICashBankService _cashBankService)
         {
             customPurchaseInvoice.Errors.Clear();
-            VUpdateObject(customPurchaseInvoice, _customPurchaseInvoiceDetailService, _warehouseService, _contactService);
+            VUpdateObject(customPurchaseInvoice, _customPurchaseInvoiceDetailService, _warehouseService, _contactService, _cashBankService);
             return isValid(customPurchaseInvoice);
         }
 

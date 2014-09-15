@@ -41,9 +41,9 @@ namespace Core.Interface.Validation
         CustomPurchaseInvoice VPaidObject(CustomPurchaseInvoice customPurchaseInvoice, ICashBankService _cashBankService, IPaymentVoucherService _paymentVoucherService);
         CustomPurchaseInvoice VUnpaidObject(CustomPurchaseInvoice customPurchaseInvoice);
 
-        CustomPurchaseInvoice VCreateObject(CustomPurchaseInvoice customPurchaseInvoice, IWarehouseService _warehouseService, IContactService _contactService);
+        CustomPurchaseInvoice VCreateObject(CustomPurchaseInvoice customPurchaseInvoice, IWarehouseService _warehouseService, IContactService _contactService, ICashBankService _cashBankService);
         CustomPurchaseInvoice VUpdateObject(CustomPurchaseInvoice customPurchaseInvoice, ICustomPurchaseInvoiceDetailService _customPurchaseInvoiceDetailService,
-                                            IWarehouseService _warehouseService, IContactService _contactService);
+                                            IWarehouseService _warehouseService, IContactService _contactService, ICashBankService _cashBankService);
         CustomPurchaseInvoice VDeleteObject(CustomPurchaseInvoice customPurchaseInvoice, ICustomPurchaseInvoiceDetailService _customPurchaseInvoiceDetailService);
 
         bool ValidConfirmObject(CustomPurchaseInvoice customPurchaseInvoice, ICustomPurchaseInvoiceDetailService _customPurchaseInvoiceDetailService,
@@ -53,9 +53,9 @@ namespace Core.Interface.Validation
         bool ValidPaidObject(CustomPurchaseInvoice customPurchaseInvoice, ICashBankService _cashBankService, IPaymentVoucherService _paymentVoucherService);
         bool ValidUnpaidObject(CustomPurchaseInvoice customPurchaseInvoice);
 
-        bool ValidCreateObject(CustomPurchaseInvoice customPurchaseInvoice, IWarehouseService _warehouseService, IContactService _contactService);
+        bool ValidCreateObject(CustomPurchaseInvoice customPurchaseInvoice, IWarehouseService _warehouseService, IContactService _contactService, ICashBankService _cashBankService);
         bool ValidUpdateObject(CustomPurchaseInvoice customPurchaseInvoice, ICustomPurchaseInvoiceDetailService _customPurchaseInvoiceDetailService,
-                               IWarehouseService _warehouseService, IContactService _contactService);
+                               IWarehouseService _warehouseService, IContactService _contactService, ICashBankService _cashBankService);
         bool ValidDeleteObject(CustomPurchaseInvoice customPurchaseInvoice, ICustomPurchaseInvoiceDetailService _customPurchaseInvoiceDetailService);
         bool isValid(CustomPurchaseInvoice customPurchaseInvoice);
         string PrintError(CustomPurchaseInvoice customPurchaseInvoice);

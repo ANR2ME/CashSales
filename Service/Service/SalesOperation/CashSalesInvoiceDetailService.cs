@@ -65,6 +65,10 @@ namespace Service.Service
                 {
                     price = cashSalesInvoiceDetail.AssignedPrice;
                 }
+                else
+                {
+                    cashSalesInvoiceDetail.AssignedPrice = 0;
+                }
                 if (quantityPricing != null)
                 {
                     if(cashSalesInvoiceDetail.Discount <= 0)
@@ -100,6 +104,10 @@ namespace Service.Service
                 if (cashSalesInvoiceDetail.IsManualPriceAssignment)
                 {
                     price = cashSalesInvoiceDetail.AssignedPrice;
+                }
+                else
+                {
+                    cashSalesInvoiceDetail.AssignedPrice = 0;
                 }
                 if (quantityPricing != null)
                 {

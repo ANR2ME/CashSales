@@ -23,16 +23,27 @@
     $("#delete_confirm_div").dialog('close');
     $("#lookup_div_contactgroup").dialog('close');
 
+    function cboxIsAdmin(cellvalue, options, rowObject) {
+        return '<input name="cbIsAdmin" disabled rel="' + rowObject.code + '" type="checkbox"' + (cellvalue ? ' checked="checked"' : '') +
+            '/>';
+    }
+
     //GRID +++++++++++++++
     $("#list").jqGrid({
         url: base_url + 'User/GetList',
         datatype: "json",
-        colNames: ['ID','Username', 'Name', 'Description', 'Created At', 'Updated At'],
+        colNames: ['ID','Username', 'Name', 'Description', 'Is Admin', 'Created At', 'Updated At'],
         colModel: [
     			  { name: 'id', index: 'id', width: 60, align: "center" },
                   { name: 'username', index: 'username', width: 180 },
 				  { name: 'name', index: 'name', width: 180 },
                   { name: 'description', index: 'description', width: 250 },
+                  {
+                      name: 'isadmin', index: 'isadmin', width: 60, align: 'center', sortable: false,
+                      editable: true,
+                      edittype: 'checkbox', editoptions: { value: "1:0" },
+                      formatter: cboxIsAdmin, formatoptions: { disabled: true }
+                  },
 				  { name: 'createdat', index: 'createdat', search: false, width: 80, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
 				  { name: 'updateat', index: 'updateat', search: false, width: 80, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
         ],

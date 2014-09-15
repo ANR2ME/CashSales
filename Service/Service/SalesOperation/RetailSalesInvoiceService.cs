@@ -79,7 +79,7 @@ namespace Service.Service
                 }
                 // Tax dihitung setelah Discount
                 retailSalesInvoice.Total = (retailSalesInvoice.Total * ((100 - retailSalesInvoice.Discount) / 100) * ((100 + retailSalesInvoice.Tax) / 100));
-                Receivable receivable = _receivableService.CreateObject(retailSalesInvoice.ContactId, Core.Constants.Constant.ReceivableSource.RetailSalesInvoice, retailSalesInvoice.Id, retailSalesInvoice.Total, (DateTime)retailSalesInvoice.DueDate.GetValueOrDefault());
+                Receivable receivable = _receivableService.CreateObject(retailSalesInvoice.ContactId, Core.Constants.Constant.ReceivableSource.RetailSalesInvoice, retailSalesInvoice.Id, retailSalesInvoice.Code, retailSalesInvoice.Total, (DateTime)retailSalesInvoice.DueDate.GetValueOrDefault());
                 retailSalesInvoice = _repository.ConfirmObject(retailSalesInvoice);
             }
             else
@@ -133,7 +133,7 @@ namespace Service.Service
                 ReceiptVoucher receiptVoucher = _receiptVoucherService.CreateObject((int)retailSalesInvoice.CashBankId.GetValueOrDefault(), retailSalesInvoice.ContactId, DateTime.Now, retailSalesInvoice.Total,
                                                                             retailSalesInvoice.IsGBCH, (DateTime)retailSalesInvoice.DueDate.GetValueOrDefault(), retailSalesInvoice.IsBank, _receiptVoucherDetailService,
                                                                             _receivableService, _contactService, _cashBankService);
-                ReceiptVoucherDetail receiptVoucherDetail = _receiptVoucherDetailService.CreateObject(receiptVoucher.Id, receivable.Id, (decimal)retailSalesInvoice.AmountPaid, 
+                ReceiptVoucherDetail receiptVoucherDetail = _receiptVoucherDetailService.CreateObject(receiptVoucher.Id, receivable.Id, (decimal)retailSalesInvoice.AmountPaid.GetValueOrDefault(), 
                                                                             "Automatic Payment", _receiptVoucherService, _cashBankService, _receivableService);
                 retailSalesInvoice = _repository.PaidObject(retailSalesInvoice);
                 _receiptVoucherService.ConfirmObject(receiptVoucher, (DateTime)retailSalesInvoice.ConfirmationDate, _receiptVoucherDetailService, _cashBankService, _receivableService, _cashMutationService);

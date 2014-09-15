@@ -41,9 +41,9 @@ namespace Service.Service
             return _repository.GetObjectsByContactId(contactId);
         }
 
-        public IList<Payable> GetObjectsByDueDate(DateTime DueDate)
+        public IList<Payable> GetObjectsByDueDate(DateTime fromDueDate, DateTime toDueDate)
         {
-            return _repository.GetObjectsByDueDate(DueDate);
+            return _repository.GetObjectsByDueDate(fromDueDate, toDueDate);
         }
 
         public Payable GetObjectBySource(string PayableSource, int PayableSourceId)
@@ -62,13 +62,14 @@ namespace Service.Service
             return (_validator.ValidCreateObject(payable, this) ? _repository.CreateObject(payable) : payable);
         }
 
-        public Payable CreateObject(int contactId, string payableSource, int payableSourceId, decimal amount, DateTime dueDate)
+        public Payable CreateObject(int contactId, string payableSource, int payableSourceId, string payableSourceCode, decimal amount, DateTime dueDate)
         {
             Payable payable = new Payable
             {
                 ContactId = contactId,
                 PayableSource = payableSource,
                 PayableSourceId = payableSourceId,
+                PayableSourceCode = payableSourceCode,
                 Amount = amount,
                 RemainingAmount = amount,
                 DueDate = dueDate
@@ -91,13 +92,13 @@ namespace Service.Service
             return _repository.DeleteObject(Id);
         }
 
-        public decimal GetTotalRemainingAmountByDueDate(DateTime DueDate)
+        public decimal GetTotalRemainingAmountByDueDate(DateTime fromDueDate, DateTime toDueDate)
         {
-            IList<Payable> payables = GetObjectsByDueDate(DueDate);
+            IList<Payable> payables = GetObjectsByDueDate(fromDueDate, toDueDate);
             decimal Total = 0;
             foreach (var payable in payables)
             {
-                Total += payable.RemainingAmount;
+                Total += payable.RemainingAmount + payable.PendingClearanceAmount;
             }
             return Total;
         }

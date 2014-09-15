@@ -23,7 +23,7 @@
     }
 
     function clearForm(form) {
-
+        $('#Quantity').numberbox('setValue','');
         $(':input', form).each(function () {
             var type = this.type;
             var tag = this.tagName.toLowerCase(); // normalize case
@@ -49,19 +49,19 @@
     $("#list").jqGrid({
         url: base_url + 'WarehouseMutationOrder/GetList',
         datatype: "json",
-        colNames: ['ID', 'Code', 'Warehouse From Id', 'Warehouse From Name', 'Warehouse To Id', 'Warehouse To Name','Mutation Date',
-                    'Is Confirmed', 'Confirmation Date', 'Created At', 'Updated At'],
+        colNames: ['ID', 'Code', 'Warehouse From Id', 'Warehouse From Name', 'Warehouse To Id', 'Warehouse To Name',
+                    'Is Confirmed', 'Confirmation Date', 'Mutation Date', 'Created At', 'Updated At'],
         colModel: [
     			  { name: 'id', index: 'id', width: 80, align: "center" },
                   { name: 'code', index: 'code', width: 100 },
-				  { name: 'warehousetoid', index: 'warehousetoid', width: 150, align: "center" },
+				  { name: 'warehousetoid', index: 'warehousetoid', width: 150, align: "center", hidden: true },
                   { name: 'warehouseto', index: 'warehouseto', width: 150 },
-                  { name: 'warehousefromid', index: 'warehousefromid', width: 150, align: "center" },
+                  { name: 'warehousefromid', index: 'warehousefromid', width: 150, align: "center", hidden: true },
                   { name: 'warehousefrom', index: 'warehousefrom', width: 150 },
+                  { name: 'isconfirmed', index: 'isconfirmed', width: 100, stype: 'select', editoptions: { value: ':All;true:Yes;false:No' } },
+                  { name: 'confirmationdate', index: 'confirmationdate', hidden: true, search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
                   { name: 'mutationdate', index: 'mutationdate', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
-                  { name: 'isconfirmed', index: 'isconfirmed', width: 100 },
-                  { name: 'confirmationdate', index: 'confirmationdate', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
-				  { name: 'createdat', index: 'createdat', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
+                  { name: 'createdat', index: 'createdat', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
 				  { name: 'updateat', index: 'updateat', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
         ],
         page: '1',
@@ -82,7 +82,7 @@
 		          var cl = ids[i];
 		          rowIsConfirmed = $(this).getRowData(cl).isconfirmed;
 		          if (rowIsConfirmed == 'true') {
-		              rowIsConfirmed = "YES";
+		              rowIsConfirmed = "YES, " + $(this).getRowData(cl).confirmationdate;
 		          } else {
 		              rowIsConfirmed = "NO";
 		          }
@@ -220,6 +220,7 @@
             var ret = jQuery("#list").jqGrid('getRowData', id);
             $('#ConfirmationDate').datebox('setValue', $.datepicker.formatDate('mm/dd/yy', new Date()));
             $('#idconfirm').val(ret.id);
+            $('#confirmCode').val(ret.code);
             $("#confirm_div").dialog("open");
         } else {
             $.messager.alert('Information', 'Please Select Data...!!', 'info');
@@ -407,9 +408,9 @@
         colNames: ['Code', 'Item Id', 'Item Name', 'Quantity',
         ],
         colModel: [
-                  { name: 'code', index: 'code', width: 100, sortable: false },
-				  { name: 'itemid', index: 'itemid', width: 100, sortable: false },
-                  { name: 'item', index: 'item', width: 80, sortable: false },
+                  { name: 'code', index: 'code', width: 100 },
+				  { name: 'itemid', index: 'itemid', width: 100, hidden: true },
+                  { name: 'item', index: 'item', width: 80 },
                   { name: 'quantity', index: 'quantity', width: 100, formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: false },
         ],
         //page: '1',
@@ -460,7 +461,7 @@
                             $("#item_btn_submit").data('kode', result.Id);
                             $('#ItemId').val(result.ItemId);
                             $('#Item').val(result.Item);
-                            $('#Quantity').val(result.Quantity);
+                            $('#Quantity').numberbox('setValue',result.Quantity);
                             $('#item_div').dialog('open');
                         }
                     }
@@ -583,10 +584,13 @@
         url: base_url,
         datatype: "json",
         mtype: 'GET',
-        colNames: ['Id', 'Name'],
+        colNames: ['Id', 'Code', 'Name', 'Description'],
         colModel: [
                   { name: 'id', index: 'id', width: 80, align: 'right' },
-                  { name: 'name', index: 'name', width: 200 }],
+                  { name: 'code', index: 'code', width: 80 },
+				  { name: 'name', index: 'name', width: 80 },
+                  { name: 'description', index: 'description', width: 250 },
+        ],
         page: '1',
         pager: $('#lookup_pager_warehousefrom'),
         rowNum: 20,
@@ -639,10 +643,13 @@
         url: base_url,
         datatype: "json",
         mtype: 'GET',
-        colNames: ['Id', 'Name'],
+        colNames: ['Id', 'Code', 'Name', 'Description'],
         colModel: [
                   { name: 'id', index: 'id', width: 80, align: 'right' },
-                  { name: 'name', index: 'name', width: 200 }],
+                  { name: 'code', index: 'code', width: 80 },
+				  { name: 'name', index: 'name', width: 80 },
+                  { name: 'description', index: 'description', width: 250 },
+        ],
         page: '1',
         pager: $('#lookup_pager_warehouseto'),
         rowNum: 20,
@@ -682,9 +689,9 @@
     // ---------------------------------------------End Lookup warehouseto----------------------------------------------------------------
 
 
-    // -------------------------------------------------------Look Up item-------------------------------------------------------
+    // -------------------------------------------------------Look Up Warehouse item-------------------------------------------------------
     $('#btnItem').click(function () {
-        var lookUpURL = base_url + 'MstItem/GetList';
+        var lookUpURL = base_url + 'WarehouseItem/GetListItem?Id=' + $('#WarehouseFromId').val(); //'MstItem/GetList';
         var lookupGrid = $('#lookup_table_item');
         lookupGrid.setGridParam({
             url: lookUpURL
@@ -696,10 +703,34 @@
         url: base_url,
         datatype: "json",
         mtype: 'GET',
-        colNames: ['Id', 'Name'],
+        colNames: ['Item ID', 'SKU', 'Item Name', 'Item Type Id', 'Item Type Name',
+                   'Category', 'Uom Id', 'UoM Name', 'Quantity', 'Pending Delivery', 'Pending Receival'
+        ],
         colModel: [
-                  { name: 'id', index: 'id', width: 80, align: 'right' },
-                  { name: 'name', index: 'name', width: 200 }],
+                  { name: 'itemid', index: 'itemid', width: 80, align: "center", frozen: true, hidden: true },
+                  { name: 'sku', index: 'sku', width: 80 },
+                  { name: 'item', index: 'item', width: 200, frozen: true },
+                  { name: 'itemtypeid', index: 'itemtypeid', width: 80, align: "center", hidden: true },
+                  { name: 'itemtype', index: 'itemtype', width: 200 },
+                  { name: 'category', index: 'category', width: 100, hidden: true },
+                  { name: 'uomid', index: 'uomid', width: 100, hidden: true },
+                  { name: 'uom', index: 'uom', width: 100 },
+                  { name: 'quantity', index: 'quantity', width: 100, formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: false },
+                  { name: 'pendingdelivery', index: 'pendingdelivery', width: 100, formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: false },
+                  { name: 'pendingreceival', index: 'pendingreceival', width: 100, formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: false },
+        ],
+        //url: base_url,
+        //datatype: "json",
+        //mtype: 'GET',
+        //colNames: ['Id', 'SKU', 'Name', 'ItemType', 'UoM', 'Quantity'],
+        //colModel: [
+        //          { name: 'id', index: 'id', width: 80, align: 'right' },
+        //          { name: 'sku', index: 'sku', width: 100 },
+        //          { name: 'name', index: 'name', width: 100 },
+        //          { name: 'itemtype', index: 'itemtype', width: 120 },
+        //          { name: 'uom', index: 'uom', width: 100 },
+        //          { name: 'quantity', index: 'quantity', width: 80, formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' } },
+        //],
         page: '1',
         pager: $('#lookup_pager_item'),
         rowNum: 20,
@@ -726,8 +757,8 @@
         if (id) {
             var ret = jQuery("#lookup_table_item").jqGrid('getRowData', id);
 
-            $('#ItemId').val(ret.id).data("kode", id);
-            $('#Item').val(ret.name);
+            $('#ItemId').val(ret.itemid).data("kode", id);
+            $('#Item').val(ret.item);
 
             $('#lookup_div_item').dialog('close');
         } else {
@@ -736,7 +767,7 @@
     });
 
 
-    // ---------------------------------------------End Lookup item----------------------------------------------------------------
+    // ---------------------------------------------End Lookup Warehouse item----------------------------------------------------------------
 
 
 }); //END DOCUMENT READY

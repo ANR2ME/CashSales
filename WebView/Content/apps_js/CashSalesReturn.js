@@ -38,26 +38,26 @@
 	$("#list").jqGrid({
 		url: base_url + 'CashSalesReturn/GetList',
 		datatype: "json",
-		colNames: ['ID', 'Code', 'Description', 'Return Date', 'CashSalesInvoice ID', 'CashSalesInvoice Code',
-				   'Allowance', 'Is Confirmed', 'Confirmation Date', 'Total',
+		colNames: ['ID', 'Code', 'Description', 'CashSalesInvoice ID', 'CashSalesInvoice Code',
+				   'Allowance', 'Total', 'Is Confirmed', 'Confirmation Date',
 				   'CashBank ID', 'CashBank Name', 'Is Bank', 'Is Paid',
-				   'Created At', 'Updated At'],
+				   'Return Date', 'Created At', 'Updated At'],
 		colModel: [
-				  { name: 'id', index: 'id', width: 80, align: "center" },
+				  { name: 'id', index: 'id', width: 50, align: "center" },
 				  { name: 'code', index: 'code', width: 100 },
-				  { name: 'description', index: 'description', width: 100 },
-				  { name: 'returndate', index: 'returndate', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
-                  { name: 'cashsalesinvoiceid', index: 'cashsalesinvoiceid', width: 125 },
+				  { name: 'description', index: 'description', width: 150 },
+                  { name: 'cashsalesinvoiceid', index: 'cashsalesinvoiceid', width: 125, hidden:true },
 				  { name: 'cashsalesinvoice', index: 'cashsalesinvoice', width: 155 },
                   { name: 'allowance', index: 'allowance', width: 80, formatter: 'currency' },
-				  { name: 'isconfirmed', index: 'isconfirmed', width: 80, boolean: { defaultValue: 'false' } },
-				  { name: 'confirmationdate', index: 'confirmationdate', search: false, width: 120, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
-				  { name: 'total', index: 'total', width: 80, formatter: 'currency' },
-				  { name: 'cashbankid', index: 'cashbankid', width: 80 },
+                  { name: 'total', index: 'total', width: 80, formatter: 'currency' },
+                  { name: 'isconfirmed', index: 'isconfirmed', width: 80, boolean: { defaultValue: 'false' }, stype: 'select', editoptions: { value: ':All;true:Yes;false:No' } },
+				  { name: 'confirmationdate', index: 'confirmationdate', hidden:true, search: false, width: 120, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
+				  { name: 'cashbankid', index: 'cashbankid', width: 80, hidden:true },
 				  { name: 'cashbank', index: 'cashbank', width: 100 },
 				  { name: 'isbank', index: 'isbank', width: 80, boolean: { defaultValue: 'false' } },
 				  { name: 'ispaid', index: 'ispaid', width: 80, boolean: { defaultValue: 'false' } },
-				  { name: 'createdat', index: 'createdat', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
+                  { name: 'returndate', index: 'returndate', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
+                  { name: 'createdat', index: 'createdat', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
 				  { name: 'updateat', index: 'updateat', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
 		],
 		page: '1',
@@ -78,7 +78,7 @@
 				  var cl = ids[i];
 				  rowIsConfirmed = $(this).getRowData(cl).isconfirmed;
 				  if (rowIsConfirmed == 'true') {
-					  rowIsConfirmed = "YES";
+				      rowIsConfirmed = "YES, " + $(this).getRowData(cl).confirmationdate;
 				  } else {
 					  rowIsConfirmed = "NO";
 				  }
@@ -110,7 +110,13 @@
 	});
 
 	$('#btn_print').click(function () {
-		window.open(base_url + 'Print_Forms/Printmstbank.aspx');
+	    //window.open(base_url + 'Print_Forms/Printmstbank.aspx');
+	    var id = jQuery("#list").jqGrid('getGridParam', 'selrow');
+	    if (id) {
+	        window.open(base_url + "Report/ReportSalesReturnInvoice?Id=" + id);
+	    } else {
+	        $.messager.alert('Information', 'Please Select Data...!!', 'info');
+	    }
 	});
 
 	$('#btn_add_new').click(function () {
@@ -120,7 +126,7 @@
 		$('#Description').removeAttr('disabled');
 		$('#btnCashBank').removeAttr('disabled');
 		$('#btnCashSalesInvoice').removeAttr('disabled');
-		$('#Allowance').removeAttr('disabled');
+		//$('#Allowance').removeAttr('disabled');
 		$('#ReturnDateDiv2').hide();
 		$('#ReturnDateDiv').show();
 		vStatusSaving = 0; //add data mode
@@ -208,7 +214,7 @@
 							$('#Code').val(result.Code);
 							$('#Description').val(result.Description);
 							$('#ReturnDate').datebox('setValue', dateEnt(result.ReturnDate));
-							$('#Allowance').numberbox('setValue', (result.Allowance));
+							//$('#Allowance').numberbox('setValue', (result.Allowance));
 							$('#Total').numberbox('setValue', (result.Total));
 							$('#CashBankId').val(result.CashBankId);
 							$('#CashBankName').val(result.CashBank);
@@ -217,7 +223,7 @@
 							$('#Description').removeAttr('disabled');
 							$('#btnCashBank').removeAttr('disabled');
 							$('#btnCashSalesInvoice').removeAttr('disabled');
-							$('#Allowance').removeAttr('disabled');
+							//$('#Allowance').removeAttr('disabled');
 							$('#ReturnDateDiv2').hide();
 							$('#ReturnDateDiv').show();
 							$('#tabledetail_div').hide();
@@ -237,8 +243,9 @@
 		if (id) {
 			var ret = jQuery("#list").jqGrid('getRowData', id);
 			$('#ConfirmationDate').datebox('setValue', $.datepicker.formatDate('mm/dd/yy', new Date()));
-			$('#confirmAllowance').numberbox('setValue', ret.allowance);
+			//$('#confirmAllowance').numberbox('setValue', ret.allowance);
 			$('#idconfirm').val(ret.id);
+			$('#confirmCode').val(ret.code);
 			$("#confirm_div").dialog("open");
 		} else {
 			$.messager.alert('Information', 'Please Select Data...!!', 'info');
@@ -291,7 +298,7 @@
 			contentType: "application/json",
 			data: JSON.stringify({
 				Id: $('#idconfirm').val(), ConfirmationDate: $('#ConfirmationDate').datebox('getValue'),
-				Allowance: $('#confirmAllowance').numberbox('getValue'),
+				//Allowance: $('#confirmAllowance').numberbox('getValue'),
 			}),
 			success: function (result) {
 				if (JSON.stringify(result.Errors) != '{}') {
@@ -324,6 +331,7 @@
 	        $('#paidAllowance').numberbox('setValue', ret.allowance);
 	        $('#paidTotal').numberbox('setValue', ret.total);
 	        $('#idpaid').val(ret.id);
+	        $('#paidCode').val(ret.code);
 	        $("#paid_div").dialog("open");
 	    } else {
 	        $.messager.alert('Information', 'Please Select Data...!!', 'info');
@@ -482,8 +490,9 @@
 			url: submitURL,
 			data: JSON.stringify({
 				Id: id, Code: $("#Code").val(), Description: $("#Description").val(),
-				ReturnDate: $("#ReturnDate").datebox('getValue'), Allowance: $('#Allowance').numberbox('getValue'),
+				ReturnDate: $("#ReturnDate").datebox('getValue'), 
 				CashBankId: $('#CashBankId').val(), CashSalesInvoiceId: $('#CashSalesInvoiceId').val(),
+				//Allowance: $('#Allowance').numberbox('getValue'),
 			}),
 			async: false,
 			cache: false,
@@ -523,9 +532,9 @@
 		colNames: ['Code', 'CashSalesReturn Id', 'CashSalesReturn Code', 'CashSalesInvoiceDetail Id', 'CashSalesInvoiceDetail Code', 'Quantity', 'TotalPrice'],
 		colModel: [
 				  { name: 'code', index: 'code', width: 100, sortable: false },
-				  { name: 'cashsalesreturnid', index: 'cashsalesreturnid', width: 130, sortable: false },
+				  { name: 'cashsalesreturnid', index: 'cashsalesreturnid', hidden:true, width: 130, sortable: false },
 				  { name: 'cashsalesreturn', index: 'cashsalesreturn', width: 140, sortable: false },
-				  { name: 'cashsalesinvoicedetailid', index: 'cashsalesinvoicedetailid', width: 160, sortable: false },
+				  { name: 'cashsalesinvoicedetailid', index: 'cashsalesinvoicedetailid', hidden:true,width: 160, sortable: false },
 				  { name: 'cashsalesinvoicedetail', index: 'cashsalesinvoicedetail', width: 185, sortable: false },
 				  { name: 'quantity', index: 'quantity', width: 100, formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: false },
 				  { name: 'totalprice', index: 'totalprice', width: 100, formatter: 'currency', formatoptions: { decimalSeparator: ".", thousandsSeparator: ",", decimalPlaces: 2, prefix: "", suffix: "", defaultValue: '0.00' }, sortable: false },
@@ -549,7 +558,8 @@
 	                .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: true });
 
 	$('#btn_add_new_detail').click(function () {
-		ClearData();
+	    ClearData();
+	    $('#Quantity').numberbox('setValue', '');
 		clearForm('#cashsalesinvoicedetail_div');
 		$('#cashsalesinvoicedetail_div').dialog('open');
 	});
@@ -582,7 +592,7 @@
 							$("#cashsalesinvoicedetail_btn_submit").data('kode', result.Id);
 							$('#CashSalesInvoiceDetailId').val(result.CashSalesInvoiceDetailId);
 							$('#CashSalesInvoiceDetail').val(result.CashSalesInvoiceDetail);
-							$('#Quantity').val(result.Quantity);
+							$('#Quantity').numberbox('setValue', result.Quantity);
 							$('#cashsalesinvoicedetail_div').dialog('open');
 						}
 					}
@@ -726,7 +736,7 @@
 		mtype: 'GET',
 		colNames: ['Id', 'Name', 'Description'],
 		colModel: [
-				  { name: 'id', index: 'id', width: 80, align: 'right' },
+				  { name: 'id', index: 'id', width: 80, align: 'right', hidden:true },
 				  { name: 'name', index: 'name', width: 200 },
 				  { name: 'description', index: 'description', width: 200 }],
 		page: '1',
@@ -783,7 +793,7 @@
 		mtype: 'GET',
 		colNames: ['Id', 'Code', 'Description'],
 		colModel: [
-				  { name: 'id', index: 'id', width: 80, align: 'right' },
+				  { name: 'id', index: 'id', width: 80, align: 'right', hidden:true },
 				  { name: 'code', index: 'code', width: 200 },
 				  { name: 'description', index: 'description', width: 200 }],
 		page: '1',
@@ -842,9 +852,9 @@
 		colModel: [
 				  //{ name: 'id', index: 'id', width: 80, align: 'right' },
 				  { name: 'code', index: 'code', width: 200, align: 'right' },
-                  { name: 'cashsalesinvoiceid', index: 'cashsalesinvoiceid', width: 200 },
+                  { name: 'cashsalesinvoiceid', index: 'cashsalesinvoiceid', hidden:true, width: 200 },
                   { name: 'cashsalesinvoice', index: 'cashsalesinvoice', width: 200 },
-                  { name: 'itemid', index: 'itemid', width: 200 },
+                  { name: 'itemid', index: 'itemid', hidden:true, width: 200 },
                   { name: 'item', index: 'item', width: 200 },
                   { name: 'quantity', index: 'quantity', width: 200 },
 		],

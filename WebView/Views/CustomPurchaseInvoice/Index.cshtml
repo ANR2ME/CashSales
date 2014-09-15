@@ -32,7 +32,7 @@
     </div>
 
 <!-- Dialog Box -->
-    <div id="form_div" class="easyui-dialog" style="text-align: left; padding:0px 0px 10px" data-options="modal:true"  
+    <div id="form_div" class="easyui-dialog" style="text-align: left; padding:0px 0px 10px; top: 100px" data-options="modal:true"  
         title=".: Master CustomPurchaseInvoice :.">
 
         <div id="form_toolbar" class="form_toolbar">
@@ -44,7 +44,7 @@
             <form id="frm">
                 @*<fieldset class="ui-widget-content ui-corner-all input_form_div">*@
                     <table width="100%" border="0" cellpadding="1" cellspacing="1" class="input_form_tbl">
-                        <tr nowrap>
+                        <tr nowrap hidden>
                             <td width="139" nowrap style="width: 100px">
                                 <label>ID</label></td>
                             <td width="550">
@@ -66,7 +66,7 @@
                             <td>
                                 <label>Contact</label></td>
                             <td colspan="3">
-                               <input id="ContactId" name="ContactId" class="textright" type="text" size="10" maxlength="7" disabled="disabled" />
+                               <input id="ContactId" hidden name="ContactId" class="textright" type="text" size="10" maxlength="7" disabled="disabled" />
                                <input id="btnContact" name="buttonactivated" type="button" style="cursor: pointer;" class="ui-corner-all ui-state-default" value=".." />
                                <input id="Contact" name="Contact" type="text" size="56" maxlength="50" class="editable upper" disabled="disabled" />
                         </tr>
@@ -74,7 +74,7 @@
                             <td>
                                 <label>CashBank</label></td>
                             <td colspan="3">
-                               <input id="CashBankId"  class="textright" type="text" size="10" maxlength="7" disabled="disabled" />
+                               <input id="CashBankId" hidden class="textright" type="text" size="10" maxlength="7" disabled="disabled" />
                                <input id="btnCashBank" name="buttonactivated" type="button" style="cursor: pointer;" class="ui-corner-all ui-state-default" value=".." />
                                <input id="CashBankName" name="CashBankId" type="text" size="56" maxlength="50" class="editable upper" disabled="disabled" />
                         </tr>
@@ -82,7 +82,7 @@
                             <td>
                                 <label>Warehouse</label></td>
                             <td colspan="3">
-                               <input id="WarehouseId"  class="textright" type="text" size="10" maxlength="7" disabled="disabled" />
+                               <input id="WarehouseId" hidden class="textright" type="text" size="10" maxlength="7" disabled="disabled" />
                                <input id="btnWarehouse" name="buttonactivated" type="button" style="cursor: pointer;" class="ui-corner-all ui-state-default" value=".." />
                                <input id="WarehouseName" name="WarehouseId" type="text" size="56" maxlength="50" class="editable upper" disabled="disabled" />
                         </tr>
@@ -157,7 +157,7 @@
                           Item
                       </td>
                       <td>
-                         <input id="ItemId"  class="textright" type="text" size="10" maxlength="7" disabled="disabled" />
+                         <input id="ItemId" hidden class="textright" type="text" size="10" maxlength="7" disabled="disabled" />
                          <input id="btnItem" name="buttonactivated" type="button" style="cursor: pointer;" class="ui-corner-all ui-state-default" value=".." />
                          <input id="Item" name="ItemId" type="text" size="56" maxlength="50" class="editable upper" disabled="disabled" />
                          <input id="CustomPurchaseInvoiceId" name="CustomPurchaseInvoiceId" type="text" size ="10" hidden="hidden" />
@@ -199,11 +199,12 @@
 
         <div id="check_toolbar" class="form_toolbar">
             <a id="check_btn_submit" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-save'">Submit</a>
+            <a id="check_btn_print" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-print'">Print Data</a>
             <a id="check_btn_cancel" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-remove'">Close</a>
         </div>
         <div id="check_info">
               <table  width="100%" border="0" cellpadding="5" cellspacing="5" class="input_form_tbl">
-                  <tr>
+                  <tr class="hideme">
                       <td width="139" nowrap style="width: 100px">
                           Id
                       </td>
@@ -213,7 +214,15 @@
                   </tr>
                   <tr>
                       <td>
-                          Due Date :
+                          Code 
+                      </td>
+                      <td>
+                         <input id="checkCode" type="text" size="10" disabled="disabled"/>
+                      </td>
+                  </tr>
+                  <tr>
+                      <td>
+                          Due Date 
                       </td>
                       <td>
                          <input id="checkDueDate"class="easyui-datebox" title="mm/dd/yyyy" type="text" size="10" value="@DateTime.Today.ToShortDateString()"/>
@@ -238,6 +247,26 @@
                             <td colspan="3">
                         <input id="checkAllowance" name="Allowance" type="text" size="15" maxlength="20" class="textright easyui-numberbox" data-options="groupSeparator:','" value="0" />
                         </tr>
+                        <tr>
+                            <td>
+                                <label>Daily Sales Projection</label></td>
+                            <td colspan="3">
+                        <input id="DailySalesProjection" name="DailySalesProjection" type="text" size="15" maxlength="20" class="textright easyui-numberbox" data-options="groupSeparator:','" value="0" />
+                        </tr>
+                        <tr>
+                            <td >
+                                <label for="IncludeSaturdaySales">Include Saturday Sales</label></td>
+                            <td colspan="3">
+                            <input type="checkbox" name="IncludeSaturdaySales" id="IncludeSaturdaySales" />
+                            @*<input type="hidden" name="IncludeSaturdaySales" value="false" />*@
+                        </tr>
+                        <tr>
+                            <td >
+                                <label for="IncludeSundaySales">Include Sunday Sales</label></td>
+                            <td colspan="3">
+                            <input type="checkbox" name="IncludeSundaySales" id="IncludeSundaySales" />
+                            @*<input type="hidden" name="IncludeSundaySales" value="false" />*@
+                        </tr>
               </table>
           
         </div>
@@ -254,12 +283,20 @@
         </div>
         <div id="confirm_info">
               <table  width="100%" border="0" cellpadding="5" cellspacing="5" class="input_form_tbl">
-                  <tr>
+                  <tr hidden>
                       <td width="139" nowrap style="width: 100px">
-                          Id
+                          ID
                       </td>
                       <td>
                          <input id="idconfirm" type="text" size="10" disabled="disabled"/>
+                      </td>
+                  </tr>
+                  <tr>
+                      <td>
+                          Code 
+                      </td>
+                      <td>
+                         <input id="confirmCode" name="Code" type="text" size="10" disabled="disabled"/>
                       </td>
                   </tr>
                   <tr>
@@ -284,12 +321,12 @@
                             <td colspan="3">
                         <input id="confirmTax" name="Tax" type="text" size="15" maxlength="20" class="textright easyui-numberbox" data-options="groupSeparator:','" value="0" />%
                         </tr>
-                        <tr>
+                        @*<tr>
                             <td>
                                 <label>Allowance</label></td>
                             <td colspan="3">
                         <input id="confirmAllowance" name="Allowance" type="text" size="15" maxlength="20" class="textright easyui-numberbox" data-options="groupSeparator:','" value="0" />
-                        </tr>
+                        </tr>*@
               </table>
           
         </div>
@@ -306,12 +343,20 @@
         </div>
         <div id="paid_info">
               <table  width="100%" border="0" cellpadding="5" cellspacing="5" class="input_form_tbl">
-                  <tr>
+                  <tr hidden>
                       <td width="139" nowrap style="width: 100px">
-                          Id
+                          ID
                       </td>
                       <td>
                          <input id="idpaid" type="text" size="10" disabled="disabled"/>
+                      </td>
+                  </tr>
+                  <tr>
+                      <td>
+                          Code 
+                      </td>
+                      <td>
+                         <input id="paidCode" name="Code" type="text" size="10" disabled="disabled"/>
                       </td>
                   </tr>
                   <tr>

@@ -66,6 +66,7 @@
     <Compile Include="Validation\SalesOperation\CashSalesReturnValidator.cs" />
     <Compile Include="Validation\SalesOperation\RetailSalesInvoiceDetailValidator.cs" />
     <Compile Include="Validation\SalesOperation\RetailSalesInvoiceValidator.cs" />
+    <Compile Include="Validation\StockAndMaster\CompanyValidator.cs" />
     <Compile Include="Validation\StockAndMaster\QuantityPricingValidator.cs" />
     <Compile Include="Validation\StockAndMaster\GroupItemPriceValidator.cs" />
     <Compile Include="Validation\StockAndMaster\PriceMutationValidator.cs" />

@@ -1,0 +1,59 @@
+﻿@{
+    ViewBag.Title = "Stock Item";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section Head {
+}
+
+@section Scripts {
+    <script type="text/javascript" src="@Url.Content("~/Content/apps_js/tools.js")"></script>
+    <script type="text/javascript" src="@Url.Content("~/Content/apps_js/reportitem.js")"></script>
+}
+<div id="ua_panel" class="easyui-panel" style="text-align: left;" data-options="modal:true" 
+    title=".: Stock Item :.">
+<div id="toolbar" class="form_toolbar">
+        @*<a id="btn_reload" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-reload'">Reload Data</a>*@
+        <a id="btn_print" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-print'">Print Data</a>
+    </div>
+
+<!-- Dialog Box -->
+
+        <div style="overflow: auto">
+            <form id="frm">
+                @*<fieldset class="ui-widget-content ui-corner-all input_form_div">*@
+                    <table width="100%" border="0" cellpadding="1" cellspacing="1" class="input_form_tbl">
+                        
+                        <tr>
+                            <td>
+                                <label>Item Type</label></td>
+                            <td colspan="3">
+                               <input id="ItemTypeId"  class="textright" type="text" size="10" maxlength="7" disabled="disabled" />
+                               <input id="btnItemType" name="buttonactivated" type="button" style="cursor: pointer;" class="ui-corner-all ui-state-default" value=".." />
+                               <input id="ItemTypeName" name="ItemType" type="text" size="56" maxlength="50" class="editable upper" disabled="disabled" />
+                        </tr>
+
+                        <tr><td></td></tr>
+                         
+                    </table>
+                @*</fieldset>*@
+            </form>
+    </div>
+<!-- End Dialog Box -->
+
+ <!-- Look Up ItemType -->
+    <div id="lookup_div_itemtype" class="easyui-dialog" title="List Item Type" style="padding: 0px 5px; height: 490px; width: 480px;"
+        data-options="iconCls:'icon-tip',modal:true">
+
+        <div id="lookup_toolbar_itemtype" class="grid_toolbar">
+            <a id="lookup_btn_add_itemtype" href="javascript:void(0)" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-add'">Select Data</a>
+            <a id="lookup_btn_cancel_itemtype" href="javascript:void(0)" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-remove'">Close Window</a>
+        </div>
+
+        <table id="lookup_table_itemtype" class="scroll" cellpadding="0" cellspacing="0"></table>
+        <div id="lookup_pager_itemtype" class="scroll" style="text-align: center;"></div>
+    </div>
+<!-- END Look Up Item Type -->
+
+  </div>
+

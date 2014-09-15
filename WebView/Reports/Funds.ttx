@@ -1,0 +1,10 @@
+ToDueDate	Date
+FromDueDate	Date	
+CurDate	Date	
+cashBank	Currency		
+payable	Currency		
+receivable	Currency		
+dailySalesProjection	Currency		
+CompanyName	String	80
+CompanyAddress	String	255
+CompanyContactNo	String	100

@@ -20,8 +20,12 @@
     }
 
     function ClearData() {
-        $('#Description').val('').text('').removeClass('errormessage');
-        $('#Name').val('').text('').removeClass('errormessage');
+        $('#id').val('');
+        $('#Discount').numberbox('setValue', '');
+        $('#MinQuantity').numberbox('setValue', '');
+        $('#IsInfiniteMaxQuantity').select('0');
+        $('#MaxQuantity').numberbox('setValue', '');
+        //onInfiniteMaxQuantity();
         $('#form_btn_save').data('kode', '');
 
         ClearErrorMessage();
@@ -64,10 +68,10 @@
             ],
             colModel: [
                       { name: 'id', index: 'id', width: 80, align: "center", frozen: true },
-                      { name: 'discount', index: 'discount', width: 100, formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: false },
-                      { name: 'minquantity', index: 'minquantity', width: 100, formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: false },
-                      { name: 'isinfinitemaxquantity', index: 'isinfinitemaxquantity', width: 100 },
-                      { name: 'maxquantity', index: 'maxquantity', width: 100, formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: false },
+                      { name: 'discount', index: 'discount', width: 100, formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' } },
+                      { name: 'minquantity', index: 'minquantity', width: 100, formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' } },
+                      { name: 'isinfinitemaxquantity', index: 'isinfinitemaxquantity', width: 130 },
+                      { name: 'maxquantity', index: 'maxquantity', width: 100, formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' } },
                       { name: 'createdat', index: 'createdat', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
 				      { name: 'updateat', index: 'updateat', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
 

@@ -13,6 +13,7 @@ namespace Core.DomainModel
         
         public string SourceDocumentType { get; set; }
         public int SourceDocumentId { get; set; }
+        public string SourceDocumentCode { get; set; }
 
         public decimal Amount { get; set; }
         public DateTime MutationDate { get; set; }

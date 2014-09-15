@@ -66,6 +66,7 @@ namespace Data.Repository
 
         public CashBankMutation CreateObject(CashBankMutation cashBankMutation)
         {
+            cashBankMutation.Code = SetObjectCode();
             cashBankMutation.IsConfirmed = false;
             cashBankMutation.IsDeleted = false;
             cashBankMutation.CreatedAt = DateTime.Now;
@@ -107,5 +108,13 @@ namespace Data.Repository
             CashBankMutation cashBankMutation =  Find(x => x.Id == Id);
             return (Delete(cashBankMutation) == 1) ? true : false;
         }
+
+        public string SetObjectCode()
+        {
+            int totalnumberinthemonth = GetAllByMonthCreated().Count() + 1;
+            string Code = DateTime.Today.Year.ToString() + "." + DateTime.Today.Month.ToString() + "." + totalnumberinthemonth;
+            return Code;
+        }
+
     }
 }

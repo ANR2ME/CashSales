@@ -68,7 +68,7 @@ namespace WebView.Controllers
         {
             if (!AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.CashSalesInvoice, Core.Constants.Constant.MenuGroupName.Transaction))
             {
-                return Content("You are not allowed to View this Page.");
+                return Content(Core.Constants.Constant.PageViewNotAllowed);
             }
 
             return View();
@@ -91,24 +91,24 @@ namespace WebView.Controllers
                             model.Id,
                             model.Code,
                             model.Description,
-                            model.SalesDate,
-                            model.DueDate,
                             model.Discount,
                             model.Tax,
                             model.Allowance,
+                            model.AmountPaid,
+                            model.Total,
+                            model.CoGS,
+                            profitloss = (model.IsConfirmed ? (Nullable<decimal>)((model.Total * (100 - model.Tax) / 100) - model.CoGS) : null),
                             model.IsConfirmed,
                             model.ConfirmationDate,
-                            model.AmountPaid,
                             model.CashBankId,
                             cashbank = model.CashBank.Name,
                             model.IsBank,
                             model.IsPaid,
                             model.IsFullPayment,
-                            model.Total,
-                            model.CoGS,
-                            profitloss = (model.IsConfirmed ? (Nullable<decimal>)((model.Total * (100 - model.Tax)/100) - model.CoGS) : null),
                             model.WarehouseId,
                             warehouse = model.Warehouse.Name,
+                            model.SalesDate,
+                            model.DueDate,
                             model.CreatedAt,
                             model.UpdatedAt,
                          }).Where(filter).OrderBy(sidx + " " + sord); //.ToList();
@@ -145,24 +145,24 @@ namespace WebView.Controllers
                             model.Id,
                             model.Code,
                             model.Description,
-                            model.SalesDate,
-                            model.DueDate,
                             model.Discount,
                             model.Tax,
                             model.Allowance,
+                            model.AmountPaid,
+                            model.Total,
+                            model.CoGS,
+                            model.profitloss,
                             model.IsConfirmed,
                             model.ConfirmationDate,
-                            model.AmountPaid,
                             model.CashBankId,
                             model.cashbank,
                             model.IsBank,
                             model.IsPaid,
                             model.IsFullPayment,
-                            model.Total,
-                            model.CoGS,
-                            model.profitloss,
                             model.WarehouseId,
                             model.warehouse,
+                            model.SalesDate,
+                            model.DueDate,
                             model.CreatedAt,
                             model.UpdatedAt,
                       }
@@ -228,17 +228,18 @@ namespace WebView.Controllers
                     {
                         id = model.Id,
                         cell = new object[] {
-                            model.Code,
-                            model.CashSalesInvoiceId,
-                            _cashSalesInvoiceService.GetObjectById(model.CashSalesInvoiceId).Code,
-                            model.ItemId,
-                            _itemService.GetObjectById(model.ItemId).Name,
-                            model.Quantity,
-                            model.Amount,
-                            model.CoGS,
-                            model.PriceMutationId,
-                            model.IsManualPriceAssignment,
-                            model.AssignedPrice,
+                             model.Code,
+                             model.CashSalesInvoiceId,
+                             model.cashsalesinvoice,
+                             model.ItemId,
+                             model.item,
+                             model.Quantity,
+                             model.Amount,
+                             model.CoGS,
+                             model.PriceMutationId,
+                             model.Discount,
+                             model.IsManualPriceAssignment,
+                             model.AssignedPrice,
                       }
                     }).ToArray()
             }, JsonRequestBehavior.AllowGet);
@@ -370,8 +371,17 @@ namespace WebView.Controllers
                     {
                         Errors
                     }, JsonRequestBehavior.AllowGet);
-                }
+               }
+                if((model.IsManualPriceAssignment || model.Discount > 0) && (!AuthenticationModel.IsAllowed("ManualPricing", Core.Constants.Constant.MenuName.CashSalesInvoice, Core.Constants.Constant.MenuGroupName.Transaction)))
+                {
+                    Dictionary<string, string> Errors = new Dictionary<string, string>();
+                    Errors.Add("Generic", "You are Not Allowed to Use Manual Pricing/Discount");
 
+                    return Json(new
+                    {
+                        Errors
+                    }, JsonRequestBehavior.AllowGet);
+               }
                 model = _cashSalesInvoiceDetailService.CreateObject(model, _cashSalesInvoiceService, _itemService, _warehouseItemService, _quantityPricingService);
                 total = _cashSalesInvoiceService.GetObjectById(model.CashSalesInvoiceId).Total;
             }
@@ -456,6 +466,16 @@ namespace WebView.Controllers
                         Errors
                     }, JsonRequestBehavior.AllowGet);
                 }
+                if ((model.IsManualPriceAssignment || model.Discount > 0) && (!AuthenticationModel.IsAllowed("ManualPricing", Core.Constants.Constant.MenuName.CashSalesInvoice, Core.Constants.Constant.MenuGroupName.Transaction)))
+                {
+                    Dictionary<string, string> Errors = new Dictionary<string, string>();
+                    Errors.Add("Generic", "You are Not Allowed to Use Manual Pricing/Discount");
+
+                    return Json(new
+                    {
+                        Errors
+                    }, JsonRequestBehavior.AllowGet);
+                }
 
                 var data = _cashSalesInvoiceDetailService.GetObjectById(model.Id);
                 data.ItemId = model.ItemId;
@@ -495,6 +515,16 @@ namespace WebView.Controllers
                 {
                     Dictionary<string, string> Errors = new Dictionary<string, string>();
                     Errors.Add("Generic", "You are Not Allowed to Confirm Record");
+
+                    return Json(new
+                    {
+                        Errors
+                    }, JsonRequestBehavior.AllowGet);
+                }
+                if ((model.Discount > 0) && (!AuthenticationModel.IsAllowed("ManualPricing", Core.Constants.Constant.MenuName.CashSalesInvoice, Core.Constants.Constant.MenuGroupName.Transaction)))
+                {
+                    Dictionary<string, string> Errors = new Dictionary<string, string>();
+                    Errors.Add("Generic", "You are Not Allowed to Use Manual Pricing/Discount/Allowance");
 
                     return Json(new
                     {
@@ -573,6 +603,16 @@ namespace WebView.Controllers
                 {
                     Dictionary<string, string> Errors = new Dictionary<string, string>();
                     Errors.Add("Generic", "You are Not Allowed to Paid record");
+
+                    return Json(new
+                    {
+                        Errors
+                    }, JsonRequestBehavior.AllowGet);
+                }
+                if ((model.Allowance > 0) && (!AuthenticationModel.IsAllowed("ManualPricing", Core.Constants.Constant.MenuName.CashSalesInvoice, Core.Constants.Constant.MenuGroupName.Transaction)))
+                {
+                    Dictionary<string, string> Errors = new Dictionary<string, string>();
+                    Errors.Add("Generic", "You are Not Allowed to Use Manual Pricing/Discount/Allowance");
 
                     return Json(new
                     {

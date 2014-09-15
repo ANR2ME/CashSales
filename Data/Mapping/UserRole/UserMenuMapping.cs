@@ -13,6 +13,10 @@ namespace Data.Mapping
         public UserMenuMapping()
         {
             HasKey(u => u.Id);
+            HasMany(u => u.UserAccesses)
+                .WithRequired(a => a.UserMenu)
+                .HasForeignKey(a => a.UserMenuId)
+                .WillCascadeOnDelete(true);
             Ignore(u => u.Errors);
         }
     }

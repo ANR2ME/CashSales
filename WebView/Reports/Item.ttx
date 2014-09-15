@@ -1,0 +1,17 @@
+SKU	String	80	
+Id	Number		
+Name	String	100	
+ItemType	String	80	
+UoM	String	50	
+Quantity	Number		
+SellingPrice	Number		
+AvgPrice	Number		
+Margin	Number		
+PendingReceival	Number		
+PendingDelivery	Number		
+CreatedAt	Date		
+UpdateAt	Date		
+CompanyName	String	80
+CompanyAddress	String	255
+CompanyContactNo	String	100
+CoGS	Number

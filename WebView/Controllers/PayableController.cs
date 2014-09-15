@@ -30,7 +30,7 @@ namespace WebView.Controllers
         {
             if (!AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.Payable, Core.Constants.Constant.MenuGroupName.Transaction))
             {
-                return Content("You are not allowed to View this Page.");
+                return Content(Core.Constants.Constant.PageViewNotAllowed);
             }
 
             return View();
@@ -51,18 +51,19 @@ namespace WebView.Controllers
                          select new
                          {
                              model.Id,
+                             model.Code,
                              model.ContactId,
                              contact = model.Contact.Name,
-                             model.Code,
                              model.PayableSource,
                              model.PayableSourceId,
+                             model.PayableSourceCode,
                              model.Amount,
                              model.RemainingAmount,
                              model.PendingClearanceAmount,
                              model.AllowanceAmount,
-                             model.DueDate,
                              model.IsCompleted,
                              model.CompletionDate,
+                             model.DueDate,
                              model.CreatedAt,
                          }).Where(filter).OrderBy(sidx + " " + sord); //.ToList();
 
@@ -96,18 +97,19 @@ namespace WebView.Controllers
                         id = model.Id,
                         cell = new object[] {
                             model.Id,
+                            model.Code,
                             model.ContactId,
                             model.contact,
-                            model.Code,
                             model.PayableSource,
                             model.PayableSourceId,
+                            model.PayableSourceCode,
                             model.Amount,
                             model.RemainingAmount,
                             model.PendingClearanceAmount,
                             model.AllowanceAmount,
-                            model.DueDate,
                             model.IsCompleted,
                             model.CompletionDate,
+                            model.DueDate,
                             model.CreatedAt,
                       }
                     }).ToArray()
@@ -140,6 +142,7 @@ namespace WebView.Controllers
                              model.Code,
                              model.PayableSource,
                              model.PayableSourceId,
+                             model.PayableSourceCode,
                              model.Amount,
                              model.RemainingAmount,
                              model.PendingClearanceAmount,

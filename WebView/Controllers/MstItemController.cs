@@ -53,7 +53,7 @@ namespace WebView.Controllers
         {
             if (!AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.Item, Core.Constants.Constant.MenuGroupName.Master))
             {
-                return Content("You are not allowed to View this Page.");
+                return Content(Core.Constants.Constant.PageViewNotAllowed);
             }
 
             return View();
@@ -74,10 +74,10 @@ namespace WebView.Controllers
                          select new
                          {
                              model.Id,
+                             model.Sku,
                              model.Name,
                              model.ItemTypeId,
                              itemtype = model.ItemType.Name,
-                             model.Sku,
                              model.Category,
                              model.UoMId,
                              uom = model.UoM.Name,
@@ -121,12 +121,12 @@ namespace WebView.Controllers
                         id = model.Id,
                         cell = new object[] {
                             model.Id,
-                            model.Name,
-                            model.ItemTypeId,
-                            model.itemtype,
                             model.Sku,
-                            model.Category,
-                            model.UoMId,
+                            model.Name,
+                            //model.ItemTypeId,
+                            model.itemtype,
+                            //model.Category,
+                            //model.UoMId,
                             model.uom,
                             model.Quantity,
                             model.SellingPrice,

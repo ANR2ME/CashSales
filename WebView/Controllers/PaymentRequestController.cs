@@ -44,7 +44,7 @@ namespace WebView.Controllers
         {
             if (!AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.PaymentRequest, Core.Constants.Constant.MenuGroupName.Master))
             {
-                return Content("You are not allowed to View this Page.");
+                return Content(Core.Constants.Constant.PageViewNotAllowed);
             }
 
             return View();
@@ -69,11 +69,11 @@ namespace WebView.Controllers
                              model.ContactId,
                              contact = model.Contact.Name,
                              model.Description,
-                             model.RequestedDate,
-                             model.DueDate,
                              model.Amount,
                              model.IsConfirmed,
                              model.ConfirmationDate,
+                             model.RequestedDate,
+                             model.DueDate,
                              model.CreatedAt,
                              model.UpdatedAt,
                          }).Where(filter).OrderBy(sidx + " " + sord); //.ToList();
@@ -112,11 +112,11 @@ namespace WebView.Controllers
                             model.ContactId,
                             model.contact,
                             model.Description,
-                            model.RequestedDate,
-                            model.DueDate,
                             model.Amount,
                             model.IsConfirmed,
                             model.ConfirmationDate,
+                            model.RequestedDate,
+                            model.DueDate,
                             model.CreatedAt,
                             model.UpdatedAt,
                       }

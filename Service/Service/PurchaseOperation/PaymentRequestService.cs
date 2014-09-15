@@ -88,7 +88,7 @@ namespace Service.Service
                 // confirm object
                 // create payable
                 paymentRequest = _repository.ConfirmObject(paymentRequest);
-                Payable payable = _payableService.CreateObject(paymentRequest.ContactId, Constant.PayableSource.PaymentRequest, paymentRequest.Id, paymentRequest.Amount, paymentRequest.DueDate);
+                Payable payable = _payableService.CreateObject(paymentRequest.ContactId, Constant.PayableSource.PaymentRequest, paymentRequest.Id, paymentRequest.Code, paymentRequest.Amount, paymentRequest.DueDate);
             }
             else
             {

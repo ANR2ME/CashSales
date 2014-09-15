@@ -38,10 +38,10 @@ namespace Validation.Validation
             {
                 cashSalesInvoice.Errors.Add("ConfirmationDate", "Tidak ada");
             }
-            else if (cashSalesInvoice.ConfirmationDate.GetValueOrDefault().Date < cashSalesInvoice.SalesDate.Date)
-            {
-                cashSalesInvoice.Errors.Add("ConfirmationDate", "Harus lebih besar atau sama dengan Sales Date");
-            }
+            //else if (cashSalesInvoice.ConfirmationDate.GetValueOrDefault().Date.AddDays(1) < cashSalesInvoice.SalesDate.Date)
+            //{
+            //    cashSalesInvoice.Errors.Add("ConfirmationDate", "Harus lebih besar atau sama dengan Sales Date");
+            //}
             return cashSalesInvoice;
         }
 
@@ -246,7 +246,7 @@ namespace Validation.Validation
             return cashSalesInvoice;
         }
 
-        public CashSalesInvoice VIsCashBankTypeNotBank(CashSalesInvoice cashSalesInvoice, ICashBankService _cashBankService)
+        /*public CashSalesInvoice VIsCashBankTypeNotBank(CashSalesInvoice cashSalesInvoice, ICashBankService _cashBankService)
         {
             CashBank cashBank = _cashBankService.GetObjectById((int)cashSalesInvoice.CashBankId.GetValueOrDefault());
             if (cashBank.IsBank)
@@ -255,7 +255,7 @@ namespace Validation.Validation
                 return cashSalesInvoice;
             }
             return cashSalesInvoice;
-        }
+        }*/
 
         public CashSalesInvoice VConfirmObject(CashSalesInvoice cashSalesInvoice, ICashSalesInvoiceDetailService _cashSalesInvoiceDetailService, 
                                                  ICashSalesInvoiceService _cashSalesInvoiceService, IWarehouseItemService _warehouseItemService, IContactService _contactService, ICashBankService _cashBankService)
@@ -302,8 +302,8 @@ namespace Validation.Validation
             VIsConfirmed(cashSalesInvoice);
             if (!isValid(cashSalesInvoice)) { return cashSalesInvoice; }
             VHasCashBank(cashSalesInvoice, _cashBankService);
-            if (!isValid(cashSalesInvoice)) { return cashSalesInvoice; }
-            VIsCashBankTypeNotBank(cashSalesInvoice, _cashBankService);
+            //if (!isValid(cashSalesInvoice)) { return cashSalesInvoice; }
+            //VIsCashBankTypeNotBank(cashSalesInvoice, _cashBankService);
             if (!isValid(cashSalesInvoice)) { return cashSalesInvoice; }
             VIsValidAllowance(cashSalesInvoice);
             if (!isValid(cashSalesInvoice)) { return cashSalesInvoice; }

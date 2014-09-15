@@ -13,8 +13,17 @@
     }
 
     function ClearData() {
-        $('#Description').val('').text('').removeClass('errormessage');
+        $('#id').val('').text('').removeClass('errormessage');
+        $('#SKU').val('').text('').removeClass('errormessage');
         $('#Name').val('').text('').removeClass('errormessage');
+        $('#Category').val('').text('').removeClass('errormessage');
+        $('#ItemTypeId').val('').text('').removeClass('errormessage');
+        $('#ItemTypeName').val('').text('').removeClass('errormessage');
+        $('#UoMId').val('').text('').removeClass('errormessage');
+        $('#UoMName').val('').text('').removeClass('errormessage');
+        $('#Quantity').numberbox('setValue', '').removeClass('errormessage');
+        $('#SellingPrice').numberbox('setValue', '').removeClass('errormessage');
+        $('#Margin').numberbox('setValue', '').removeClass('errormessage');
         $('#form_btn_save').data('kode', '');
 
         ClearErrorMessage();
@@ -25,30 +34,49 @@
     $("#lookup_div_uom").dialog('close');
     $("#delete_confirm_div").dialog('close');
 
+    $("#ItemTypeId").hide();
+    $("#UoMId").hide();
+
+    $('#SellingPrice').bind('keypress', function (e) {
+        if ($('#SellingPrice').val().length != 0) {
+            if (e.which == 45) { // minus
+                e.preventDefault();
+            }
+        }
+    });
+
+    $('#Margin').bind('keypress', function (e) {
+        if ($('#Margin').val().length != 0) {
+            if (e.which == 45) { // minus
+                e.preventDefault();
+            }
+        }
+    });
+
+    //$(document).ready(function() {
+    //    $('.QuantityInput').keypress(function(key) {
+    //        if(key.charCode == 45) return false;
+    //    });
 
     //GRID +++++++++++++++
     $("#list").jqGrid({
         url: base_url + 'MstItem/GetList',
         datatype: "json",
-        colNames: ['ID', 'Name', 'Item Type Id', 'Item Type Name', 'SKU',
-                   'Category', 'UoM Id','UoM','Quantity',
+        colNames: ['ID', 'SKU', 'Name', 'Item Type Name', 'UoM', 'Quantity',
                    'Selling Price', 'AvgPrice', 'Margin',
                    'Pending Receival', 'Pending Delivery', 'Created At', 'Updated At'],
         colModel: [
     			  { name: 'id', index: 'id', width: 80, align: "center" },
-				  { name: 'name', index: 'name', width: 100 },
-                  { name: 'itemtypeid', index: 'itemtypeid', width: 80 },
-                  { name: 'itemtype', index: 'itemtype', width: 100 },
                   { name: 'sku', index: 'sku', width: 100 },
-                  { name: 'category', index: 'category', width: 100 },
-                  { name: 'uomid', index: 'uomid', width: 80 },
+                  { name: 'name', index: 'name', width: 100 },
+                  { name: 'itemtype', index: 'itemtype', width: 120 },
                   { name: 'uom', index: 'uom', width: 100 },
                   { name: 'quantity', index: 'quantity', width: 80, formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' } },
-                  { name: 'sellingprice', index: 'sellingprice', width: 80, formatter: 'currency', formatoptions: { thousandsSeparator: ",", defaultValue: '0' } },
+                  { name: 'sellingprice', index: 'sellingprice', width: 100, formatter: 'currency', formatoptions: { thousandsSeparator: ",", defaultValue: '0' } },
                   { name: 'avgprice', index: 'avgprice', width: 80, formatter: 'currency', formatoptions: { thousandsSeparator: ",", defaultValue: '0' } },
                   { name: 'margin', index: 'margin', width: 80, formatter: 'currency', formatoptions: { thousandsSeparator: ",", defaultValue: '0' } },
-                  { name: 'pendingreceival', index: 'pendingreceival', width: 105, formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' } },
-                  { name: 'pendingdelivery', index: 'pendingdelivery', width: 105, formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' } },
+                  { name: 'pendingreceival', index: 'pendingreceival', width: 115, formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' } },
+                  { name: 'pendingdelivery', index: 'pendingdelivery', width: 115, formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' } },
 				  { name: 'createdat', index: 'createdat', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
 				  { name: 'updateat', index: 'updateat', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
         ],
@@ -77,7 +105,8 @@
     });
 
     $('#btn_print').click(function () {
-        window.open(base_url + 'Print_Forms/Printmstbank.aspx');
+        //window.open(base_url + 'Print_Forms/Printmstbank.aspx');
+        window.open(base_url + 'Report/ReportItem');
     });
 
     $('#btn_add_new').click(function () {
@@ -103,7 +132,7 @@
                         if (JSON.stringify(result.Errors) != '{}') {
                             var error = '';
                             for (var key in result.Errors) {
-                                error = error + "<br>" + key + " " + result.model.Errors[key];
+                                error = error + "<br>" + key + " " + result.Errors[key];
                             }
                             $.messager.alert('Warning', error, 'warning');
                         }
@@ -208,8 +237,8 @@
             type: 'POST',
             url: submitURL,
             data: JSON.stringify({
-                Id: id, Name: $("#Name").val(), ItemTypeId: $("#ItemTypeId").val(), SellingPrice : $("#SellingPrice").val(),
-                Sku: $("#SKU").val(), Category: $("#Category").val(), UoMId: $("#UoMId").val(), Margin: $("#Margin").val()
+                Id: id, Name: $("#Name").val(), ItemTypeId: $("#ItemTypeId").val(), SellingPrice : $("#SellingPrice").numberbox('getValue'),
+                Sku: $("#SKU").val(), Category: $("#Category").val(), UoMId: $("#UoMId").val(), Margin: $("#Margin").numberbox('getValue')
             }),
             async: false,
             cache: false,
@@ -266,11 +295,11 @@
         url: base_url,
         datatype: "json",
         mtype: 'GET',
-        colNames: ['Id', 'Name', 'Description'],
+        colNames: ['ID', 'Name', 'Description'],
         colModel: [
-                  { name: 'id', index: 'id', width: 80, align: 'right' },
+                  { name: 'id', index: 'id', width: 80, align: 'right', hidden: true },
                   { name: 'name', index: 'name', width: 200 },
-                  { name: 'address', index: 'address', width: 200 }],
+                  { name: 'description', index: 'description', width: 200 }],
         page: '1',
         pager: $('#lookup_pager_itemtype'),
         rowNum: 20,
@@ -283,8 +312,8 @@
         width: $("#lookup_div_itemtype").width() - 10,
         height: $("#lookup_div_itemtype").height() - 110,
     });
-    $("#lookup_table_itemtype").jqGrid('navGrid', '#lookup_toolbar_itemtype', { del: false, add: false, edit: false, search: false })
-           .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: false });
+    $("#lookup_table_itemtype").jqGrid('navGrid', '#lookup_toolbar_itemtype', { del: false, add: false, edit: false, search: true })
+           .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: true });
 
     // Cancel or CLose
     $('#lookup_btn_cancel_itemtype').click(function () {
@@ -325,7 +354,7 @@
         mtype: 'GET',
         colNames: ['Id', 'Name'],
         colModel: [
-                  { name: 'id', index: 'id', width: 80, align: 'right' },
+                  { name: 'id', index: 'id', width: 80, align: 'right', hidden: true },
                   { name: 'name', index: 'name', width: 200 }],
         page: '1',
         pager: $('#lookup_pager_uom'),

@@ -11,6 +11,7 @@ namespace Core.DomainModel
         public int ContactId { get; set; }
         public string ReceivableSource { get; set; }
         public int ReceivableSourceId { get; set; }
+        public string ReceivableSourceCode { get; set; }
         public string Code { get; set; }
 
         public DateTime DueDate { get; set; }

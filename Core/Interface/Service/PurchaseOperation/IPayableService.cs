@@ -13,14 +13,14 @@ namespace Core.Interface.Service
         IPayableValidator GetValidator();
         IList<Payable> GetAll();
         IList<Payable> GetObjectsByContactId(int contactId);
-        IList<Payable> GetObjectsByDueDate(DateTime DueDate);
+        IList<Payable> GetObjectsByDueDate(DateTime fromDueDate, DateTime toDueDate);
         Payable GetObjectBySource(string PayableSource, int PayableSourceId); 
         Payable GetObjectById(int Id);
         Payable CreateObject(Payable payable);
-        Payable CreateObject(int contactId, string payableSource, int payableSourceId, decimal amount, DateTime dueDate);
+        Payable CreateObject(int contactId, string payableSource, int payableSourceId, string payableSourceCode, decimal amount, DateTime dueDate);
         Payable UpdateObject(Payable payable);
         Payable SoftDeleteObject(Payable payable);
         bool DeleteObject(int Id);
-        decimal GetTotalRemainingAmountByDueDate(DateTime DueDate);
+        decimal GetTotalRemainingAmountByDueDate(DateTime fromDueDate, DateTime toDueDate);
     }
 }

@@ -103,7 +103,7 @@ namespace Service.Service
                 PurchaseReceival purchaseReceival = _purchaseReceivalService.GetObjectById(purchaseInvoice.PurchaseReceivalId);
                 _purchaseReceivalService.CheckAndSetInvoiceComplete(purchaseReceival, _purchaseReceivalDetailService);
                 PurchaseOrder purchaseOrder = _purchaseOrderService.GetObjectById(purchaseReceival.PurchaseOrderId);
-                Payable payable = _payableService.CreateObject(purchaseOrder.ContactId, Constant.PayableSource.PurchaseInvoice, purchaseInvoice.Id, purchaseInvoice.AmountPayable, purchaseInvoice.DueDate);
+                Payable payable = _payableService.CreateObject(purchaseOrder.ContactId, Constant.PayableSource.PurchaseInvoice, purchaseInvoice.Id, purchaseInvoice.Code, purchaseInvoice.AmountPayable, purchaseInvoice.DueDate);
             }
             return purchaseInvoice;
         }

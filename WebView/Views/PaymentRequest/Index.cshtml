@@ -20,7 +20,7 @@
         <a id="btn_confirm" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-approval'">Confirm</a>
         <a id="btn_unconfirm" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-undo'">Unconfirm</a>
         <a id="btn_del" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-remove'">Delete</a>
-        <a id="btn_print" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-print'">Print Data</a>
+        @*<a id="btn_print" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-print'">Print Data</a>*@
     </div>
 
     <div id="table_div">
@@ -42,7 +42,7 @@
                @* <fieldset class="ui-widget-content ui-corner-all input_form_div">*@
                        
                     <table id = "tablefrm" width="100%" border="0" cellpadding="5" cellspacing="5" class="input_form_tbl">
-                        <tr nowrap>
+                        <tr nowrap hidden>
                             <td width="139" nowrap style="width: 100px">
                                 <label>ID</label></td>
                             <td width="550" colspan="3">
@@ -58,9 +58,9 @@
                         </tr>
                          <tr>
                             <td>
-                                <label>Contact Id</label></td>
+                                <label>Contact </label></td>
                             <td colspan="3">
-                                <input id="ContactId"  class="textright" type="text" size="10" maxlength="7" disabled="disabled" />
+                                <input id="ContactId" hidden class="textright" type="text" size="10" maxlength="7" disabled="disabled" />
                                 <input id="btnContact" name="buttonactivated" type="button" style="cursor: pointer;" class="ui-corner-all ui-state-default" value=".." />
                                 <input id="Contact" name="Contact" type="text" size="56" maxlength="50" class="editable upper" disabled="disabled" />
                         
@@ -128,13 +128,21 @@
         </div>
         <div id="confirm_info">
               <table  width="100%" border="0" cellpadding="5" cellspacing="5" class="input_form_tbl">
-                  <tr>
+                  <tr hidden>
                       <td width="139" nowrap style="width: 100px">
                           Id
                       </td>
                       <td>
                          <input id="idconfirm" type="text" size="10" disabled="disabled"/>
                       </td>
+                  </tr>
+                  <tr>
+                            <td>
+                             <label>Code</label>
+                            </td>
+                            <td  colspan="3">
+                               <input id="confirmCode" name="Code" type="text" size="10" disabled="disabled"/>
+                            </td>
                   </tr>
                   <tr>
                       <td >

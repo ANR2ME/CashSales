@@ -8,6 +8,8 @@ using Core.Interface.Service;
 using Core.DomainModel;
 using Data.Repository;
 using Validation.Validation;
+using System.Linq.Dynamic;
+using System.Data.Entity;
 
 namespace WebView.Controllers
 {
@@ -27,7 +29,7 @@ namespace WebView.Controllers
         {
             if (!AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.Receivable, Core.Constants.Constant.MenuGroupName.Transaction))
             {
-                return Content("You are not allowed to View this Page.");
+                return Content(Core.Constants.Constant.PageViewNotAllowed);
             }
 
             return View();
@@ -36,13 +38,35 @@ namespace WebView.Controllers
         public dynamic GetList(string _search, long nd, int rows, int? page, string sidx, string sord, string filters = "")
         {
             // Construct where statement
-
             string strWhere = GeneralFunction.ConstructWhere(filters);
+            string filter = null;
+            GeneralFunction.ConstructWhereInLinq(strWhere, out filter);
+            if (filter == "") filter = "true";
 
             // Get Data
-            var query = _receivableService.GetAll().Where(d => d.IsDeleted == false);
+            var q = _receivableService.GetQueryable().Include("Contact");
 
-            var list = query as IEnumerable<Receivable>;
+            var query = (from model in q
+                         select new
+                         {
+                             model.Id,
+                             model.ContactId,
+                             contact = model.Contact.Name,
+                             model.Code,
+                             model.ReceivableSource,
+                             model.ReceivableSourceId,
+                             model.ReceivableSourceCode,
+                             model.Amount,
+                             model.RemainingAmount,
+                             model.PendingClearanceAmount,
+                             model.AllowanceAmount,
+                             model.IsCompleted,
+                             model.CompletionDate,
+                             model.DueDate,
+                             model.CreatedAt,
+                         }).Where(filter).OrderBy(sidx + " " + sord); //.ToList();
+
+            var list = query.AsEnumerable();
 
             var pageIndex = Convert.ToInt32(page) - 1;
             var pageSize = rows;
@@ -66,25 +90,26 @@ namespace WebView.Controllers
                 page = page,
                 records = totalRecords,
                 rows = (
-                    from receivable in list
+                    from model in list
                     select new
                     {
-                        id = receivable.Id,
+                        id = model.Id,
                         cell = new object[] {
-                            receivable.Id,
-                            receivable.ContactId,
-                            _contactService.GetObjectById(receivable.ContactId).Name,
-                            receivable.Code,
-                            receivable.ReceivableSource,
-                            receivable.ReceivableSourceId,
-                            receivable.Amount,
-                            receivable.RemainingAmount,
-                            receivable.PendingClearanceAmount,
-                            receivable.AllowanceAmount,
-                            receivable.DueDate,
-                            receivable.IsCompleted,
-                            receivable.CompletionDate,
-                            receivable.CreatedAt,
+                            model.Id,
+                            model.ContactId,
+                            model.contact,
+                            model.Code,
+                            model.ReceivableSource,
+                            model.ReceivableSourceId,
+                            model.ReceivableSourceCode,
+                            model.Amount,
+                            model.RemainingAmount,
+                            model.PendingClearanceAmount,
+                            model.AllowanceAmount,
+                            model.IsCompleted,
+                            model.CompletionDate,
+                            model.DueDate,
+                            model.CreatedAt,
                       }
                     }).ToArray()
             }, JsonRequestBehavior.AllowGet);
@@ -93,13 +118,37 @@ namespace WebView.Controllers
         public dynamic GetListByDate(string _search, long nd, int rows, int? page, string sidx, string sord, DateTime startdate, DateTime enddate, string filters = "")
         {
             // Construct where statement
-
             string strWhere = GeneralFunction.ConstructWhere(filters);
+            string filter = null;
+            GeneralFunction.ConstructWhereInLinq(strWhere, out filter);
+            if (filter == "") filter = "true";
+
+            filter += " AND CreatedAt >= @0 AND CreatedAt < @1";
 
             // Get Data
-            var query = _receivableService.GetAll().Where(d => d.CreatedAt >= startdate && d.CreatedAt < enddate.AddDays(1) && d.IsDeleted == false);
+            var q = _receivableService.GetQueryable().Include("Contact");
 
-            var list = query as IEnumerable<Receivable>;
+            var query = (from model in q
+                         select new
+                         {
+                             model.Id,
+                             model.Code,
+                             model.ContactId,
+                             contact = model.Contact.Name,
+                             model.ReceivableSource,
+                             model.ReceivableSourceId,
+                             model.ReceivableSourceCode,
+                             model.Amount,
+                             model.RemainingAmount,
+                             model.PendingClearanceAmount,
+                             model.AllowanceAmount,
+                             model.IsCompleted,
+                             model.CompletionDate,
+                             model.DueDate,
+                             model.CreatedAt,
+                         }).Where(filter, startdate.Date, enddate.Date.AddDays(1)).OrderBy(sidx + " " + sord); //.ToList();
+
+            var list = query.AsEnumerable();
 
             var pageIndex = Convert.ToInt32(page) - 1;
             var pageSize = rows;
@@ -123,25 +172,26 @@ namespace WebView.Controllers
                 page = page,
                 records = totalRecords,
                 rows = (
-                    from receivable in list
+                    from model in list
                     select new
                     {
-                        id = receivable.Id,
+                        id = model.Id,
                         cell = new object[] {
-                            receivable.Id,
-                            receivable.ContactId,
-                            _contactService.GetObjectById(receivable.ContactId).Name,
-                            receivable.Code,
-                            receivable.ReceivableSource,
-                            receivable.ReceivableSourceId,
-                            receivable.Amount,
-                            receivable.RemainingAmount,
-                            receivable.PendingClearanceAmount,
-                            receivable.AllowanceAmount,
-                            receivable.DueDate,
-                            receivable.IsCompleted,
-                            receivable.CompletionDate,
-                            receivable.CreatedAt,
+                            model.Id,
+                            model.Code,
+                            model.ContactId,
+                            model.contact,
+                            model.ReceivableSource,
+                            model.ReceivableSourceId,
+                            model.ReceivableSourceCode,
+                            model.Amount,
+                            model.RemainingAmount,
+                            model.PendingClearanceAmount,
+                            model.AllowanceAmount,
+                            model.IsCompleted,
+                            model.CompletionDate,
+                            model.DueDate,
+                            model.CreatedAt,
                       }
                     }).ToArray()
             }, JsonRequestBehavior.AllowGet);

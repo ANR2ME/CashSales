@@ -70,7 +70,7 @@ namespace WebView.Controllers
         {
             if (!AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.CustomPurchaseInvoice, Core.Constants.Constant.MenuGroupName.Transaction))
             {
-                return Content("You are not allowed to View this Page.");
+                return Content(Core.Constants.Constant.PageViewNotAllowed);
             }
 
             return View();
@@ -93,17 +93,17 @@ namespace WebView.Controllers
                              model.Id,
                              model.Code,
                              model.Description,
-                             model.PurchaseDate,
-                             model.DueDate,
                              model.Discount,
                              model.Tax,
                              model.Allowance,
+                             model.Total,
+                             model.CoGS,
+                             model.AmountPaid,
                              model.IsGroupPricing,
                              model.ContactId,
                              contact = model.Contact.Name,
                              model.IsConfirmed,
                              model.ConfirmationDate,
-                             model.AmountPaid,
                              model.IsGBCH,
                              model.GBCH_No,
                              model.GBCH_DueDate,
@@ -112,10 +112,10 @@ namespace WebView.Controllers
                              model.IsBank,
                              model.IsPaid,
                              model.IsFullPayment,
-                             model.Total,
-                             model.CoGS,
                              model.WarehouseId,
                              warehouse = model.Warehouse.Name,
+                             model.PurchaseDate,
+                             model.DueDate,
                              model.CreatedAt,
                              model.UpdatedAt,
                          }).Where(filter).OrderBy(sidx + " " + sord); //.ToList();
@@ -152,17 +152,17 @@ namespace WebView.Controllers
                             model.Id,
                             model.Code,
                             model.Description,
-                            model.PurchaseDate,
-                            model.DueDate,
                             model.Discount,
                             model.Tax,
                             model.Allowance,
+                            model.Total,
+                            model.CoGS,
+                            model.AmountPaid,
                             model.IsGroupPricing,
                             model.ContactId,
                             model.contact,
                             model.IsConfirmed,
                             model.ConfirmationDate,
-                            model.AmountPaid,
                             model.IsGBCH,
                             model.GBCH_No,
                             model.GBCH_DueDate,
@@ -171,10 +171,10 @@ namespace WebView.Controllers
                             model.IsBank,
                             model.IsPaid,
                             model.IsFullPayment,
-                            model.Total,
-                            model.CoGS,
                             model.WarehouseId,
                             model.warehouse,
+                            model.PurchaseDate,
+                            model.DueDate,
                             model.CreatedAt,
                             model.UpdatedAt,
                       }
@@ -492,20 +492,37 @@ namespace WebView.Controllers
         }
 
         [HttpPost]
-        public dynamic Check(CustomPurchaseInvoice model)
+        public dynamic Check(CustomPurchaseInvoice model, decimal DailySalesProjection, bool IncludeSaturdaySales, bool IncludeSundaySales)
         {
             Dictionary<string, string> Errors = new Dictionary<string, string>();
             try
             {
+                DateTime startDate = DateTime.Today;
+                DateTime endDate = model.DueDate.GetValueOrDefault();
+
                 var data = _customPurchaseInvoiceService.GetObjectById(model.Id);
                 decimal total = _customPurchaseInvoiceService.CalculateTotalAmountAfterDiscountAndTax(data) - model.Allowance;
-                decimal cashbank = _cashBankService.GetTotalCashBank();
-                decimal receivable = _receivableService.GetTotalRemainingAmountByDueDate(model.DueDate.GetValueOrDefault());
-                decimal payable = _payableService.GetTotalRemainingAmountByDueDate(model.DueDate.GetValueOrDefault());
+                decimal totalcashbank = _cashBankService.GetTotalCashBank();
 
-                if ((cashbank + receivable) - payable < total)
+                DateTime curDate = startDate;
+                decimal funds = totalcashbank;
+                while (curDate <= endDate)
                 {
-                    Errors.Add("Generic", "Dana tidak tersedia");
+                    if ((curDate.DayOfWeek != DayOfWeek.Saturday && curDate.DayOfWeek != DayOfWeek.Sunday) ||
+                        (curDate.DayOfWeek == DayOfWeek.Saturday && IncludeSaturdaySales) ||
+                        (curDate.DayOfWeek == DayOfWeek.Sunday && IncludeSundaySales))
+                    {
+                        funds += DailySalesProjection;
+                    }
+                    funds += _receivableService.GetTotalRemainingAmountByDueDate(curDate, curDate);
+                    funds -= _payableService.GetTotalRemainingAmountByDueDate(curDate, curDate);
+
+                    curDate = curDate.AddDays(1);
+                }
+
+                if (funds < total)
+                {
+                    Errors.Add("Generic", "Dana Tidak tersedia");
                 }
             }
             catch (Exception ex)
@@ -537,6 +554,8 @@ namespace WebView.Controllers
                 }
 
                 var data = _customPurchaseInvoiceService.GetObjectById(model.Id);
+                data.Discount = model.Discount;
+                data.Tax = model.Tax;
                 model = _customPurchaseInvoiceService.ConfirmObject(data, model.ConfirmationDate.Value, _customPurchaseInvoiceDetailService, 
                                                     _contactService, _priceMutationService, _payableService, _customPurchaseInvoiceService, _warehouseItemService, 
                                                     _warehouseService, _itemService, _barringService, _stockMutationService);

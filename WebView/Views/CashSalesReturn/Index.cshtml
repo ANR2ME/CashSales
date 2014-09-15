@@ -31,7 +31,7 @@
     </div>
 
 <!-- Dialog Box -->
-    <div id="form_div" class="easyui-dialog" style="text-align: left; padding:0px 0px 10px" data-options="modal:true"  
+    <div id="form_div" class="easyui-dialog" style="text-align: left; padding:0px 0px 10px; top:100px" data-options="modal:true"  
         title=".: Master CashSalesReturn :.">
 
         <div id="form_toolbar" class="form_toolbar">
@@ -43,7 +43,7 @@
             <form id="frm">
                 @*<fieldset class="ui-widget-content ui-corner-all input_form_div">*@
                     <table width="100%" border="0" cellpadding="1" cellspacing="1" class="input_form_tbl">
-                        <tr nowrap>
+                        <tr nowrap hidden>
                             <td width="139" nowrap style="width: 100px">
                                 <label>ID</label></td>
                             <td width="550">
@@ -65,7 +65,7 @@
                             <td>
                                 <label>CashBank</label></td>
                             <td colspan="3">
-                               <input id="CashBankId"  class="textright" type="text" size="10" maxlength="7" disabled="disabled" />
+                               <input id="CashBankId" hidden class="textright" type="text" size="10" maxlength="7" disabled="disabled" />
                                <input id="btnCashBank" name="buttonactivated" type="button" style="cursor: pointer;" class="ui-corner-all ui-state-default" value=".." />
                                <input id="CashBankName" name="CashBankId" type="text" size="56" maxlength="50" class="editable upper" disabled="disabled" />
                                          
@@ -74,17 +74,17 @@
                             <td>
                                 <label>CashSalesInvoice</label></td>
                             <td colspan="3">
-                               <input id="CashSalesInvoiceId"  class="textright" type="text" size="10" maxlength="7" disabled="disabled" />
+                               <input id="CashSalesInvoiceId" hidden class="textright" type="text" size="10" maxlength="7" disabled="disabled" />
                                <input id="btnCashSalesInvoice" name="buttonactivated" type="button" style="cursor: pointer;" class="ui-corner-all ui-state-default" value=".." />
                                <input id="CashSalesInvoiceName" name="CashSalesInvoiceId" type="text" size="56" maxlength="50" class="editable upper" disabled="disabled" />
                         </tr>
-                        <tr>
+                        @*<tr>
                             <td>
                                 <label>Allowance</label></td>
                             <td colspan="3">
                         <input id="Allowance" name="Allowance" type="text" size="15" maxlength="20" class="textright easyui-numberbox" data-options="groupSeparator:','" value="0" />
                         </tr>
-                        <tr>
+                        <tr>*@
                             <td>
                                 <label>Total</label></td>
                             <td colspan="3">
@@ -145,7 +145,7 @@
                           CashSalesInvoiceDetail
                       </td>
                       <td>
-                         <input id="CashSalesInvoiceDetailId" name="CashSalesInvoiceDetailId" class="textright" type="text" size="10" maxlength="7" disabled="disabled" />
+                         <input id="CashSalesInvoiceDetailId" hidden name="CashSalesInvoiceDetailId" class="textright" type="text" size="10" maxlength="7" disabled="disabled" />
                                <input id="btnCashSalesInvoiceDetail" name="buttonactivated" type="button" style="cursor: pointer;" class="ui-corner-all ui-state-default" value=".." />
                                <input id="CashSalesInvoiceDetail" name="CashSalesInvoiceDetail" type="text" size="56" maxlength="50" class="editable upper" disabled="disabled" />
                       </td>
@@ -174,13 +174,19 @@
         </div>
         <div id="confirm_info">
               <table  width="100%" border="0" cellpadding="5" cellspacing="5" class="input_form_tbl">
-                  <tr>
+                  <tr hidden>
                       <td width="139" nowrap style="width: 100px">
                           Id
                       </td>
                       <td>
                          <input id="idconfirm" type="text" size="10" disabled="disabled"/>
                       </td>
+                  </tr>
+                  <tr>
+                            <td>
+                                <label>Code</label></td>
+                            <td >
+                                <input id="confirmCode" name ="Code" type="text" size="10" disabled="disabled" /></td>
                   </tr>
                   <tr>
                       <td>
@@ -192,12 +198,12 @@
                          <input name="IsConfirmed" type="text" size="1" hidden="hidden"/>
                       </td>
                   </tr>
-                  <tr>
+                  @*<tr>
                             <td>
                                 <label>Allowance</label></td>
                             <td colspan="3">
                         <input id="confirmAllowance" name="Allowance" type="text" size="15" maxlength="20" class="textright easyui-numberbox" data-options="groupSeparator:','" value="0" />
-                        </tr>
+                  </tr>*@
               </table>
           
         </div>
@@ -214,13 +220,19 @@
         </div>
         <div id="paid_info">
               <table  width="100%" border="0" cellpadding="5" cellspacing="5" class="input_form_tbl">
-                  <tr>
+                  <tr hidden>
                       <td width="139" nowrap style="width: 100px">
                           Id
                       </td>
                       <td>
                          <input id="idpaid" type="text" size="10" disabled="disabled"/>
                       </td>
+                  </tr>
+                  <tr>
+                            <td>
+                                <label>Code</label></td>
+                            <td >
+                                <input id="paidCode" name ="Code" type="text" size="10" disabled="disabled" /></td>
                   </tr>
                   <tr>
                         <td>

@@ -25,7 +25,7 @@ namespace Core.Interface.Validation
         CashSalesReturn VIsNotConfirmed(CashSalesReturn cashSalesReturn);
         CashSalesReturn VIsConfirmed(CashSalesReturn cashSalesReturn);
         CashSalesReturn VHasCashBank(CashSalesReturn cashSalesReturn, ICashBankService _cashBankService);
-        CashSalesReturn VIsCashBankTypeNotBank(CashSalesReturn cashSalesReturn, ICashBankService _cashBankService);
+        //CashSalesReturn VIsCashBankTypeNotBank(CashSalesReturn cashSalesReturn, ICashBankService _cashBankService);
         CashSalesReturn VHasCashSalesInvoice(CashSalesReturn cashSalesReturn, ICashSalesInvoiceService _cashSalesInvoiceService);
         CashSalesReturn VHasNoPaymentVoucherDetails(CashSalesReturn cashSalesReturn, IPayableService _payableService, IPaymentVoucherDetailService _paymentVoucherDetailService);
 

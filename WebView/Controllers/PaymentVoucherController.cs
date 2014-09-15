@@ -52,7 +52,7 @@ namespace WebView.Controllers
         {
             if (!AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.CashSalesInvoice, Core.Constants.Constant.MenuGroupName.Transaction))
             {
-                return Content("You are not allowed to View this Page.");
+                return Content(Core.Constants.Constant.PageViewNotAllowed);
             }
 
             return View();
@@ -76,17 +76,17 @@ namespace WebView.Controllers
                              model.Code,
                              model.ContactId,
                              contact = model.Contact.Name,
+                             model.TotalAmount,
                              model.CashBankId,
                              cashbank = model.CashBank.Name,
-                             model.PaymentDate,
+                             isbank = model.CashBank.IsBank,
                              model.IsGBCH,
                              model.DueDate,
-                             isbank = model.CashBank.IsBank,
-                             model.TotalAmount,
                              model.IsReconciled,
                              model.ReconciliationDate,
                              model.IsConfirmed,
                              model.ConfirmationDate,
+                             model.PaymentDate,
                              model.CreatedAt,
                              model.UpdatedAt,
                          }).Where(filter).OrderBy(sidx + " " + sord); //.ToList();
@@ -124,17 +124,17 @@ namespace WebView.Controllers
                             model.Code,
                             model.ContactId,
                             model.contact,
+                            model.TotalAmount,
                             model.CashBankId,
                             model.cashbank,
-                            model.PaymentDate,
+                            model.isbank,
                             model.IsGBCH,
                             model.DueDate,
-                            model.isbank,
-                            model.TotalAmount,
                             model.IsReconciled,
                             model.ReconciliationDate,
                             model.IsConfirmed,
                             model.ConfirmationDate,
+                            model.PaymentDate,
                             model.CreatedAt,
                             model.UpdatedAt,
                       }
@@ -162,10 +162,11 @@ namespace WebView.Controllers
                              contact = model.Contact.Name,
                              model.PayableSource,
                              model.PayableSourceId,
-                             model.DueDate,
+                             model.PayableSourceCode,
                              model.Amount,
                              model.RemainingAmount,
                              model.PendingClearanceAmount,
+                             model.DueDate,
                              model.CreatedAt,
                              model.UpdatedAt,
                          }).Where(filter).OrderBy(sidx + " " + sord); //.ToList();
@@ -204,10 +205,11 @@ namespace WebView.Controllers
                             model.contact,
                             model.PayableSource,
                             model.PayableSourceId,
-                            model.DueDate,
+                            model.PayableSourceCode,
                             model.Amount,
                             model.RemainingAmount,
                             model.PendingClearanceAmount,
+                            model.DueDate,
                             model.CreatedAt,
                             model.UpdatedAt,
                       }

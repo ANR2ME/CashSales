@@ -70,7 +70,7 @@ namespace WebView.Controllers
         {
             if (!AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.CashSalesReturn, Core.Constants.Constant.MenuGroupName.Transaction))
             {
-                return Content("You are not allowed to View this Page.");
+                return Content(Core.Constants.Constant.PageViewNotAllowed);
             }
 
             return View();
@@ -93,17 +93,17 @@ namespace WebView.Controllers
                              model.Id,
                              model.Code,
                              model.Description,
-                             model.ReturnDate,
                              model.CashSalesInvoiceId,
                              cashsalesinvoice = model.CashSalesInvoice.Code,
                              model.Allowance,
+                             model.Total,
                              model.IsConfirmed,
                              model.ConfirmationDate,
-                             model.Total,
                              model.CashBankId,
                              cashbank = model.CashBank.Name,
                              isbank = model.CashBank.IsBank,
                              model.IsPaid,
+                             model.ReturnDate,
                              model.CreatedAt,
                              model.UpdatedAt,
                          }).Where(filter).OrderBy(sidx + " " + sord); //.ToList();
@@ -140,17 +140,17 @@ namespace WebView.Controllers
                             model.Id,
                             model.Code,
                             model.Description,
-                            model.ReturnDate,
                             model.CashSalesInvoiceId,
                             model.cashsalesinvoice,
                             model.Allowance,
+                            model.Total,
                             model.IsConfirmed,
                             model.ConfirmationDate,
-                            model.Total,
                             model.CashBankId,
                             model.cashbank,
                             model.isbank,
                             model.IsPaid,
+                            model.ReturnDate,
                             model.CreatedAt,
                             model.UpdatedAt,
                       }

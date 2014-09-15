@@ -20,5 +20,6 @@ namespace Core.Interface.Repository
         CashBankMutation ConfirmObject(CashBankMutation cashBankMutation);
         CashBankMutation UnconfirmObject(CashBankMutation cashBankMutation);
         bool DeleteObject(int Id);
+        string SetObjectCode();
     }
 }

@@ -1,0 +1,17 @@
+CompanyName	String	80	
+CompanyAddress	String	255	
+CompanyContactNo	String	100	
+Contact	String	80	
+Code	String	80	
+Date	Date		
+SKU	String	80	
+Name	String	80	
+UoM	String	80	
+Quantity	Number		
+Price	Currency		
+Discount	Number		
+GlobalDiscount	Number
+Tax	Number		
+Allowance	Currency		
+User	String	80
+Description	String	255	

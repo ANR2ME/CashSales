@@ -19,7 +19,7 @@
         <a id="btn_del" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-remove'">Delete</a>
         <a id="btn_confirm" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-approval'">Confirm</a>
         <a id="btn_unconfirm" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-undo'">Unconfirm</a>
-        <a id="btn_print" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-print'">Print Data</a>
+        @*<a id="btn_print" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-print'">Print Data</a>*@
     </div>
 
     <div id="table_div">
@@ -40,7 +40,7 @@
             <form id="frm">
                 @*<fieldset class="ui-widget-content ui-corner-all input_form_div">*@
                     <table width="100%" border="0" cellpadding="1" cellspacing="1" class="input_form_tbl">
-                        <tr nowrap>
+                        <tr nowrap hidden>
                             <td width="139" nowrap style="width: 100px">
                                 <label>ID</label></td>
                             <td width="550">
@@ -58,7 +58,7 @@
                             <td>
                                 <label>Source CashBank</label></td>
                             <td>
-                               <input id="SourceCashBankId"  class="textright" type="text" size="10" maxlength="7" disabled="disabled" />
+                               <input id="SourceCashBankId" hidden class="textright" type="text" size="10" maxlength="7" disabled="disabled" />
                                <input id="btnSourceCashBank" name="buttonactivated" type="button" style="cursor: pointer;" class="ui-corner-all ui-state-default" value=".." />
                                <input id="SourceCashBank" name="SourceCashBank" type="text" size="56" maxlength="50" class="editable upper" disabled="disabled" />
                              </td>        
@@ -67,7 +67,7 @@
                             <td>
                                 <label>Target CashBank</label></td>
                             <td>
-                               <input id="TargetCashBankId"  class="textright" type="text" size="10" maxlength="7" disabled="disabled" />
+                               <input id="TargetCashBankId" hidden class="textright" type="text" size="10" maxlength="7" disabled="disabled" />
                                <input id="btnTargetCashBank" name="buttonactivated" type="button" style="cursor: pointer;" class="ui-corner-all ui-state-default" value=".." />
                                <input id="TargetCashBank" name="TargetCashBank" type="text" size="56" maxlength="50" class="editable upper" disabled="disabled" />
                              </td>         
@@ -77,7 +77,7 @@
                                 <label>Amount</label></td>
                             <td>
                         <input type="text" id="Amount" name="Amount"  class="textright easyui-numberbox" data-options="precision:0,groupSeparator:','"
-                                                        value="0" size="10" maxlength="20" />
+                                                        value="0" size="20" maxlength="20" />
                         </tr>
                     </table>
                 @*</fieldset>*@
@@ -87,7 +87,7 @@
 <!-- End Dialog Box -->
 
  <!-- Dialog Box Confirm-->
-    <div id="confirm_div" class="easyui-dialog" style="text-align: left;padding:0px 0px 10px;width :500px"
+    <div id="confirm_div" class="easyui-dialog" style="text-align: left;padding:0px 0px 10px;width :auto"
         data-options="modal:true" title=".: Confirm CashBank Adjustment :.">
 
         <div id="confirm_toolbar" class="form_toolbar">
@@ -96,13 +96,46 @@
         </div>
         <div id="confirm_info">
               <table  width="100%" border="0" cellpadding="5" cellspacing="5" class="input_form_tbl">
-                  <tr>
+                  <tr hidden>
                       <td width="139" nowrap style="width: 100px">
                           Id
                       </td>
                       <td>
                          <input id="idconfirm" type="text" size="10" disabled="disabled"/>
                       </td>
+                  </tr>
+                  <tr>
+                            <td>
+                             <label>Code</label>
+                            </td>
+                            <td>
+                               <input id="confirmCode" name="Code" type="text" size="10" disabled="disabled"/>
+                            </td>
+                  </tr>
+                  <tr>
+                            <td>
+                                <label>Source CashBank</label></td>
+                            <td>
+                               <input id="confirmSourceCashBankId" hidden class="textright" type="text" size="10" maxlength="7" disabled="disabled" />
+                               <input id="confirmbtnSourceCashBank" name="buttonactivated" type="button" style="cursor: pointer;" class="ui-corner-all ui-state-default" value=".." disabled="disabled" />
+                               <input id="confirmSourceCashBank" name="SourceCashBank" type="text" size="56" maxlength="50" class="editable upper" disabled="disabled" />
+                             </td>        
+                  </tr>
+                  <tr>
+                            <td>
+                                <label>Target CashBank</label></td>
+                            <td>
+                               <input id="confirmTargetCashBankId" hidden class="textright" type="text" size="10" maxlength="7" disabled="disabled" />
+                               <input id="confirmbtnTargetCashBank" name="buttonactivated" type="button" style="cursor: pointer;" class="ui-corner-all ui-state-default" value=".." / disabled="disabled">
+                               <input id="confirmTargetCashBank" name="TargetCashBank" type="text" size="56" maxlength="50" class="editable upper" disabled="disabled" />
+                             </td>         
+                  </tr>
+                  <tr>
+                            <td>
+                                <label>Amount</label></td>
+                            <td>
+                        <input type="text" id="confirmAmount" name="Amount"  class="textright easyui-numberbox" data-options="precision:0,groupSeparator:','"
+                                                        value="0" size="20" maxlength="20" disabled="disabled" />
                   </tr>
                   <tr>
                       <td>

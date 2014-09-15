@@ -41,9 +41,9 @@ namespace Service.Service
             return _repository.GetObjectsByContactId(contactId);
         }
 
-        public IList<Receivable> GetObjectsByDueDate(DateTime DueDate)
+        public IList<Receivable> GetObjectsByDueDate(DateTime fromDueDate, DateTime toDueDate)
         {
-            return _repository.GetObjectsByDueDate(DueDate);
+            return _repository.GetObjectsByDueDate(fromDueDate, toDueDate);
         }
 
         public Receivable GetObjectBySource(string ReceivableSource, int ReceivableSourceId)
@@ -62,13 +62,14 @@ namespace Service.Service
             return (_validator.ValidCreateObject(receivable, this) ? _repository.CreateObject(receivable) : receivable);
         }
 
-        public Receivable CreateObject(int contactId, string receivableSource, int receivableSourceId, decimal amount, DateTime dueDate)
+        public Receivable CreateObject(int contactId, string receivableSource, int receivableSourceId, string receivableSourceCode, decimal amount, DateTime dueDate)
         {
             Receivable receivable = new Receivable
             {
                 ContactId = contactId,
                 ReceivableSource = receivableSource,
                 ReceivableSourceId = receivableSourceId,
+                ReceivableSourceCode = receivableSourceCode,
                 Amount = amount,
                 RemainingAmount = amount,
                 DueDate = dueDate
@@ -91,13 +92,13 @@ namespace Service.Service
             return _repository.DeleteObject(Id);
         }
 
-        public decimal GetTotalRemainingAmountByDueDate(DateTime DueDate)
+        public decimal GetTotalRemainingAmountByDueDate(DateTime fromDueDate, DateTime toDueDate)
         {
-            IList<Receivable> receivables = GetObjectsByDueDate(DueDate);
+            IList<Receivable> receivables = GetObjectsByDueDate(fromDueDate, toDueDate);
             decimal Total = 0;
             foreach (var receivable in receivables)
             {
-                Total += receivable.RemainingAmount;
+                Total += receivable.RemainingAmount + receivable.PendingClearanceAmount;
             }
             return Total;
         }

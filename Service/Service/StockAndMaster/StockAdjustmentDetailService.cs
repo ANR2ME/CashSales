@@ -105,7 +105,7 @@ namespace Service.Service
                 Item item = _itemService.GetObjectById(stockAdjustmentDetail.ItemId);
                 item.AvgPrice = _itemService.CalculateAndUpdateAvgPrice(item, stockAdjustmentDetail.Quantity, stockAdjustmentDetail.Price);
                 WarehouseItem warehouseItem = _warehouseItemService.FindOrCreateObject(stockAdjustment.WarehouseId, item.Id);
-                StockMutation stockMutation = _stockMutationService.CreateStockMutationForStockAdjustment(stockAdjustmentDetail, warehouseItem);
+                StockMutation stockMutation = _stockMutationService.CreateStockMutationForStockAdjustment(stockAdjustmentDetail, warehouseItem, _stockAdjustmentService);
                 _stockMutationService.StockMutateObject(stockMutation, _itemService, _barringService, _warehouseItemService);
             }
             return stockAdjustmentDetail;

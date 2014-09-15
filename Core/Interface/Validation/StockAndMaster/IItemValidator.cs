@@ -13,7 +13,7 @@ namespace Core.Interface.Validation
         Item VHasItemTypeAndNotLegacyItem(Item item, IItemTypeService _itemTypeService);
         Item VHasUniqueSku(Item item, IItemService _itemService);
         Item VHasName(Item item);
-        Item VHasCategory(Item item);
+        //Item VHasCategory(Item item);
         Item VHasUoM(Item item, IUoMService _uomService);
         Item VNonNegativeQuantity(Item item);
         Item VIsValidMargin(Item item);

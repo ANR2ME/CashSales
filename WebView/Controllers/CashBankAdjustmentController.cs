@@ -31,7 +31,7 @@ namespace WebView.Controllers
         {
             if (!AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.CashBankAdjustment, Core.Constants.Constant.MenuGroupName.Master))
             {
-                return Content("You are not allowed to View this Page.");
+                return Content(Core.Constants.Constant.PageViewNotAllowed);
             }
 
             return View();
@@ -56,9 +56,9 @@ namespace WebView.Controllers
                              model.CashBankId,
                              cashbank = model.CashBank.Name,
                              model.Amount,
-                             model.AdjustmentDate,
                              model.IsConfirmed,
                              model.ConfirmationDate,
+                             model.AdjustmentDate,
                              model.CreatedAt,
                              model.UpdatedAt,
                          }).Where(filter).OrderBy(sidx + " " + sord); //.ToList();
@@ -95,11 +95,11 @@ namespace WebView.Controllers
                             model.Id,
                             model.Code,
                             model.CashBankId,
-                            _cashBankService.GetObjectById(model.CashBankId).Name,
+                            model.cashbank,
                             model.Amount,
-                            model.AdjustmentDate,
                             model.IsConfirmed,
                             model.ConfirmationDate,
+                            model.AdjustmentDate,
                             model.CreatedAt,
                             model.UpdatedAt,
                       }

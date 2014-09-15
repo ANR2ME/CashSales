@@ -330,9 +330,9 @@
 										<ul>
 											 <li><a href="#">Purchase</a>
 												<ul>
-													<li><a href="@Url.Action("Index", "PurchaseOrder")">Purchase Order</a></li>
+													@*<li><a href="@Url.Action("Index", "PurchaseOrder")">Purchase Order</a></li>
 													<li><a href="@Url.Action("Index", "PurchaseReceival")">Purchase Receival</a></li>
-													<li><a href="@Url.Action("Index", "PurchaseInvoice")">Purchase Invoice</a></li>
+													<li><a href="@Url.Action("Index", "PurchaseInvoice")">Purchase Invoice</a></li>*@
 													<li><a href="@Url.Action("Index", "PaymentVoucher")">Payment Voucher</a></li>
                                                     <li><a href="@Url.Action("Index", "Payable")">Payable</a></li>
                                                     <li><a href="@Url.Action("Index", "CustomPurchaseInvoice")">Custom Purchase Invoice</a></li>
@@ -340,82 +340,55 @@
 											</li>
 											   <li><a href="#">Sales</a>
 												<ul>
-													<li><a href="@Url.Action("Index", "SalesOrder")">Sales Order</a></li>
+													@*<li><a href="@Url.Action("Index", "SalesOrder")">Sales Order</a></li>
 													<li><a href="@Url.Action("Index", "DeliveryOrder")">Delivery Order</a></li>
-													<li><a href="@Url.Action("Index", "SalesInvoice")">Sales Invoice</a></li>
+													<li><a href="@Url.Action("Index", "SalesInvoice")">Sales Invoice</a></li>*@
 													<li><a href="@Url.Action("Index", "ReceiptVoucher")">Receipt Voucher</a></li>
                                                     <li><a href="@Url.Action("Index", "Receivable")">Receivable</a></li>
 													<li><a href="@Url.Action("Index", "CashSalesInvoice")">Cash Sales Invoice</a></li>
                                                     <li><a href="@Url.Action("Index", "CashSalesReturn")">Cash Sales Return</a></li>
-                                                    <li><a href="@Url.Action("Index", "RetailSalesInvoice")">Retail Sales Invoice</a></li>
+                                                    @*<li><a href="@Url.Action("Index", "RetailSalesInvoice")">Retail Sales Invoice</a></li>*@
 												</ul>
 											</li>
 										</ul>
 									</li>
 									<li><a href="#">Report</a>
-										@*<ul>
-											<li><a href="#">Finance Report</a>
+										<ul>
+											   @*<li><a href="#">Data</a>
 												<ul>
-													<li><a href="@Url.Action("BalanceSheet", "FinanceReport")">Balance Sheet</a></li>
-													<li><a href="#">Cash Flow Per Period</a></li>
-													<li><a href="#">Chart Of Account</a></li>
-													<li><a href="#">Daily Report</a></li>
-													<li><a href="#">General Ledger</a></li>
-													<li><a href="#">General Trial Balance</a></li>
-													<li><a href="@Url.Action("IncomeStatement", "FinanceReport")">Income Statement</a></li>
-													<li><a href="#">Outstanding AR & AP</a></li>
-													<li><a href="@Url.Action("SummaryGeneralJurnal", "FinanceReport")">Summary General Journal</a></li>
+											   <li><a href="@Url.Action("Index", "MstContact")">Contact</a> </li>
+											   <li><a href="@Url.Action("Index", "MstItemType")">ItemType</a> </li>
+                                               <li><a href="@Url.Action("Index", "MstUom")">UoM</a> </li>
+                                               <li><a href="@Url.Action("Index", "QuantityPricing")">Quantity Pricing</a> </li>
+												</ul>
+											</li>*@
+												@*<li><a href="#">Finance</a>
+												<ul>
+													<li><a href="@Url.Action("Index", "MstCashBank")">CashBank</a> </li>
+													<li><a href="@Url.Action("Index", "CashMutation")">Cash Mutation</a></li>
+                                                    <li><a href="@Url.Action("Index", "CashBankAdjustment")">CashBank Adjustment</a></li>
+													<li><a href="@Url.Action("Index", "CashBankMutation")">CashBank Mutation</a></li>
+													<li><a href="@Url.Action("Index", "PaymentRequest")">Payment Request</a></li>
+												</ul>
+											</li>*@
+											   <li><a href="#">Stock</a>
+												<ul>
+													<li><a href="@Url.Action("Item", "Report")">Item </a> </li>
 												</ul>
 											</li>
-											<li><a href="#">Control Report</a>
+                                            <li><a href="#">Transaction</a>
 												<ul>
-													<li><a href="#">Customer Invoices</a></li>
-													<li><a href="#">Progress Invoices Per Month</a></li>
-													<li><a href="#">Customer Payment</a></li>
-													<li><a href="#">Outstanding Invoice</a></li>
-													<li><a href="#">Shipment Order Without Invoices</a></li>
-													<li><a href="#">Income and Cost Variance Report</a></li>
-													<li><a href="#">Actual and Estimate Profit Margin Report</a></li>
-													<li><a href="#">Bad Debt Invoices List</a></li>
-													<li><a href="#">Paid Invoices Bad Debt</a></li>
+													<li><a href="@Url.Action("Sales", "Report")">Sales </a> </li>
+                                                    <li><a href="@Url.Action("ProfitLoss", "Report")">Profit/Loss </a> </li>
+                                                    
 												</ul>
 											</li>
-											<li><a href="#">Control Report</a>
-												<ul>
-													<li><a href="#">Cost of Sales and Sales</a></li>
-													<li><a href="#">Outstanding Temporary Receipt</a></li>
-													<li><a href="#">Temporary Receipt List</a></li>
-													<li><a href="#">Activity</a></li>
-													<li><a href="#">Perhitungan Hari Bunga</a></li>
-													<li><a href="#">Outstanding Temporary Payment</a></li>
-													<li><a href="#">Down Payment List</a></li>
-												</ul>
-											</li>
-											<li><a href="#">Account Receivable</a>
-												<ul>
-													<li><a href="#">Detail Subsequent</a></li>
-													<li><a href="#">Receivable Aging</a></li>
-													<li><a href="#">Statement Of Account</a></li>
-													<li><a href="#">Subsidiary Ledger</a></li>
-												</ul>
-											</li>
-											<li><a href="#">Account Payable</a>
-												<ul>
-													<li><a href="#">Balance A/P Per Shipment Order</a></li>
-													<li><a href="#">Balance A/P Detail</a></li>
-													<li><a href="#">Balance A/P Per Payment Order</a></li>
-													<li><a href="#">Payable Aging</a></li>
-													<li><a href="#">Subsidiary Ledger</a></li>
-												</ul>
-											</li>
-											<li><a href="#">Estimate Income Statement</a>
-											</li>
-											<li><a href="#">Validitas Posting</a>
-											</li>
-										</ul>*@
+										</ul>
+
 									</li>
 									<li id="menu-item-51"><a href="#">Setting</a>
 										<ul>
+                                            <li><a href="@Url.Action("Index", "Company")">Company Info</a></li>
                                             <li><a href="@Url.Action("Index", "User")">User</a></li>
 											<li><a href="@Url.Action("Index", "UserAccess")">User Access Right</a></li>
 											<li><a href="#" id="menu_change_pass">Change Password</a></li>
@@ -426,7 +399,7 @@
 						</div>
 					</div>
 					<div style="clear: both"></div>
-					<div id="sidebar-footer">
+					<div hidden id="sidebar-footer">
 						Copyright &copy; 2014
 						<br />
 						PT. Solusi Sentral Data

@@ -35,7 +35,7 @@ namespace Data.Repository
 
         public ContactGroup GetObjectByIsLegacy(bool IsLegacy)
         {
-            ContactGroup contactGroup = Find(x => x.IsLegacy == IsLegacy && !x.IsDeleted);
+            ContactGroup contactGroup = FindAll(x => x.IsLegacy == IsLegacy && !x.IsDeleted).FirstOrDefault();
             if (contactGroup != null) { contactGroup.Errors = new Dictionary<string, string>(); }
             return contactGroup;
         }

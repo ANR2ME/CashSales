@@ -46,7 +46,7 @@ namespace WebView.Controllers
         {
             if (!AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.PurchaseOrder, Core.Constants.Constant.MenuGroupName.Transaction))
             {
-                return Content("You are not allowed to View this Page.");
+                return Content(Core.Constants.Constant.PageViewNotAllowed);
             }
 
             return View();
@@ -555,7 +555,7 @@ namespace WebView.Controllers
                 }
 
                 var data = _purchaseOrderService.GetObjectById(model.Id);
-                model = _purchaseOrderService.ConfirmObject(data,model.ConfirmationDate.Value,_purchaseOrderDetailService,_stockMutationService,_itemService,_barringService,_warehouseItemService);
+                model = _purchaseOrderService.ConfirmObject(data,model.ConfirmationDate.Value,_purchaseOrderDetailService,_stockMutationService,_itemService,_barringService,_warehouseItemService, _purchaseOrderService);
             }
             catch (Exception ex)
             {

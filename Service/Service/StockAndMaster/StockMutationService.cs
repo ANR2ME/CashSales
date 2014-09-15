@@ -87,7 +87,7 @@ namespace Service.Service
             return _repository.DeleteObject(Id);
         }
 
-        public StockMutation CreateStockMutationForPurchaseOrder(PurchaseOrderDetail purchaseOrderDetail, Item item)
+        public StockMutation CreateStockMutationForPurchaseOrder(PurchaseOrderDetail purchaseOrderDetail, Item item, IPurchaseOrderService _purchaseOrderService)
         {
             StockMutation stockMutation = new StockMutation();
             stockMutation.ItemId = item.Id;
@@ -96,8 +96,10 @@ namespace Service.Service
             stockMutation.Quantity = purchaseOrderDetail.Quantity;
             stockMutation.SourceDocumentType = Constant.SourceDocumentType.PurchaseOrder;
             stockMutation.SourceDocumentId = purchaseOrderDetail.PurchaseOrderId;
+            stockMutation.SourceDocumentCode = _purchaseOrderService.GetObjectById(purchaseOrderDetail.PurchaseOrderId).Code;
             stockMutation.SourceDocumentDetailType = Constant.SourceDocumentDetailType.PurchaseOrderDetail;
             stockMutation.SourceDocumentDetailId = purchaseOrderDetail.Id;
+            stockMutation.SourceDocumentDetailCode = purchaseOrderDetail.Code;
             stockMutation.ItemCase = Constant.ItemCase.PendingReceival;
             stockMutation.Status = Constant.MutationStatus.Addition;
             return _repository.CreateObject(stockMutation);
@@ -124,8 +126,10 @@ namespace Service.Service
             stockMutationPendingReceival.Quantity = purchaseReceivalDetail.Quantity;
             stockMutationPendingReceival.SourceDocumentType = Constant.SourceDocumentType.PurchaseReceival;
             stockMutationPendingReceival.SourceDocumentId = purchaseReceivalDetail.PurchaseReceivalId;
+            //stockMutationPendingReceival.SourceDocumentCode = purchaseReceivalDetail.PurchaseReceivalCode;
             stockMutationPendingReceival.SourceDocumentDetailType = Constant.SourceDocumentDetailType.PurchaseReceivalDetail;
             stockMutationPendingReceival.SourceDocumentDetailId = purchaseReceivalDetail.Id;
+            stockMutationPendingReceival.SourceDocumentDetailCode = purchaseReceivalDetail.Code;
             stockMutationPendingReceival.ItemCase = Constant.ItemCase.PendingReceival;
             stockMutationPendingReceival.Status = Constant.MutationStatus.Deduction;
             stockMutationPendingReceival = _repository.CreateObject(stockMutationPendingReceival);
@@ -137,8 +141,10 @@ namespace Service.Service
             stockMutationReady.Quantity = purchaseReceivalDetail.Quantity;
             stockMutationReady.SourceDocumentType = Constant.SourceDocumentType.PurchaseReceival;
             stockMutationReady.SourceDocumentId = purchaseReceivalDetail.PurchaseReceivalId;
+            //stockMutationReady.SourceDocumentCode = purchaseReceivalDetail.PurchaseReceivalCode;
             stockMutationReady.SourceDocumentDetailType = Constant.SourceDocumentDetailType.PurchaseReceivalDetail;
             stockMutationReady.SourceDocumentDetailId = purchaseReceivalDetail.Id;
+            stockMutationReady.SourceDocumentDetailCode = purchaseReceivalDetail.Code;
             stockMutationReady.ItemCase = Constant.ItemCase.Ready;
             stockMutationReady.Status = Constant.MutationStatus.Addition;
             stockMutationReady = _repository.CreateObject(stockMutationReady);
@@ -167,8 +173,10 @@ namespace Service.Service
             stockMutation.Quantity = salesOrderDetail.Quantity;
             stockMutation.SourceDocumentType = Constant.SourceDocumentType.SalesOrder;
             stockMutation.SourceDocumentId = salesOrderDetail.SalesOrderId;
+            //stockMutation.SourceDocumentCode = salesOrderDetail.SalesOrderCode;
             stockMutation.SourceDocumentDetailType = Constant.SourceDocumentDetailType.SalesOrderDetail;
             stockMutation.SourceDocumentDetailId = salesOrderDetail.Id;
+            stockMutation.SourceDocumentDetailCode = salesOrderDetail.Code;
             stockMutation.ItemCase = Constant.ItemCase.PendingDelivery;
             stockMutation.Status = Constant.MutationStatus.Addition;
             return _repository.CreateObject(stockMutation);
@@ -196,8 +204,10 @@ namespace Service.Service
             stockMutationPendingDelivery.Quantity = deliveryOrderDetail.Quantity;
             stockMutationPendingDelivery.SourceDocumentType = Constant.SourceDocumentType.DeliveryOrder;
             stockMutationPendingDelivery.SourceDocumentId = deliveryOrderDetail.DeliveryOrderId;
+            //stockMutationPendingDelivery.SourceDocumentCode = deliveryOrderDetail.DeliveryOrderCode;
             stockMutationPendingDelivery.SourceDocumentDetailType = Constant.SourceDocumentDetailType.DeliveryOrderDetail;
             stockMutationPendingDelivery.SourceDocumentDetailId = deliveryOrderDetail.Id;
+            stockMutationPendingDelivery.SourceDocumentDetailCode = deliveryOrderDetail.Code;
             stockMutationPendingDelivery.ItemCase = Constant.ItemCase.PendingDelivery;
             stockMutationPendingDelivery.Status = Constant.MutationStatus.Deduction;
             stockMutationPendingDelivery = _repository.CreateObject(stockMutationPendingDelivery);
@@ -210,8 +220,10 @@ namespace Service.Service
             stockMutationReady.Quantity = deliveryOrderDetail.Quantity;
             stockMutationReady.SourceDocumentType = Constant.SourceDocumentType.DeliveryOrder;
             stockMutationReady.SourceDocumentId = deliveryOrderDetail.DeliveryOrderId;
+            //stockMutationReady.SourceDocumentCode = deliveryOrderDetail.DeliveryOrderCode;
             stockMutationReady.SourceDocumentDetailType = Constant.SourceDocumentDetailType.DeliveryOrderDetail;
             stockMutationReady.SourceDocumentDetailId = deliveryOrderDetail.Id;
+            stockMutationReady.SourceDocumentDetailCode = deliveryOrderDetail.Code;
             stockMutationReady.ItemCase = Constant.ItemCase.Ready;
             stockMutationReady.Status = Constant.MutationStatus.Deduction;
             stockMutationReady = _repository.CreateObject(stockMutationReady);
@@ -231,7 +243,7 @@ namespace Service.Service
             return stockMutations;
         }
 
-        public StockMutation CreateStockMutationForStockAdjustment(StockAdjustmentDetail stockAdjustmentDetail, WarehouseItem warehouseItem)
+        public StockMutation CreateStockMutationForStockAdjustment(StockAdjustmentDetail stockAdjustmentDetail, WarehouseItem warehouseItem, IStockAdjustmentService _stockAdjustmentService)
         {
             StockMutation stockMutation = new StockMutation();
             stockMutation.ItemId = warehouseItem.ItemId;
@@ -240,8 +252,10 @@ namespace Service.Service
             stockMutation.Quantity = (stockAdjustmentDetail.Quantity >= 0) ? stockAdjustmentDetail.Quantity : (-1) * stockAdjustmentDetail.Quantity;
             stockMutation.SourceDocumentType = Constant.SourceDocumentType.StockAdjustment;
             stockMutation.SourceDocumentId = stockAdjustmentDetail.StockAdjustmentId;
+            stockMutation.SourceDocumentCode = _stockAdjustmentService.GetObjectById(stockAdjustmentDetail.StockAdjustmentId).Code;
             stockMutation.SourceDocumentDetailType = Constant.SourceDocumentDetailType.StockAdjustmentDetail;
             stockMutation.SourceDocumentDetailId = stockAdjustmentDetail.Id;
+            stockMutation.SourceDocumentDetailCode = stockAdjustmentDetail.Code;
             stockMutation.ItemCase = Constant.ItemCase.Ready;
             stockMutation.Status = (stockAdjustmentDetail.Quantity >= 0) ? Constant.MutationStatus.Addition : Constant.MutationStatus.Deduction;
             return _repository.CreateObject(stockMutation);
@@ -266,8 +280,10 @@ namespace Service.Service
             stockMutation.Quantity = 1;
             stockMutation.SourceDocumentType = Constant.SourceDocumentType.CoreIdentification;
             stockMutation.SourceDocumentId = coreIdentificationDetail.CoreIdentificationId;
+            //stockMutation.SourceDocumentCode = coreIdentificationDetail.CoreIdentificationCode;
             stockMutation.SourceDocumentDetailType = Constant.SourceDocumentDetailType.CoreIdentificationDetail;
             stockMutation.SourceDocumentDetailId = coreIdentificationDetail.Id;
+            //stockMutation.SourceDocumentDetailCode = coreIdentificationDetail.Code;
             stockMutation.ItemCase = Constant.ItemCase.Ready;
             stockMutation.Status = Constant.MutationStatus.Addition;
             return _repository.CreateObject(stockMutation);
@@ -292,8 +308,10 @@ namespace Service.Service
             stockMutation.Quantity = 1;
             stockMutation.SourceDocumentType = Constant.SourceDocumentType.RecoveryOrder;
             stockMutation.SourceDocumentId = recoveryOrderDetail.RecoveryOrderId;
+            //stockMutation.SourceDocumentCode = recoveryOrderDetail.RecoveryOrderCode;
             stockMutation.SourceDocumentDetailType = Constant.SourceDocumentDetailType.RecoveryOrderDetail;
             stockMutation.SourceDocumentDetailId = recoveryOrderDetail.Id;
+            //stockMutation.SourceDocumentDetailCode = recoveryOrderDetail.Code;
             stockMutation.ItemCase = Constant.ItemCase.Ready;
             stockMutation.Status = CaseAddition ? Constant.MutationStatus.Addition : Constant.MutationStatus.Deduction;
             return _repository.CreateObject(stockMutation);
@@ -308,8 +326,10 @@ namespace Service.Service
             stockMutation.Quantity = recoveryOrderDetail.CompoundUsage;
             stockMutation.SourceDocumentType = Constant.SourceDocumentType.RecoveryOrder;
             stockMutation.SourceDocumentId = recoveryOrderDetail.RecoveryOrderId;
+            //stockMutation.SourceDocumentCode = recoveryOrderDetail.RecoveryOrderCode;
             stockMutation.SourceDocumentDetailType = Constant.SourceDocumentDetailType.RecoveryOrderDetail;
             stockMutation.SourceDocumentDetailId = recoveryOrderDetail.Id;
+            //stockMutation.SourceDocumentDetailCode = recoveryOrderDetail.Code;
             stockMutation.ItemCase = Constant.ItemCase.Ready;
             stockMutation.Status = CaseAddition ? Constant.MutationStatus.Addition : Constant.MutationStatus.Deduction;
             return _repository.CreateObject(stockMutation);
@@ -334,8 +354,10 @@ namespace Service.Service
             stockMutation.Quantity = recoveryAccessoryDetail.Quantity;
             stockMutation.SourceDocumentType = Constant.SourceDocumentType.RecoveryOrderDetail;
             stockMutation.SourceDocumentId = recoveryAccessoryDetail.RecoveryOrderDetailId;
+            //stockMutation.SourceDocumentCode = recoveryAccessoryDetail.RecoveryOrderDetailCode;
             stockMutation.SourceDocumentDetailType = Constant.SourceDocumentDetailType.RecoveryAccessoryDetail;
             stockMutation.SourceDocumentDetailId = recoveryAccessoryDetail.Id;
+            //stockMutation.SourceDocumentDetailCode = recoveryAccessoryDetail.Code;
             stockMutation.ItemCase = Constant.ItemCase.Ready;
             stockMutation.Status = Constant.MutationStatus.Deduction;
             return _repository.CreateObject(stockMutation);
@@ -360,8 +382,10 @@ namespace Service.Service
             stockMutation.Quantity = 1;
             stockMutation.SourceDocumentType = Constant.SourceDocumentType.BarringOrder;
             stockMutation.SourceDocumentId = barringOrderDetail.BarringOrderId;
+            //stockMutation.SourceDocumentCode = barringOrderDetail.BarringOrderCode;
             stockMutation.SourceDocumentDetailType = Constant.SourceDocumentDetailType.BarringOrderDetail;
             stockMutation.SourceDocumentDetailId = barringOrderDetail.Id;
+            //stockMutation.SourceDocumentDetailCode = barringOrderDetail.Code;
             stockMutation.ItemCase = Constant.ItemCase.Ready;
             stockMutation.Status = CaseAddition ? Constant.MutationStatus.Addition : Constant.MutationStatus.Deduction;
             return _repository.CreateObject(stockMutation);
@@ -388,8 +412,10 @@ namespace Service.Service
             stockMutationFrom.Quantity = 1;
             stockMutationFrom.SourceDocumentType = Constant.SourceDocumentType.RollerWarehouseMutation;
             stockMutationFrom.SourceDocumentId = rollerWarehouseMutationDetail.RollerWarehouseMutationId;
+            //stockMutationFrom.SourceDocumentCode = rollerWarehouseMutationDetail.RollerWarehouseMutationCode;
             stockMutationFrom.SourceDocumentDetailType = Constant.SourceDocumentDetailType.RollerWarehouseMutationDetail;
             stockMutationFrom.SourceDocumentDetailId = rollerWarehouseMutationDetail.Id;
+            stockMutationFrom.SourceDocumentDetailCode = rollerWarehouseMutationDetail.Code;
             stockMutationFrom.ItemCase = Constant.ItemCase.Ready;
             stockMutationFrom.Status = Constant.MutationStatus.Deduction;
             stockMutationFrom = _repository.CreateObject(stockMutationFrom);
@@ -401,8 +427,10 @@ namespace Service.Service
             stockMutationTo.Quantity = 1;
             stockMutationTo.SourceDocumentType = Constant.SourceDocumentType.RollerWarehouseMutation;
             stockMutationTo.SourceDocumentId = rollerWarehouseMutationDetail.RollerWarehouseMutationId;
+            //stockMutationTo.SourceDocumentCode = rollerWarehouseMutationDetail.RollerWarehouseMutationCode;
             stockMutationTo.SourceDocumentDetailType = Constant.SourceDocumentDetailType.RollerWarehouseMutationDetail;
             stockMutationTo.SourceDocumentDetailId = rollerWarehouseMutationDetail.Id;
+            stockMutationTo.SourceDocumentDetailCode = rollerWarehouseMutationDetail.Code;
             stockMutationTo.ItemCase = Constant.ItemCase.Ready;
             stockMutationTo.Status = Constant.MutationStatus.Addition;
             stockMutationTo = _repository.CreateObject(stockMutationTo);
@@ -432,7 +460,7 @@ namespace Service.Service
             return stockMutations;
         }
 
-        public IList<StockMutation> CreateStockMutationForWarehouseMutationOrder(WarehouseMutationOrderDetail warehouseMutationOrderDetail, WarehouseItem warehouseItemFrom, WarehouseItem warehouseItemTo)
+        public IList<StockMutation> CreateStockMutationForWarehouseMutationOrder(WarehouseMutationOrderDetail warehouseMutationOrderDetail, WarehouseItem warehouseItemFrom, WarehouseItem warehouseItemTo, IWarehouseMutationOrderService _warehouseMutationOrderService)
         {
             IList<StockMutation> stockMutations = new List<StockMutation>();
 
@@ -443,8 +471,10 @@ namespace Service.Service
             stockMutationFrom.Quantity = warehouseMutationOrderDetail.Quantity;
             stockMutationFrom.SourceDocumentType = Constant.SourceDocumentType.WarehouseMutationOrder;
             stockMutationFrom.SourceDocumentId = warehouseMutationOrderDetail.WarehouseMutationOrderId;
+            stockMutationFrom.SourceDocumentCode = _warehouseMutationOrderService.GetObjectById(warehouseMutationOrderDetail.WarehouseMutationOrderId).Code;
             stockMutationFrom.SourceDocumentDetailType = Constant.SourceDocumentDetailType.WarehouseMutationOrderDetail;
             stockMutationFrom.SourceDocumentDetailId = warehouseMutationOrderDetail.Id;
+            stockMutationFrom.SourceDocumentDetailCode = warehouseMutationOrderDetail.Code;
             stockMutationFrom.ItemCase = Constant.ItemCase.Ready;
             stockMutationFrom.Status = Constant.MutationStatus.Deduction;
             stockMutationFrom = _repository.CreateObject(stockMutationFrom);
@@ -456,8 +486,10 @@ namespace Service.Service
             stockMutationTo.Quantity = warehouseMutationOrderDetail.Quantity;
             stockMutationTo.SourceDocumentType = Constant.SourceDocumentType.WarehouseMutationOrder;
             stockMutationTo.SourceDocumentId = warehouseMutationOrderDetail.WarehouseMutationOrderId;
+            stockMutationTo.SourceDocumentCode = _warehouseMutationOrderService.GetObjectById(warehouseMutationOrderDetail.WarehouseMutationOrderId).Code;
             stockMutationTo.SourceDocumentDetailType = Constant.SourceDocumentDetailType.WarehouseMutationOrderDetail;
             stockMutationTo.SourceDocumentDetailId = warehouseMutationOrderDetail.Id;
+            stockMutationTo.SourceDocumentDetailCode = warehouseMutationOrderDetail.Code;
             stockMutationTo.ItemCase = Constant.ItemCase.Ready;
             stockMutationTo.Status = Constant.MutationStatus.Addition;
             stockMutationTo = _repository.CreateObject(stockMutationTo);

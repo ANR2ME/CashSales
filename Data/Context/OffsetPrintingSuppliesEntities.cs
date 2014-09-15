@@ -6,6 +6,7 @@ using System.Data.Entity;
 using System.Data.Entity.ModelConfiguration.Conventions;
 using System.Linq;
 using System.Text;
+using Data.Migrations;
 
 namespace Data.Context
 {
@@ -13,7 +14,8 @@ namespace Data.Context
     {
         public OffsetPrintingSuppliesEntities() : base("CashSales")
         {
-            Database.SetInitializer<OffsetPrintingSuppliesEntities>(new DropCreateDatabaseIfModelChanges<OffsetPrintingSuppliesEntities>());
+            //Database.SetInitializer<OffsetPrintingSuppliesEntities>(new DropCreateDatabaseIfModelChanges<OffsetPrintingSuppliesEntities>());
+            Database.SetInitializer<OffsetPrintingSuppliesEntities>(new MigrateDatabaseToLatestVersion<OffsetPrintingSuppliesEntities, Configuration>()); // Is this suppose to be inside OnModelCreating ?
        
         }
 
@@ -22,7 +24,7 @@ namespace Data.Context
             IList<String> tableNames = new List<String>();
 
             IList<String> userroleNames = new List<String>() 
-                                        { "UserAccess", "UserMenu", "UserAccount" };
+                                        { "UserMenu", "UserAccount", "UserAccess" };
 
             IList<String> accountingNames = new List<String>() 
                                         { "GeneralLedgerJournal", "Closing", "ValidComb", "Account" };
@@ -48,7 +50,7 @@ namespace Data.Context
                                         { "GroupItemPrice", "QuantityPricing", "PriceMutation", "StockMutation", "WarehouseMutationOrderDetail", "WarehouseMutationOrder",
                                           "RollerBuilder", "StockAdjustmentDetail", "StockAdjustment", "WarehouseItem",
                                           "Warehouse", "Barring", "CoreBuilder", "Item", "ItemType", "UoM", "Contact",
-                                          "RollerType", "Machine", "ContactGroup"};
+                                          "RollerType", "Machine", "ContactGroup", "Company"};
 
             userroleNames.ToList().ForEach(x => tableNames.Add(x));
             accountingNames.ToList().ForEach(x => tableNames.Add(x));
@@ -138,6 +140,7 @@ namespace Data.Context
             modelBuilder.Configurations.Add(new UserAccountMapping());
             modelBuilder.Configurations.Add(new UserMenuMapping());
             modelBuilder.Configurations.Add(new UserAccessMapping());
+            modelBuilder.Configurations.Add(new CompanyMapping());
             base.OnModelCreating(modelBuilder);
         }
 
@@ -210,5 +213,6 @@ namespace Data.Context
         public DbSet<UserAccount> UserAccounts { get; set; }
         public DbSet<UserMenu> UserMenus { get; set; }
         public DbSet<UserAccess> UserAccesses { get; set; }
+        public DbSet<Company> Companies { get; set; }
     }
 }

@@ -15,7 +15,7 @@ namespace Validation.Validation
             WarehouseMutationOrder warehouseMutationOrder = _warehouseMutationOrderService.GetObjectById(warehouseMutationOrderDetail.WarehouseMutationOrderId);
             if (warehouseMutationOrder == null)
             {
-                warehouseMutationOrderDetail.Errors.Add("WarehouseMutationOrderId", "Tidak terasosiasi dengan Stock Adjustment");
+                warehouseMutationOrderDetail.Errors.Add("Generic", "Tidak terasosiasi dengan Stock Adjustment");
             }
             return warehouseMutationOrderDetail;
         }
@@ -78,7 +78,7 @@ namespace Validation.Validation
         {
             if (warehouseMutationOrderDetail.IsConfirmed)
             {
-                warehouseMutationOrderDetail.Errors.Add("IsConfirmed", "Tidak boleh sudah selesai.");
+                warehouseMutationOrderDetail.Errors.Add("Generic", "Tidak boleh sudah terkonfirmasi.");
             }
             return warehouseMutationOrderDetail;
         }
@@ -87,7 +87,7 @@ namespace Validation.Validation
         {
             if (!warehouseMutationOrderDetail.IsConfirmed)
             {
-                warehouseMutationOrderDetail.Errors.Add("IsConfirmed", "Harus sudah selesai.");
+                warehouseMutationOrderDetail.Errors.Add("Generic", "Harus sudah terkonfirmasi.");
             }
             return warehouseMutationOrderDetail;
         }

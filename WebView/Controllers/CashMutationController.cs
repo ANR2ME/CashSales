@@ -29,7 +29,7 @@ namespace WebView.Controllers
         {
             if (!AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.CashMutation, Core.Constants.Constant.MenuGroupName.Master))
             {
-                return Content("You are not allowed to View this Page.");
+                return Content(Core.Constants.Constant.PageViewNotAllowed);
             }
 
             return View();
@@ -41,7 +41,7 @@ namespace WebView.Controllers
             string strWhere = GeneralFunction.ConstructWhere(filters);
             string filter = null;
             GeneralFunction.ConstructWhereInLinq(strWhere, out filter);
-            if (filter == "") filter = "true";
+            if (filter == "") filter = "true"; 
 
             // Get Data
             var q = _cashMutationService.GetQueryable().Include("CashBank");
@@ -55,8 +55,9 @@ namespace WebView.Controllers
                             amount = (model.Status == Core.Constants.Constant.MutationStatus.Addition) ? model.Amount : model.Amount * (-1),
                             model.SourceDocumentType,
                             model.SourceDocumentId,
+                            model.SourceDocumentCode,
+                            model.MutationDate,
                             model.CreatedAt,
-                            model.MutationDate
                          }).Where(filter).OrderBy(sidx + " " + sord); //.ToList();
 
             var list = query.AsEnumerable();
@@ -94,8 +95,9 @@ namespace WebView.Controllers
                             model.amount,
                             model.SourceDocumentType,
                             model.SourceDocumentId,
+                            model.SourceDocumentCode,
+                            model.MutationDate,
                             model.CreatedAt,
-                            model.MutationDate
                       }
                     }).ToArray()
             }, JsonRequestBehavior.AllowGet);
@@ -123,8 +125,9 @@ namespace WebView.Controllers
                              amount = (model.Status == Core.Constants.Constant.MutationStatus.Addition) ? model.Amount : model.Amount * (-1),
                              model.SourceDocumentType,
                              model.SourceDocumentId,
+                             model.SourceDocumentCode,
+                             model.MutationDate,
                              model.CreatedAt,
-                             model.MutationDate
                          }).Where(filter, startdate.Date, enddate.Date.AddDays(1)).OrderBy(sidx + " " + sord); // Need to add 1 day due to hour/minute difference
 
             var list = query.AsEnumerable();
@@ -162,8 +165,9 @@ namespace WebView.Controllers
                             model.amount,
                             model.SourceDocumentType,
                             model.SourceDocumentId,
+                            model.SourceDocumentCode,
+                            model.MutationDate,
                             model.CreatedAt,
-                            model.MutationDate
                       }
                     }).ToArray()
             }, JsonRequestBehavior.AllowGet);

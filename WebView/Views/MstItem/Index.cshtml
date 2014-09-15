@@ -17,7 +17,7 @@
         <a id="btn_add_new" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-add'">Add New</a>
         <a id="btn_edit" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-edit'">Edit Data</a>
         <a id="btn_del" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-remove'">Delete</a>
-        <a id="btn_print" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-print'">Print Data</a>
+        @*<a id="btn_print" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-print'">Print Data</a>*@
     </div>
 
     <div id="table_div">
@@ -38,7 +38,7 @@
             <form id="frm">
                 @*<fieldset class="ui-widget-content ui-corner-all input_form_div">*@
                     <table width="100%" border="0" cellpadding="1" cellspacing="1" class="input_form_tbl">
-                        <tr nowrap>
+                        <tr nowrap class="hideme" >
                             <td width="139" nowrap style="width: 100px">
                                 <label>ID</label></td>
                             <td width="550">
@@ -56,7 +56,7 @@
                             <td colspan="3">
                                 <input id="Name" name="Name" type="text" size="60" maxlength="60" align="left" /></td>
                         </tr>
-                        <tr>
+                        <tr class="hideme">
                             <td>
                                 <label>Category</label></td>
                             <td colspan="3">

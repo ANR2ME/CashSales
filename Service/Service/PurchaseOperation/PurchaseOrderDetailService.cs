@@ -98,7 +98,7 @@ namespace Service.Service
         }
 
         public PurchaseOrderDetail ConfirmObject(PurchaseOrderDetail purchaseOrderDetail, DateTime ConfirmationDate, IStockMutationService _stockMutationService,
-                                                 IItemService _itemService, IBarringService _barringService, IWarehouseItemService _warehouseItemService)
+                                                 IItemService _itemService, IBarringService _barringService, IWarehouseItemService _warehouseItemService, IPurchaseOrderService _purchaseOrderService)
         {
             purchaseOrderDetail.ConfirmationDate = ConfirmationDate;
             if (_validator.ValidConfirmObject(purchaseOrderDetail))
@@ -106,8 +106,8 @@ namespace Service.Service
                 purchaseOrderDetail = _repository.ConfirmObject(purchaseOrderDetail);
 
                 Item item = _itemService.GetObjectById(purchaseOrderDetail.ItemId);
-                StockMutation stockMutation = _stockMutationService.CreateStockMutationForPurchaseOrder(purchaseOrderDetail, item);
-                //item.PendingReceival += purchaseOrderDetail.Quantity;
+                StockMutation stockMutation = _stockMutationService.CreateStockMutationForPurchaseOrder(purchaseOrderDetail, item, _purchaseOrderService);
+                // item.PendingReceival += purchaseOrderDetail.Quantity;
                 _stockMutationService.StockMutateObject(stockMutation, _itemService, _barringService, _warehouseItemService);
             }
             return purchaseOrderDetail;

@@ -11,6 +11,7 @@ namespace Core.DomainModel
         public int ContactId { get; set; }
         public string PayableSource { get; set; }
         public int PayableSourceId { get; set; }
+        public string PayableSourceCode { get; set; }
         public string Code { get; set; }
 
         public DateTime DueDate { get; set; }

@@ -154,8 +154,10 @@
     <Compile Include="Controllers\CashBankMutationController.cs" />
     <Compile Include="Controllers\CashMutationController.cs" />
     <Compile Include="Controllers\CashSalesReturnController.cs" />
+    <Compile Include="Controllers\CompanyController.cs" />
     <Compile Include="Controllers\ReceivableController.cs" />
     <Compile Include="Controllers\PayableController.cs" />
+    <Compile Include="Controllers\ReportController.cs" />
     <Compile Include="Controllers\RetailSalesInvoiceController.cs" />
     <Compile Include="Controllers\PaymentRequestController.cs" />
     <Compile Include="Controllers\QuantityPricingController.cs" />
@@ -205,6 +207,10 @@
     <Content Include="Content\apps_js\CashBankMutation.js" />
     <Content Include="Content\apps_js\CashMutation.js" />
     <Content Include="Content\apps_js\CashSalesReturn.js" />
+    <Content Include="Content\apps_js\Company.js" />
+    <Content Include="Content\apps_js\ReportSales.js" />
+    <Content Include="Content\apps_js\ReportProfitLoss.js" />
+    <Content Include="Content\apps_js\ReportItem.js" />
     <Content Include="Content\apps_js\MasterUser.js" />
     <Content Include="Content\apps_js\Receivable.js" />
     <Content Include="Content\apps_js\Payable.js" />
@@ -982,6 +988,21 @@
     <None Include="Properties\PublishProfiles\ftp_laptop.pubxml" />
     <None Include="Properties\PublishProfiles\package.pubxml" />
     <None Include="Properties\PublishProfiles\sampleapp.pubxml" />
+    <Content Include="Reports\Item.rpt" />
+    <Content Include="Reports\Item.ttx" />
+    <Content Include="Reports\Logo.png" />
+    <Content Include="Reports\ProfitLoss.rpt" />
+    <Content Include="Reports\ProfitLoss.ttx" />
+    <Content Include="Reports\Sales.rpt" />
+    <Content Include="Reports\Sales.ttx" />
+    <Content Include="Reports\Funds.rpt" />
+    <Content Include="Reports\Funds.ttx" />
+    <Content Include="Reports\PurchaseInvoice.rpt" />
+    <Content Include="Reports\PurchaseInvoice.ttx" />
+    <Content Include="Reports\SalesInvoice.rpt" />
+    <Content Include="Reports\SalesInvoice.ttx" />
+    <Content Include="Reports\SalesReturnInvoice.rpt" />
+    <Content Include="Reports\SalesReturnInvoice.ttx" />
     <None Include="Scripts\jquery-1.7.1.intellisense.js" />
     <Content Include="Scripts\collapsiblePanel.js" />
     <Content Include="Scripts\jquery-1.1.3.1.pack.js" />
@@ -1139,6 +1160,10 @@
     <Content Include="Views\Authentication\Login.cshtml" />
     <Content Include="Views\UserAccess\Index.cshtml" />
     <Content Include="Views\User\Index.cshtml" />
+    <Content Include="Views\Company\Index.cshtml" />
+    <Content Include="Views\Report\Item.cshtml" />
+    <Content Include="Views\Report\ProfitLoss.cshtml" />
+    <Content Include="Views\Report\Sales.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -598,7 +598,7 @@ namespace WebView
 
                         if (isifilter.field.ToString().ToUpper().Contains("DATE"))
                         {
-                            strField = "convert(varchar(10)," + isifilter.field + ",120)";
+                            strField = "convert(nvarchar(10)," + isifilter.field + ",120)"; // varchar
                         }
                         else
                         {
@@ -634,7 +634,10 @@ namespace WebView
                 {
                     if (!String.IsNullOrEmpty(conditions[i]))
                     {
-                        string[] temp = conditions[i].TrimEnd().TrimStart().Split(' ');
+                        //string[] temp = conditions[i].TrimEnd().TrimStart().Split(' ');
+                        string temporary = conditions[i].TrimEnd().TrimStart();
+                        char[] delimiter = " ".ToCharArray();
+                        string[] temp = temporary.Split(delimiter, 3);
                         // 0 : fieldName
                         // 1 : operator
                         // 2 : fieldValue
@@ -711,7 +714,9 @@ namespace WebView
                 {
                     if (!String.IsNullOrEmpty(conditions[i]))
                     {
-                        string[] temp = conditions[i].TrimEnd().TrimStart().Split(' ');
+                        string temporary = conditions[i].TrimEnd().TrimStart();
+                        char[] delimiter = ",".ToCharArray();
+                        string[] temp = temporary.Split(delimiter, 3);
                         // 0 : fieldName
                         // 1 : operator
                         // 2 : fieldValue
@@ -789,7 +794,10 @@ namespace WebView
                 {
                     if (!String.IsNullOrEmpty(conditions[i]))
                     {
-                        string[] temp = conditions[i].TrimEnd().TrimStart().Split(' ');
+                        //string[] temp = conditions[i].TrimEnd().TrimStart().Split(' ');
+                        string temporary = conditions[i].TrimEnd().TrimStart();
+                        char[] delimiter = " ".ToCharArray();
+                        string[] temp = temporary.Split(delimiter, 3);
                         // 0 : fieldName
                         // 1 : operator
                         // 2 : fieldValue
@@ -815,17 +823,19 @@ namespace WebView
                         DateTime date = DateTime.Now;
                         bool boolValue = false;
 
+                        // FieldValue as Date
+                        if ((!Regex.IsMatch(filterValue,"[.]")) && DateTime.TryParse(filterValue, out date))
+                        {
+                            //filterValues.Add(date);
+                            filter += temp[0].Trim() + " " + temp[1].Trim() + "{" + date.ToShortDateString().ToLower() + "}"; // Still Buggy
+                            //filter += temp[0].Trim() + " " + temp[1].Trim() + "cast('" + date.ToShortDateString().ToLower() + "' as datetime(10))";
+                        }
                         // FieldValue as Numeric
                         if (int.TryParse(filterValue, out value))
                         {
                             //filterValues.Add(value);
-                            filter += temp[0].Trim() + " " + temp[1].Trim() + value.ToString() + "";
-                        }
-                        // FieldValue as Date
-                        else if (DateTime.TryParse(filterValue, out date))
-                        {
-                            //filterValues.Add(date);
-                            filter += temp[0].Trim() + " " + temp[1].Trim() + "'" + date.ToShortDateString().ToLower() + "'"; // Still Buggy
+                            filter += temp[0].Trim() + " " + temp[1].Trim() + value.ToString() + ""; //Convert.ToDecimal("2.5") //decimal.Parse("2.5")
+                            //filter += "String.Concat("+temp[0].Trim()+").ToLower().Contains(\"" + filterValue.ToLower() + "\")";
                         }
                         // FieldValue as Boolean
                         else if (bool.TryParse(filterValue, out boolValue))

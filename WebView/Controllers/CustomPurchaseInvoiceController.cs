@@ -203,6 +203,8 @@ namespace WebView.Controllers
                              model.ItemId,
                              item = model.Item.Name,
                              model.Quantity,
+                             model.Discount,
+                             model.ListedUnitPrice,
                              model.Amount,
                              model.CoGS,
                          }).Where(filter).OrderBy(sidx + " " + sord); //.ToList();
@@ -242,6 +244,8 @@ namespace WebView.Controllers
                             model.ItemId,
                             model.item,
                             model.Quantity,
+                            model.Discount,
+                            model.ListedUnitPrice,
                             model.Amount,
                             model.CoGS,
                       }

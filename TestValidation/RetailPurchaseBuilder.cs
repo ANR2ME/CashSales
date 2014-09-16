@@ -24,6 +24,7 @@ namespace TestValidation
         public ICashBankAdjustmentService _cashBankAdjustmentService;
         public ICashBankMutationService _cashBankMutationService;
         public ICashMutationService _cashMutationService;
+        public IClosingService _closingService;
         public ICoreBuilderService _coreBuilderService;
         public ICoreIdentificationService _coreIdentificationService;
         public ICoreIdentificationDetailService _coreIdentificationDetailService;
@@ -107,6 +108,7 @@ namespace TestValidation
             _cashBankMutationService = new CashBankMutationService(new CashBankMutationRepository(), new CashBankMutationValidator());
             _cashBankService = new CashBankService(new CashBankRepository(), new CashBankValidator());
             _cashMutationService = new CashMutationService(new CashMutationRepository(), new CashMutationValidator());
+            _closingService = new ClosingService(new ClosingRepository(), new ClosingValidator());
             _coreBuilderService = new CoreBuilderService(new CoreBuilderRepository(), new CoreBuilderValidator());
             _coreIdentificationDetailService = new CoreIdentificationDetailService(new CoreIdentificationDetailRepository(), new CoreIdentificationDetailValidator());
             _coreIdentificationService = new CoreIdentificationService(new CoreIdentificationRepository(), new CoreIdentificationValidator());
@@ -357,8 +359,8 @@ namespace TestValidation
             };
             _cashBankAdjustmentService.CreateObject(cashBankAdjustment2, _cashBankService);
 
-            _cashBankAdjustmentService.ConfirmObject(cashBankAdjustment, DateTime.Now, _cashMutationService, _cashBankService, _generalLedgerJournalService, _accountService);
-            _cashBankAdjustmentService.ConfirmObject(cashBankAdjustment2, DateTime.Now, _cashMutationService, _cashBankService, _generalLedgerJournalService, _accountService);
+            _cashBankAdjustmentService.ConfirmObject(cashBankAdjustment, DateTime.Now, _cashMutationService, _cashBankService, _generalLedgerJournalService, _accountService, _closingService);
+            _cashBankAdjustmentService.ConfirmObject(cashBankAdjustment2, DateTime.Now, _cashMutationService, _cashBankService, _generalLedgerJournalService, _accountService, _closingService);
         }
 
         public void PopulateRetailPurchaseData()
@@ -429,13 +431,13 @@ namespace TestValidation
             };
             _retailPurchaseInvoiceDetailService.CreateObject(rpid3, _retailPurchaseInvoiceService, _itemService, _warehouseItemService, _priceMutationService);
 
-            _retailPurchaseInvoiceService.ConfirmObject(rpi1, rpi1.PurchaseDate, contact.Id, _retailPurchaseInvoiceDetailService, _contactService, _priceMutationService, _payableService, _retailPurchaseInvoiceService, _warehouseItemService, _warehouseService, _itemService, _barringService, _stockMutationService);
-            _retailPurchaseInvoiceService.ConfirmObject(rpi2, rpi2.PurchaseDate, contact2.Id, _retailPurchaseInvoiceDetailService, _contactService, _priceMutationService, _payableService, _retailPurchaseInvoiceService, _warehouseItemService, _warehouseService, _itemService, _barringService, _stockMutationService);
-            _retailPurchaseInvoiceService.ConfirmObject(rpi3, rpi3.PurchaseDate, contact3.Id, _retailPurchaseInvoiceDetailService, _contactService, _priceMutationService, _payableService, _retailPurchaseInvoiceService, _warehouseItemService, _warehouseService, _itemService, _barringService, _stockMutationService);
+            _retailPurchaseInvoiceService.ConfirmObject(rpi1, rpi1.PurchaseDate, contact.Id, _retailPurchaseInvoiceDetailService, _contactService, _priceMutationService, _payableService, _retailPurchaseInvoiceService, _warehouseItemService, _warehouseService, _itemService, _barringService, _stockMutationService, _closingService);
+            _retailPurchaseInvoiceService.ConfirmObject(rpi2, rpi2.PurchaseDate, contact2.Id, _retailPurchaseInvoiceDetailService, _contactService, _priceMutationService, _payableService, _retailPurchaseInvoiceService, _warehouseItemService, _warehouseService, _itemService, _barringService, _stockMutationService, _closingService);
+            _retailPurchaseInvoiceService.ConfirmObject(rpi3, rpi3.PurchaseDate, contact3.Id, _retailPurchaseInvoiceDetailService, _contactService, _priceMutationService, _payableService, _retailPurchaseInvoiceService, _warehouseItemService, _warehouseService, _itemService, _barringService, _stockMutationService, _closingService);
 
-            _retailPurchaseInvoiceService.PaidObject(rpi1, 200000, _cashBankService, _payableService, _paymentVoucherService, _paymentVoucherDetailService, _contactService, _cashMutationService, _generalLedgerJournalService, _accountService);
-            _retailPurchaseInvoiceService.PaidObject(rpi2, rpi2.Total, _cashBankService, _payableService, _paymentVoucherService, _paymentVoucherDetailService, _contactService, _cashMutationService, _generalLedgerJournalService, _accountService);
-            _retailPurchaseInvoiceService.PaidObject(rpi3, rpi3.Total, _cashBankService, _payableService, _paymentVoucherService, _paymentVoucherDetailService, _contactService, _cashMutationService, _generalLedgerJournalService, _accountService);
+            _retailPurchaseInvoiceService.PaidObject(rpi1, 200000, _cashBankService, _payableService, _paymentVoucherService, _paymentVoucherDetailService, _contactService, _cashMutationService, _generalLedgerJournalService, _accountService, _closingService);
+            _retailPurchaseInvoiceService.PaidObject(rpi2, rpi2.Total, _cashBankService, _payableService, _paymentVoucherService, _paymentVoucherDetailService, _contactService, _cashMutationService, _generalLedgerJournalService, _accountService, _closingService);
+            _retailPurchaseInvoiceService.PaidObject(rpi3, rpi3.Total, _cashBankService, _payableService, _paymentVoucherService, _paymentVoucherDetailService, _contactService, _cashMutationService, _generalLedgerJournalService, _accountService, _closingService);
         }
 
         

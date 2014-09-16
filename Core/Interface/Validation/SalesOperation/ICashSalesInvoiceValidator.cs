@@ -30,25 +30,29 @@ namespace Core.Interface.Validation
         CashSalesInvoice VIsValidAmountPaid(CashSalesInvoice cashSalesInvoice);
         CashSalesInvoice VIsValidFullPayment(CashSalesInvoice cashSalesInvoice);
         CashSalesInvoice VHasCashBank(CashSalesInvoice cashSalesInvoice, ICashBankService _cashBankService);
+
         //CashSalesInvoice VIsCashBankTypeNotBank(CashSalesInvoice cashSalesInvoice, ICashBankService _cashBankService);
+        CashSalesInvoice VGeneralLedgerPostingHasNotBeenClosed(CashSalesInvoice cashSalesInvoice, IClosingService _closingService, int CaseConfirmUnconfirm);
 
         CashSalesInvoice VConfirmObject(CashSalesInvoice cashSalesInvoice, ICashSalesInvoiceDetailService _cashSalesInvoiceDetailService, ICashSalesInvoiceService _cashSalesInvoiceService, 
-                                        IWarehouseItemService _warehouseItemService, IContactService _contactService, ICashBankService _cashBankService);
+                                        IWarehouseItemService _warehouseItemService, IContactService _contactService, ICashBankService _cashBankService, IClosingService _closingService);
         CashSalesInvoice VUnconfirmObject(CashSalesInvoice cashSalesInvoice, ICashSalesInvoiceDetailService _cashSalesInvoiceDetailService, 
-                                          IReceivableService _receivableService, IReceiptVoucherDetailService _receiptVoucherDetailService);
-        CashSalesInvoice VPaidObject(CashSalesInvoice cashSalesInvoice, ICashBankService _cashBankService, IReceiptVoucherService _receiptVoucherService, ICashSalesReturnService _cashSalesReturnService);
-        CashSalesInvoice VUnpaidObject(CashSalesInvoice cashSalesInvoice, ICashSalesReturnService _cashSalesReturnService);
+                                          IReceivableService _receivableService, IReceiptVoucherDetailService _receiptVoucherDetailService, IClosingService _closingService);
+        CashSalesInvoice VPaidObject(CashSalesInvoice cashSalesInvoice, ICashBankService _cashBankService, IReceiptVoucherService _receiptVoucherService, ICashSalesReturnService _cashSalesReturnService,
+                                     IClosingService _closingService);
+        CashSalesInvoice VUnpaidObject(CashSalesInvoice cashSalesInvoice, ICashSalesReturnService _cashSalesReturnService, IClosingService _closingService);
 
         CashSalesInvoice VCreateObject(CashSalesInvoice cashSalesInvoice, IWarehouseService _warehouseService, ICashBankService _cashBankService);
         CashSalesInvoice VUpdateObject(CashSalesInvoice cashSalesInvoice, IWarehouseService _warehouseService, ICashBankService _cashBankService);
         CashSalesInvoice VDeleteObject(CashSalesInvoice cashSalesInvoice, ICashSalesInvoiceDetailService _cashSalesInvoiceDetailService);
 
         bool ValidConfirmObject(CashSalesInvoice cashSalesInvoice, ICashSalesInvoiceDetailService _cashSalesInvoiceDetailService, ICashSalesInvoiceService _cashSalesInvoiceService,
-                                IWarehouseItemService _warehouseItemService, IContactService _contactService, ICashBankService _cashBankService);
+                                IWarehouseItemService _warehouseItemService, IContactService _contactService, ICashBankService _cashBankService, IClosingService _closingService);
         bool ValidUnconfirmObject(CashSalesInvoice cashSalesInvoice, ICashSalesInvoiceDetailService _cashSalesInvoiceDetailService, 
-                                  IReceivableService _receivableService, IReceiptVoucherDetailService _receiptVoucherDetailService);
-        bool ValidPaidObject(CashSalesInvoice cashSalesInvoice, ICashBankService _cashBankService, IReceiptVoucherService _receiptVoucherService, ICashSalesReturnService _cashSalesReturnService);
-        bool ValidUnpaidObject(CashSalesInvoice cashSalesInvoice, ICashSalesReturnService _cashSalesReturnService);
+                                  IReceivableService _receivableService, IReceiptVoucherDetailService _receiptVoucherDetailService, IClosingService _closingService);
+        bool ValidPaidObject(CashSalesInvoice cashSalesInvoice, ICashBankService _cashBankService, IReceiptVoucherService _receiptVoucherService, ICashSalesReturnService _cashSalesReturnService,
+                             IClosingService _closingService);
+        bool ValidUnpaidObject(CashSalesInvoice cashSalesInvoice, ICashSalesReturnService _cashSalesReturnService, IClosingService _closingService);
 
         bool ValidCreateObject(CashSalesInvoice cashSalesInvoice, IWarehouseService _warehouseService, ICashBankService _cashBankService);
         bool ValidUpdateObject(CashSalesInvoice cashSalesInvoice, IWarehouseService _warehouseService, ICashBankService _cashBankService);

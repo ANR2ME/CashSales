@@ -24,6 +24,7 @@ namespace TestValidation
         public ICashBankAdjustmentService _cashBankAdjustmentService;
         public ICashBankMutationService _cashBankMutationService;
         public ICashMutationService _cashMutationService;
+        public IClosingService _closingService;
         public ICoreBuilderService _coreBuilderService;
         public ICoreIdentificationService _coreIdentificationService;
         public ICoreIdentificationDetailService _coreIdentificationDetailService;
@@ -139,6 +140,7 @@ namespace TestValidation
             _cashBankMutationService = new CashBankMutationService(new CashBankMutationRepository(), new CashBankMutationValidator());
             _cashBankService = new CashBankService(new CashBankRepository(), new CashBankValidator());
             _cashMutationService = new CashMutationService(new CashMutationRepository(), new CashMutationValidator());
+            _closingService = new ClosingService(new ClosingRepository(), new ClosingValidator());
             _coreBuilderService = new CoreBuilderService(new CoreBuilderRepository(), new CoreBuilderValidator());
             _coreIdentificationDetailService = new CoreIdentificationDetailService(new CoreIdentificationDetailRepository(), new CoreIdentificationDetailValidator());
             _coreIdentificationService = new CoreIdentificationService(new CoreIdentificationRepository(), new CoreIdentificationValidator());
@@ -1143,7 +1145,7 @@ namespace TestValidation
         public void PopulateRecoveryOrders3()
         {
             _stockAdjustmentService.ConfirmObject(stockAdjustment, DateTime.Today, _stockAdjustmentDetailService, _stockMutationService,
-                                                  _itemService, _barringService, _warehouseItemService, _generalLedgerJournalService, _accountService);
+                                                  _itemService, _barringService, _warehouseItemService, _generalLedgerJournalService, _accountService, _closingService);
             
             recoveryOrderContact2 = new RecoveryOrder()
             {

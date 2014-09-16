@@ -98,10 +98,10 @@ namespace Service.Service
 
         public PaymentVoucher ConfirmObject(PaymentVoucher paymentVoucher, DateTime ConfirmationDate, IPaymentVoucherDetailService _paymentVoucherDetailService,
                                             ICashBankService _cashBankService, IPayableService _payableService, ICashMutationService _cashMutationService,
-                                            IGeneralLedgerJournalService _generalLedgerJournalService, IAccountService _accountService)
+                                            IGeneralLedgerJournalService _generalLedgerJournalService, IAccountService _accountService, IClosingService _closingService)
         {
             paymentVoucher.ConfirmationDate = ConfirmationDate;
-            if (_validator.ValidConfirmObject(paymentVoucher, this, _paymentVoucherDetailService, _cashBankService, _payableService))
+            if (_validator.ValidConfirmObject(paymentVoucher, this, _paymentVoucherDetailService, _cashBankService, _payableService, _closingService))
             {
                 IList<PaymentVoucherDetail> details = _paymentVoucherDetailService.GetObjectsByPaymentVoucherId(paymentVoucher.Id);
                 foreach (var detail in details)
@@ -125,9 +125,9 @@ namespace Service.Service
 
         public PaymentVoucher UnconfirmObject(PaymentVoucher paymentVoucher, IPaymentVoucherDetailService _paymentVoucherDetailService,
                                             ICashBankService _cashBankService, IPayableService _payableService, ICashMutationService _cashMutationService,
-                                            IGeneralLedgerJournalService _generalLedgerJournalService, IAccountService _accountService)
+                                            IGeneralLedgerJournalService _generalLedgerJournalService, IAccountService _accountService, IClosingService _closingService)
         {
-            if (_validator.ValidUnconfirmObject(paymentVoucher))
+            if (_validator.ValidUnconfirmObject(paymentVoucher, _closingService))
             {
                 IList<PaymentVoucherDetail> details = _paymentVoucherDetailService.GetObjectsByPaymentVoucherId(paymentVoucher.Id);
                 foreach (var detail in details)
@@ -153,10 +153,10 @@ namespace Service.Service
 
         public PaymentVoucher ReconcileObject(PaymentVoucher paymentVoucher, DateTime ReconciliationDate, IPaymentVoucherDetailService _paymentVoucherDetailService,
                                               ICashMutationService _cashMutationService, ICashBankService _cashBankService, IPayableService _payableService,
-                                              IGeneralLedgerJournalService _generalLedgerJournalService, IAccountService _accountService)
+                                              IGeneralLedgerJournalService _generalLedgerJournalService, IAccountService _accountService, IClosingService _closingService)
         {
             paymentVoucher.ReconciliationDate = ReconciliationDate;
-            if (_validator.ValidReconcileObject(paymentVoucher))
+            if (_validator.ValidReconcileObject(paymentVoucher, _closingService))
             {
                 _repository.ReconcileObject(paymentVoucher);
 
@@ -182,9 +182,9 @@ namespace Service.Service
 
         public PaymentVoucher UnreconcileObject(PaymentVoucher paymentVoucher, IPaymentVoucherDetailService _paymentVoucherDetailService,
                                                 ICashMutationService _cashMutationService, ICashBankService _cashBankService, IPayableService _payableService,
-                                                IGeneralLedgerJournalService _generalLedgerJournalService, IAccountService _accountService)
+                                                IGeneralLedgerJournalService _generalLedgerJournalService, IAccountService _accountService, IClosingService _closingService)
         {
-            if (_validator.ValidUnreconcileObject(paymentVoucher))
+            if (_validator.ValidUnreconcileObject(paymentVoucher, _closingService))
             {
                 _repository.UnreconcileObject(paymentVoucher);
 

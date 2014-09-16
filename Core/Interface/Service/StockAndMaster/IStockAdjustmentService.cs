@@ -21,10 +21,10 @@ namespace Core.Interface.Service
         bool DeleteObject(int Id);
         StockAdjustment ConfirmObject(StockAdjustment stockAdjustment, DateTime ConfirmationDate, IStockAdjustmentDetailService _stockAdjustmentDetailService,
                                       IStockMutationService _stockMutationService, IItemService _itemService, IBarringService _barringService, IWarehouseItemService _warehouseItemService,
-                                      IGeneralLedgerJournalService _generalLedgerJournalService, IAccountService _accountService);
+                                      IGeneralLedgerJournalService _generalLedgerJournalService, IAccountService _accountService, IClosingService _closingService);
         StockAdjustment UnconfirmObject(StockAdjustment stockAdjustment, IStockAdjustmentDetailService _stockAdjustmentDetailService,
                                        IStockMutationService _stockMutationService, IItemService _itemService, IBarringService _barringService, IWarehouseItemService _warehouseItemService,
-                                       IGeneralLedgerJournalService _generalLedgerJournalService, IAccountService _accountService);
+                                       IGeneralLedgerJournalService _generalLedgerJournalService, IAccountService _accountService, IClosingService _closingService);
 
     }
 }

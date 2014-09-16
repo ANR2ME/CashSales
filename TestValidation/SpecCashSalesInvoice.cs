@@ -116,11 +116,11 @@ namespace TestValidation
                 before = () =>
                 {
                     b._cashSalesInvoiceService.UnpaidObject(b.csi1, b._receiptVoucherService, b._receiptVoucherDetailService, b._cashBankService, b._receivableService, b._cashMutationService,
-                                                            b._cashSalesReturnService, b._generalLedgerJournalService, b._accountService);
+                                                            b._cashSalesReturnService, b._generalLedgerJournalService, b._accountService, b._closingService);
                     b._cashSalesInvoiceService.UnpaidObject(b.csi2, b._receiptVoucherService, b._receiptVoucherDetailService, b._cashBankService, b._receivableService, b._cashMutationService,
-                                                            b._cashSalesReturnService, b._generalLedgerJournalService, b._accountService);
+                                                            b._cashSalesReturnService, b._generalLedgerJournalService, b._accountService, b._closingService);
                     b._cashSalesInvoiceService.UnpaidObject(b.csi3, b._receiptVoucherService, b._receiptVoucherDetailService, b._cashBankService, b._receivableService, b._cashMutationService,
-                                                            b._cashSalesReturnService, b._generalLedgerJournalService, b._accountService);
+                                                            b._cashSalesReturnService, b._generalLedgerJournalService, b._accountService, b._closingService);
                     b.csi1.Errors.Count().should_not_be(0); // Already have CashSalesReturn
                     b.csi2.Errors.Count().should_be(0);
                     b.csi3.Errors.Count().should_not_be(0);
@@ -148,11 +148,11 @@ namespace TestValidation
                     before = () =>
                     {
                         b._cashSalesInvoiceService.UnconfirmObject(b.csi1, b._cashSalesInvoiceDetailService, b._receivableService, b._receiptVoucherDetailService, b._warehouseItemService, b._warehouseService,
-                                                                   b._itemService, b._barringService, b._stockMutationService, b._generalLedgerJournalService, b._accountService);
+                                                                   b._itemService, b._barringService, b._stockMutationService, b._generalLedgerJournalService, b._accountService, b._closingService);
                         b._cashSalesInvoiceService.UnconfirmObject(b.csi2, b._cashSalesInvoiceDetailService, b._receivableService, b._receiptVoucherDetailService, b._warehouseItemService, b._warehouseService,
-                                                                   b._itemService, b._barringService, b._stockMutationService, b._generalLedgerJournalService, b._accountService);
+                                                                   b._itemService, b._barringService, b._stockMutationService, b._generalLedgerJournalService, b._accountService, b._closingService);
                         b._cashSalesInvoiceService.UnconfirmObject(b.csi3, b._cashSalesInvoiceDetailService, b._receivableService, b._receiptVoucherDetailService, b._warehouseItemService, b._warehouseService,
-                                                                   b._itemService, b._barringService, b._stockMutationService, b._generalLedgerJournalService, b._accountService);
+                                                                   b._itemService, b._barringService, b._stockMutationService, b._generalLedgerJournalService, b._accountService, b._closingService);
                         b.csi1.Errors.Count().should_not_be(0);
                         b.csi2.Errors.Count().should_be(0);
                         b.csi3.Errors.Count().should_be(0);
@@ -211,7 +211,7 @@ namespace TestValidation
                 it["validates_unpaid_cashsalesinvoice_with_cashsalesreturn"] = () =>
                 {
                     b._cashSalesInvoiceService.UnpaidObject(b.csi1, b._receiptVoucherService, b._receiptVoucherDetailService, b._cashBankService, b._receivableService, b._cashMutationService,
-                                                            b._cashSalesReturnService, b._generalLedgerJournalService, b._accountService);
+                                                            b._cashSalesReturnService, b._generalLedgerJournalService, b._accountService, b._closingService);
                     
                     b.csi1.Errors.Count().should_not_be(0);
                 };
@@ -221,7 +221,7 @@ namespace TestValidation
                     before = () =>
                     {
                         b._cashSalesReturnService.UnpaidObject(b.csr1, b._paymentVoucherService, b._paymentVoucherDetailService, b._cashBankService, b._payableService, b._cashMutationService,
-                                                               b._generalLedgerJournalService, b._accountService);
+                                                               b._generalLedgerJournalService, b._accountService, b._closingService);
                         b.csr1.Errors.Count().should_be(0);
                         b.csrd1.Errors.Count().should_be(0);
                     };
@@ -235,7 +235,7 @@ namespace TestValidation
                     {
                         before = () =>
                         {
-                            b._cashSalesReturnService.UnconfirmObject(b.csr1, b._cashSalesReturnDetailService, b._cashSalesInvoiceDetailService, b._payableService, b._paymentVoucherDetailService, b._warehouseItemService, b._warehouseService, b._itemService, b._barringService, b._stockMutationService);
+                            b._cashSalesReturnService.UnconfirmObject(b.csr1, b._cashSalesReturnDetailService, b._cashSalesInvoiceDetailService, b._payableService, b._paymentVoucherDetailService, b._warehouseItemService, b._warehouseService, b._itemService, b._barringService, b._stockMutationService, b._closingService);
                             
                             b.csr1.Errors.Count().should_be(0);
 
@@ -260,7 +260,7 @@ namespace TestValidation
                             b._cashSalesReturnDetailService.SoftDeleteObject(b.csrd1, b._cashSalesReturnService);
                             b._cashSalesReturnService.SoftDeleteObject(b.csr1, b._cashSalesReturnDetailService);
                             b._cashSalesInvoiceService.UnpaidObject(b.csi1, b._receiptVoucherService, b._receiptVoucherDetailService, b._cashBankService, b._receivableService,
-                                                                    b._cashMutationService, b._cashSalesReturnService, b._generalLedgerJournalService, b._accountService);
+                                                                    b._cashMutationService, b._cashSalesReturnService, b._generalLedgerJournalService, b._accountService, b._closingService);
 
                             b.csi1.Errors.Count().should_be(0);
                         };

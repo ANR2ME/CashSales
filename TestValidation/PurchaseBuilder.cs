@@ -24,6 +24,7 @@ namespace TestValidation
         public ICashBankAdjustmentService _cashBankAdjustmentService;
         public ICashBankMutationService _cashBankMutationService;
         public ICashMutationService _cashMutationService;
+        public IClosingService _closingService;
         public ICoreBuilderService _coreBuilderService;
         public ICoreIdentificationService _coreIdentificationService;
         public ICoreIdentificationDetailService _coreIdentificationDetailService;
@@ -108,6 +109,7 @@ namespace TestValidation
             _cashBankMutationService = new CashBankMutationService(new CashBankMutationRepository(), new CashBankMutationValidator());
             _cashBankService = new CashBankService(new CashBankRepository(), new CashBankValidator());
             _cashMutationService = new CashMutationService(new CashMutationRepository(), new CashMutationValidator());
+            _closingService = new ClosingService(new ClosingRepository(), new ClosingValidator());
             _coreBuilderService = new CoreBuilderService(new CoreBuilderRepository(), new CoreBuilderValidator());
             _coreIdentificationDetailService = new CoreIdentificationDetailService(new CoreIdentificationDetailRepository(), new CoreIdentificationDetailValidator());
             _coreIdentificationService = new CoreIdentificationService(new CoreIdentificationRepository(), new CoreIdentificationValidator());
@@ -316,7 +318,7 @@ namespace TestValidation
                 AdjustmentDate = DateTime.Today
             };
             _cashBankAdjustmentService.CreateObject(cashBankAdjustment, _cashBankService);
-            _cashBankAdjustmentService.ConfirmObject(cashBankAdjustment, DateTime.Now, _cashMutationService, _cashBankService, _generalLedgerJournalService, _accountService);
+            _cashBankAdjustmentService.ConfirmObject(cashBankAdjustment, DateTime.Now, _cashMutationService, _cashBankService, _generalLedgerJournalService, _accountService, _closingService);
         }
 
         public void PopulateOrderAndReceivalData()
@@ -608,9 +610,9 @@ namespace TestValidation
             };
             _paymentVoucherDetailService.CreateObject(pvd3, _paymentVoucherService, _cashBankService, _payableService);
 
-            _paymentVoucherService.ConfirmObject(pv, DateTime.Today, _paymentVoucherDetailService, _cashBankService, _payableService, _cashMutationService, _generalLedgerJournalService, _accountService);
+            _paymentVoucherService.ConfirmObject(pv, DateTime.Today, _paymentVoucherDetailService, _cashBankService, _payableService, _cashMutationService, _generalLedgerJournalService, _accountService, _closingService);
 
-            _paymentVoucherService.ReconcileObject(pv, DateTime.Today.AddDays(10), _paymentVoucherDetailService, _cashMutationService, _cashBankService, _payableService, _generalLedgerJournalService, _accountService);
+            _paymentVoucherService.ReconcileObject(pv, DateTime.Today.AddDays(10), _paymentVoucherDetailService, _cashMutationService, _cashBankService, _payableService, _generalLedgerJournalService, _accountService, _closingService);
         }
     }
 }

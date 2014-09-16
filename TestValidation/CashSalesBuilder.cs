@@ -24,6 +24,7 @@ namespace TestValidation
         public ICashBankAdjustmentService _cashBankAdjustmentService;
         public ICashBankMutationService _cashBankMutationService;
         public ICashMutationService _cashMutationService;
+        public IClosingService _closingService;
         public ICoreBuilderService _coreBuilderService;
         public ICoreIdentificationService _coreIdentificationService;
         public ICoreIdentificationDetailService _coreIdentificationDetailService;
@@ -115,6 +116,7 @@ namespace TestValidation
             _cashBankMutationService = new CashBankMutationService(new CashBankMutationRepository(), new CashBankMutationValidator());
             _cashBankService = new CashBankService(new CashBankRepository(), new CashBankValidator());
             _cashMutationService = new CashMutationService(new CashMutationRepository(), new CashMutationValidator());
+            _closingService = new ClosingService(new ClosingRepository(), new ClosingValidator());
             _coreBuilderService = new CoreBuilderService(new CoreBuilderRepository(), new CoreBuilderValidator());
             _coreIdentificationDetailService = new CoreIdentificationDetailService(new CoreIdentificationDetailRepository(), new CoreIdentificationDetailValidator());
             _coreIdentificationService = new CoreIdentificationService(new CoreIdentificationRepository(), new CoreIdentificationValidator());
@@ -401,8 +403,8 @@ namespace TestValidation
             };
             _cashBankAdjustmentService.CreateObject(cashBankAdjustment2, _cashBankService);
 
-            _cashBankAdjustmentService.ConfirmObject(cashBankAdjustment, DateTime.Now, _cashMutationService, _cashBankService, _generalLedgerJournalService, _accountService);
-            _cashBankAdjustmentService.ConfirmObject(cashBankAdjustment2, DateTime.Now, _cashMutationService, _cashBankService, _generalLedgerJournalService, _accountService);
+            _cashBankAdjustmentService.ConfirmObject(cashBankAdjustment, DateTime.Now, _cashMutationService, _cashBankService, _generalLedgerJournalService, _accountService, _closingService);
+            _cashBankAdjustmentService.ConfirmObject(cashBankAdjustment2, DateTime.Now, _cashMutationService, _cashBankService, _generalLedgerJournalService, _accountService, _closingService);
         
         }
 
@@ -477,15 +479,15 @@ namespace TestValidation
 
 
             _cashSalesInvoiceService.ConfirmObject(csi1, csi1.SalesDate, 0, 0, _cashSalesInvoiceDetailService, _contactService, _priceMutationService,_receivableService,_cashSalesInvoiceService,_warehouseItemService,_warehouseService,
-                                                   _itemService,_barringService,_stockMutationService,_cashBankService,_generalLedgerJournalService,_accountService);
+                                                   _itemService, _barringService, _stockMutationService, _cashBankService, _generalLedgerJournalService, _accountService, _closingService);
             _cashSalesInvoiceService.ConfirmObject(csi2, csi2.SalesDate, 0, 0, _cashSalesInvoiceDetailService, _contactService, _priceMutationService, _receivableService, _cashSalesInvoiceService, _warehouseItemService, _warehouseService,
-                                                   _itemService, _barringService, _stockMutationService, _cashBankService, _generalLedgerJournalService, _accountService);
+                                                   _itemService, _barringService, _stockMutationService, _cashBankService, _generalLedgerJournalService, _accountService, _closingService);
             _cashSalesInvoiceService.ConfirmObject(csi3, csi3.SalesDate, 0, 0, _cashSalesInvoiceDetailService, _contactService, _priceMutationService, _receivableService, _cashSalesInvoiceService, _warehouseItemService, _warehouseService,
-                                                   _itemService, _barringService, _stockMutationService, _cashBankService, _generalLedgerJournalService, _accountService);
+                                                   _itemService, _barringService, _stockMutationService, _cashBankService, _generalLedgerJournalService, _accountService, _closingService);
 
-            _cashSalesInvoiceService.PaidObject(csi1, 200000, 50000, _cashBankService, _receivableService, _receiptVoucherService, _receiptVoucherDetailService, _contactService, _cashMutationService, _cashSalesReturnService, _generalLedgerJournalService, _accountService);
-            _cashSalesInvoiceService.PaidObject(csi2, csi2.Total, 50000, _cashBankService, _receivableService, _receiptVoucherService, _receiptVoucherDetailService, _contactService, _cashMutationService, _cashSalesReturnService, _generalLedgerJournalService, _accountService);
-            _cashSalesInvoiceService.PaidObject(csi3, csi3.Total, 50000, _cashBankService, _receivableService, _receiptVoucherService, _receiptVoucherDetailService, _contactService, _cashMutationService, _cashSalesReturnService, _generalLedgerJournalService, _accountService);
+            _cashSalesInvoiceService.PaidObject(csi1, 200000, 50000, _cashBankService, _receivableService, _receiptVoucherService, _receiptVoucherDetailService, _contactService, _cashMutationService, _cashSalesReturnService, _generalLedgerJournalService, _accountService, _closingService);
+            _cashSalesInvoiceService.PaidObject(csi2, csi2.Total, 50000, _cashBankService, _receivableService, _receiptVoucherService, _receiptVoucherDetailService, _contactService, _cashMutationService, _cashSalesReturnService, _generalLedgerJournalService, _accountService, _closingService);
+            _cashSalesInvoiceService.PaidObject(csi3, csi3.Total, 50000, _cashBankService, _receivableService, _receiptVoucherService, _receiptVoucherDetailService, _contactService, _cashMutationService, _cashSalesReturnService, _generalLedgerJournalService, _accountService, _closingService);
         
             // --------- CashSalesReturn -------------
 
@@ -508,10 +510,10 @@ namespace TestValidation
             _cashSalesReturnService.ConfirmObject(csr1, DateTime.Now, 50000, _cashSalesReturnDetailService, _contactService, _cashSalesInvoiceService,
                                                   _cashSalesInvoiceDetailService, _priceMutationService, _payableService,
                                                   _cashSalesReturnService, _warehouseItemService, _warehouseService,
-                                                  _itemService, _barringService, _stockMutationService);
+                                                  _itemService, _barringService, _stockMutationService, _closingService);
 
             _cashSalesReturnService.PaidObject(csr1, /*50000,*/ _cashBankService, _payableService, _paymentVoucherService,
-                                               _paymentVoucherDetailService, _contactService, _cashMutationService, _generalLedgerJournalService, _accountService);
+                                               _paymentVoucherDetailService, _contactService, _cashMutationService, _generalLedgerJournalService, _accountService, _closingService);
 
             //_cashSalesReturnService.UnpaidObject(csr1, _paymentVoucherService, _paymentVoucherDetailService, _cashBankService, _payableService, _cashMutationService);
 

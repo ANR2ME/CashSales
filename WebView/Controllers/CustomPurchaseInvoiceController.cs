@@ -41,6 +41,7 @@ namespace WebView.Controllers
         private IReceivableService _receivableService;
         private IAccountService _accountService;
         private IGeneralLedgerJournalService _generalLedgerJournalService;
+        private IClosingService _closingService;
 
         public CustomPurchaseInvoiceController()
         {
@@ -67,6 +68,9 @@ namespace WebView.Controllers
             _paymentVoucherService = new PaymentVoucherService(new PaymentVoucherRepository(), new PaymentVoucherValidator());
             _paymentVoucherDetailService = new PaymentVoucherDetailService(new PaymentVoucherDetailRepository(), new PaymentVoucherDetailValidator());
             _receivableService = new ReceivableService(new ReceivableRepository(), new ReceivableValidator());
+            _accountService = new AccountService(new AccountRepository(), new AccountValidator());
+            _generalLedgerJournalService = new GeneralLedgerJournalService(new GeneralLedgerJournalRepository(), new GeneralLedgerJournalValidator());
+            _closingService = new ClosingService(new ClosingRepository(), new ClosingValidator());
         }
 
         public ActionResult Index()
@@ -565,7 +569,7 @@ namespace WebView.Controllers
                 data.Tax = model.Tax;
                 model = _customPurchaseInvoiceService.ConfirmObject(data, model.ConfirmationDate.Value, _customPurchaseInvoiceDetailService, 
                                                     _contactService, _priceMutationService, _payableService, _customPurchaseInvoiceService, _warehouseItemService, 
-                                                    _warehouseService, _itemService, _barringService, _stockMutationService,_generalLedgerJournalService,_accountService);
+                                                    _warehouseService, _itemService, _barringService, _stockMutationService,_generalLedgerJournalService,_accountService,_closingService);
             }
             catch (Exception ex)
             {
@@ -604,7 +608,7 @@ namespace WebView.Controllers
                 var data = _customPurchaseInvoiceService.GetObjectById(model.Id);
                 model = _customPurchaseInvoiceService.UnconfirmObject(data, _customPurchaseInvoiceDetailService, _payableService, _paymentVoucherDetailService,
                                                                       _warehouseItemService, _warehouseService, _itemService, _barringService, _stockMutationService,
-                                                                      _priceMutationService, _generalLedgerJournalService,_accountService);
+                                                                      _priceMutationService, _generalLedgerJournalService,_accountService,_closingService);
 
             }
             catch (Exception ex)
@@ -647,7 +651,7 @@ namespace WebView.Controllers
                 data.GBCH_No = model.GBCH_No;
                 data.GBCH_DueDate = model.GBCH_DueDate;
                 model = _customPurchaseInvoiceService.PaidObject(data, model.AmountPaid.Value, _cashBankService, _payableService, _paymentVoucherService, _paymentVoucherDetailService, 
-                                                    _contactService, _cashMutationService, _generalLedgerJournalService, _accountService);
+                                                    _contactService, _cashMutationService, _generalLedgerJournalService, _accountService, _closingService);
             }
             catch (Exception ex)
             {
@@ -685,7 +689,7 @@ namespace WebView.Controllers
 
                 var data = _customPurchaseInvoiceService.GetObjectById(model.Id);
                 model = _customPurchaseInvoiceService.UnpaidObject(data, _paymentVoucherService, _paymentVoucherDetailService, _cashBankService,
-                                                   _payableService, _cashMutationService,_generalLedgerJournalService,_accountService);
+                                                   _payableService, _cashMutationService,_generalLedgerJournalService,_accountService, _closingService);
 
             }
             catch (Exception ex)

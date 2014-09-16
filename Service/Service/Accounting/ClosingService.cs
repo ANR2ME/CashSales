@@ -41,12 +41,17 @@ namespace Service.Service
             return _repository.GetObjectById(Id);
         }
 
+        public Closing GetObjectByPeriodAndYear(int Period, int YearPeriod)
+        {
+            return _repository.GetObjectByPeriodAndYear(Period, YearPeriod);
+        }
+
         public Closing CreateObject(Closing closing, IAccountService _accountService, IValidCombService _validCombService)
         {
             closing.Errors = new Dictionary<String, String>();
             // Create all ValidComb
 
-            if (_validator.ValidCreateObject(closing))
+            if (_validator.ValidCreateObject(closing, this))
             {
                 _repository.CreateObject(closing);
                 IList<Account> allAccounts = _accountService.GetQueryable().OrderBy(x => x.Code).ToList();
@@ -67,8 +72,7 @@ namespace Service.Service
         public Closing CloseObject(Closing closing, IAccountService _accountService,
                                    IGeneralLedgerJournalService _generalLedgerJournalService, IValidCombService _validCombService)
         {
-            closing.Errors = new Dictionary<String, String>();
-            if (_validator.ValidCloseObject(closing))
+            if (_validator.ValidCloseObject(closing, this))
             {
                 // Count ValidComb for each leaf account
                 IList<Account> leafAccounts = _accountService.GetLeafObjects();
@@ -143,12 +147,15 @@ namespace Service.Service
 
         public Closing OpenObject(Closing closing, IAccountService _accountService, IValidCombService _validCombService)
         {
-            IList<Account> allAccounts = _accountService.GetAll();
-            foreach (var account in allAccounts)
+            if (_validator.ValidOpenObject(closing))
             {
-                ValidComb validComb = _validCombService.FindOrCreateObjectByAccountAndClosing(account.Id, closing.Id);
-                validComb.Amount = 0;
-                _validCombService.UpdateObject(validComb, _accountService, this);
+                IList<Account> allAccounts = _accountService.GetAll();
+                foreach (var account in allAccounts)
+                {
+                    ValidComb validComb = _validCombService.FindOrCreateObjectByAccountAndClosing(account.Id, closing.Id);
+                    validComb.Amount = 0;
+                    _validCombService.UpdateObject(validComb, _accountService, this);
+                }
             }
             return _repository.OpenObject(closing);
         }
@@ -162,6 +169,16 @@ namespace Service.Service
                 _validCombService.DeleteObject(validComb.Id);
             }
             return _repository.DeleteObject(Id);
-        }        
+        }
+
+        public bool IsDateClosed(DateTime DateToCheck)
+        {
+            var ClosedDates = _repository.FindAll(x => x.BeginningPeriod >= DateToCheck && x.EndDatePeriod < DateToCheck.AddDays(1));
+            if (ClosedDates.Any())
+            {
+                return true;
+            }
+            return false;
+        }
     }
 }

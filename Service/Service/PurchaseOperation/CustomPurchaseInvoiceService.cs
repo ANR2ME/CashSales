@@ -57,15 +57,14 @@ namespace Service.Service
             return (customPurchaseInvoice = _validator.ValidUpdateObject(customPurchaseInvoice, _customPurchaseInvoiceDetailService, _warehouseService, _contactService, _cashBankService) ? _repository.UpdateObject(customPurchaseInvoice) : customPurchaseInvoice);
         }
 
-        public CustomPurchaseInvoice ConfirmObject(CustomPurchaseInvoice customPurchaseInvoice, DateTime ConfirmationDate, 
-                                                ICustomPurchaseInvoiceDetailService _customPurchaseInvoiceDetailService, IContactService _contactService,
-                                                IPriceMutationService _priceMutationService, IPayableService _payableService, 
-                                                ICustomPurchaseInvoiceService _customPurchaseInvoiceService, IWarehouseItemService _warehouseItemService,
-                                                IWarehouseService _warehouseService, IItemService _itemService, IBarringService _barringService, IStockMutationService _stockMutationService,
-                                                IGeneralLedgerJournalService _generalLedgerJournalService, IAccountService _accountService)
+        public CustomPurchaseInvoice ConfirmObject(CustomPurchaseInvoice customPurchaseInvoice, DateTime ConfirmationDate,  ICustomPurchaseInvoiceDetailService _customPurchaseInvoiceDetailService,
+                                                   IContactService _contactService, IPriceMutationService _priceMutationService, IPayableService _payableService, 
+                                                   ICustomPurchaseInvoiceService _customPurchaseInvoiceService, IWarehouseItemService _warehouseItemService,
+                                                   IWarehouseService _warehouseService, IItemService _itemService, IBarringService _barringService, IStockMutationService _stockMutationService,
+                                                   IGeneralLedgerJournalService _generalLedgerJournalService, IAccountService _accountService, IClosingService _closingService)
         {
             customPurchaseInvoice.ConfirmationDate = ConfirmationDate;
-            if (_validator.ValidConfirmObject(customPurchaseInvoice, _customPurchaseInvoiceDetailService, _customPurchaseInvoiceService, _warehouseItemService, _contactService))
+            if (_validator.ValidConfirmObject(customPurchaseInvoice, _customPurchaseInvoiceDetailService, _customPurchaseInvoiceService, _warehouseItemService, _contactService, _closingService))
             {
                 IList<CustomPurchaseInvoiceDetail> customPurchaseInvoiceDetails = _customPurchaseInvoiceDetailService.GetObjectsByCustomPurchaseInvoiceId(customPurchaseInvoice.Id);
                 customPurchaseInvoice.Total = 0;
@@ -96,9 +95,9 @@ namespace Service.Service
                                                   IPayableService _payableService, IPaymentVoucherDetailService _paymentVoucherDetailService,
                                                   IWarehouseItemService _warehouseItemService, IWarehouseService _warehouseService, IItemService _itemService,
                                                   IBarringService _barringService, IStockMutationService _stockMutationService, IPriceMutationService _priceMutationService,
-                                                  IGeneralLedgerJournalService _generalLedgerJournalService, IAccountService _accountService)
+                                                  IGeneralLedgerJournalService _generalLedgerJournalService, IAccountService _accountService, IClosingService _closingService)
         {
-            if (_validator.ValidUnconfirmObject(customPurchaseInvoice, _customPurchaseInvoiceDetailService, _payableService, _paymentVoucherDetailService))
+            if (_validator.ValidUnconfirmObject(customPurchaseInvoice, _customPurchaseInvoiceDetailService, _payableService, _paymentVoucherDetailService, _closingService))
             {
                 
                 IList<CustomPurchaseInvoiceDetail> customPurchaseInvoiceDetails = _customPurchaseInvoiceDetailService.GetObjectsByCustomPurchaseInvoiceId(customPurchaseInvoice.Id);
@@ -119,10 +118,11 @@ namespace Service.Service
 
         public CustomPurchaseInvoice PaidObject(CustomPurchaseInvoice customPurchaseInvoice, decimal AmountPaid, ICashBankService _cashBankService, IPayableService _payableService, 
                                                 IPaymentVoucherService _paymentVoucherService, IPaymentVoucherDetailService _paymentVoucherDetailService, IContactService _contactService,
-                                                ICashMutationService _cashMutationService, IGeneralLedgerJournalService _generalLedgerJournalService, IAccountService _accountService)
+                                                ICashMutationService _cashMutationService, IGeneralLedgerJournalService _generalLedgerJournalService, IAccountService _accountService,
+                                                IClosingService _closingService)
         {
             customPurchaseInvoice.AmountPaid = AmountPaid;
-            if (_validator.ValidPaidObject(customPurchaseInvoice, _cashBankService, _paymentVoucherService))
+            if (_validator.ValidPaidObject(customPurchaseInvoice, _cashBankService, _paymentVoucherService, _closingService))
             {
                 CashBank cashBank = _cashBankService.GetObjectById((int)customPurchaseInvoice.CashBankId.GetValueOrDefault());
                 customPurchaseInvoice.IsBank = cashBank.IsBank;
@@ -149,7 +149,7 @@ namespace Service.Service
                 customPurchaseInvoice = _repository.PaidObject(customPurchaseInvoice);
                 _generalLedgerJournalService.CreatePaidJournalForCustomPurchaseInvoice(customPurchaseInvoice, _accountService);
                 _paymentVoucherService.ConfirmObject(paymentVoucher, (DateTime)customPurchaseInvoice.ConfirmationDate.GetValueOrDefault(), _paymentVoucherDetailService,
-                                                     _cashBankService, _payableService, _cashMutationService,_generalLedgerJournalService, _accountService);
+                                                     _cashBankService, _payableService, _cashMutationService,_generalLedgerJournalService, _accountService, _closingService);
             }
             
             return customPurchaseInvoice;
@@ -157,9 +157,10 @@ namespace Service.Service
 
         public CustomPurchaseInvoice UnpaidObject(CustomPurchaseInvoice customPurchaseInvoice, IPaymentVoucherService _paymentVoucherService,
                                                   IPaymentVoucherDetailService _paymentVoucherDetailService, ICashBankService _cashBankService, IPayableService _payableService,
-                                                  ICashMutationService _cashMutationService, IGeneralLedgerJournalService _generalLedgerJournalService, IAccountService _accountService)
+                                                  ICashMutationService _cashMutationService, IGeneralLedgerJournalService _generalLedgerJournalService, IAccountService _accountService,
+                                                  IClosingService _closingService)
         {
-            if (_validator.ValidUnpaidObject(customPurchaseInvoice))
+            if (_validator.ValidUnpaidObject(customPurchaseInvoice, _closingService))
             {
                 Payable payable = _payableService.GetObjectBySource(Core.Constants.Constant.PayableSource.CustomPurchaseInvoice, customPurchaseInvoice.Id);
                 IList<PaymentVoucher> paymentVouchers = _paymentVoucherService.GetObjectsByCashBankId((int)customPurchaseInvoice.CashBankId.GetValueOrDefault());
@@ -169,7 +170,7 @@ namespace Service.Service
                     {
                         paymentVoucher.Errors = new Dictionary<string, string>();
                         _paymentVoucherService.UnconfirmObject(paymentVoucher, _paymentVoucherDetailService, _cashBankService,
-                                                               _payableService, _cashMutationService,_generalLedgerJournalService,_accountService);
+                                                               _payableService, _cashMutationService,_generalLedgerJournalService,_accountService, _closingService);
 
                         IList<PaymentVoucherDetail> paymentVoucherDetails = _paymentVoucherDetailService.GetObjectsByPaymentVoucherId(paymentVoucher.Id);
                         foreach (var paymentVoucherDetail in paymentVoucherDetails)

@@ -40,6 +40,7 @@ namespace WebView.Controllers
         private IStockAdjustmentDetailService _stockAdjustmentDetailService;
         private IAccountService _accountService;
         private IGeneralLedgerJournalService _generalLedgerJournalService;
+        private IClosingService _closingService;
         
         public RetailSalesInvoiceController()
         {
@@ -67,6 +68,7 @@ namespace WebView.Controllers
             _receiptVoucherDetailService = new ReceiptVoucherDetailService(new ReceiptVoucherDetailRepository(), new ReceiptVoucherDetailValidator());
             _accountService = new AccountService(new AccountRepository(), new AccountValidator());
             _generalLedgerJournalService = new GeneralLedgerJournalService(new GeneralLedgerJournalRepository(), new GeneralLedgerJournalValidator());
+            _closingService = new ClosingService(new ClosingRepository(), new ClosingValidator());
         }
 
         public ActionResult Index()
@@ -526,7 +528,7 @@ namespace WebView.Controllers
                 data.Tax = model.Tax;
                 model = _retailSalesInvoiceService.ConfirmObject(data, model.ConfirmationDate.GetValueOrDefault(), data.ContactId, _retailSalesInvoiceDetailService, 
                                                     _contactService, _priceMutationService, _receivableService, _retailSalesInvoiceService, _warehouseItemService, 
-                                                    _warehouseService, _itemService, _barringService, _stockMutationService);
+                                                    _warehouseService, _itemService, _barringService, _stockMutationService, _closingService);
             }
             catch (Exception ex)
             {
@@ -564,7 +566,7 @@ namespace WebView.Controllers
 
                 var data = _retailSalesInvoiceService.GetObjectById(model.Id);
                 model = _retailSalesInvoiceService.UnconfirmObject(data, _retailSalesInvoiceDetailService, _receivableService, _receiptVoucherDetailService,
-                                                   _warehouseItemService, _warehouseService, _itemService, _barringService, _stockMutationService);
+                                                   _warehouseItemService, _warehouseService, _itemService, _barringService, _stockMutationService,_closingService);
 
             }
             catch (Exception ex)
@@ -606,7 +608,7 @@ namespace WebView.Controllers
                 data.GBCH_No = model.GBCH_No;
                 data.GBCH_DueDate = model.GBCH_DueDate;
                 model = _retailSalesInvoiceService.PaidObject(data, model.AmountPaid.Value, _cashBankService, _receivableService, _receiptVoucherService, _receiptVoucherDetailService, 
-                                                    _contactService, _cashMutationService, _generalLedgerJournalService, _accountService);
+                                                    _contactService, _cashMutationService, _generalLedgerJournalService, _accountService,_closingService);
             }
             catch (Exception ex)
             {
@@ -644,7 +646,7 @@ namespace WebView.Controllers
 
                 var data = _retailSalesInvoiceService.GetObjectById(model.Id);
                 model = _retailSalesInvoiceService.UnpaidObject(data, _receiptVoucherService, _receiptVoucherDetailService, _cashBankService,
-                                                   _receivableService, _cashMutationService,_generalLedgerJournalService,_accountService);
+                                                   _receivableService, _cashMutationService,_generalLedgerJournalService,_accountService,_closingService);
 
             }
             catch (Exception ex)

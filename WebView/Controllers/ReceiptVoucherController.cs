@@ -33,11 +33,10 @@ namespace WebView.Controllers
         private IReceiptVoucherDetailService _receiptVoucherDetailService;
         private IAccountService _accountService;
         private IGeneralLedgerJournalService _generalLedgerJournalService;
+        private IClosingService _closingService;
 
         public ReceiptVoucherController()
         {
-            _accountService = new AccountService(new AccountRepository(), new AccountValidator());
-            _generalLedgerJournalService = new GeneralLedgerJournalService(new GeneralLedgerJournalRepository(), new GeneralLedgerJournalValidator());
             _cashBankService = new CashBankService(new CashBankRepository(),new CashBankValidator());
             _cashMutationService = new CashMutationService(new CashMutationRepository(), new CashMutationValidator());
             _purchaseOrderService = new PurchaseOrderService(new PurchaseOrderRepository(), new PurchaseOrderValidator());
@@ -53,6 +52,9 @@ namespace WebView.Controllers
             _contactService = new ContactService(new ContactRepository(), new ContactValidator());
             _receiptVoucherService = new ReceiptVoucherService(new ReceiptVoucherRepository(), new ReceiptVoucherValidator());
             _receiptVoucherDetailService = new ReceiptVoucherDetailService(new ReceiptVoucherDetailRepository(), new ReceiptVoucherDetailValidator());
+            _accountService = new AccountService(new AccountRepository(), new AccountValidator());
+            _generalLedgerJournalService = new GeneralLedgerJournalService(new GeneralLedgerJournalRepository(), new GeneralLedgerJournalValidator());
+            _closingService = new ClosingService(new ClosingRepository(), new ClosingValidator());
         }
 
 
@@ -606,7 +608,7 @@ namespace WebView.Controllers
 
                 var data = _receiptVoucherService.GetObjectById(model.Id);
                 model = _receiptVoucherService.ConfirmObject(data,model.ConfirmationDate.Value,_receiptVoucherDetailService,_cashBankService,
-                                                            _receivableService,_cashMutationService,_generalLedgerJournalService,_accountService);
+                                                            _receivableService,_cashMutationService,_generalLedgerJournalService,_accountService,_closingService);
             }
             catch (Exception ex)
             {
@@ -644,7 +646,7 @@ namespace WebView.Controllers
 
                 var data = _receiptVoucherService.GetObjectById(model.Id);
                 model = _receiptVoucherService.UnconfirmObject(data,_receiptVoucherDetailService,_cashBankService,
-                    _receivableService,_cashMutationService,_generalLedgerJournalService,_accountService);
+                    _receivableService,_cashMutationService,_generalLedgerJournalService,_accountService,_closingService);
             }
             catch (Exception ex)
             {
@@ -683,7 +685,7 @@ namespace WebView.Controllers
                 var data = _receiptVoucherService.GetObjectById(model.Id);
                 model = _receiptVoucherService.ReconcileObject(data,model.ReconciliationDate.Value,_receiptVoucherDetailService,
                                                                _cashMutationService, _cashBankService, _receivableService,
-                                                               _generalLedgerJournalService,_accountService);
+                                                               _generalLedgerJournalService,_accountService,_closingService);
             }
             catch (Exception ex)
             {
@@ -721,8 +723,7 @@ namespace WebView.Controllers
 
                 var data = _receiptVoucherService.GetObjectById(model.Id);
                 model = _receiptVoucherService.UnreconcileObject(data,_receiptVoucherDetailService,_cashMutationService,
-                    _cashBankService, _receivableService,_generalLedgerJournalService,_accountService
-                    );
+                    _cashBankService, _receivableService,_generalLedgerJournalService,_accountService,_closingService);
             }
             catch (Exception ex)
             {

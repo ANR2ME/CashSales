@@ -266,8 +266,52 @@ namespace Validation.Validation
             return customPurchaseInvoice;
         }
 
+        public CustomPurchaseInvoice VGeneralLedgerPostingHasNotBeenClosed(CustomPurchaseInvoice customPurchaseInvoice, IClosingService _closingService, int CaseConfirmUnconfirm)
+        {
+            switch (CaseConfirmUnconfirm)
+            {
+                case (1): // Confirm
+                {
+                    if (_closingService.IsDateClosed(customPurchaseInvoice.ConfirmationDate.GetValueOrDefault()))
+                    {
+                        customPurchaseInvoice.Errors.Add("Generic", "Ledger sudah tutup buku");
+                    }
+                    break;
+                }
+                case (2): // Unconfirm
+                {
+                    if (_closingService.IsDateClosed(DateTime.Now))
+                    {
+                        customPurchaseInvoice.Errors.Add("Generic", "Ledger sudah tutup buku");
+                    }
+                    break;
+                }
+                case (3): // Paid
+                {
+                    // TODO:
+                    /*
+                    if (_closingService.IsDateClosed(customPurchaseInvoice.PaymentDate.GetValueOrDefault()))
+                    {
+                        customPurchaseInvoice.Errors.Add("Generic", "Ledger sudah tutup buku");
+                    }
+                     */
+                    break;
+                }
+                case (4): // Unpaid
+                {
+                    if (_closingService.IsDateClosed(DateTime.Now))
+                    {
+                        customPurchaseInvoice.Errors.Add("Generic", "Ledger sudah tutup buku");
+                    }
+                    break;
+                }
+            }
+            return customPurchaseInvoice;
+        }
+
         public CustomPurchaseInvoice VConfirmObject(CustomPurchaseInvoice customPurchaseInvoice, ICustomPurchaseInvoiceDetailService _customPurchaseInvoiceDetailService, 
-                                                 ICustomPurchaseInvoiceService _customPurchaseInvoiceService, IWarehouseItemService _warehouseItemService, IContactService _contactService)
+                                                    ICustomPurchaseInvoiceService _customPurchaseInvoiceService, IWarehouseItemService _warehouseItemService, IContactService _contactService,
+                                                    IClosingService _closingService)
         {
             VHasCustomPurchaseInvoiceDetails(customPurchaseInvoice, _customPurchaseInvoiceDetailService);
             if (!isValid(customPurchaseInvoice)) { return customPurchaseInvoice; }
@@ -287,11 +331,13 @@ namespace Validation.Validation
                 if (!isValid(customPurchaseInvoice)) { return customPurchaseInvoice; }
                 VHasContact(customPurchaseInvoice, _contactService);
             }
+            if (!isValid(customPurchaseInvoice)) { return customPurchaseInvoice; }
+            VGeneralLedgerPostingHasNotBeenClosed(customPurchaseInvoice, _closingService, 1);
             return customPurchaseInvoice;
         }
 
         public CustomPurchaseInvoice VUnconfirmObject(CustomPurchaseInvoice customPurchaseInvoice, ICustomPurchaseInvoiceDetailService _customPurchaseInvoiceDetailService, 
-                                                   IPayableService _payableService, IPaymentVoucherDetailService _paymentVoucherDetailService)
+                                                   IPayableService _payableService, IPaymentVoucherDetailService _paymentVoucherDetailService, IClosingService _closingService)
         {
             VIsNotDeleted(customPurchaseInvoice);
             if (!isValid(customPurchaseInvoice)) { return customPurchaseInvoice; }
@@ -302,10 +348,13 @@ namespace Validation.Validation
             VIsUnconfirmableCustomPurchaseInvoiceDetails(customPurchaseInvoice, _customPurchaseInvoiceDetailService);
             if (!isValid(customPurchaseInvoice)) { return customPurchaseInvoice; }
             VHasNoPaymentVoucherDetails(customPurchaseInvoice, _payableService, _paymentVoucherDetailService);
+            if (!isValid(customPurchaseInvoice)) { return customPurchaseInvoice; }
+            VGeneralLedgerPostingHasNotBeenClosed(customPurchaseInvoice, _closingService, 2);
             return customPurchaseInvoice;
         }
 
-        public CustomPurchaseInvoice VPaidObject(CustomPurchaseInvoice customPurchaseInvoice, ICashBankService _cashBankService, IPaymentVoucherService _paymentVoucherService)
+        public CustomPurchaseInvoice VPaidObject(CustomPurchaseInvoice customPurchaseInvoice, ICashBankService _cashBankService,
+                                                 IPaymentVoucherService _paymentVoucherService, IClosingService _closingService)
         {
             VIsNotPaid(customPurchaseInvoice);
             if (!isValid(customPurchaseInvoice)) { return customPurchaseInvoice; }
@@ -328,12 +377,16 @@ namespace Validation.Validation
                 if (!isValid(customPurchaseInvoice)) { return customPurchaseInvoice; }
                 VIsValidFullPayment(customPurchaseInvoice);
             }
+            if (!isValid(customPurchaseInvoice)) { return customPurchaseInvoice; }
+            VGeneralLedgerPostingHasNotBeenClosed(customPurchaseInvoice, _closingService, 3);
             return customPurchaseInvoice;
         }
 
-        public CustomPurchaseInvoice VUnpaidObject(CustomPurchaseInvoice customPurchaseInvoice)
+        public CustomPurchaseInvoice VUnpaidObject(CustomPurchaseInvoice customPurchaseInvoice, IClosingService _closingService)
         {
             VIsPaid(customPurchaseInvoice);
+            if (!isValid(customPurchaseInvoice)) { return customPurchaseInvoice; }
+            VGeneralLedgerPostingHasNotBeenClosed(customPurchaseInvoice, _closingService, 4);
             return customPurchaseInvoice;
         }
 
@@ -377,32 +430,35 @@ namespace Validation.Validation
         }
 
         public bool ValidConfirmObject(CustomPurchaseInvoice customPurchaseInvoice, ICustomPurchaseInvoiceDetailService _customPurchaseInvoiceDetailService, 
-                                       ICustomPurchaseInvoiceService _customPurchaseInvoiceService, IWarehouseItemService _warehouseItemService, IContactService _contactService)
+                                       ICustomPurchaseInvoiceService _customPurchaseInvoiceService, IWarehouseItemService _warehouseItemService,
+                                       IContactService _contactService, IClosingService _closingService)
         {
             customPurchaseInvoice.Errors.Clear();
-            VConfirmObject(customPurchaseInvoice, _customPurchaseInvoiceDetailService, _customPurchaseInvoiceService, _warehouseItemService, _contactService);
+            VConfirmObject(customPurchaseInvoice, _customPurchaseInvoiceDetailService, _customPurchaseInvoiceService, _warehouseItemService,
+                           _contactService, _closingService);
             return isValid(customPurchaseInvoice);
         }
 
         public bool ValidUnconfirmObject(CustomPurchaseInvoice customPurchaseInvoice, ICustomPurchaseInvoiceDetailService _customPurchaseInvoiceDetailService, 
-                                         IPayableService _payableService, IPaymentVoucherDetailService _paymentVoucherDetailService)
+                                         IPayableService _payableService, IPaymentVoucherDetailService _paymentVoucherDetailService, IClosingService _closingService)
         {
             customPurchaseInvoice.Errors.Clear();
-            VUnconfirmObject(customPurchaseInvoice, _customPurchaseInvoiceDetailService, _payableService, _paymentVoucherDetailService);
+            VUnconfirmObject(customPurchaseInvoice, _customPurchaseInvoiceDetailService, _payableService, _paymentVoucherDetailService, _closingService);
             return isValid(customPurchaseInvoice);
         }
 
-        public bool ValidPaidObject(CustomPurchaseInvoice customPurchaseInvoice, ICashBankService _cashBankService, IPaymentVoucherService _paymentVoucherService)
+        public bool ValidPaidObject(CustomPurchaseInvoice customPurchaseInvoice, ICashBankService _cashBankService, IPaymentVoucherService _paymentVoucherService,
+                                    IClosingService _closingService)
         {
             customPurchaseInvoice.Errors.Clear();
-            VPaidObject(customPurchaseInvoice, _cashBankService, _paymentVoucherService);
+            VPaidObject(customPurchaseInvoice, _cashBankService, _paymentVoucherService, _closingService);
             return isValid(customPurchaseInvoice);
         }
 
-        public bool ValidUnpaidObject(CustomPurchaseInvoice customPurchaseInvoice)
+        public bool ValidUnpaidObject(CustomPurchaseInvoice customPurchaseInvoice, IClosingService _closingService)
         {
             customPurchaseInvoice.Errors.Clear();
-            VUnpaidObject(customPurchaseInvoice);
+            VUnpaidObject(customPurchaseInvoice, _closingService);
             return isValid(customPurchaseInvoice);
         }
 

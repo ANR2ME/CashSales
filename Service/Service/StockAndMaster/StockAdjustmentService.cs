@@ -73,10 +73,10 @@ namespace Service.Service
 
         public StockAdjustment ConfirmObject(StockAdjustment stockAdjustment, DateTime ConfirmationDate, IStockAdjustmentDetailService _stockAdjustmentDetailService,
                                              IStockMutationService _stockMutationService, IItemService _itemService, IBarringService _barringService, IWarehouseItemService _warehouseItemService,
-                                             IGeneralLedgerJournalService _generalLedgerJournalService, IAccountService _accountService)
+                                             IGeneralLedgerJournalService _generalLedgerJournalService, IAccountService _accountService, IClosingService _closingService)
         {
             stockAdjustment.ConfirmationDate = ConfirmationDate;
-            if (_validator.ValidConfirmObject(stockAdjustment, this, _stockAdjustmentDetailService, _itemService, _barringService, _warehouseItemService))
+            if (_validator.ValidConfirmObject(stockAdjustment, this, _stockAdjustmentDetailService, _itemService, _barringService, _warehouseItemService, _closingService))
             {
                 IList<StockAdjustmentDetail> stockAdjustmentDetails = _stockAdjustmentDetailService.GetObjectsByStockAdjustmentId(stockAdjustment.Id);
                 foreach (var detail in stockAdjustmentDetails)
@@ -93,9 +93,9 @@ namespace Service.Service
 
         public StockAdjustment UnconfirmObject(StockAdjustment stockAdjustment, IStockAdjustmentDetailService _stockAdjustmentDetailService,
                                                IStockMutationService _stockMutationService, IItemService _itemService, IBarringService _barringService, IWarehouseItemService _warehouseItemService,
-                                               IGeneralLedgerJournalService _generalLedgerJournalService, IAccountService _accountService)
+                                               IGeneralLedgerJournalService _generalLedgerJournalService, IAccountService _accountService, IClosingService _closingService)
         {
-            if (_validator.ValidUnconfirmObject(stockAdjustment, this, _stockAdjustmentDetailService, _itemService, _barringService, _warehouseItemService))
+            if (_validator.ValidUnconfirmObject(stockAdjustment, this, _stockAdjustmentDetailService, _itemService, _barringService, _warehouseItemService, _closingService))
             {
                 IList<StockAdjustmentDetail> stockAdjustmentDetails = _stockAdjustmentDetailService.GetObjectsByStockAdjustmentId(stockAdjustment.Id);
                 foreach (var detail in stockAdjustmentDetails)

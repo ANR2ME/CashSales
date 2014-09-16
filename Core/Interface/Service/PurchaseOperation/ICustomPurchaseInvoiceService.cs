@@ -23,16 +23,20 @@ namespace Core.Interface.Service
                                          ICustomPurchaseInvoiceDetailService _customPurchaseInvoiceDetailService, IContactService _contactService,
                                          IPriceMutationService _priceMutationService, IPayableService _payableService,
                                          ICustomPurchaseInvoiceService _customPurchaseInvoiceService, IWarehouseItemService _warehouseItemService,
-                                         IWarehouseService _warehouseService, IItemService _itemService, IBarringService _barringService, IStockMutationService _stockMutationService);
+                                         IWarehouseService _warehouseService, IItemService _itemService, IBarringService _barringService, IStockMutationService _stockMutationService,
+                                         IGeneralLedgerJournalService _generalLedgerJournalService, IAccountService _accountService);
         CustomPurchaseInvoice UnconfirmObject(CustomPurchaseInvoice customPurchaseInvoice, ICustomPurchaseInvoiceDetailService _customPurchaseInvoiceDetailService,
                                            IPayableService _payableService, IPaymentVoucherDetailService _paymentVoucherDetailService,
                                            IWarehouseItemService _warehouseItemService, IWarehouseService _warehouseService, IItemService _itemService,
-                                           IBarringService _barringService, IStockMutationService _stockMutationService, IPriceMutationService _priceMutationService);
+                                           IBarringService _barringService, IStockMutationService _stockMutationService, IPriceMutationService _priceMutationService,
+                                           IGeneralLedgerJournalService _generalLedgerJournalService, IAccountService _accountService);
         CustomPurchaseInvoice PaidObject(CustomPurchaseInvoice customPurchaseInvoice, decimal AmountPaid, ICashBankService _cashBankService, IPayableService _payableService,
                                            IPaymentVoucherService _paymentVoucherService, IPaymentVoucherDetailService _paymentVoucherDetailService,
-                                           IContactService _contactService, ICashMutationService _cashMutationService);
+                                           IContactService _contactService, ICashMutationService _cashMutationService,
+                                           IGeneralLedgerJournalService _generalLedgerJournalService, IAccountService _accountService);
         CustomPurchaseInvoice UnpaidObject(CustomPurchaseInvoice customPurchaseInvoice, IPaymentVoucherService _paymentVoucherService, IPaymentVoucherDetailService _paymentVoucherDetailService,
-                                           ICashBankService _cashBankService, IPayableService _payableService, ICashMutationService _cashMutationService);
+                                           ICashBankService _cashBankService, IPayableService _payableService, ICashMutationService _cashMutationService,
+                                           IGeneralLedgerJournalService _generalLedgerJournalService, IAccountService _accountService);
         bool DeleteObject(int Id);
         decimal CalculateTotalAmountAfterDiscountAndTax(CustomPurchaseInvoice customPurchaseInvoice);
     }

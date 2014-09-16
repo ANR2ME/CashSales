@@ -23,6 +23,8 @@ namespace WebView.Controllers
         private IWarehouseItemService _warehouseItemService;
         private IStockMutationService _stockMutationService;
         private IBarringService _barringService;
+        private IAccountService _accountService;
+        private IGeneralLedgerJournalService _generalLedgerJournalService;
 
         public StockAdjustmentController()
         {
@@ -33,6 +35,8 @@ namespace WebView.Controllers
             _warehouseItemService = new WarehouseItemService(new WarehouseItemRepository(), new WarehouseItemValidator());
             _stockMutationService = new StockMutationService(new StockMutationRepository(), new StockMutationValidator());
             _barringService = new BarringService(new BarringRepository(), new BarringValidator());
+            _accountService = new AccountService(new AccountRepository(), new AccountValidator());
+            _generalLedgerJournalService = new GeneralLedgerJournalService(new GeneralLedgerJournalRepository(), new GeneralLedgerJournalValidator());
         }
 
 
@@ -482,7 +486,9 @@ namespace WebView.Controllers
                 }
 
                 var data = _stockAdjustmentService.GetObjectById(model.Id);
-                model = _stockAdjustmentService.ConfirmObject(data, model.ConfirmationDate.Value, _stockAdjustmentDetailService, _stockMutationService, _itemService, _barringService, _warehouseItemService);
+                model = _stockAdjustmentService.ConfirmObject(data, model.ConfirmationDate.Value, _stockAdjustmentDetailService,
+                                                              _stockMutationService, _itemService, _barringService, _warehouseItemService,
+                                                              _generalLedgerJournalService,_accountService);
             }
             catch (Exception ex)
             {
@@ -519,7 +525,8 @@ namespace WebView.Controllers
                 }
 
                 var data = _stockAdjustmentService.GetObjectById(model.Id);
-                model = _stockAdjustmentService.UnconfirmObject(data,_stockAdjustmentDetailService,_stockMutationService,_itemService,_barringService,_warehouseItemService);
+                model = _stockAdjustmentService.UnconfirmObject(data,_stockAdjustmentDetailService,_stockMutationService,_itemService,_barringService,
+                                                                _warehouseItemService,_generalLedgerJournalService,_accountService);
             }
             catch (Exception ex)
             {

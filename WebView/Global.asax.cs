@@ -11,6 +11,7 @@ using Core.Interface.Service;
 using Data.Repository;
 using Service.Service;
 using Validation.Validation;
+using Core.Constants;
 
 namespace WebView
 {
@@ -19,6 +20,7 @@ namespace WebView
 
     public class MvcApplication : System.Web.HttpApplication
     {
+        private IAccountService _accountService;
         private IContactGroupService _contactGroupService;
         private IContactService _contactService;
         private IUserMenuService _userMenuService;
@@ -28,6 +30,11 @@ namespace WebView
         private ContactGroup baseContactGroup;
         private Contact baseContact;
         private Company baseCompany;
+        private Account Asset, CashBank, AccountReceivable, GBCHReceivable, Inventory;
+        private Account Expense, CashBankAdjustmentExpense, COGS, Discount, SalesAllowance, StockAdjustmentExpense;
+        private Account Liability, AccountPayable, GBCHPayable, GoodsPendingClearance;
+        private Account Equity, OwnersEquity, EquityAdjustment;
+        private Account Revenue;
 
         protected void Application_Start()
         {
@@ -44,6 +51,7 @@ namespace WebView
 
         public void PopulateData()
         {
+            _accountService = new AccountService(new AccountRepository(), new AccountValidator());
             _contactGroupService = new ContactGroupService(new ContactGroupRepository(), new ContactGroupValidator());
             _contactService = new ContactService(new ContactRepository(), new ContactValidator());
             _userMenuService = new UserMenuService(new UserMenuRepository(), new UserMenuValidator());
@@ -58,63 +66,95 @@ namespace WebView
             {
                 baseCompany = _companyService.CreateObject("Jakarta Andalan Bike", "Jl. Hos Cokroaminoto No.12A Mencong Ciledug, Tangerang", "021-7316575", "", "jakartaandalanbike@gmail.com");
             }
+            
+            if (!_accountService.GetLegacyObjects().Any())
+            {
+                Asset = _accountService.CreateLegacyObject(new Account() { Name = "Asset", Code = Constant.AccountCode.Asset, LegacyCode = Constant.AccountLegacyCode.Asset, Level = 1, Group = Constant.AccountGroup.Asset, IsLegacy = true }, _accountService);
+                CashBank = _accountService.CreateLegacyObject(new Account() { Name = "CashBank", IsLeaf = true, Code = Constant.AccountCode.CashBank, LegacyCode = Constant.AccountLegacyCode.CashBank, Level = 2, Group = Constant.AccountGroup.Asset, ParentId = Asset.Id, IsLegacy = true }, _accountService);
+                AccountReceivable = _accountService.CreateLegacyObject(new Account() { Name = "Account Receivable", IsLeaf = true, Code = Constant.AccountCode.AccountReceivable, LegacyCode = Constant.AccountLegacyCode.AccountReceivable, Level = 2, Group = Constant.AccountGroup.Asset, ParentId = Asset.Id, IsLegacy = true }, _accountService);
+                GBCHReceivable = _accountService.CreateLegacyObject(new Account() { Name = "GBCH Receivable", IsLeaf = true, Code = Constant.AccountCode.GBCHReceivable, LegacyCode = Constant.AccountLegacyCode.GBCHReceivable, Level = 2, Group = Constant.AccountGroup.Asset, ParentId = Asset.Id, IsLegacy = true }, _accountService);
+                Inventory = _accountService.CreateLegacyObject(new Account() { Name = "Inventory", IsLeaf = true, Code = Constant.AccountCode.Inventory, LegacyCode = Constant.AccountLegacyCode.Inventory, Level = 2, Group = Constant.AccountGroup.Asset, ParentId = Asset.Id, IsLegacy = true }, _accountService);
 
+                Expense = _accountService.CreateLegacyObject(new Account() { Name = "Expense", Code = Constant.AccountCode.Expense, LegacyCode = Constant.AccountLegacyCode.Expense, Level = 1, Group = Constant.AccountGroup.Expense, IsLegacy = true }, _accountService);
+                CashBankAdjustmentExpense = _accountService.CreateLegacyObject(new Account() { Name = "CashBank Adjustment Expense", IsLeaf = true, Code = Constant.AccountCode.CashBankAdjustmentExpense, LegacyCode = Constant.AccountLegacyCode.CashBankAdjustmentExpense, Level = 2, Group = Constant.AccountGroup.Expense, ParentId = Expense.Id, IsLegacy = true }, _accountService);
+                COGS = _accountService.CreateLegacyObject(new Account() { Name = "Cost Of Goods Sold", IsLeaf = true, Code = Constant.AccountCode.COGS, LegacyCode = Constant.AccountLegacyCode.COGS, Level = 2, Group = Constant.AccountGroup.Expense, ParentId = Expense.Id, IsLegacy = true }, _accountService);
+                Discount = _accountService.CreateLegacyObject(new Account() { Name = "Discount", IsLeaf = true, Code = Constant.AccountCode.Discount, LegacyCode = Constant.AccountLegacyCode.Discount, Level = 2, Group = Constant.AccountGroup.Expense, ParentId = Expense.Id, IsLegacy = true }, _accountService);
+                SalesAllowance = _accountService.CreateLegacyObject(new Account() { Name = "Sales Allowance", IsLeaf = true, Code = Constant.AccountCode.SalesAllowance, LegacyCode = Constant.AccountLegacyCode.SalesAllowance, Level = 2, Group = Constant.AccountGroup.Expense, ParentId = Expense.Id, IsLegacy = true }, _accountService);
+                StockAdjustmentExpense = _accountService.CreateLegacyObject(new Account() { Name = "Stock Adjustment Expense", IsLeaf = true, Code = Constant.AccountCode.StockAdjustmentExpense, LegacyCode = Constant.AccountLegacyCode.StockAdjustmentExpense, Level = 2, Group = Constant.AccountGroup.Expense, ParentId = Expense.Id, IsLegacy = true }, _accountService);
+
+                Liability = _accountService.CreateLegacyObject(new Account() { Name = "Liability", Code = Constant.AccountCode.Liability, LegacyCode = Constant.AccountLegacyCode.Liability, Level = 1, Group = Constant.AccountGroup.Liability, IsLegacy = true }, _accountService);
+                AccountPayable = _accountService.CreateLegacyObject(new Account() { Name = "Account Payable", IsLeaf = true, Code = Constant.AccountCode.AccountPayable, LegacyCode = Constant.AccountLegacyCode.AccountPayable, Level = 2, Group = Constant.AccountGroup.Liability, ParentId = Liability.Id, IsLegacy = true }, _accountService);
+                GBCHPayable = _accountService.CreateLegacyObject(new Account() { Name = "GBCH Payable", IsLeaf = true, Code = Constant.AccountCode.GBCHPayable, LegacyCode = Constant.AccountLegacyCode.GBCHPayable, Level = 2, Group = Constant.AccountGroup.Liability, ParentId = Liability.Id, IsLegacy = true }, _accountService);
+                GoodsPendingClearance = _accountService.CreateLegacyObject(new Account() { Name = "Goods Pending Clearance", IsLeaf = true, Code = Constant.AccountCode.GoodsPendingClearance, LegacyCode = Constant.AccountLegacyCode.GoodsPendingClearance, Level = 2, Group = Constant.AccountGroup.Liability, ParentId = Liability.Id, IsLegacy = true }, _accountService);
+
+                Equity = _accountService.CreateLegacyObject(new Account() { Name = "Equity", Code = Constant.AccountCode.Equity, LegacyCode = Constant.AccountLegacyCode.Equity, Level = 1, Group = Constant.AccountGroup.Equity, IsLegacy = true }, _accountService);
+                OwnersEquity = _accountService.CreateLegacyObject(new Account() { Name = "Owners Equity", Code = Constant.AccountCode.OwnersEquity, LegacyCode = Constant.AccountLegacyCode.OwnersEquity, Level = 2, Group = Constant.AccountGroup.Equity, ParentId = Equity.Id, IsLegacy = true }, _accountService);
+                EquityAdjustment = _accountService.CreateLegacyObject(new Account() { Name = "Equity Adjustment", IsLeaf = true, Code = Constant.AccountCode.EquityAdjustment, LegacyCode = Constant.AccountLegacyCode.EquityAdjustment, Level = 3, Group = Constant.AccountGroup.Equity, ParentId = OwnersEquity.Id, IsLegacy = true }, _accountService);
+
+                Revenue = _accountService.CreateLegacyObject(new Account() { Name = "Revenue", IsLeaf = true, Code = Constant.AccountCode.Revenue, LegacyCode = Constant.AccountLegacyCode.Revenue, Level = 1, Group = Constant.AccountGroup.Revenue, IsLegacy = true }, _accountService);
+            }
+            
             CreateUserMenus();
             CreateSysAdmin();
         }
 
         public void CreateUserMenus()
         {
-            _userMenuService.CreateObject(Core.Constants.Constant.MenuName.Contact, Core.Constants.Constant.MenuGroupName.Master);
-            _userMenuService.CreateObject(Core.Constants.Constant.MenuName.ItemType, Core.Constants.Constant.MenuGroupName.Master);
-            _userMenuService.CreateObject(Core.Constants.Constant.MenuName.UoM, Core.Constants.Constant.MenuGroupName.Master);
-            _userMenuService.CreateObject(Core.Constants.Constant.MenuName.QuantityPricing, Core.Constants.Constant.MenuGroupName.Master);
+            _userMenuService.CreateObject(Constant.MenuName.Contact, Constant.MenuGroupName.Master);
+            _userMenuService.CreateObject(Constant.MenuName.ItemType, Constant.MenuGroupName.Master);
+            _userMenuService.CreateObject(Constant.MenuName.UoM, Constant.MenuGroupName.Master);
+            _userMenuService.CreateObject(Constant.MenuName.QuantityPricing, Constant.MenuGroupName.Master);
 
-            _userMenuService.CreateObject(Core.Constants.Constant.MenuName.CashBank, Core.Constants.Constant.MenuGroupName.Master);
-            _userMenuService.CreateObject(Core.Constants.Constant.MenuName.CashBankAdjustment, Core.Constants.Constant.MenuGroupName.Master);
-            _userMenuService.CreateObject(Core.Constants.Constant.MenuName.CashBankMutation, Core.Constants.Constant.MenuGroupName.Master);
-            _userMenuService.CreateObject(Core.Constants.Constant.MenuName.CashMutation, Core.Constants.Constant.MenuGroupName.Master);
-            _userMenuService.CreateObject(Core.Constants.Constant.MenuName.PaymentRequest, Core.Constants.Constant.MenuGroupName.Master);
+            _userMenuService.CreateObject(Constant.MenuName.CashBank, Constant.MenuGroupName.Master);
+            _userMenuService.CreateObject(Constant.MenuName.CashBankAdjustment, Constant.MenuGroupName.Master);
+            _userMenuService.CreateObject(Constant.MenuName.CashBankMutation, Constant.MenuGroupName.Master);
+            _userMenuService.CreateObject(Constant.MenuName.CashMutation, Constant.MenuGroupName.Master);
+            _userMenuService.CreateObject(Constant.MenuName.PaymentRequest, Constant.MenuGroupName.Master);
 
-            _userMenuService.CreateObject(Core.Constants.Constant.MenuName.Item, Core.Constants.Constant.MenuGroupName.Master);
-            _userMenuService.CreateObject(Core.Constants.Constant.MenuName.StockAdjustment, Core.Constants.Constant.MenuGroupName.Master);
-            _userMenuService.CreateObject(Core.Constants.Constant.MenuName.StockMutation, Core.Constants.Constant.MenuGroupName.Master);
-            _userMenuService.CreateObject(Core.Constants.Constant.MenuName.Warehouse, Core.Constants.Constant.MenuGroupName.Master);
-            _userMenuService.CreateObject(Core.Constants.Constant.MenuName.WarehouseItem, Core.Constants.Constant.MenuGroupName.Master);
-            _userMenuService.CreateObject(Core.Constants.Constant.MenuName.WarehouseMutation, Core.Constants.Constant.MenuGroupName.Master);
+            _userMenuService.CreateObject(Constant.MenuName.Item, Constant.MenuGroupName.Master);
+            _userMenuService.CreateObject(Constant.MenuName.StockAdjustment, Constant.MenuGroupName.Master);
+            _userMenuService.CreateObject(Constant.MenuName.StockMutation, Constant.MenuGroupName.Master);
+            _userMenuService.CreateObject(Constant.MenuName.Warehouse, Constant.MenuGroupName.Master);
+            _userMenuService.CreateObject(Constant.MenuName.WarehouseItem, Constant.MenuGroupName.Master);
+            _userMenuService.CreateObject(Constant.MenuName.WarehouseMutation, Constant.MenuGroupName.Master);
 
-            //_userMenuService.CreateObject(Core.Constants.Constant.MenuName.PurchaseOrder, Core.Constants.Constant.MenuGroupName.Transaction);
-            //_userMenuService.CreateObject(Core.Constants.Constant.MenuName.PurchaseReceival, Core.Constants.Constant.MenuGroupName.Transaction);
-            //_userMenuService.CreateObject(Core.Constants.Constant.MenuName.PurchaseInvoice, Core.Constants.Constant.MenuGroupName.Transaction);
-            _userMenuService.CreateObject(Core.Constants.Constant.MenuName.CustomPurchaseInvoice, Core.Constants.Constant.MenuGroupName.Transaction);
-            _userMenuService.CreateObject(Core.Constants.Constant.MenuName.PaymentVoucher, Core.Constants.Constant.MenuGroupName.Transaction);
-            _userMenuService.CreateObject(Core.Constants.Constant.MenuName.Payable, Core.Constants.Constant.MenuGroupName.Transaction);
+            //_userMenuService.CreateObject(Constant.MenuName.PurchaseOrder, Constant.MenuGroupName.Transaction);
+            //_userMenuService.CreateObject(Constant.MenuName.PurchaseReceival, Constant.MenuGroupName.Transaction);
+            //_userMenuService.CreateObject(Constant.MenuName.PurchaseInvoice, Constant.MenuGroupName.Transaction);
+            _userMenuService.CreateObject(Constant.MenuName.CustomPurchaseInvoice, Constant.MenuGroupName.Transaction);
+            _userMenuService.CreateObject(Constant.MenuName.PaymentVoucher, Constant.MenuGroupName.Transaction);
+            _userMenuService.CreateObject(Constant.MenuName.Payable, Constant.MenuGroupName.Transaction);
 
-            //_userMenuService.CreateObject(Core.Constants.Constant.MenuName.SalesOrder, Core.Constants.Constant.MenuGroupName.Transaction);
-            //_userMenuService.CreateObject(Core.Constants.Constant.MenuName.DeliveryOrder, Core.Constants.Constant.MenuGroupName.Transaction);
-            //_userMenuService.CreateObject(Core.Constants.Constant.MenuName.SalesInvoice, Core.Constants.Constant.MenuGroupName.Transaction);
-            //_userMenuService.CreateObject(Core.Constants.Constant.MenuName.RetailSalesInvoice, Core.Constants.Constant.MenuGroupName.Transaction);
-            _userMenuService.CreateObject(Core.Constants.Constant.MenuName.CashSalesInvoice, Core.Constants.Constant.MenuGroupName.Transaction);
-            _userMenuService.CreateObject(Core.Constants.Constant.MenuName.CashSalesReturn, Core.Constants.Constant.MenuGroupName.Transaction);
-            _userMenuService.CreateObject(Core.Constants.Constant.MenuName.ReceiptVoucher, Core.Constants.Constant.MenuGroupName.Transaction);
-            _userMenuService.CreateObject(Core.Constants.Constant.MenuName.Receivable, Core.Constants.Constant.MenuGroupName.Transaction);
+            //_userMenuService.CreateObject(Constant.MenuName.SalesOrder, Constant.MenuGroupName.Transaction);
+            //_userMenuService.CreateObject(Constant.MenuName.DeliveryOrder, Constant.MenuGroupName.Transaction);
+            //_userMenuService.CreateObject(Constant.MenuName.SalesInvoice, Constant.MenuGroupName.Transaction);
+            //_userMenuService.CreateObject(Constant.MenuName.RetailSalesInvoice, Constant.MenuGroupName.Transaction);
+            _userMenuService.CreateObject(Constant.MenuName.CashSalesInvoice, Constant.MenuGroupName.Transaction);
+            _userMenuService.CreateObject(Constant.MenuName.CashSalesReturn, Constant.MenuGroupName.Transaction);
+            
+            _userMenuService.CreateObject(Constant.MenuName.ReceiptVoucher, Constant.MenuGroupName.Transaction);
+            _userMenuService.CreateObject(Constant.MenuName.Receivable, Constant.MenuGroupName.Transaction);
 
-            _userMenuService.CreateObject(Core.Constants.Constant.MenuName.User, Core.Constants.Constant.MenuGroupName.Setting);
-            _userMenuService.CreateObject(Core.Constants.Constant.MenuName.UserAccessRight, Core.Constants.Constant.MenuGroupName.Setting);
-            _userMenuService.CreateObject(Core.Constants.Constant.MenuName.CompanyInfo, Core.Constants.Constant.MenuGroupName.Setting);
-
-            _userMenuService.CreateObject(Core.Constants.Constant.MenuName.Item, Core.Constants.Constant.MenuGroupName.Report);
-            _userMenuService.CreateObject(Core.Constants.Constant.MenuName.Sales, Core.Constants.Constant.MenuGroupName.Report);
-            _userMenuService.CreateObject(Core.Constants.Constant.MenuName.TopSales, Core.Constants.Constant.MenuGroupName.Report);
-            _userMenuService.CreateObject(Core.Constants.Constant.MenuName.ProfitLoss, Core.Constants.Constant.MenuGroupName.Report);
+            _userMenuService.CreateObject(Constant.MenuName.Item, Constant.MenuGroupName.Report);
+            _userMenuService.CreateObject(Constant.MenuName.Sales, Constant.MenuGroupName.Report);
+            _userMenuService.CreateObject(Constant.MenuName.TopSales, Constant.MenuGroupName.Report);
+            _userMenuService.CreateObject(Constant.MenuName.ProfitLoss, Constant.MenuGroupName.Report);
+            _userMenuService.CreateObject(Constant.MenuName.Account, Constant.MenuGroupName.Report);
+            _userMenuService.CreateObject(Constant.MenuName.Closing, Constant.MenuGroupName.Report);
+            _userMenuService.CreateObject(Constant.MenuName.GeneralLedger, Constant.MenuGroupName.Report);
+            _userMenuService.CreateObject(Constant.MenuName.ValidComb, Constant.MenuGroupName.Report);
+            
+            _userMenuService.CreateObject(Constant.MenuName.User, Constant.MenuGroupName.Setting);
+            _userMenuService.CreateObject(Constant.MenuName.UserAccessRight, Constant.MenuGroupName.Setting);
+            _userMenuService.CreateObject(Constant.MenuName.CompanyInfo, Constant.MenuGroupName.Setting);
         }
 
         public void CreateSysAdmin()
         {
-            UserAccount userAccount = _userAccountService.GetObjectByUsername(Core.Constants.Constant.UserType.Admin);
+            UserAccount userAccount = _userAccountService.GetObjectByUsername(Constant.UserType.Admin);
             if (userAccount == null)
             {
-                userAccount = _userAccountService.CreateObject(Core.Constants.Constant.UserType.Admin, "sysadmin", "Administrator", "Administrator", true);
+                userAccount = _userAccountService.CreateObject(Constant.UserType.Admin, "sysadmin", "Administrator", "Administrator", true);
             }
             _userAccessService.CreateDefaultAccess(userAccount.Id, _userMenuService, _userAccountService);
 

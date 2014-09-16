@@ -112,7 +112,8 @@ namespace Service.Service
         }
 
         public RetailPurchaseInvoice PaidObject(RetailPurchaseInvoice retailPurchaseInvoice, decimal AmountPaid, ICashBankService _cashBankService, IPayableService _payableService, 
-                                             IPaymentVoucherService _paymentVoucherService, IPaymentVoucherDetailService _paymentVoucherDetailService, IContactService _contactService, ICashMutationService _cashMutationService)
+                                                IPaymentVoucherService _paymentVoucherService, IPaymentVoucherDetailService _paymentVoucherDetailService, IContactService _contactService,
+                                                ICashMutationService _cashMutationService, IGeneralLedgerJournalService _generalLedgerJournalService, IAccountService _accountService)
         {
             retailPurchaseInvoice.AmountPaid = AmountPaid;
             if (_validator.ValidPaidObject(retailPurchaseInvoice, _cashBankService, _paymentVoucherService))
@@ -136,13 +137,17 @@ namespace Service.Service
                 PaymentVoucherDetail paymentVoucherDetail = _paymentVoucherDetailService.CreateObject(paymentVoucher.Id, payable.Id, (decimal)retailPurchaseInvoice.AmountPaid.GetValueOrDefault(),
                                                                             "Automatic Payment", _paymentVoucherService, _cashBankService, _payableService);
                 retailPurchaseInvoice = _repository.PaidObject(retailPurchaseInvoice);
-                _paymentVoucherService.ConfirmObject(paymentVoucher, (DateTime)retailPurchaseInvoice.ConfirmationDate.GetValueOrDefault(), _paymentVoucherDetailService, _cashBankService, _payableService, _cashMutationService);
+                _paymentVoucherService.ConfirmObject(paymentVoucher, (DateTime)retailPurchaseInvoice.ConfirmationDate.GetValueOrDefault(), _paymentVoucherDetailService,
+                                                     _cashBankService, _payableService, _cashMutationService, _generalLedgerJournalService, _accountService);
             }
             
             return retailPurchaseInvoice;
         }
 
-        public RetailPurchaseInvoice UnpaidObject(RetailPurchaseInvoice retailPurchaseInvoice, IPaymentVoucherService _paymentVoucherService, IPaymentVoucherDetailService _paymentVoucherDetailService, ICashBankService _cashBankService, IPayableService _payableService, ICashMutationService _cashMutationService)
+        public RetailPurchaseInvoice UnpaidObject(RetailPurchaseInvoice retailPurchaseInvoice, IPaymentVoucherService _paymentVoucherService,
+                                                  IPaymentVoucherDetailService _paymentVoucherDetailService, ICashBankService _cashBankService,
+                                                  IPayableService _payableService, ICashMutationService _cashMutationService,
+                                                  IGeneralLedgerJournalService _generalLedgerJournalService, IAccountService _accountService)
         {
             if (_validator.ValidUnpaidObject(retailPurchaseInvoice))
             {
@@ -153,7 +158,8 @@ namespace Service.Service
                     if (paymentVoucher.ContactId == retailPurchaseInvoice.ContactId)
                     {
                         paymentVoucher.Errors = new Dictionary<string, string>();
-                        _paymentVoucherService.UnconfirmObject(paymentVoucher, _paymentVoucherDetailService, _cashBankService, _payableService, _cashMutationService);
+                        _paymentVoucherService.UnconfirmObject(paymentVoucher, _paymentVoucherDetailService, _cashBankService, _payableService,
+                                                               _cashMutationService, _generalLedgerJournalService, _accountService);
 
                         IList<PaymentVoucherDetail> paymentVoucherDetails = _paymentVoucherDetailService.GetObjectsByPaymentVoucherId(paymentVoucher.Id);
                         foreach (var paymentVoucherDetail in paymentVoucherDetails)

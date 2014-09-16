@@ -72,7 +72,8 @@ namespace Service.Service
         }
 
         public StockAdjustment ConfirmObject(StockAdjustment stockAdjustment, DateTime ConfirmationDate, IStockAdjustmentDetailService _stockAdjustmentDetailService,
-                                             IStockMutationService _stockMutationService, IItemService _itemService, IBarringService _barringService, IWarehouseItemService _warehouseItemService)
+                                             IStockMutationService _stockMutationService, IItemService _itemService, IBarringService _barringService, IWarehouseItemService _warehouseItemService,
+                                             IGeneralLedgerJournalService _generalLedgerJournalService, IAccountService _accountService)
         {
             stockAdjustment.ConfirmationDate = ConfirmationDate;
             if (_validator.ValidConfirmObject(stockAdjustment, this, _stockAdjustmentDetailService, _itemService, _barringService, _warehouseItemService))
@@ -82,14 +83,17 @@ namespace Service.Service
                 {
                     detail.Errors = new Dictionary<string, string>();
                     _stockAdjustmentDetailService.ConfirmObject(detail, ConfirmationDate, this, _stockMutationService, _itemService, _barringService, _warehouseItemService);
+                    stockAdjustment.Total += (detail.Quantity * detail.Price);
                 }
+                _generalLedgerJournalService.CreateConfirmationJournalForStockAdjustment(stockAdjustment, _accountService);
                 _repository.ConfirmObject(stockAdjustment);
             }
             return stockAdjustment;
         }
 
         public StockAdjustment UnconfirmObject(StockAdjustment stockAdjustment, IStockAdjustmentDetailService _stockAdjustmentDetailService,
-                                               IStockMutationService _stockMutationService, IItemService _itemService, IBarringService _barringService, IWarehouseItemService _warehouseItemService)
+                                               IStockMutationService _stockMutationService, IItemService _itemService, IBarringService _barringService, IWarehouseItemService _warehouseItemService,
+                                               IGeneralLedgerJournalService _generalLedgerJournalService, IAccountService _accountService)
         {
             if (_validator.ValidUnconfirmObject(stockAdjustment, this, _stockAdjustmentDetailService, _itemService, _barringService, _warehouseItemService))
             {
@@ -99,6 +103,7 @@ namespace Service.Service
                     detail.Errors = new Dictionary<string, string>();
                     _stockAdjustmentDetailService.UnconfirmObject(detail, this, _stockMutationService, _itemService, _barringService, _warehouseItemService);
                 }
+                _generalLedgerJournalService.CreateUnconfirmationJournalForStockAdjustment(stockAdjustment, _accountService);
                 _repository.UnconfirmObject(stockAdjustment);
             }
             return stockAdjustment;

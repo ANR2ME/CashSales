@@ -117,8 +117,9 @@ namespace Service.Service
         }
 
         public CashSalesReturn PaidObject(CashSalesReturn cashSalesReturn, /*decimal Allowance,*/ ICashBankService _cashBankService, IPayableService _payableService, 
-                                             IPaymentVoucherService _paymentVoucherService, IPaymentVoucherDetailService _paymentVoucherDetailService, 
-                                             IContactService _contactService, ICashMutationService _cashMutationService)
+                                          IPaymentVoucherService _paymentVoucherService, IPaymentVoucherDetailService _paymentVoucherDetailService, 
+                                          IContactService _contactService, ICashMutationService _cashMutationService,
+                                          IGeneralLedgerJournalService _generalLedgerJournalService, IAccountService _accountService)
         {
             if (_validator.ValidPaidObject(cashSalesReturn, _cashBankService))
             {
@@ -128,19 +129,21 @@ namespace Service.Service
                 payable.AllowanceAmount = cashSalesReturn.Allowance;
                 payable.RemainingAmount = payable.Amount - payable.AllowanceAmount;
                 _payableService.UpdateObject(payable);
-                PaymentVoucher paymentVoucher = _paymentVoucherService.CreateObject((int)cashSalesReturn.CashBankId.GetValueOrDefault(), payable.ContactId, DateTime.Now, payable.RemainingAmount,
-                                                                                false, payable.DueDate, cashBank.IsBank, _paymentVoucherDetailService,
-                                                                                _payableService, _contactService, _cashBankService);
+                PaymentVoucher paymentVoucher = _paymentVoucherService.CreateObject((int)cashSalesReturn.CashBankId.GetValueOrDefault(), payable.ContactId,
+                                                                                    DateTime.Now, payable.RemainingAmount, false, payable.DueDate, cashBank.IsBank,
+                                                                                    _paymentVoucherDetailService, _payableService, _contactService, _cashBankService);
                 PaymentVoucherDetail paymentVoucherDetail = _paymentVoucherDetailService.CreateObject(paymentVoucher.Id, payable.Id, payable.RemainingAmount,
                                                                                 "Automatic Payment", _paymentVoucherService, _cashBankService, _payableService);
-                _paymentVoucherService.ConfirmObject(paymentVoucher, (DateTime)cashSalesReturn.ConfirmationDate.GetValueOrDefault(), _paymentVoucherDetailService, _cashBankService, _payableService, _cashMutationService);
+                _paymentVoucherService.ConfirmObject(paymentVoucher, (DateTime)cashSalesReturn.ConfirmationDate.GetValueOrDefault(), _paymentVoucherDetailService,
+                                                     _cashBankService, _payableService, _cashMutationService, _generalLedgerJournalService, _accountService);
                 cashSalesReturn = _repository.PaidObject(cashSalesReturn);
             }
             return cashSalesReturn;
         }
 
         public CashSalesReturn UnpaidObject(CashSalesReturn cashSalesReturn, IPaymentVoucherService _paymentVoucherService, IPaymentVoucherDetailService _paymentVoucherDetailService,
-                                               ICashBankService _cashBankService, IPayableService _payableService, ICashMutationService _cashMutationService)
+                                            ICashBankService _cashBankService, IPayableService _payableService, ICashMutationService _cashMutationService,
+                                            IGeneralLedgerJournalService _generalLedgerJournalService, IAccountService _accountService)
         {
             if (_validator.ValidUnpaidObject(cashSalesReturn))
             {
@@ -151,7 +154,8 @@ namespace Service.Service
                     if (paymentVoucher.ContactId == payable.ContactId)
                     {
                         paymentVoucher.Errors = new Dictionary<string, string>();
-                        _paymentVoucherService.UnconfirmObject(paymentVoucher, _paymentVoucherDetailService, _cashBankService, _payableService, _cashMutationService);
+                        _paymentVoucherService.UnconfirmObject(paymentVoucher, _paymentVoucherDetailService, _cashBankService, _payableService,
+                                                               _cashMutationService, _generalLedgerJournalService, _accountService);
 
                         IList<PaymentVoucherDetail> paymentVoucherDetails = _paymentVoucherDetailService.GetObjectsByPaymentVoucherId(paymentVoucher.Id);
                         foreach (var paymentVoucherDetail in paymentVoucherDetails)

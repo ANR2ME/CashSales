@@ -11,6 +11,8 @@ namespace Core.DomainModel
         public int AccountId { get; set; }
         public int ClosingId { get; set; }
 
+        public decimal Amount { get; set; }
+
         public DateTime CreatedAt { get; set; }
         public Dictionary<string, string> Errors { get; set; }
 

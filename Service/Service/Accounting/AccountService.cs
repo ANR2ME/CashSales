@@ -36,9 +36,24 @@ namespace Service.Service
             return _repository.GetAll();
         }
 
+        public IList<Account> GetLeafObjects()
+        {
+            return _repository.GetQueryable().Where(x => x.IsLeaf == true).ToList();
+        }
+
+        public IList<Account> GetLegacyObjects()
+        {
+            return _repository.FindAll(x => x.IsLegacy == true).ToList();
+        }
+
         public Account GetObjectById(int Id)
         {
             return _repository.GetObjectById(Id);
+        }
+
+        public Account GetObjectByLegacyCode(string LegacyCode)
+        {
+            return _repository.Find(x => x.LegacyCode == LegacyCode);
         }
 
         public Account GetObjectByIsLegacy(bool IsLegacy)
@@ -59,6 +74,17 @@ namespace Service.Service
             return (_validator.ValidCreateObject(account, _accountService) ? _repository.CreateObject(account) : account);
         }
 
+        public Account CreateCashBankAccount(Account account, IAccountService _accountService)
+        {
+            account.Errors = new Dictionary<String, String>();
+            return (_validator.ValidCreateObject(account, _accountService) ? _repository.CreateObject(account) : account);
+        }
+
+        public Account UpdateObject(Account account, IAccountService _accountService)
+        {
+            return (_validator.ValidUpdateObject(account, _accountService) ? _repository.UpdateObject(account) : account);
+        }
+
         public Account SoftDeleteObject(Account account)
         {
             return (_validator.ValidDeleteObject(account) ? _repository.SoftDeleteObject(account) : account);
@@ -68,7 +94,5 @@ namespace Service.Service
         {
             return _repository.DeleteObject(Id);
         }
-
-        
     }
 }

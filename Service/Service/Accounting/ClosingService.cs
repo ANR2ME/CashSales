@@ -41,28 +41,127 @@ namespace Service.Service
             return _repository.GetObjectById(Id);
         }
 
-        public Closing CreateObject(Closing closing)
+        public Closing CreateObject(Closing closing, IAccountService _accountService, IValidCombService _validCombService)
         {
             closing.Errors = new Dictionary<String, String>();
-            return (_validator.ValidCreateObject(closing) ? _repository.CreateObject(closing) : closing);
+            // Create all ValidComb
+
+            if (_validator.ValidCreateObject(closing))
+            {
+                _repository.CreateObject(closing);
+                IList<Account> allAccounts = _accountService.GetQueryable().OrderBy(x => x.Code).ToList();
+                foreach (var account in allAccounts)
+                {
+                    ValidComb validComb = new ValidComb()
+                    {
+                        AccountId = account.Id,
+                        ClosingId = closing.Id,
+                        Amount = 0
+                    };
+                    _validCombService.CreateObject(validComb, _accountService, this);
+                }
+            }
+            return closing;
         }
 
-        public Closing CloseObject(Closing closing)
+        public Closing CloseObject(Closing closing, IAccountService _accountService,
+                                   IGeneralLedgerJournalService _generalLedgerJournalService, IValidCombService _validCombService)
         {
             closing.Errors = new Dictionary<String, String>();
-            return (_validator.ValidCloseObject(closing) ? _repository.CloseObject(closing) : closing);
+            if (_validator.ValidCloseObject(closing))
+            {
+                // Count ValidComb for each leaf account
+                IList<Account> leafAccounts = _accountService.GetLeafObjects();
+                foreach(var leaf in leafAccounts)
+                {
+                    IList<GeneralLedgerJournal> ledgers = _generalLedgerJournalService.GetQueryable()
+                                                          .Where(x => x.AccountId == leaf.Id && 
+                                                                 x.TransactionDate >= closing.BeginningPeriod && 
+                                                                 x.TransactionDate < closing.EndDatePeriod.AddDays(1))
+                                                          .ToList();
+                    decimal totalAmountInLedgers = 0;
+                    foreach(var ledger in ledgers)
+                    {
+                        Account account = _accountService.GetObjectById(ledger.AccountId);
+                        if ((ledger.Status == Constant.GeneralLedgerStatus.Debit &&
+                            (account.Group == Constant.AccountGroup.Asset ||
+                             account.Group == Constant.AccountGroup.Expense)) ||
+                           (ledger.Status == Constant.GeneralLedgerStatus.Credit &&
+                            (account.Group == Constant.AccountGroup.Liability ||
+                             account.Group == Constant.AccountGroup.Equity ||
+                             account.Group == Constant.AccountGroup.Revenue)))
+                        {
+                            totalAmountInLedgers += ledger.Amount;
+                        }
+                        else 
+                        {
+                            totalAmountInLedgers -= ledger.Amount;
+                        }
+                    }
+
+                    ValidComb validComb = _validCombService.FindOrCreateObjectByAccountAndClosing(leaf.Id, closing.Id);
+                    validComb.Amount = totalAmountInLedgers;
+                    _validCombService.UpdateObject(validComb, _accountService, this);
+                }
+
+                // Count validComb for all parent Nodes
+                var groupLeafAccounts = _accountService.GetLeafObjects().GroupBy(x => x.ParentId)
+                                                                        .Select(grp => grp.ToList()).ToList();
+                FillValidComb(groupLeafAccounts, closing, _accountService, _validCombService);
+
+                _repository.CloseObject(closing);
+            }
+            return closing;
         }
 
-        /*public Closing SoftDeleteObject(Closing closing)
+        private void FillValidComb(IList<List<Account>> nodeAccounts, Closing closing, IAccountService _accountService, IValidCombService _validCombService)
         {
-            return (_validator.ValidDeleteObject(closing) ? _repository.SoftDeleteObject(closing) : closing);
-        }*/
+            foreach(var group in nodeAccounts)
+            {
+                decimal totalNodeAmount = 0;
+                foreach(var node in group)
+                {
+                    ValidComb validComb = _validCombService.FindOrCreateObjectByAccountAndClosing(node.Id, closing.Id);
+                    totalNodeAmount += validComb.Amount;
+                }
+                if (group.First().ParentId == null) { return; }
+                int AccountId = (int)group.First().ParentId ;
+                ValidComb nodeValidComb = _validCombService.FindOrCreateObjectByAccountAndClosing(AccountId, closing.Id);
+                nodeValidComb.Amount = totalNodeAmount;
+                _validCombService.UpdateObject(nodeValidComb, _accountService, this);
 
-        public bool DeleteObject(int Id)
+                Account currentAccount = _accountService.GetObjectById(AccountId);
+                if (currentAccount.ParentId != null)
+                {
+                    var parentNodeAccounts = _accountService.GetQueryable().Where(x => x.ParentId == currentAccount.ParentId).ToList()
+                                                            .GroupBy(x => x.ParentId).Select(grp => grp.ToList()).ToList();
+
+                    FillValidComb(parentNodeAccounts, closing, _accountService, _validCombService);
+                }
+            }
+        }
+
+        public Closing OpenObject(Closing closing, IAccountService _accountService, IValidCombService _validCombService)
         {
+            IList<Account> allAccounts = _accountService.GetAll();
+            foreach (var account in allAccounts)
+            {
+                ValidComb validComb = _validCombService.FindOrCreateObjectByAccountAndClosing(account.Id, closing.Id);
+                validComb.Amount = 0;
+                _validCombService.UpdateObject(validComb, _accountService, this);
+            }
+            return _repository.OpenObject(closing);
+        }
+
+        public bool DeleteObject(int Id, IAccountService _accountService, IValidCombService _validCombService)
+        {
+            IList<Account> allAccounts = _accountService.GetAll();
+            foreach (var account in allAccounts)
+            {
+                ValidComb validComb = _validCombService.FindOrCreateObjectByAccountAndClosing(account.Id, Id);
+                _validCombService.DeleteObject(validComb.Id);
+            }
             return _repository.DeleteObject(Id);
-        }
-
-        
+        }        
     }
 }

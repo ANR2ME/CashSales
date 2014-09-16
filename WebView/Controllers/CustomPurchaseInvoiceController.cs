@@ -39,6 +39,9 @@ namespace WebView.Controllers
         private IPaymentVoucherDetailService _paymentVoucherDetailService;
         private IStockAdjustmentDetailService _stockAdjustmentDetailService;
         private IReceivableService _receivableService;
+        private IAccountService _accountService;
+        private IGeneralLedgerJournalService _generalLedgerJournalService;
+
         public CustomPurchaseInvoiceController()
         {
             _contactService = new ContactService(new ContactRepository(), new ContactValidator());
@@ -562,7 +565,7 @@ namespace WebView.Controllers
                 data.Tax = model.Tax;
                 model = _customPurchaseInvoiceService.ConfirmObject(data, model.ConfirmationDate.Value, _customPurchaseInvoiceDetailService, 
                                                     _contactService, _priceMutationService, _payableService, _customPurchaseInvoiceService, _warehouseItemService, 
-                                                    _warehouseService, _itemService, _barringService, _stockMutationService);
+                                                    _warehouseService, _itemService, _barringService, _stockMutationService,_generalLedgerJournalService,_accountService);
             }
             catch (Exception ex)
             {
@@ -600,7 +603,8 @@ namespace WebView.Controllers
 
                 var data = _customPurchaseInvoiceService.GetObjectById(model.Id);
                 model = _customPurchaseInvoiceService.UnconfirmObject(data, _customPurchaseInvoiceDetailService, _payableService, _paymentVoucherDetailService,
-                                                   _warehouseItemService, _warehouseService, _itemService, _barringService, _stockMutationService, _priceMutationService);
+                                                                      _warehouseItemService, _warehouseService, _itemService, _barringService, _stockMutationService,
+                                                                      _priceMutationService, _generalLedgerJournalService,_accountService);
 
             }
             catch (Exception ex)
@@ -643,7 +647,7 @@ namespace WebView.Controllers
                 data.GBCH_No = model.GBCH_No;
                 data.GBCH_DueDate = model.GBCH_DueDate;
                 model = _customPurchaseInvoiceService.PaidObject(data, model.AmountPaid.Value, _cashBankService, _payableService, _paymentVoucherService, _paymentVoucherDetailService, 
-                                                    _contactService, _cashMutationService);
+                                                    _contactService, _cashMutationService, _generalLedgerJournalService, _accountService);
             }
             catch (Exception ex)
             {
@@ -681,7 +685,7 @@ namespace WebView.Controllers
 
                 var data = _customPurchaseInvoiceService.GetObjectById(model.Id);
                 model = _customPurchaseInvoiceService.UnpaidObject(data, _paymentVoucherService, _paymentVoucherDetailService, _cashBankService,
-                                                   _payableService, _cashMutationService);
+                                                   _payableService, _cashMutationService,_generalLedgerJournalService,_accountService);
 
             }
             catch (Exception ex)

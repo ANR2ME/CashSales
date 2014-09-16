@@ -159,3 +159,16 @@ textarea {
 {
 	background-color: #1BC9E0 !important;
 }
+
+.grid-col {
+  text-indent: 15px;
+}
+
+.hide-row {
+    display: none;    
+}
+
+.label-space {
+    margin-left: 10px;
+    margin-right: 5px;
+}

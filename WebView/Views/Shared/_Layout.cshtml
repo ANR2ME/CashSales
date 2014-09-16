@@ -354,7 +354,21 @@
 									</li>
 									<li><a href="#">Report</a>
 										<ul>
-											   @*<li><a href="#">Data</a>
+											<li><a href="#">Finance Report</a>
+                                                <ul>
+												<li><a href="@Url.Action("Index", "ChartOfAccount")">Chart Of Account</a></li>
+													@*<li><a href="">Daily Report</a></li>
+													*@<li><a href="@Url.Action("Index", "GeneralLedger")">General Ledger</a></li>
+                                                    <li><a href="@Url.Action("Index", "Closing")">Closing</a></li>
+                                                    <li><a href="@Url.Action("Index", "ValidComb")">Valid Combination</a></li>
+													@*<li><a href="#">General Trial Balance</a></@*li>
+													<li><a href="@Url.Action("IncomeStatement", "FinanceReport")">Income Statement</a></li>
+													<li><a href="#">Outstanding AR & AP</a></li>
+													<li><a href="@Url.Action("SummaryGeneralJurnal", "FinanceReport")">Summary General Journal</a></li>
+												*@</ul>
+											</li>
+											@*<li><a href="#">Control Report</a>
+
 												<ul>
 											   <li><a href="@Url.Action("Index", "MstContact")">Contact</a> </li>
 											   <li><a href="@Url.Action("Index", "MstItemType")">ItemType</a> </li>
@@ -384,7 +398,14 @@
                                                     
 												</ul>
 											</li>
-										</ul>
+
+										@*</ul>
+
+											<li><a href="#">Estimate Income Statement</a>
+											</li>
+											<li><a href="#">Validitas Posting</a>
+											</li>
+										</ul>*@
 
 									</li>
 									<li id="menu-item-51"><a href="#">Setting</a>

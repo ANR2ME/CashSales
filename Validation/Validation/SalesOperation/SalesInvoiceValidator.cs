@@ -122,6 +122,7 @@ namespace Validation.Validation
             foreach (var detail in details)
             {
                 detail.ConfirmationDate = salesInvoice.ConfirmationDate;
+                detail.Errors = new Dictionary<string, string>();
                 _salesInvoiceDetailService.GetValidator().VConfirmObject(detail, _salesInvoiceDetailService, _deliveryOrderDetailService);
                 foreach (var error in detail.Errors)
                 {

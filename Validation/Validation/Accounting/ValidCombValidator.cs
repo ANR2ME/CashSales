@@ -40,6 +40,14 @@ namespace Validation.Validation
             return validComb;
         }
 
+        public ValidComb VUpdateObject(ValidComb validComb, IAccountService _accountService, IClosingService _closingService)
+        {
+            VHasAccount(validComb, _accountService);
+            if (!isValid(validComb)) { return validComb; }
+            VHasClosing(validComb, _closingService);
+            return validComb;
+        }
+
         public ValidComb VDeleteObject(ValidComb validComb)
         {
             return validComb;
@@ -48,6 +56,14 @@ namespace Validation.Validation
         public bool ValidCreateObject(ValidComb validComb, IAccountService _accountService, IClosingService _closingService)
         {
             VCreateObject(validComb, _accountService, _closingService);
+            return isValid(validComb);
+        }
+
+
+        public bool ValidUpdateObject(ValidComb validComb, IAccountService _accountService, IClosingService _closingService)
+        {
+            validComb.Errors.Clear();
+            VUpdateObject(validComb, _accountService, _closingService);
             return isValid(validComb);
         }
 

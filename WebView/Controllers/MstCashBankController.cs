@@ -17,8 +17,10 @@ namespace WebView.Controllers
         private readonly static log4net.ILog LOG = log4net.LogManager.GetLogger("CashBankController");
         private ICashBankService _cashBankService;
         private ICashMutationService _cashMutationService;
+        private IAccountService _accountService;
         public MstCashBankController()
         {
+            _accountService = new AccountService(new AccountRepository(), new AccountValidator());
             _cashBankService = new CashBankService(new CashBankRepository(),new CashBankValidator());
             _cashMutationService = new CashMutationService(new CashMutationRepository(), new CashMutationValidator());
         }
@@ -143,7 +145,7 @@ namespace WebView.Controllers
                     }, JsonRequestBehavior.AllowGet);
                 }
 
-                model = _cashBankService.CreateObject(model);
+                model = _cashBankService.CreateObject(model, _accountService);
             }
             catch (Exception ex)
             {

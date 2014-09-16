@@ -18,8 +18,10 @@ namespace Core.Interface.Validation
         Account VIsValidParent(Account account, IAccountService _accountService);
 
         Account VCreateObject(Account account, IAccountService _accountService);
+        Account VUpdateObject(Account account, IAccountService _accountService);
         Account VDeleteObject(Account account);
         bool ValidCreateObject(Account account, IAccountService _accountService);
+        bool ValidUpdateObject(Account account, IAccountService _accountService);
         bool ValidDeleteObject(Account account);
         bool isValid(Account account);
         string PrintError(Account account);

@@ -59,6 +59,10 @@ namespace Core.Constants
             public static string ReceiptVoucher = "Receipt Voucher";
             public static string Receivable = "Receivable";
 
+            public static string Account = "Account";
+            public static string Closing = "Closing";
+            public static string GeneralLedger = "GeneralLedger";
+            public static string ValidComb = "ValidComb";
             public static string User = "User";
             public static string UserAccessRight = "User Access Right";
             public static string CompanyInfo = "Company Info";
@@ -67,7 +71,6 @@ namespace Core.Constants
             public static string Sales = "Sales";
             public static string TopSales = "Top Sales";
             public static string ProfitLoss = "Profit/Loss";
-
         }
 
         public class ItemCase
@@ -86,15 +89,6 @@ namespace Core.Constants
         public class UserType
         {
             public static string Admin = "Admin";
-        }
-
-        public class AccountGroup
-        {
-            public static int Asset = 1;
-            public static int Expenses = 2;
-            public static int Liability = 3;
-            public static int Equity = 4;
-            public static int Revenue = 5;
         }
 
         public class SourceDocument

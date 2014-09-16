@@ -51,7 +51,7 @@ namespace TestValidation
             it["deletes_warehousemutationorder"] = () =>
             {
                 d.warehouseMutationOrder = d._warehouseMutationOrderService.SoftDeleteObject(d.warehouseMutationOrder, d._warehouseMutationOrderDetailService);
-                d.warehouseMutationOrder.Errors.Count().should_be(0);
+                d.warehouseMutationOrder.Errors.Count().should_not_be(0);
             };
 
             it["deletes_warehousemutationorderdetail"] = () =>

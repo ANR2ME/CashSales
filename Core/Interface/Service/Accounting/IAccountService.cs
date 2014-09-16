@@ -12,19 +12,16 @@ namespace Core.Interface.Service
         IQueryable<Account> GetQueryable();
         IAccountValidator GetValidator();
         IList<Account> GetAll();
+        IList<Account> GetLeafObjects();
+        IList<Account> GetLegacyObjects();
         Account GetObjectById(int Id);
+        Account GetObjectByLegacyCode(string LegacyCode);
         Account GetObjectByIsLegacy(bool IsLegacy);
         Account CreateObject(Account account, IAccountService _accountService);
         Account CreateLegacyObject(Account account, IAccountService _accountService);
+        Account CreateCashBankAccount(Account account, IAccountService _accountService);
+        Account UpdateObject(Account account, IAccountService _accountService);
         Account SoftDeleteObject(Account account);
         bool DeleteObject(int Id);
-        //Account CreateAccountForPaymentVoucher(PaymentVoucher paymentVoucher, CashBank cashBank);
-        //Account CreateAccountForReceiptVoucher(ReceiptVoucher receiptVoucher, CashBank cashBank);
-        //Account CreateAccountForCashBankAdjustment(CashBankAdjustment cashBankAdjustment, CashBank cashBank);
-        //IList<Account> CreateAccountForCashBankMutation(CashBankMutation cashBankMutation, CashBank sourceCashBank, CashBank targetCashBank);
-        //IList<Account> SoftDeleteAccountForPaymentVoucher(PaymentVoucher paymentVoucher, CashBank cashBank);
-        //IList<Account> SoftDeleteAccountForReceiptVoucher(ReceiptVoucher receiptVoucher, CashBank cashBank);
-        //IList<Account> SoftDeleteAccountForCashBankAdjustment(CashBankAdjustment cashBankAdjustment, CashBank cashBank);
-        //IList<Account> SoftDeleteAccountForCashBankMutation(CashBankMutation cashBankMutation, CashBank sourceCashBank, CashBank targetCashBank);
     }
 }

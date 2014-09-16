@@ -37,6 +37,8 @@ namespace OffsetPrintingSupplies
                 //RetailSalesFunction(rsb);
                 CashSalesFunction(csb);
                 //CustomPurchaseFunction(cpb);
+
+                
             }
         }
 
@@ -85,21 +87,27 @@ namespace OffsetPrintingSupplies
             Console.ReadKey();
             // ---
             b._cashSalesInvoiceService.UnpaidObject(b.csi1, b._receiptVoucherService, b._receiptVoucherDetailService,
-                                                        b._cashBankService, b._receivableService, b._cashMutationService, b._cashSalesReturnService);
+                                                        b._cashBankService, b._receivableService, b._cashMutationService, b._cashSalesReturnService,
+                                                        b._generalLedgerJournalService, b._accountService);
             b._cashSalesInvoiceService.UnpaidObject(b.csi2, b._receiptVoucherService, b._receiptVoucherDetailService,
-                                                        b._cashBankService, b._receivableService, b._cashMutationService, b._cashSalesReturnService);
+                                                        b._cashBankService, b._receivableService, b._cashMutationService, b._cashSalesReturnService,
+                                                        b._generalLedgerJournalService, b._accountService);
             b._cashSalesInvoiceService.UnpaidObject(b.csi3, b._receiptVoucherService, b._receiptVoucherDetailService,
-                                                        b._cashBankService, b._receivableService, b._cashMutationService, b._cashSalesReturnService);
+                                                        b._cashBankService, b._receivableService, b._cashMutationService, b._cashSalesReturnService,
+                                                        b._generalLedgerJournalService, b._accountService);
 
             b._cashSalesInvoiceService.UnconfirmObject(b.csi1, b._cashSalesInvoiceDetailService, b._receivableService,
                                                            b._receiptVoucherDetailService, b._warehouseItemService, b._warehouseService,
-                                                           b._itemService, b._barringService, b._stockMutationService);
+                                                           b._itemService, b._barringService, b._stockMutationService,
+                                                           b._generalLedgerJournalService, b._accountService);
             b._cashSalesInvoiceService.UnconfirmObject(b.csi2, b._cashSalesInvoiceDetailService, b._receivableService,
                                                            b._receiptVoucherDetailService, b._warehouseItemService, b._warehouseService,
-                                                           b._itemService, b._barringService, b._stockMutationService);
+                                                           b._itemService, b._barringService, b._stockMutationService,
+                                                           b._generalLedgerJournalService, b._accountService);
             b._cashSalesInvoiceService.UnconfirmObject(b.csi3, b._cashSalesInvoiceDetailService, b._receivableService,
                                                            b._receiptVoucherDetailService, b._warehouseItemService, b._warehouseService,
-                                                           b._itemService, b._barringService, b._stockMutationService);
+                                                           b._itemService, b._barringService, b._stockMutationService,
+                                                           b._generalLedgerJournalService, b._accountService);
 
             // End of Test
             Console.WriteLine("Press any key to stop...");
@@ -135,11 +143,14 @@ namespace OffsetPrintingSupplies
             }
             // ---
             rsb._retailSalesInvoiceService.UnpaidObject(rsb.rsi1, rsb._receiptVoucherService, rsb._receiptVoucherDetailService, 
-                                                        rsb._cashBankService, rsb._receivableService, rsb._cashMutationService);
+                                                        rsb._cashBankService, rsb._receivableService, rsb._cashMutationService,
+                                                        rsb._generalLedgerJournalService, rsb._accountService);
             rsb._retailSalesInvoiceService.UnpaidObject(rsb.rsi2, rsb._receiptVoucherService, rsb._receiptVoucherDetailService,
-                                                        rsb._cashBankService, rsb._receivableService, rsb._cashMutationService);
+                                                        rsb._cashBankService, rsb._receivableService, rsb._cashMutationService,
+                                                        rsb._generalLedgerJournalService, rsb._accountService);
             rsb._retailSalesInvoiceService.UnpaidObject(rsb.rsi3, rsb._receiptVoucherService, rsb._receiptVoucherDetailService,
-                                                        rsb._cashBankService, rsb._receivableService, rsb._cashMutationService);
+                                                        rsb._cashBankService, rsb._receivableService, rsb._cashMutationService,
+                                                        rsb._generalLedgerJournalService, rsb._accountService);
 
             rsb._retailSalesInvoiceService.UnconfirmObject(rsb.rsi1, rsb._retailSalesInvoiceDetailService, rsb._receivableService, 
                                                            rsb._receiptVoucherDetailService, rsb._warehouseItemService, rsb._warehouseService, 
@@ -181,11 +192,14 @@ namespace OffsetPrintingSupplies
             }
             // ---
             rpb._retailPurchaseInvoiceService.UnpaidObject(rpb.rpi1, rpb._paymentVoucherService, rpb._paymentVoucherDetailService,
-                                                        rpb._cashBankService, rpb._payableService, rpb._cashMutationService);
+                                                        rpb._cashBankService, rpb._payableService, rpb._cashMutationService,
+                                                        rpb._generalLedgerJournalService, rpb._accountService);
             rpb._retailPurchaseInvoiceService.UnpaidObject(rpb.rpi2, rpb._paymentVoucherService, rpb._paymentVoucherDetailService,
-                                                        rpb._cashBankService, rpb._payableService, rpb._cashMutationService);
+                                                        rpb._cashBankService, rpb._payableService, rpb._cashMutationService,
+                                                        rpb._generalLedgerJournalService, rpb._accountService);
             rpb._retailPurchaseInvoiceService.UnpaidObject(rpb.rpi3, rpb._paymentVoucherService, rpb._paymentVoucherDetailService,
-                                                        rpb._cashBankService, rpb._payableService, rpb._cashMutationService);
+                                                        rpb._cashBankService, rpb._payableService, rpb._cashMutationService,
+                                                        rpb._generalLedgerJournalService, rpb._accountService);
 
             rpb._retailPurchaseInvoiceService.UnconfirmObject(rpb.rpi1, rpb._retailPurchaseInvoiceDetailService, rpb._payableService,
                                                            rpb._paymentVoucherDetailService, rpb._warehouseItemService, rpb._warehouseService,
@@ -227,21 +241,27 @@ namespace OffsetPrintingSupplies
             }
             // ---
             cpb._customPurchaseInvoiceService.UnpaidObject(cpb.cpi1, cpb._paymentVoucherService, cpb._paymentVoucherDetailService,
-                                                        cpb._cashBankService, cpb._payableService, cpb._cashMutationService);
+                                                        cpb._cashBankService, cpb._payableService, cpb._cashMutationService, 
+                                                        cpb._generalLedgerJournalService, cpb._accountService);
             cpb._customPurchaseInvoiceService.UnpaidObject(cpb.cpi2, cpb._paymentVoucherService, cpb._paymentVoucherDetailService,
-                                                        cpb._cashBankService, cpb._payableService, cpb._cashMutationService);
+                                                        cpb._cashBankService, cpb._payableService, cpb._cashMutationService,
+                                                        cpb._generalLedgerJournalService, cpb._accountService);
             cpb._customPurchaseInvoiceService.UnpaidObject(cpb.cpi3, cpb._paymentVoucherService, cpb._paymentVoucherDetailService,
-                                                        cpb._cashBankService, cpb._payableService, cpb._cashMutationService);
+                                                        cpb._cashBankService, cpb._payableService, cpb._cashMutationService,
+                                                        cpb._generalLedgerJournalService, cpb._accountService);
 
             cpb._customPurchaseInvoiceService.UnconfirmObject(cpb.cpi1, cpb._customPurchaseInvoiceDetailService, cpb._payableService,
                                                            cpb._paymentVoucherDetailService, cpb._warehouseItemService, cpb._warehouseService,
-                                                           cpb._itemService, cpb._barringService, cpb._stockMutationService, cpb._priceMutationService);
+                                                           cpb._itemService, cpb._barringService, cpb._stockMutationService, cpb._priceMutationService,
+                                                           cpb._generalLedgerJournalService, cpb._accountService);
             cpb._customPurchaseInvoiceService.UnconfirmObject(cpb.cpi2, cpb._customPurchaseInvoiceDetailService, cpb._payableService,
                                                            cpb._paymentVoucherDetailService, cpb._warehouseItemService, cpb._warehouseService,
-                                                           cpb._itemService, cpb._barringService, cpb._stockMutationService, cpb._priceMutationService);
+                                                           cpb._itemService, cpb._barringService, cpb._stockMutationService, cpb._priceMutationService,
+                                                           cpb._generalLedgerJournalService, cpb._accountService);
             cpb._customPurchaseInvoiceService.UnconfirmObject(cpb.cpi3, cpb._customPurchaseInvoiceDetailService, cpb._payableService,
                                                            cpb._paymentVoucherDetailService, cpb._warehouseItemService, cpb._warehouseService,
-                                                           cpb._itemService, cpb._barringService, cpb._stockMutationService, cpb._priceMutationService);
+                                                           cpb._itemService, cpb._barringService, cpb._stockMutationService, cpb._priceMutationService,
+                                                           cpb._generalLedgerJournalService, cpb._accountService);
         }
 
         public static void DataFunction(DataBuilder d)

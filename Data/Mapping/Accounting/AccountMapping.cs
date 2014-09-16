@@ -12,9 +12,15 @@ namespace Data.Mapping
         public AccountMapping()
         {
             HasKey(a => a.Id);
-            //HasMany(a => a.GeneralLedgerJournals);
-            //HasOptional(a => a.ValidComb);
-            //HasOptional(a => a.Closing);
+            HasMany(a => a.GeneralLedgerJournals)
+                .WithRequired(glj => glj.Account)
+                .HasForeignKey(glj => glj.AccountId);
+            HasMany(a => a.ValidCombs)
+                .WithRequired(v => v.Account)
+                .HasForeignKey(v => v.AccountId);
+            HasOptional(a => a.Parent)
+                .WithMany()
+                .HasForeignKey(a => a.ParentId);
             Ignore(a => a.Errors);
         }
     }

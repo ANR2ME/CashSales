@@ -13,8 +13,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestValidation", "TestValid
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CashSales", "OffsetPrintingSupplies\CashSales.csproj", "{1EA8D668-A5B2-460A-8200-C3C2E5EB9C5A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExtJs", "ExtJs\ExtJs.csproj", "{EDF120C7-DF97-4EA4-9E70-0D21C9C8E2AB}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebView", "WebView\WebView.csproj", "{37E9CE9B-F929-4A67-81F8-879EDB19FC3C}"
 EndProject
 Global
@@ -41,9 +39,6 @@ Global
 		{1EA8D668-A5B2-460A-8200-C3C2E5EB9C5A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{1EA8D668-A5B2-460A-8200-C3C2E5EB9C5A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1EA8D668-A5B2-460A-8200-C3C2E5EB9C5A}.Release|Any CPU.Build.0 = Release|Any CPU
-		{EDF120C7-DF97-4EA4-9E70-0D21C9C8E2AB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{EDF120C7-DF97-4EA4-9E70-0D21C9C8E2AB}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{EDF120C7-DF97-4EA4-9E70-0D21C9C8E2AB}.Release|Any CPU.Build.0 = Release|Any CPU
 		{37E9CE9B-F929-4A67-81F8-879EDB19FC3C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{37E9CE9B-F929-4A67-81F8-879EDB19FC3C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{37E9CE9B-F929-4A67-81F8-879EDB19FC3C}.Release|Any CPU.ActiveCfg = Release|Any CPU

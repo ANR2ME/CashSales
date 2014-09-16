@@ -19,12 +19,16 @@ namespace WebView.Controllers
         private ICashBankService _cashBankService;
         private ICashBankAdjustmentService _cashBankAdjustmentService;
         private ICashMutationService _cashMutationService;
+        private IAccountService _accountService;
+        private IGeneralLedgerJournalService _generalLedgerJournalService;
 
         public CashBankAdjustmentController()
         {
+            _accountService = new AccountService(new AccountRepository(), new AccountValidator());
             _cashBankAdjustmentService = new CashBankAdjustmentService(new CashBankAdjustmentRepository(), new CashBankAdjustmentValidator());
             _cashBankService = new CashBankService(new CashBankRepository(), new CashBankValidator());
             _cashMutationService = new CashMutationService(new CashMutationRepository(), new CashMutationValidator());
+            _generalLedgerJournalService = new GeneralLedgerJournalService(new GeneralLedgerJournalRepository(), new GeneralLedgerJournalValidator());
         }
 
         public ActionResult Index()
@@ -269,7 +273,8 @@ namespace WebView.Controllers
                 }
 
                 var data = _cashBankAdjustmentService.GetObjectById(model.Id);
-                model = _cashBankAdjustmentService.ConfirmObject(data,model.ConfirmationDate.Value,_cashMutationService,_cashBankService);
+                model = _cashBankAdjustmentService.ConfirmObject(data,model.ConfirmationDate.Value,_cashMutationService,
+                                                                _cashBankService,_generalLedgerJournalService,_accountService);
             }
             catch (Exception ex)
             {
@@ -306,7 +311,7 @@ namespace WebView.Controllers
                 }
 
                 var data = _cashBankAdjustmentService.GetObjectById(model.Id);
-                model = _cashBankAdjustmentService.UnconfirmObject(data,_cashMutationService,_cashBankService);
+                model = _cashBankAdjustmentService.UnconfirmObject(data,_cashMutationService,_cashBankService,_generalLedgerJournalService,_accountService);
             }
             catch (Exception ex)
             {

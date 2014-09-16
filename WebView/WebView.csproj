@@ -154,8 +154,10 @@
     <Compile Include="Controllers\CashBankMutationController.cs" />
     <Compile Include="Controllers\CashMutationController.cs" />
     <Compile Include="Controllers\CashSalesReturnController.cs" />
+    <Compile Include="Controllers\ValidCombController.cs" />
+    <Compile Include="Controllers\ClosingController.cs" />
     <Compile Include="Controllers\GeneralLedgerController.cs" />
-    <Compile Include="Controllers\MstCOAController.cs" />
+    <Compile Include="Controllers\ChartOfAccountController.cs" />
     <Compile Include="Controllers\ReceivableController.cs" />
     <Compile Include="Controllers\PayableController.cs" />
     <Compile Include="Controllers\RetailSalesInvoiceController.cs" />
@@ -208,7 +210,10 @@
     <Content Include="Content\apps_js\CashMutation.js" />
     <Content Include="Content\apps_js\CashSalesReturn.js" />
     <Content Include="Content\apps_js\closingmonthly.js" />
+    <Content Include="Content\apps_js\Closing.js" />
+    <Content Include="Content\apps_js\ValidComb.js" />
     <Content Include="Content\apps_js\GeneralLedgerJournal.js" />
+    <Content Include="Content\apps_js\MasterCOA.js" />
     <Content Include="Content\apps_js\MasterUser.js" />
     <Content Include="Content\apps_js\Receivable.js" />
     <Content Include="Content\apps_js\Payable.js" />
@@ -578,7 +583,6 @@
     <Content Include="Content\infoss_home.css" />
     <Content Include="Content\jquery.tabs-ie.css" />
     <Content Include="Content\jquery.tabs.css" />
-    <Content Include="Content\apps_js\mstcoa.js" />
     <Content Include="Content\plupload\js\i18n\ar.js" />
     <Content Include="Content\plupload\js\i18n\az.js" />
     <Content Include="Content\plupload\js\i18n\bs.js" />
@@ -1163,18 +1167,20 @@
     <Content Include="Views\ValidCombinationCashRegional\Index.cshtml" />
     <Content Include="Views\ValidCombinationContact\Index.cshtml" />
     <Content Include="Views\ValidCombination\Index.cshtml" />
-    <Content Include="Views\FinanceReport\BalanceSheet.cshtml" />
-    <Content Include="Views\FinanceReport\ChartOfAccount.cshtml" />
-    <Content Include="Views\FinanceReport\DailyReport.cshtml" />
-    <Content Include="Views\FinanceReport\GeneralLedger.cshtml" />
-    <Content Include="Views\FinanceReport\GeneralTrialBalance.cshtml" />
-    <Content Include="Views\FinanceReport\IncomeStatement.cshtml" />
-    <Content Include="Views\FinanceReport\OutStandingARAP.cshtml" />
-    <Content Include="Views\FinanceReport\SummaryGeneralJurnal.cshtml" />
+    <Content Include="Views\FinanceReportOld\BalanceSheet.cshtml" />
+    <Content Include="Views\FinanceReportOld\ChartOfAccount.cshtml" />
+    <Content Include="Views\FinanceReportOld\DailyReport.cshtml" />
+    <Content Include="Views\FinanceReportOld\GeneralLedger.cshtml" />
+    <Content Include="Views\FinanceReportOld\GeneralTrialBalance.cshtml" />
+    <Content Include="Views\FinanceReportOld\IncomeStatement.cshtml" />
+    <Content Include="Views\FinanceReportOld\OutStandingARAP.cshtml" />
+    <Content Include="Views\FinanceReportOld\SummaryGeneralJurnal.cshtml" />
     <Content Include="Views\GeneralLedger\Index.cshtml" />
     <Content Include="Views\ClosingMonthly\Index.cshtml" />
     <Content Include="Views\ClosingMonthly\Restore.cshtml" />
-    <Content Include="Views\MstCOA\Index.cshtml" />
+    <Content Include="Views\ChartOfAccount\Index.cshtml" />
+    <Content Include="Views\ValidComb\Index.cshtml" />
+    <Content Include="Views\Closing\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -53,8 +53,8 @@
         colModel: [
     			  { name: 'id', index: 'id', width: 80, align: "center" },
                   { name: 'code', index: 'code', width: 100 },
-				  { name: 'warehouseid', index: 'warehouseid', width: 100 },
-                  { name: 'warehouse', index: 'warehouse', width: 80 },
+				  { name: 'warehouseid', index: 'warehouseid', width: 100, hidden: true },
+                  { name: 'warehouse', index: 'warehouse', width: 100 },
                   { name: 'adjustmentdate', index: 'adjustmentdate', width: 100 ,search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
                   { name: 'description', index: 'description', width: 100 },
                   { name: 'isconfirmed', index: 'isconfirmed', width: 100 },
@@ -587,9 +587,10 @@
         url: base_url,
         datatype: "json",
         mtype: 'GET',
-        colNames: ['Id', 'Name'],
+        colNames: ['Id', 'Code', 'Name'],
         colModel: [
-                  { name: 'id', index: 'id', width: 80, align: 'right' },
+                  { name: 'id', index: 'id', width: 50, align: 'right' },
+                  { name: 'code', index: 'code', width: 80 }, 
                   { name: 'name', index: 'name', width: 200 }],
         page: '1',
         pager: $('#lookup_pager_warehouse'),

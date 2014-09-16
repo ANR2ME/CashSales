@@ -41,16 +41,21 @@ namespace Service.Service
             return _repository.GetObjectById(Id);
         }
 
+        public ValidComb FindOrCreateObjectByAccountAndClosing(int accountId, int closingId)
+        {
+            return _repository.FindOrCreateObjectByAccountAndClosing(accountId, closingId);
+        }
+
         public ValidComb CreateObject(ValidComb validComb, IAccountService _accountService, IClosingService _closingService)
         {
             validComb.Errors = new Dictionary<String, String>();
             return (_validator.ValidCreateObject(validComb, _accountService, _closingService) ? _repository.CreateObject(validComb) : validComb);
         }
 
-        /*public ValidComb SoftDeleteObject(ValidComb validComb)
+        public ValidComb UpdateObject(ValidComb validComb, IAccountService _accountService, IClosingService _closingService)
         {
-            return (_validator.ValidDeleteObject(validComb) ? _repository.SoftDeleteObject(validComb) : validComb);
-        }*/
+            return (_validator.ValidUpdateObject(validComb, _accountService, _closingService) ? _repository.UpdateObject(validComb) : validComb);
+        }
 
         public bool DeleteObject(int Id)
         {

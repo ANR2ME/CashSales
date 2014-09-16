@@ -12,11 +12,13 @@ namespace Core.DomainModel
         public int YearPeriod { get; set; } // year (closing period)
         public DateTime BeginningPeriod { get; set; }
         public DateTime EndDatePeriod { get; set; }
-        public DateTime ClosedAt { get; set; }
+
+        public bool IsClosed { get; set; }
+        public Nullable<DateTime> ClosedAt { get; set; }
 
         public DateTime CreatedAt { get; set; }
         public Dictionary<string, string> Errors { get; set; }
 
-        public virtual Account Account { get; set; }
+        public ICollection<ValidComb> ValidCombs { get; set; }
     }
 }

@@ -163,3 +163,8 @@ textarea {
 .hide-row {
     display: none;    
 }
+
+.label-space {
+    margin-left: 10px;
+    margin-right: 5px;
+}

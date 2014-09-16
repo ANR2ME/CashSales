@@ -24,9 +24,11 @@ namespace WebView.Controllers
 
         public CashBankAdjustmentController()
         {
+            _accountService = new AccountService(new AccountRepository(), new AccountValidator());
             _cashBankAdjustmentService = new CashBankAdjustmentService(new CashBankAdjustmentRepository(), new CashBankAdjustmentValidator());
             _cashBankService = new CashBankService(new CashBankRepository(), new CashBankValidator());
             _cashMutationService = new CashMutationService(new CashMutationRepository(), new CashMutationValidator());
+            _generalLedgerJournalService = new GeneralLedgerJournalService(new GeneralLedgerJournalRepository(), new GeneralLedgerJournalValidator());
         }
 
         public ActionResult Index()

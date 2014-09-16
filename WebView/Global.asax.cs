@@ -127,8 +127,10 @@ namespace WebView
             _userMenuService.CreateObject(Constant.MenuName.Receivable, Constant.MenuGroupName.Transaction);
 
             _userMenuService.CreateObject(Constant.MenuName.Account, Constant.MenuGroupName.Report);
+            _userMenuService.CreateObject(Constant.MenuName.Closing, Constant.MenuGroupName.Report);
             _userMenuService.CreateObject(Constant.MenuName.GeneralLedger, Constant.MenuGroupName.Report);
-
+            _userMenuService.CreateObject(Constant.MenuName.ValidComb, Constant.MenuGroupName.Report);
+            
             _userMenuService.CreateObject(Constant.MenuName.User, Constant.MenuGroupName.Setting);
             _userMenuService.CreateObject(Constant.MenuName.UserAccessRight, Constant.MenuGroupName.Setting);
         }

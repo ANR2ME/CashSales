@@ -13,17 +13,9 @@ namespace Core.Interface.Service
         IClosingValidator GetValidator();
         IList<Closing> GetAll();
         Closing GetObjectById(int Id);
-        Closing CreateObject(Closing closing);
-        Closing CloseObject(Closing closing);
-        //Closing SoftDeleteObject(Closing closing);
-        bool DeleteObject(int Id);
-        //Closing CreateClosingForPaymentVoucher(PaymentVoucher paymentVoucher, CashBank cashBank);
-        //Closing CreateClosingForReceiptVoucher(ReceiptVoucher receiptVoucher, CashBank cashBank);
-        //Closing CreateClosingForCashBankAdjustment(CashBankAdjustment cashBankAdjustment, CashBank cashBank);
-        //IList<Closing> CreateClosingForCashBankMutation(CashBankMutation cashBankMutation, CashBank sourceCashBank, CashBank targetCashBank);
-        //IList<Closing> SoftDeleteClosingForPaymentVoucher(PaymentVoucher paymentVoucher, CashBank cashBank);
-        //IList<Closing> SoftDeleteClosingForReceiptVoucher(ReceiptVoucher receiptVoucher, CashBank cashBank);
-        //IList<Closing> SoftDeleteClosingForCashBankAdjustment(CashBankAdjustment cashBankAdjustment, CashBank cashBank);
-        //IList<Closing> SoftDeleteClosingForCashBankMutation(CashBankMutation cashBankMutation, CashBank sourceCashBank, CashBank targetCashBank);
+        Closing CreateObject(Closing closing, IAccountService _accountService, IValidCombService _validCombService);
+        Closing CloseObject(Closing closing, IAccountService _accountService, IGeneralLedgerJournalService _generalLedgerJournalService, IValidCombService _validCombService);
+        Closing OpenObject(Closing closing, IAccountService _accountService, IValidCombService _validCombService);
+        bool DeleteObject(int Id, IAccountService _accountService, IValidCombService _validCombService);
     }
 }

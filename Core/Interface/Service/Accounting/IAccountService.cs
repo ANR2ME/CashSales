@@ -12,6 +12,7 @@ namespace Core.Interface.Service
         IQueryable<Account> GetQueryable();
         IAccountValidator GetValidator();
         IList<Account> GetAll();
+        IList<Account> GetLeafObjects();
         IList<Account> GetLegacyObjects();
         Account GetObjectById(int Id);
         Account GetObjectByLegacyCode(string LegacyCode);

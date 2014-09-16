@@ -28,7 +28,7 @@
         colModel: [
     			  { name: 'id', index: 'id', width: 80, align: "center" },
 				  { name: 'code', index: 'code', width: 100 },
-                  { name: 'cashbankid', index: 'cashbankid', width: 80 },
+                  { name: 'cashbankid', index: 'cashbankid', width: 80, hidden: true },
                   { name: 'cashbank', index: 'cashbank', width: 100 },
                   { name: 'amount', index: 'amount', width: 100, formatter: 'currency', formatoptions: { decimalSeparator: ".", thousandsSeparator: ",", decimalPlaces: 2, prefix: "", suffix: "", defaultValue: '0.00' } },
                   { name: 'adjustmentdate', index: 'adjustmentdate', width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
@@ -339,9 +339,9 @@
         mtype: 'GET',
         colNames: ['Id', 'Name', 'Description'],
         colModel: [
-                  { name: 'id', index: 'id', width: 80, align: 'right' },
-                  { name: 'name', index: 'name', width: 200 },
-                  { name: 'address', index: 'address', width: 200 }],
+                  { name: 'id', index: 'id', width: 50, align: 'right' },
+                  { name: 'name', index: 'name', width: 150 },
+                  { name: 'description', index: 'description', width: 200 }],
         page: '1',
         pager: $('#lookup_pager_cashbank'),
         rowNum: 20,

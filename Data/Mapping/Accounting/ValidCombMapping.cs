@@ -13,13 +13,11 @@ namespace Data.Mapping
         {
             HasKey(vc => vc.Id);
             HasRequired(vc => vc.Account)
-                .WithMany()
-                .HasForeignKey(vc => vc.AccountId)
-                .WillCascadeOnDelete(false);
+                .WithMany(a => a.ValidCombs)
+                .HasForeignKey(vc => vc.AccountId);
             HasRequired(vc => vc.Closing)
-                .WithMany()
-                .HasForeignKey(vc => vc.ClosingId)
-                .WillCascadeOnDelete(false);
+                .WithMany(c => c.ValidCombs)
+                .HasForeignKey(vc => vc.ClosingId);
             Ignore(vc => vc.Errors);
         }
     }

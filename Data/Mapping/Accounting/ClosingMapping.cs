@@ -12,6 +12,9 @@ namespace Data.Mapping
         public ClosingMapping()
         {
             HasKey(c => c.Id);
+            HasMany(c => c.ValidCombs)
+                .WithRequired(v => v.Closing)
+                .HasForeignKey(v => v.ClosingId);
             Ignore(c => c.Errors);
         }
     }

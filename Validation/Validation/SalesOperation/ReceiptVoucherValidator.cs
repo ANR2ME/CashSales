@@ -135,6 +135,7 @@ namespace Validation.Validation
             foreach (var detail in details)
             {
                 detail.ConfirmationDate = receiptVoucher.ConfirmationDate;
+                detail.Errors = new Dictionary<string, string>();
                 if (!_receiptVoucherDetailService.GetValidator().ValidConfirmObject(detail, _receivableService))
                 {
                     foreach (var error in detail.Errors)

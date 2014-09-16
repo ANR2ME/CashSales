@@ -13,12 +13,12 @@ using System.Data.Entity;
 
 namespace WebView.Controllers
 {
-    public class MstCOAController : Controller
+    public class ChartOfAccountController : Controller
     {
-        private readonly static log4net.ILog LOG = log4net.LogManager.GetLogger("MstCOAController");
+        private readonly static log4net.ILog LOG = log4net.LogManager.GetLogger("ChartOfAccountController");
         private IAccountService _accountService;
 
-        public MstCOAController()
+        public ChartOfAccountController()
         {
             _accountService = new AccountService(new AccountRepository(), new AccountValidator());
         }

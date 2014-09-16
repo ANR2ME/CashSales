@@ -60,10 +60,11 @@ namespace Core.Constants
             public static string Receivable = "Receivable";
 
             public static string Account = "Account";
+            public static string Closing = "Closing";
             public static string GeneralLedger = "GeneralLedger";
+            public static string ValidComb = "ValidComb";
             public static string User = "User";
             public static string UserAccessRight = "User Access Right";
-
         }
 
         public class ItemCase

@@ -43,7 +43,15 @@ namespace Data.Repository
 
         public Closing CloseObject(Closing closing)
         {
-            closing.ClosedAt = DateTime.Now;
+            closing.IsClosed = true;    
+            Update(closing);
+            return closing;
+        }
+
+        public Closing OpenObject(Closing closing)
+        {
+            closing.IsClosed = false;
+            closing.ClosedAt = null;
             Update(closing);
             return closing;
         }

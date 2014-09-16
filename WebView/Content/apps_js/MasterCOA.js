@@ -5,7 +5,7 @@
     }
 
     function ReloadGrid() {
-        $("#list_mstcoa").setGridParam({ url: base_url + 'MstCOA/GetList', postData: { filters: null }, page: 'first' }).trigger("reloadGrid");
+        $("#list_mstcoa").setGridParam({ url: base_url + 'ChartOfAccount/GetList', postData: { filters: null }, page: 'first' }).trigger("reloadGrid");
     }
 
     function ClearData() {
@@ -22,7 +22,7 @@
     $('#ParentCode').hide();
 
     $("#list_mstcoa").jqGrid({
-        url: base_url + 'MstCOA/GetList',
+        url: base_url + 'ChartOfAccount/GetList',
         datatype: "json",
         colNames: ['Id', 'Account Code', 'Account Name', 'Group', 'Level', 'Parent Code', 'Parent Name', 'Legacy','CashBank', 'Legacy Code', 'Leaf'],
         colModel: [
@@ -136,7 +136,7 @@
         var v_accGroup = $("input[name='radiogroup']:checked").val();
         var v_accLevel = $("input[name='radiolevel']:checked").val() - 1;
         if (v_accLevel > -1) {
-            $("#lookup_table_coa").setGridParam({ url: base_url + 'MstCOA/Lookup?Level=' + v_accLevel + '&Group=' + v_accGroup }).trigger("reloadGrid");
+            $("#lookup_table_coa").setGridParam({ url: base_url + 'ChartOfAccount/Lookup?Level=' + v_accLevel + '&Group=' + v_accGroup }).trigger("reloadGrid");
             $('#lookup_div_coa').dialog('open');
         }
     });
@@ -158,7 +158,7 @@
         if (id) {
             $.ajax({
                 dataType: "json",
-                url: base_url + "MstCOA/GetInfo?Id=" + id,
+                url: base_url + "ChartOfAccount/GetInfo?Id=" + id,
                 success: function (result) {
                     if (result.Id == null) {
                         $.messager.alert('Information', 'Data Not Found...!!', 'info');
@@ -248,7 +248,7 @@
 
     $('#delete_confirm_btn_submit').click(function () {
         $.ajax({
-            url: base_url + "MstCOA/Delete",
+            url: base_url + "ChartOfAccount/Delete",
             type: "POST",
             contentType: "application/json",
             data: JSON.stringify({
@@ -290,11 +290,11 @@
 
         // Update
         if (id != undefined && id != '' && !isNaN(id) && id > 0) {
-            submitURL = base_url + 'MstCOA/Update';
+            submitURL = base_url + 'ChartOfAccount/Update';
         }
         // Insert
         else {
-            submitURL = base_url + 'MstCOA/Insert';
+            submitURL = base_url + 'ChartOfAccount/Insert';
         }
 
         $.ajax({

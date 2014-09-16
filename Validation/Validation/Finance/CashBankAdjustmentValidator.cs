@@ -76,6 +76,30 @@ namespace Validation.Validation
             return cashBankAdjustment;
         }
 
+        public CashBankAdjustment VGeneralLedgerPostingHasNotBeenClosed(CashBankAdjustment cashBankAdjustment, IClosingService _closingService, int CaseConfirmUnconfirm)
+        {
+            switch (CaseConfirmUnconfirm)
+            {
+                case (1): // Confirm
+                {
+                    if (_closingService.IsDateClosed(cashBankAdjustment.ConfirmationDate.GetValueOrDefault()))
+                    {
+                        cashBankAdjustment.Errors.Add("Generic", "Ledger sudah tutup buku");
+                    }
+                    break;
+                }
+                case (2): // Unconfirm
+                {
+                    if (_closingService.IsDateClosed(DateTime.Now))
+                    {
+                        cashBankAdjustment.Errors.Add("Generic", "Ledger sudah tutup buku");
+                    }
+                    break;
+                }
+            }
+            return cashBankAdjustment;
+        }
+
         public CashBankAdjustment VCreateObject(CashBankAdjustment cashBankAdjustment, ICashBankService _cashBankService)
         {
             VAdjustmentDate(cashBankAdjustment);
@@ -111,21 +135,25 @@ namespace Validation.Validation
             return obj;
         }
 
-        public CashBankAdjustment VConfirmObject(CashBankAdjustment cashBankAdjustment, ICashBankService _cashBankService)
+        public CashBankAdjustment VConfirmObject(CashBankAdjustment cashBankAdjustment, ICashBankService _cashBankService, IClosingService _closingService)
         {
             VHasConfirmationDate(cashBankAdjustment);
             if (!isValid(cashBankAdjustment)) { return cashBankAdjustment; }
             VHasNotBeenConfirmed(cashBankAdjustment);
             if (!isValid(cashBankAdjustment)) { return cashBankAdjustment; }
             VNonNegativeNorZeroCashBankAmount(cashBankAdjustment, _cashBankService, true);
+            if (!isValid(cashBankAdjustment)) { return cashBankAdjustment; }
+            VGeneralLedgerPostingHasNotBeenClosed(cashBankAdjustment, _closingService, 1);
             return cashBankAdjustment;
         }
 
-        public CashBankAdjustment VUnconfirmObject(CashBankAdjustment cashBankAdjustment, ICashBankService _cashBankService)
+        public CashBankAdjustment VUnconfirmObject(CashBankAdjustment cashBankAdjustment, ICashBankService _cashBankService, IClosingService _closingService)
         {
             VHasBeenConfirmed(cashBankAdjustment);
             if (!isValid(cashBankAdjustment)) { return cashBankAdjustment; }
             VNonNegativeNorZeroCashBankAmount(cashBankAdjustment, _cashBankService, false);
+            if (!isValid(cashBankAdjustment)) { return cashBankAdjustment; }
+            VGeneralLedgerPostingHasNotBeenClosed(cashBankAdjustment, _closingService, 2);
             return cashBankAdjustment;
         }
 
@@ -149,17 +177,17 @@ namespace Validation.Validation
             return isValid(cashBankAdjustment);
         }
 
-        public bool ValidConfirmObject(CashBankAdjustment cashBankAdjustment, ICashBankService _cashBankService)
+        public bool ValidConfirmObject(CashBankAdjustment cashBankAdjustment, ICashBankService _cashBankService, IClosingService _closingService)
         {
             cashBankAdjustment.Errors.Clear();
-            VConfirmObject(cashBankAdjustment, _cashBankService);
+            VConfirmObject(cashBankAdjustment, _cashBankService, _closingService);
             return isValid(cashBankAdjustment);
         }
 
-        public bool ValidUnconfirmObject(CashBankAdjustment cashBankAdjustment, ICashBankService _cashBankService)
+        public bool ValidUnconfirmObject(CashBankAdjustment cashBankAdjustment, ICashBankService _cashBankService, IClosingService _closingService)
         {
             cashBankAdjustment.Errors.Clear();
-            VUnconfirmObject(cashBankAdjustment, _cashBankService);
+            VUnconfirmObject(cashBankAdjustment, _cashBankService, _closingService);
             return isValid(cashBankAdjustment);
         }
 

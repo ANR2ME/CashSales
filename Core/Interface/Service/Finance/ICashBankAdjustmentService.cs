@@ -21,8 +21,8 @@ namespace Core.Interface.Service
         CashBankAdjustment SoftDeleteObject(CashBankAdjustment cashBankAdjustment);
         bool DeleteObject(int Id);
         CashBankAdjustment ConfirmObject(CashBankAdjustment cashBankAdjustment, DateTime ConfirmationDate, ICashMutationService _cashMutationService, ICashBankService _cashBankService,
-                                         IGeneralLedgerJournalService _generalLedgerJournalService, IAccountService _accountService);
+                                         IGeneralLedgerJournalService _generalLedgerJournalService, IAccountService _accountService, IClosingService _closingService);
         CashBankAdjustment UnconfirmObject(CashBankAdjustment cashBankAdjustment, ICashMutationService _cashMutationService, ICashBankService _cashBankService,
-                                           IGeneralLedgerJournalService _generalLedgerJournalService, IAccountService _accountService);
+                                           IGeneralLedgerJournalService _generalLedgerJournalService, IAccountService _accountService, IClosingService _closingService);
     }
 }

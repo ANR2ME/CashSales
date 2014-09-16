@@ -33,13 +33,16 @@ namespace Core.Interface.Validation
         CustomPurchaseInvoice VIsValidFullPayment(CustomPurchaseInvoice customPurchaseInvoice);
         CustomPurchaseInvoice VHasCashBank(CustomPurchaseInvoice customPurchaseInvoice, ICashBankService _cashBankService);
         CustomPurchaseInvoice VIsCashBankTypeBank(CustomPurchaseInvoice customPurchaseInvoice, ICashBankService _cashBankService);
+        CustomPurchaseInvoice VGeneralLedgerPostingHasNotBeenClosed(CustomPurchaseInvoice customPurchaseInvoice, IClosingService _closingService, int CaseConfirmUnconfirm);
 
         CustomPurchaseInvoice VConfirmObject(CustomPurchaseInvoice customPurchaseInvoice, ICustomPurchaseInvoiceDetailService _customPurchaseInvoiceDetailService,
-                                                 ICustomPurchaseInvoiceService _customPurchaseInvoiceService, IWarehouseItemService _warehouseItemService, IContactService _contactService);
+                                             ICustomPurchaseInvoiceService _customPurchaseInvoiceService, IWarehouseItemService _warehouseItemService, IContactService _contactService,
+                                             IClosingService _closingService);
         CustomPurchaseInvoice VUnconfirmObject(CustomPurchaseInvoice customPurchaseInvoice, ICustomPurchaseInvoiceDetailService _customPurchaseInvoiceDetailService, 
-                                            IPayableService _receivableService, IPaymentVoucherDetailService _paymentVoucherDetailService);
-        CustomPurchaseInvoice VPaidObject(CustomPurchaseInvoice customPurchaseInvoice, ICashBankService _cashBankService, IPaymentVoucherService _paymentVoucherService);
-        CustomPurchaseInvoice VUnpaidObject(CustomPurchaseInvoice customPurchaseInvoice);
+                                            IPayableService _receivableService, IPaymentVoucherDetailService _paymentVoucherDetailService, IClosingService _closingService);
+        CustomPurchaseInvoice VPaidObject(CustomPurchaseInvoice customPurchaseInvoice, ICashBankService _cashBankService, IPaymentVoucherService _paymentVoucherService,
+                                          IClosingService _closingService);
+        CustomPurchaseInvoice VUnpaidObject(CustomPurchaseInvoice customPurchaseInvoice, IClosingService _closingService);
 
         CustomPurchaseInvoice VCreateObject(CustomPurchaseInvoice customPurchaseInvoice, IWarehouseService _warehouseService, IContactService _contactService);
         CustomPurchaseInvoice VUpdateObject(CustomPurchaseInvoice customPurchaseInvoice, ICustomPurchaseInvoiceDetailService _customPurchaseInvoiceDetailService,
@@ -47,11 +50,13 @@ namespace Core.Interface.Validation
         CustomPurchaseInvoice VDeleteObject(CustomPurchaseInvoice customPurchaseInvoice, ICustomPurchaseInvoiceDetailService _customPurchaseInvoiceDetailService);
 
         bool ValidConfirmObject(CustomPurchaseInvoice customPurchaseInvoice, ICustomPurchaseInvoiceDetailService _customPurchaseInvoiceDetailService,
-                                       ICustomPurchaseInvoiceService _customPurchaseInvoiceService, IWarehouseItemService _warehouseItemService, IContactService _contactService);
+                                ICustomPurchaseInvoiceService _customPurchaseInvoiceService, IWarehouseItemService _warehouseItemService, IContactService _contactService,
+                                IClosingService _closingService);
         bool ValidUnconfirmObject(CustomPurchaseInvoice customPurchaseInvoice, ICustomPurchaseInvoiceDetailService _customPurchaseInvoiceDetailService, 
-                                  IPayableService _receivableService, IPaymentVoucherDetailService _paymentVoucherDetailService);
-        bool ValidPaidObject(CustomPurchaseInvoice customPurchaseInvoice, ICashBankService _cashBankService, IPaymentVoucherService _paymentVoucherService);
-        bool ValidUnpaidObject(CustomPurchaseInvoice customPurchaseInvoice);
+                                  IPayableService _receivableService, IPaymentVoucherDetailService _paymentVoucherDetailService, IClosingService _closingService);
+        bool ValidPaidObject(CustomPurchaseInvoice customPurchaseInvoice, ICashBankService _cashBankService, IPaymentVoucherService _paymentVoucherService,
+                             IClosingService _closingService);
+        bool ValidUnpaidObject(CustomPurchaseInvoice customPurchaseInvoice, IClosingService _closingService);
 
         bool ValidCreateObject(CustomPurchaseInvoice customPurchaseInvoice, IWarehouseService _warehouseService, IContactService _contactService);
         bool ValidUpdateObject(CustomPurchaseInvoice customPurchaseInvoice, ICustomPurchaseInvoiceDetailService _customPurchaseInvoiceDetailService,

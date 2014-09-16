@@ -66,7 +66,8 @@ namespace Service.Service
                                                 ICashSalesInvoiceService _cashSalesInvoiceService, ICashSalesInvoiceDetailService _cashSalesInvoiceDetailService,
                                                 IPriceMutationService _priceMutationService, IPayableService _payableService, 
                                                 ICashSalesReturnService _cashSalesReturnService, IWarehouseItemService _warehouseItemService,
-                                                IWarehouseService _warehouseService, IItemService _itemService, IBarringService _barringService, IStockMutationService _stockMutationService)
+                                                IWarehouseService _warehouseService, IItemService _itemService, IBarringService _barringService,
+                                                IStockMutationService _stockMutationService, IClosingService _closingService)
         {
             cashSalesReturn.ConfirmationDate = ConfirmationDate;
             cashSalesReturn.Allowance = Allowance;
@@ -96,7 +97,7 @@ namespace Service.Service
                                                   ICashSalesInvoiceDetailService _cashSalesInvoiceDetailService,
                                                   IPayableService _payableService, IPaymentVoucherDetailService _paymentVoucherDetailService,
                                                   IWarehouseItemService _warehouseItemService, IWarehouseService _warehouseService, IItemService _itemService, 
-                                                  IBarringService _barringService, IStockMutationService _stockMutationService)
+                                                  IBarringService _barringService, IStockMutationService _stockMutationService, IClosingService _closingService)
         {
             if (_validator.ValidUnconfirmObject(cashSalesReturn, _cashSalesReturnDetailService, _payableService, _paymentVoucherDetailService))
             {
@@ -119,7 +120,7 @@ namespace Service.Service
         public CashSalesReturn PaidObject(CashSalesReturn cashSalesReturn, /*decimal Allowance,*/ ICashBankService _cashBankService, IPayableService _payableService, 
                                           IPaymentVoucherService _paymentVoucherService, IPaymentVoucherDetailService _paymentVoucherDetailService, 
                                           IContactService _contactService, ICashMutationService _cashMutationService,
-                                          IGeneralLedgerJournalService _generalLedgerJournalService, IAccountService _accountService)
+                                          IGeneralLedgerJournalService _generalLedgerJournalService, IAccountService _accountService, IClosingService _closingService)
         {
             if (_validator.ValidPaidObject(cashSalesReturn, _cashBankService))
             {
@@ -135,7 +136,7 @@ namespace Service.Service
                 PaymentVoucherDetail paymentVoucherDetail = _paymentVoucherDetailService.CreateObject(paymentVoucher.Id, payable.Id, payable.RemainingAmount,
                                                                                 "Automatic Payment", _paymentVoucherService, _cashBankService, _payableService);
                 _paymentVoucherService.ConfirmObject(paymentVoucher, (DateTime)cashSalesReturn.ConfirmationDate.GetValueOrDefault(), _paymentVoucherDetailService,
-                                                     _cashBankService, _payableService, _cashMutationService, _generalLedgerJournalService, _accountService);
+                                                     _cashBankService, _payableService, _cashMutationService, _generalLedgerJournalService, _accountService, _closingService);
                 cashSalesReturn = _repository.PaidObject(cashSalesReturn);
             }
             return cashSalesReturn;
@@ -143,7 +144,7 @@ namespace Service.Service
 
         public CashSalesReturn UnpaidObject(CashSalesReturn cashSalesReturn, IPaymentVoucherService _paymentVoucherService, IPaymentVoucherDetailService _paymentVoucherDetailService,
                                             ICashBankService _cashBankService, IPayableService _payableService, ICashMutationService _cashMutationService,
-                                            IGeneralLedgerJournalService _generalLedgerJournalService, IAccountService _accountService)
+                                            IGeneralLedgerJournalService _generalLedgerJournalService, IAccountService _accountService, IClosingService _closingService)
         {
             if (_validator.ValidUnpaidObject(cashSalesReturn))
             {
@@ -155,7 +156,7 @@ namespace Service.Service
                     {
                         paymentVoucher.Errors = new Dictionary<string, string>();
                         _paymentVoucherService.UnconfirmObject(paymentVoucher, _paymentVoucherDetailService, _cashBankService, _payableService,
-                                                               _cashMutationService, _generalLedgerJournalService, _accountService);
+                                                               _cashMutationService, _generalLedgerJournalService, _accountService, _closingService);
 
                         IList<PaymentVoucherDetail> paymentVoucherDetails = _paymentVoucherDetailService.GetObjectsByPaymentVoucherId(paymentVoucher.Id);
                         foreach (var paymentVoucherDetail in paymentVoucherDetails)

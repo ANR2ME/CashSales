@@ -28,6 +28,7 @@ namespace Core.Interface.Validation
         PaymentVoucher VHasBeenReconciled(PaymentVoucher paymentVoucher);
         PaymentVoucher VHasNotBeenReconciled(PaymentVoucher paymentVoucher);
         PaymentVoucher VHasReconciliationDate(PaymentVoucher paymentVoucher);
+        PaymentVoucher VGeneralLedgerPostingHasNotBeenClosed(PaymentVoucher paymentVoucher, IClosingService _closingService, int CaseConfirmUnconfirmReconcileUnreconcile);
         PaymentVoucher VCreateObject(PaymentVoucher paymentVoucher, IPaymentVoucherService _paymentVoucherService, IPaymentVoucherDetailService _paymentVoucherDetailService,
                                      IPayableService _payableService, IContactService _contactService, ICashBankService _cashBankService);
         PaymentVoucher VUpdateObject(PaymentVoucher paymentVoucher, IPaymentVoucherService _paymentVoucherService, IPaymentVoucherDetailService _paymentVoucherDetailService,
@@ -36,10 +37,10 @@ namespace Core.Interface.Validation
         PaymentVoucher VHasConfirmationDate(PaymentVoucher paymentVoucher);
         PaymentVoucher VConfirmObject(PaymentVoucher paymentVoucher, IPaymentVoucherService _paymentVoucherService,
                                        IPaymentVoucherDetailService _paymentVoucherDetailService, ICashBankService _cashBankService,
-                                       IPayableService _payableService);
-        PaymentVoucher VUnconfirmObject(PaymentVoucher paymentVoucher);
-        PaymentVoucher VReconcileObject(PaymentVoucher paymentVoucher);
-        PaymentVoucher VUnreconcileObject(PaymentVoucher paymentVoucher);
+                                       IPayableService _payableService, IClosingService _closingService);
+        PaymentVoucher VUnconfirmObject(PaymentVoucher paymentVoucher, IClosingService _closingService);
+        PaymentVoucher VReconcileObject(PaymentVoucher paymentVoucher, IClosingService _closingService);
+        PaymentVoucher VUnreconcileObject(PaymentVoucher paymentVoucher, IClosingService _closingService);
         bool ValidCreateObject(PaymentVoucher paymentVoucher, IPaymentVoucherService _paymentVoucherService, IPaymentVoucherDetailService _paymentVoucherDetailService,
                                IPayableService _payableService, IContactService _contactService, ICashBankService _cashBankService);
         bool ValidUpdateObject(PaymentVoucher paymentVoucher, IPaymentVoucherService _paymentVoucherService, IPaymentVoucherDetailService _paymentVoucherDetailService,
@@ -47,10 +48,10 @@ namespace Core.Interface.Validation
         bool ValidDeleteObject(PaymentVoucher paymentVoucher, IPaymentVoucherDetailService _paymentVoucherDetailService);
         bool ValidConfirmObject(PaymentVoucher paymentVoucher, IPaymentVoucherService _paymentVoucherService,
                                 IPaymentVoucherDetailService _paymentVoucherDetailService, ICashBankService _cashBankService,
-                                IPayableService _payableService);
-        bool ValidUnconfirmObject(PaymentVoucher paymentVoucher);
-        bool ValidReconcileObject(PaymentVoucher paymentVoucher);
-        bool ValidUnreconcileObject(PaymentVoucher paymentVoucher);
+                                IPayableService _payableService, IClosingService _closingService);
+        bool ValidUnconfirmObject(PaymentVoucher paymentVoucher, IClosingService _closingService);
+        bool ValidReconcileObject(PaymentVoucher paymentVoucher, IClosingService _closingService);
+        bool ValidUnreconcileObject(PaymentVoucher paymentVoucher, IClosingService _closingService);
         bool isValid(PaymentVoucher paymentVoucher);
         string PrintError(PaymentVoucher paymentVoucher);
     }

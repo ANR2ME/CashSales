@@ -34,6 +34,13 @@ namespace Data.Repository
             return closing;
         }
 
+        public Closing GetObjectByPeriodAndYear(int Period, int YearPeriod)
+        {
+            Closing closing = Find(x => x.Period == Period && x.YearPeriod == YearPeriod);
+            if (closing != null) { closing.Errors = new Dictionary<string, string>(); }
+            return closing;
+        }
+
         public Closing CreateObject(Closing closing)
         {
             //closing.IsDeleted = false;

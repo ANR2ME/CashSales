@@ -11,6 +11,7 @@ namespace Core.Interface.Repository
         IQueryable<Closing> GetQueryable();
         IList<Closing> GetAll();
         Closing GetObjectById(int Id);
+        Closing GetObjectByPeriodAndYear(int Period, int YearPeriod);
         Closing CreateObject(Closing closing);
         Closing CloseObject(Closing closing);
         Closing OpenObject(Closing closing);

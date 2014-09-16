@@ -105,6 +105,7 @@ namespace WebView
 
             _userMenuService.CreateObject(Core.Constants.Constant.MenuName.Item, Core.Constants.Constant.MenuGroupName.Report);
             _userMenuService.CreateObject(Core.Constants.Constant.MenuName.Sales, Core.Constants.Constant.MenuGroupName.Report);
+            _userMenuService.CreateObject(Core.Constants.Constant.MenuName.TopSales, Core.Constants.Constant.MenuGroupName.Report);
             _userMenuService.CreateObject(Core.Constants.Constant.MenuName.ProfitLoss, Core.Constants.Constant.MenuGroupName.Report);
         }
 

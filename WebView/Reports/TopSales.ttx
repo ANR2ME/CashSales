@@ -1,0 +1,12 @@
+StartDate	Date		
+EndDate	Date	
+CompanyName	String	80
+CompanyAddress	String	255
+CompanyContactNo	String	100
+SKU	String	100	
+Name	String	255	
+Quantity	Number	
+UoM	String 50			
+CoGS	Currency		
+Amount	Currency		
+ProfitLoss	Currency

@@ -208,6 +208,7 @@
     <Content Include="Content\apps_js\CashMutation.js" />
     <Content Include="Content\apps_js\CashSalesReturn.js" />
     <Content Include="Content\apps_js\Company.js" />
+    <Content Include="Content\apps_js\ReportTopSales.js" />
     <Content Include="Content\apps_js\ReportSales.js" />
     <Content Include="Content\apps_js\ReportProfitLoss.js" />
     <Content Include="Content\apps_js\ReportItem.js" />
@@ -1003,6 +1004,9 @@
     <Content Include="Reports\SalesInvoice.ttx" />
     <Content Include="Reports\SalesReturnInvoice.rpt" />
     <Content Include="Reports\SalesReturnInvoice.ttx" />
+    <Content Include="Reports\TopSales.rpt" />
+    <Content Include="Reports\TopSales.ttx" />
+    <Content Include="Reports\SalesInvoiceGeneric.rpt" />
     <None Include="Scripts\jquery-1.7.1.intellisense.js" />
     <Content Include="Scripts\collapsiblePanel.js" />
     <Content Include="Scripts\jquery-1.1.3.1.pack.js" />
@@ -1164,6 +1168,7 @@
     <Content Include="Views\Report\Item.cshtml" />
     <Content Include="Views\Report\ProfitLoss.cshtml" />
     <Content Include="Views\Report\Sales.cshtml" />
+    <Content Include="Views\Report\TopSales.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

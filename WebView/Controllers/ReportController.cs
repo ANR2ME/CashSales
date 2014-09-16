@@ -252,6 +252,54 @@ namespace WebView.Controllers
             return File(stream, "application/pdf");
         }
 
+        public ActionResult TopSales()
+        {
+            if (!AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.TopSales, Core.Constants.Constant.MenuGroupName.Report))
+            {
+                return Content(Core.Constants.Constant.PageViewNotAllowed);
+            }
+
+            return View();
+        }
+
+        public ActionResult ReportTopSales(DateTime startDate, DateTime endDate, int maxItem)
+        {
+            var company = _companyService.GetQueryable().FirstOrDefault();
+            var q = _cashSalesInvoiceDetailService.GetQueryable().Include("CashSalesInvoice").Include("Item").Include("UoM").Where(x => x.CashSalesInvoice.IsPaid && x.CashSalesInvoice.SalesDate >= startDate && x.CashSalesInvoice.SalesDate <= endDate);
+
+            if (maxItem <= 0 || !q.Any()) return Content("");
+
+            var query = (from m in q
+                         group m by m.ItemId into g
+                         orderby g.Sum(x => x.Amount - x.CoGS) descending
+                         select new
+                         {
+                             StartDate = startDate,
+                             EndDate = endDate,
+                             CompanyName = company.Name,
+                             CompanyAddress = company.Address,
+                             CompanyContactNo = company.ContactNo,
+                             SKU = g.FirstOrDefault().Item.Sku,
+                             Name = g.FirstOrDefault().Item.Name,
+                             Quantity = g.Sum(x => x.Quantity),
+                             uom = g.FirstOrDefault().Item.UoM.Name,
+                             CoGS = g.Sum(x => x.CoGS), 
+                             Amount = g.Sum(x => x.Amount),
+                             profitloss = g.Sum(x => x.Amount - x.CoGS)
+                         }).Take(maxItem).ToList();
+
+            var rd = new ReportDocument();
+
+            //Loading Report
+            rd.Load(Server.MapPath("~/") + "Reports/TopSales.rpt");
+
+            // Setting report data source
+            rd.SetDataSource(query);
+
+            var stream = rd.ExportToStream(CrystalDecisions.Shared.ExportFormatType.PortableDocFormat);
+            return File(stream, "application/pdf");
+        }
+
         public ActionResult Funds()
         {
             return View();

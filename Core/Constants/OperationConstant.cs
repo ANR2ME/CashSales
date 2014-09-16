@@ -65,6 +65,7 @@ namespace Core.Constants
 
             //public static string Stock = "Stock";
             public static string Sales = "Sales";
+            public static string TopSales = "Top Sales";
             public static string ProfitLoss = "Profit/Loss";
 
         }

@@ -15,7 +15,7 @@ namespace Validation.Validation
             CashBank cashBank = _cashBankService.GetObjectById(cashBankAdjustment.CashBankId);
             if (cashBank == null)
             {
-                cashBankAdjustment.Errors.Add("CashBankId", "Tidak terasosiasi dengan cashBank");
+                cashBankAdjustment.Errors.Add("CashBank", "Tidak terasosiasi dengan cashBank");
             }
             return cashBankAdjustment;
         }

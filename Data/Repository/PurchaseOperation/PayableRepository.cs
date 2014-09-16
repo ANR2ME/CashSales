@@ -44,7 +44,7 @@ namespace Data.Repository
 
         public Payable GetObjectBySource(string PayableSource, int PayableSourceId)
         {
-            Payable payable = Find(p => p.PayableSource == PayableSource && p.PayableSourceId == PayableSourceId && !p.IsDeleted);
+            Payable payable = FindAll(p => p.PayableSource == PayableSource && p.PayableSourceId == PayableSourceId && !p.IsDeleted).FirstOrDefault();
             if (payable != null) { payable.Errors = new Dictionary<string, string>(); }
             return payable;
         }

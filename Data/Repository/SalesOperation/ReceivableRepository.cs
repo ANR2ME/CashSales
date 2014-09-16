@@ -44,7 +44,7 @@ namespace Data.Repository
 
         public Receivable GetObjectBySource(string ReceivableSource, int ReceivableSourceId)
         {
-            Receivable receivable = Find(p => p.ReceivableSource == ReceivableSource && p.ReceivableSourceId == ReceivableSourceId && !p.IsDeleted);
+            Receivable receivable = FindAll(p => p.ReceivableSource == ReceivableSource && p.ReceivableSourceId == ReceivableSourceId && !p.IsDeleted).FirstOrDefault();
             if (receivable != null) { receivable.Errors = new Dictionary<string, string>(); }
             return receivable;
         }

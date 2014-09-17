@@ -34,6 +34,7 @@ namespace WebView.Controllers
         private IAccountService _accountService;
         private IGeneralLedgerJournalService _generalLedgerJournalService;
         private IClosingService _closingService;
+        private IValidCombService _validCombService;
 
         public ReceiptVoucherController()
         {
@@ -55,6 +56,7 @@ namespace WebView.Controllers
             _accountService = new AccountService(new AccountRepository(), new AccountValidator());
             _generalLedgerJournalService = new GeneralLedgerJournalService(new GeneralLedgerJournalRepository(), new GeneralLedgerJournalValidator());
             _closingService = new ClosingService(new ClosingRepository(), new ClosingValidator());
+            _validCombService = new ValidCombService(new ValidCombRepository(), new ValidCombValidator());
         }
 
 
@@ -608,7 +610,7 @@ namespace WebView.Controllers
 
                 var data = _receiptVoucherService.GetObjectById(model.Id);
                 model = _receiptVoucherService.ConfirmObject(data,model.ConfirmationDate.Value,_receiptVoucherDetailService,_cashBankService,
-                                                            _receivableService,_cashMutationService,_generalLedgerJournalService,_accountService,_closingService);
+                                                            _receivableService,_cashMutationService,_generalLedgerJournalService,_accountService, _closingService);
             }
             catch (Exception ex)
             {
@@ -723,7 +725,8 @@ namespace WebView.Controllers
 
                 var data = _receiptVoucherService.GetObjectById(model.Id);
                 model = _receiptVoucherService.UnreconcileObject(data,_receiptVoucherDetailService,_cashMutationService,
-                    _cashBankService, _receivableService,_generalLedgerJournalService,_accountService,_closingService);
+                    _cashBankService, _receivableService,_generalLedgerJournalService,_accountService,_closingService
+                    );
             }
             catch (Exception ex)
             {

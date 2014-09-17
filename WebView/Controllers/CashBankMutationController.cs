@@ -23,6 +23,7 @@ namespace WebView.Controllers
         private IAccountService _accountService;
         private IGeneralLedgerJournalService _generalLedgerJournalService;
         private IClosingService _closingService;
+        private IValidCombService _validCombService;
 
         public CashBankMutationController()
         {
@@ -33,6 +34,7 @@ namespace WebView.Controllers
             _accountService = new AccountService(new AccountRepository(), new AccountValidator());
             _generalLedgerJournalService = new GeneralLedgerJournalService(new GeneralLedgerJournalRepository(), new GeneralLedgerJournalValidator());
             _closingService = new ClosingService(new ClosingRepository(), new ClosingValidator());
+            _validCombService = new ValidCombService(new ValidCombRepository(), new ValidCombValidator());
         }
 
         public ActionResult Index()
@@ -304,7 +306,7 @@ namespace WebView.Controllers
                 }
 
                 var data = _cashBankMutationService.GetObjectById(model.Id);
-                model = _cashBankMutationService.UnconfirmObject(data,_cashMutationService,_cashBankService,_generalLedgerJournalService,_accountService, _closingService);
+                model = _cashBankMutationService.UnconfirmObject(data,_cashMutationService,_cashBankService,_generalLedgerJournalService,_accountService,_closingService);
             }
             catch (Exception ex)
             {

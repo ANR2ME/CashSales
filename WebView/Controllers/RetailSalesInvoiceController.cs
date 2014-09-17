@@ -41,6 +41,7 @@ namespace WebView.Controllers
         private IAccountService _accountService;
         private IGeneralLedgerJournalService _generalLedgerJournalService;
         private IClosingService _closingService;
+        private IValidCombService _validCombService;
         
         public RetailSalesInvoiceController()
         {
@@ -69,6 +70,7 @@ namespace WebView.Controllers
             _accountService = new AccountService(new AccountRepository(), new AccountValidator());
             _generalLedgerJournalService = new GeneralLedgerJournalService(new GeneralLedgerJournalRepository(), new GeneralLedgerJournalValidator());
             _closingService = new ClosingService(new ClosingRepository(), new ClosingValidator());
+            _validCombService = new ValidCombService(new ValidCombRepository(), new ValidCombValidator());
         }
 
         public ActionResult Index()
@@ -566,8 +568,7 @@ namespace WebView.Controllers
 
                 var data = _retailSalesInvoiceService.GetObjectById(model.Id);
                 model = _retailSalesInvoiceService.UnconfirmObject(data, _retailSalesInvoiceDetailService, _receivableService, _receiptVoucherDetailService,
-                                                   _warehouseItemService, _warehouseService, _itemService, _barringService, _stockMutationService,_closingService);
-
+                                                   _warehouseItemService, _warehouseService, _itemService, _barringService, _stockMutationService, _closingService);
             }
             catch (Exception ex)
             {

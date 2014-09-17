@@ -41,6 +41,7 @@ namespace WebView.Controllers
         private IAccountService _accountService;
         private IGeneralLedgerJournalService _generalLedgerJournalService;
         private IClosingService _closingService;
+        private IValidCombService _validCombService;
 
         public CashSalesInvoiceController()
         {
@@ -69,6 +70,7 @@ namespace WebView.Controllers
             _accountService = new AccountService(new AccountRepository(), new AccountValidator());
             _generalLedgerJournalService = new GeneralLedgerJournalService(new GeneralLedgerJournalRepository(), new GeneralLedgerJournalValidator());
             _closingService = new ClosingService(new ClosingRepository(), new ClosingValidator());
+            _validCombService = new ValidCombService(new ValidCombRepository(), new ValidCombValidator());
         }
 
         public ActionResult Index()
@@ -714,7 +716,7 @@ namespace WebView.Controllers
                 model = _cashSalesInvoiceService.ConfirmObject(data, model.ConfirmationDate.Value, model.Discount, model.Tax, _cashSalesInvoiceDetailService, 
                                                     _contactService, _priceMutationService, _receivableService, _cashSalesInvoiceService, _warehouseItemService, 
                                                     _warehouseService, _itemService, _barringService, _stockMutationService, _cashBankService,
-                                                    _generalLedgerJournalService, _accountService, _closingService);
+                                                    _generalLedgerJournalService, _accountService,_closingService);
             }
             catch (Exception ex)
             {
@@ -752,8 +754,8 @@ namespace WebView.Controllers
 
                 var data = _cashSalesInvoiceService.GetObjectById(model.Id);
                 model = _cashSalesInvoiceService.UnconfirmObject(data, _cashSalesInvoiceDetailService, _receivableService, _receiptVoucherDetailService,
-                                                   _warehouseItemService, _warehouseService, _itemService, _barringService, _stockMutationService,_generalLedgerJournalService,_accountService,_closingService);
-
+                                                   _warehouseItemService, _warehouseService, _itemService, _barringService, _stockMutationService,
+                                                   _generalLedgerJournalService,_accountService,_closingService);
             }
             catch (Exception ex)
             {
@@ -841,8 +843,8 @@ namespace WebView.Controllers
 
                 var data = _cashSalesInvoiceService.GetObjectById(model.Id);
                 model = _cashSalesInvoiceService.UnpaidObject(data, _receiptVoucherService, _receiptVoucherDetailService, _cashBankService,
-                                                   _receivableService, _cashMutationService, _cashSalesReturnService,_generalLedgerJournalService,_accountService,_closingService);
-
+                                                   _receivableService, _cashMutationService, _cashSalesReturnService,_generalLedgerJournalService,
+                                                   _accountService,_closingService);
             }
             catch (Exception ex)
             {

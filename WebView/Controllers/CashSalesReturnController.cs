@@ -42,6 +42,7 @@ namespace WebView.Controllers
         private IAccountService _accountService;
         private IGeneralLedgerJournalService _generalLedgerJournalService;
         private IClosingService _closingService;
+        private IValidCombService _validCombService;
 
         public CashSalesReturnController()
         {
@@ -71,6 +72,7 @@ namespace WebView.Controllers
             _accountService = new AccountService(new AccountRepository(), new AccountValidator());
             _generalLedgerJournalService = new GeneralLedgerJournalService(new GeneralLedgerJournalRepository(), new GeneralLedgerJournalValidator());
             _closingService = new ClosingService(new ClosingRepository(), new ClosingValidator());
+            _validCombService = new ValidCombService(new ValidCombRepository(), new ValidCombValidator());
         }
 
         public ActionResult Index()
@@ -480,7 +482,8 @@ namespace WebView.Controllers
                 var data = _cashSalesReturnService.GetObjectById(model.Id);
                 model = _cashSalesReturnService.ConfirmObject(data, model.ConfirmationDate.Value, model.Allowance, _cashSalesReturnDetailService, 
                                                     _contactService, _cashSalesInvoiceService, _cashSalesInvoiceDetailService, _priceMutationService, _payableService, 
-                                                    _cashSalesReturnService, _warehouseItemService, _warehouseService, _itemService, _barringService, _stockMutationService, _closingService);
+                                                    _cashSalesReturnService, _warehouseItemService, _warehouseService, _itemService, _barringService, _stockMutationService,
+                                                    _closingService);
             }
             catch (Exception ex)
             {
@@ -517,9 +520,9 @@ namespace WebView.Controllers
                 }
 
                 var data = _cashSalesReturnService.GetObjectById(model.Id);
-                model = _cashSalesReturnService.UnconfirmObject(data, _cashSalesReturnDetailService, _cashSalesInvoiceDetailService, _payableService, _paymentVoucherDetailService,
-                                                   _warehouseItemService, _warehouseService, _itemService, _barringService, _stockMutationService,_closingService);
-
+                model = _cashSalesReturnService.UnconfirmObject(data, _cashSalesReturnDetailService, _cashSalesInvoiceDetailService, _payableService, 
+                                                                _paymentVoucherDetailService,_warehouseItemService, _warehouseService, _itemService,
+                                                                _barringService, _stockMutationService,_closingService);
             }
             catch (Exception ex)
             {

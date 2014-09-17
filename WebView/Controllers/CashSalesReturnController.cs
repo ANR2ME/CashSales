@@ -41,6 +41,8 @@ namespace WebView.Controllers
         private IStockAdjustmentDetailService _stockAdjustmentDetailService;
         private IAccountService _accountService;
         private IGeneralLedgerJournalService _generalLedgerJournalService;
+        private IClosingService _closingService;
+        private IValidCombService _validCombService;
 
         public CashSalesReturnController()
         {
@@ -67,6 +69,8 @@ namespace WebView.Controllers
             _payableService = new PayableService(new PayableRepository(), new PayableValidator());
             _paymentVoucherService = new PaymentVoucherService(new PaymentVoucherRepository(), new PaymentVoucherValidator());
             _paymentVoucherDetailService = new PaymentVoucherDetailService(new PaymentVoucherDetailRepository(), new PaymentVoucherDetailValidator());
+            _closingService = new ClosingService(new ClosingRepository(), new ClosingValidator());
+            _validCombService = new ValidCombService(new ValidCombRepository(), new ValidCombValidator());
         }
 
         public ActionResult Index()
@@ -474,7 +478,8 @@ namespace WebView.Controllers
                 var data = _cashSalesReturnService.GetObjectById(model.Id);
                 model = _cashSalesReturnService.ConfirmObject(data, model.ConfirmationDate.Value, model.Allowance, _cashSalesReturnDetailService, 
                                                     _contactService, _cashSalesInvoiceService, _cashSalesInvoiceDetailService, _priceMutationService, _payableService, 
-                                                    _cashSalesReturnService, _warehouseItemService, _warehouseService, _itemService, _barringService, _stockMutationService);
+                                                    _cashSalesReturnService, _warehouseItemService, _warehouseService, _itemService, _barringService, _stockMutationService,
+                                                    _closingService);
             }
             catch (Exception ex)
             {
@@ -511,8 +516,9 @@ namespace WebView.Controllers
                 }
 
                 var data = _cashSalesReturnService.GetObjectById(model.Id);
-                model = _cashSalesReturnService.UnconfirmObject(data, _cashSalesReturnDetailService, _cashSalesInvoiceDetailService, _payableService, _paymentVoucherDetailService,
-                                                   _warehouseItemService, _warehouseService, _itemService, _barringService, _stockMutationService);
+                model = _cashSalesReturnService.UnconfirmObject(data, _cashSalesReturnDetailService, _cashSalesInvoiceDetailService, _payableService, 
+                                                                _paymentVoucherDetailService,_warehouseItemService, _warehouseService, _itemService,
+                                                                _barringService, _stockMutationService,_closingService);
 
             }
             catch (Exception ex)
@@ -552,7 +558,7 @@ namespace WebView.Controllers
                 var data = _cashSalesReturnService.GetObjectById(model.Id);
                 data.Allowance = model.Allowance;
                 model = _cashSalesReturnService.PaidObject(data, _cashBankService, _payableService, _paymentVoucherService, _paymentVoucherDetailService, 
-                                                    _contactService, _cashMutationService, _generalLedgerJournalService, _accountService);
+                                                    _contactService, _cashMutationService, _generalLedgerJournalService, _accountService,_closingService);
             }
             catch (Exception ex)
             {
@@ -590,7 +596,7 @@ namespace WebView.Controllers
 
                 var data = _cashSalesReturnService.GetObjectById(model.Id);
                 model = _cashSalesReturnService.UnpaidObject(data, _paymentVoucherService, _paymentVoucherDetailService, _cashBankService,
-                                                   _payableService, _cashMutationService,_generalLedgerJournalService,_accountService);
+                                                   _payableService, _cashMutationService,_generalLedgerJournalService,_accountService,_closingService);
 
             }
             catch (Exception ex)

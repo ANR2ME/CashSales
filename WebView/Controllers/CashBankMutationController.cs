@@ -22,6 +22,8 @@ namespace WebView.Controllers
         private ICashBankMutationService _cashBankMutationService;
         private IAccountService _accountService;
         private IGeneralLedgerJournalService _generalLedgerJournalService;
+        private IClosingService _closingService;
+        private IValidCombService _validCombService;
 
         public CashBankMutationController()
         {
@@ -29,6 +31,8 @@ namespace WebView.Controllers
             _cashBankService = new CashBankService(new CashBankRepository(), new CashBankValidator());
             _cashMutationService = new CashMutationService(new CashMutationRepository(), new CashMutationValidator());
             _cashBankMutationService = new CashBankMutationService(new CashBankMutationRepository(), new CashBankMutationValidator());
+            _closingService = new ClosingService(new ClosingRepository(), new ClosingValidator());
+            _validCombService = new ValidCombService(new ValidCombRepository(), new ValidCombValidator());
         }
 
         public ActionResult Index()
@@ -263,7 +267,7 @@ namespace WebView.Controllers
 
                 var data = _cashBankMutationService.GetObjectById(model.Id);
                 model = _cashBankMutationService.ConfirmObject(data,model.ConfirmationDate.Value,_cashMutationService,_cashBankService,
-                                                               _generalLedgerJournalService,_accountService);
+                                                               _generalLedgerJournalService,_accountService,_closingService);
             }
             catch (Exception ex)
             {
@@ -300,7 +304,7 @@ namespace WebView.Controllers
                 }
 
                 var data = _cashBankMutationService.GetObjectById(model.Id);
-                model = _cashBankMutationService.UnconfirmObject(data,_cashMutationService,_cashBankService,_generalLedgerJournalService,_accountService);
+                model = _cashBankMutationService.UnconfirmObject(data,_cashMutationService,_cashBankService,_generalLedgerJournalService,_accountService,_closingService);
             }
             catch (Exception ex)
             {

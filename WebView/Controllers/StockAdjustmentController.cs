@@ -25,6 +25,8 @@ namespace WebView.Controllers
         private IBarringService _barringService;
         private IAccountService _accountService;
         private IGeneralLedgerJournalService _generalLedgerJournalService;
+        private IClosingService _closingService;
+        private IValidCombService _validCombService;
 
         public StockAdjustmentController()
         {
@@ -37,6 +39,8 @@ namespace WebView.Controllers
             _barringService = new BarringService(new BarringRepository(), new BarringValidator());
             _accountService = new AccountService(new AccountRepository(), new AccountValidator());
             _generalLedgerJournalService = new GeneralLedgerJournalService(new GeneralLedgerJournalRepository(), new GeneralLedgerJournalValidator());
+            _closingService = new ClosingService(new ClosingRepository(), new ClosingValidator());
+            _validCombService = new ValidCombService(new ValidCombRepository(), new ValidCombValidator());
         }
 
 
@@ -488,7 +492,7 @@ namespace WebView.Controllers
                 var data = _stockAdjustmentService.GetObjectById(model.Id);
                 model = _stockAdjustmentService.ConfirmObject(data, model.ConfirmationDate.Value, _stockAdjustmentDetailService,
                                                               _stockMutationService, _itemService, _barringService, _warehouseItemService,
-                                                              _generalLedgerJournalService,_accountService);
+                                                              _generalLedgerJournalService,_accountService,_closingService);
             }
             catch (Exception ex)
             {
@@ -526,7 +530,7 @@ namespace WebView.Controllers
 
                 var data = _stockAdjustmentService.GetObjectById(model.Id);
                 model = _stockAdjustmentService.UnconfirmObject(data,_stockAdjustmentDetailService,_stockMutationService,_itemService,_barringService,
-                                                                _warehouseItemService,_generalLedgerJournalService,_accountService);
+                                                                _warehouseItemService,_generalLedgerJournalService,_accountService,_closingService);
             }
             catch (Exception ex)
             {

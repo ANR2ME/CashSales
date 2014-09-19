@@ -69,11 +69,11 @@ namespace TestValidation
                 b.csi2.IsFullPayment.should_be_true();
                 b.csi3.IsFullPayment.should_be_false();
 
-                b.csid1.CoGS.should_be(100 * 10000); // Quantity=100, AvgPrice=10000
-                b.csid1.Amount.should_be(100 * 10000 * (100-50)/100); // SellingPrice=10000, QuantityPricing discount = 50% for quantity>=51
-                b.csid2.CoGS.should_be(30 * 20000); // Quantity=30, AvgPrice=20000
-                b.csid2.Amount.should_be(30 * 20000 * (100 - 10) / 100); // SellingPrice=20000, QuantityPricing discount = 10% for quantity=20-40, 25% for q=30-50
-                b.csid4.Amount.should_be(10 * 30000); // SellingPrice=30000, not existed QuantityPricing for Q=10
+                b.csid1.CoGS.should_be(b.csid1.Quantity * b.blanket1.AvgPrice); // Quantity=100, AvgPrice=10000
+                b.csid1.Amount.should_be(b.csid1.Quantity * b.blanket1.SellingPrice * (100 - b.csid1.Discount)/100); // SellingPrice=10000, QuantityPricing discount = 50% for quantity>=51
+                b.csid2.CoGS.should_be(b.csid2.Quantity * b.blanket2.AvgPrice); // Quantity=30, AvgPrice=20000
+                b.csid2.Amount.should_be(b.csid2.Quantity * b.blanket2.SellingPrice * (100 - b.csid2.Discount) / 100); // SellingPrice=20000, QuantityPricing discount = 10% for quantity=20-40, 25% for q=30-50
+                b.csid4.Amount.should_be(b.csid4.Quantity * b.blanket3.SellingPrice * (100 - b.csid4.Discount) / 100); // SellingPrice=30000, not existed QuantityPricing for Q=10
             };
 
             it["validates_receivables_and_receiptvouchers"] = () =>
@@ -235,7 +235,9 @@ namespace TestValidation
                     {
                         before = () =>
                         {
-                            b._cashSalesReturnService.UnconfirmObject(b.csr1, b._cashSalesReturnDetailService, b._cashSalesInvoiceDetailService, b._payableService, b._paymentVoucherDetailService, b._warehouseItemService, b._warehouseService, b._itemService, b._barringService, b._stockMutationService, b._closingService);
+                            b._cashSalesReturnService.UnconfirmObject(b.csr1, b._cashSalesReturnDetailService, b._cashSalesInvoiceDetailService, b._payableService,
+                                                                      b._paymentVoucherDetailService, b._warehouseItemService, b._warehouseService, b._itemService,
+                                                                      b._barringService, b._stockMutationService, b._closingService);
                             
                             b.csr1.Errors.Count().should_be(0);
 

@@ -68,10 +68,10 @@ namespace Validation.Validation
 
         public Closing VIsBackToBackToPreviousClosing(Closing closing, IClosingService _closingService)
         {
-            IList<Closing> closings = _closingService.GetQueryable().OrderByDescending(x => x.Id).ToList();
+            IList<Closing> closings = _closingService.GetQueryable().Where(x => x.Id != closing.Id).OrderByDescending(x => x.Id).ToList();
             if (closings.Any())
             {
-                if (closings.FirstOrDefault().EndDatePeriod.AddDays(1) != closing.BeginningPeriod)
+                if (closings.FirstOrDefault().EndDatePeriod.AddDays(1).Date != closing.BeginningPeriod)
                 {
                     closing.Errors.Add("Generic", "Tanggal Beginning Date harus " + closings.FirstOrDefault().EndDatePeriod.AddDays(1).ToLongDateString());
                 }

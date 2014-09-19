@@ -71,8 +71,24 @@ namespace TestValidation
                     UoMId = d.Pcs.Id
                 };
                 d.itemCompound = d._itemService.CreateObject(d.itemCompound, d._uomService, d._itemTypeService, d._warehouseItemService, d._warehouseService, d._priceMutationService, d._contactGroupService);
-                d._itemService.AdjustQuantity(d.itemCompound, 2);
-                d._warehouseItemService.AdjustQuantity(d._warehouseItemService.FindOrCreateObject(d.localWarehouse.Id, d.itemCompound.Id), 2);
+
+                d.stockAdjustment = new StockAdjustment()
+                {
+                    AdjustmentDate = DateTime.Today,
+                    WarehouseId = d.localWarehouse.Id
+                };
+                d._stockAdjustmentService.CreateObject(d.stockAdjustment, d._warehouseService);
+                d.stockAD1 = new StockAdjustmentDetail()
+                {
+                    StockAdjustmentId = d.stockAdjustment.Id,
+                    Quantity = 2,
+                    ItemId = d.itemCompound.Id
+                };
+                d._stockAdjustmentDetailService.CreateObject(d.stockAD1, d._stockAdjustmentService, d._itemService, d._warehouseItemService);
+
+                d._stockAdjustmentService.ConfirmObject(d.stockAdjustment, DateTime.Today, d._stockAdjustmentDetailService, d._stockMutationService,
+                                                        d._itemService, d._barringService, d._warehouseItemService, d._generalLedgerJournalService,
+                                                        d._accountService, d._closingService);
 
                 d.contact = d._contactService.CreateObject("Abbey", "1 Abbey St", "001234567", "Daddy", "001234888", "abbey@abbeyst.com", d._contactGroupService);
 
@@ -166,8 +182,31 @@ namespace TestValidation
 
             it["delete_rollerbuilder_with_recoveryorderdetail"] = () =>
             {
-                d._itemService.AdjustQuantity(d._coreBuilderService.GetNewCore(d.coreBuilder.Id), 1);
-                d._itemService.AdjustQuantity(d._coreBuilderService.GetUsedCore(d.coreBuilder.Id), 1);
+                StockAdjustment sa = new StockAdjustment()
+                {
+                    AdjustmentDate = DateTime.Today,
+                    WarehouseId = d.localWarehouse.Id
+                };
+                d._stockAdjustmentService.CreateObject(sa, d._warehouseService);
+                StockAdjustmentDetail stockADx = new StockAdjustmentDetail()
+                {
+                    StockAdjustmentId = d.stockAdjustment.Id,
+                    Quantity = 1,
+                    ItemId = d._coreBuilderService.GetNewCore(d.coreBuilder.Id).Id
+                };
+                d._stockAdjustmentDetailService.CreateObject(stockADx, d._stockAdjustmentService, d._itemService, d._warehouseItemService);
+
+                StockAdjustmentDetail stockADy = new StockAdjustmentDetail()
+                {
+                    StockAdjustmentId = d.stockAdjustment.Id,
+                    Quantity = 1,
+                    ItemId = d._coreBuilderService.GetUsedCore(d.coreBuilder.Id).Id
+                };
+                d._stockAdjustmentDetailService.CreateObject(stockADy, d._stockAdjustmentService, d._itemService, d._warehouseItemService);
+
+                d._stockAdjustmentService.ConfirmObject(d.stockAdjustment, DateTime.Today, d._stockAdjustmentDetailService, d._stockMutationService,
+                                                        d._itemService, d._barringService, d._warehouseItemService, d._generalLedgerJournalService,
+                                                        d._accountService, d._closingService);
 
                 d.coreIdentification = d._coreIdentificationService.ConfirmObject(d.coreIdentification, DateTime.Today, 
                                        d._coreIdentificationDetailService, d._stockMutationService, d._recoveryOrderService, d._recoveryOrderDetailService,

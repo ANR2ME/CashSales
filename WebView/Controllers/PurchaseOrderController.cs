@@ -555,7 +555,7 @@ namespace WebView.Controllers
                 }
 
                 var data = _purchaseOrderService.GetObjectById(model.Id);
-                model = _purchaseOrderService.ConfirmObject(data,model.ConfirmationDate.Value,_purchaseOrderDetailService,_stockMutationService,_itemService,_barringService,_warehouseItemService, _purchaseOrderService);
+                model = _purchaseOrderService.ConfirmObject(data,model.ConfirmationDate.Value,_purchaseOrderDetailService,_stockMutationService,_itemService,_barringService,_warehouseItemService);
             }
             catch (Exception ex)
             {

@@ -10,6 +10,7 @@ using Data.Context;
 using System.Data.Entity;
 using Data.Repository;
 using Validation.Validation;
+using Core.Constants;
 
 namespace NSpec
 {
@@ -30,15 +31,27 @@ namespace NSpec
         IContactService contactService;
         IPurchaseOrderService poService;
         IPurchaseOrderDetailService poDetailService;
-        IStockMutationService stockMutationService;
+        IStockMutationService _stockMutationService;
         IUoMService _uomService;
         IBarringService _barringService;
         IItemTypeService _itemTypeService;
         IWarehouseItemService _warehouseItemService;
         IWarehouseService _warehouseService;
+        IStockAdjustmentDetailService _stockAdjustmentDetailService;
+        IStockAdjustmentService _stockAdjustmentService;
+        IItemService _itemService;
+        IAccountService _accountService;
+        IClosingService _closingService;
+        IGeneralLedgerJournalService _generalLedgerJournalService;
 
         IPriceMutationService _priceMutationService;
         IContactGroupService _contactGroupService;
+
+        public Account Asset, CashBank, AccountReceivable, GBCHReceivable, Inventory;
+        public Account Expense, CashBankAdjustmentExpense, COGS, Discount, SalesAllowance, StockAdjustmentExpense;
+        public Account Liability, AccountPayable, GBCHPayable, GoodsPendingClearance;
+        public Account Equity, OwnersEquity, EquityAdjustment;
+        public Account Revenue;
 
         int Quantity1;
         int Quantity2;
@@ -53,15 +66,47 @@ namespace NSpec
                 contactService = new ContactService(new ContactRepository(), new ContactValidator());
                 poService = new PurchaseOrderService(new PurchaseOrderRepository(), new PurchaseOrderValidator());
                 poDetailService = new PurchaseOrderDetailService(new PurchaseOrderDetailRepository(), new PurchaseOrderDetailValidator());
-                stockMutationService = new StockMutationService(new StockMutationRepository(), new StockMutationValidator());
+                _stockMutationService = new StockMutationService(new StockMutationRepository(), new StockMutationValidator());
                 _itemTypeService = new ItemTypeService(new ItemTypeRepository(), new ItemTypeValidator());
                 _uomService = new UoMService(new UoMRepository(), new UoMValidator());
                 _warehouseItemService = new WarehouseItemService(new WarehouseItemRepository(), new WarehouseItemValidator());
                 _warehouseService = new WarehouseService(new WarehouseRepository(), new WarehouseValidator());
                 _barringService = new BarringService(new BarringRepository(), new BarringValidator());
-
+                _itemService = new ItemService(new ItemRepository(), new ItemValidator());
+                _stockAdjustmentService = new StockAdjustmentService(new StockAdjustmentRepository(), new StockAdjustmentValidator());
+                _stockAdjustmentDetailService = new StockAdjustmentDetailService(new StockAdjustmentDetailRepository(), new StockAdjustmentDetailValidator());
+                _accountService = new AccountService(new AccountRepository(), new AccountValidator());
+                _closingService = new ClosingService(new ClosingRepository(), new ClosingValidator());
+                _generalLedgerJournalService = new GeneralLedgerJournalService(new GeneralLedgerJournalRepository(), new GeneralLedgerJournalValidator());
                 _priceMutationService = new PriceMutationService(new PriceMutationRepository(), new PriceMutationValidator());
                 _contactGroupService = new ContactGroupService(new ContactGroupRepository(), new ContactGroupValidator());
+
+                if (!_accountService.GetLegacyObjects().Any())
+                {
+                    Asset = _accountService.CreateLegacyObject(new Account() { Name = "Asset", Code = Constant.AccountCode.Asset, LegacyCode = Constant.AccountLegacyCode.Asset, Level = 1, Group = Constant.AccountGroup.Asset, IsLegacy = true }, _accountService);
+                    CashBank = _accountService.CreateLegacyObject(new Account() { Name = "CashBank", IsLeaf = true, Code = Constant.AccountCode.CashBank, LegacyCode = Constant.AccountLegacyCode.CashBank, Level = 2, Group = Constant.AccountGroup.Asset, ParentId = Asset.Id, IsLegacy = true }, _accountService);
+                    AccountReceivable = _accountService.CreateLegacyObject(new Account() { Name = "Account Receivable", IsLeaf = true, Code = Constant.AccountCode.AccountReceivable, LegacyCode = Constant.AccountLegacyCode.AccountReceivable, Level = 2, Group = Constant.AccountGroup.Asset, ParentId = Asset.Id, IsLegacy = true }, _accountService);
+                    GBCHReceivable = _accountService.CreateLegacyObject(new Account() { Name = "GBCH Receivable", IsLeaf = true, Code = Constant.AccountCode.GBCHReceivable, LegacyCode = Constant.AccountLegacyCode.GBCHReceivable, Level = 2, Group = Constant.AccountGroup.Asset, ParentId = Asset.Id, IsLegacy = true }, _accountService);
+                    Inventory = _accountService.CreateLegacyObject(new Account() { Name = "Inventory", IsLeaf = true, Code = Constant.AccountCode.Inventory, LegacyCode = Constant.AccountLegacyCode.Inventory, Level = 2, Group = Constant.AccountGroup.Asset, ParentId = Asset.Id, IsLegacy = true }, _accountService);
+
+                    Expense = _accountService.CreateLegacyObject(new Account() { Name = "Expense", Code = Constant.AccountCode.Expense, LegacyCode = Constant.AccountLegacyCode.Expense, Level = 1, Group = Constant.AccountGroup.Expense, IsLegacy = true }, _accountService);
+                    CashBankAdjustmentExpense = _accountService.CreateLegacyObject(new Account() { Name = "CashBank Adjustment Expense", IsLeaf = true, Code = Constant.AccountCode.CashBankAdjustmentExpense, LegacyCode = Constant.AccountLegacyCode.CashBankAdjustmentExpense, Level = 2, Group = Constant.AccountGroup.Expense, ParentId = Expense.Id, IsLegacy = true }, _accountService);
+                    COGS = _accountService.CreateLegacyObject(new Account() { Name = "Cost Of Goods Sold", IsLeaf = true, Code = Constant.AccountCode.COGS, LegacyCode = Constant.AccountLegacyCode.COGS, Level = 2, Group = Constant.AccountGroup.Expense, ParentId = Expense.Id, IsLegacy = true }, _accountService);
+                    Discount = _accountService.CreateLegacyObject(new Account() { Name = "Discount", IsLeaf = true, Code = Constant.AccountCode.Discount, LegacyCode = Constant.AccountLegacyCode.Discount, Level = 2, Group = Constant.AccountGroup.Expense, ParentId = Expense.Id, IsLegacy = true }, _accountService);
+                    SalesAllowance = _accountService.CreateLegacyObject(new Account() { Name = "Sales Allowance", IsLeaf = true, Code = Constant.AccountCode.SalesAllowance, LegacyCode = Constant.AccountLegacyCode.SalesAllowance, Level = 2, Group = Constant.AccountGroup.Expense, ParentId = Expense.Id, IsLegacy = true }, _accountService);
+                    StockAdjustmentExpense = _accountService.CreateLegacyObject(new Account() { Name = "Stock Adjustment Expense", IsLeaf = true, Code = Constant.AccountCode.StockAdjustmentExpense, LegacyCode = Constant.AccountLegacyCode.StockAdjustmentExpense, Level = 2, Group = Constant.AccountGroup.Expense, ParentId = Expense.Id, IsLegacy = true }, _accountService);
+
+                    Liability = _accountService.CreateLegacyObject(new Account() { Name = "Liability", Code = Constant.AccountCode.Liability, LegacyCode = Constant.AccountLegacyCode.Liability, Level = 1, Group = Constant.AccountGroup.Liability, IsLegacy = true }, _accountService);
+                    AccountPayable = _accountService.CreateLegacyObject(new Account() { Name = "Account Payable", IsLeaf = true, Code = Constant.AccountCode.AccountPayable, LegacyCode = Constant.AccountLegacyCode.AccountPayable, Level = 2, Group = Constant.AccountGroup.Liability, ParentId = Liability.Id, IsLegacy = true }, _accountService);
+                    GBCHPayable = _accountService.CreateLegacyObject(new Account() { Name = "GBCH Payable", IsLeaf = true, Code = Constant.AccountCode.GBCHPayable, LegacyCode = Constant.AccountLegacyCode.GBCHPayable, Level = 2, Group = Constant.AccountGroup.Liability, ParentId = Liability.Id, IsLegacy = true }, _accountService);
+                    GoodsPendingClearance = _accountService.CreateLegacyObject(new Account() { Name = "Goods Pending Clearance", IsLeaf = true, Code = Constant.AccountCode.GoodsPendingClearance, LegacyCode = Constant.AccountLegacyCode.GoodsPendingClearance, Level = 2, Group = Constant.AccountGroup.Liability, ParentId = Liability.Id, IsLegacy = true }, _accountService);
+
+                    Equity = _accountService.CreateLegacyObject(new Account() { Name = "Equity", Code = Constant.AccountCode.Equity, LegacyCode = Constant.AccountLegacyCode.Equity, Level = 1, Group = Constant.AccountGroup.Equity, IsLegacy = true }, _accountService);
+                    OwnersEquity = _accountService.CreateLegacyObject(new Account() { Name = "Owners Equity", Code = Constant.AccountCode.OwnersEquity, LegacyCode = Constant.AccountLegacyCode.OwnersEquity, Level = 2, Group = Constant.AccountGroup.Equity, ParentId = Equity.Id, IsLegacy = true }, _accountService);
+                    EquityAdjustment = _accountService.CreateLegacyObject(new Account() { Name = "Equity Adjustment", IsLeaf = true, Code = Constant.AccountCode.EquityAdjustment, LegacyCode = Constant.AccountLegacyCode.EquityAdjustment, Level = 3, Group = Constant.AccountGroup.Equity, ParentId = OwnersEquity.Id, IsLegacy = true }, _accountService);
+
+                    Revenue = _accountService.CreateLegacyObject(new Account() { Name = "Revenue", IsLeaf = true, Code = Constant.AccountCode.Revenue, LegacyCode = Constant.AccountLegacyCode.Revenue, Level = 1, Group = Constant.AccountGroup.Revenue, IsLegacy = true }, _accountService);
+                }
 
                 baseGroup = _contactGroupService.CreateObject(Core.Constants.Constant.GroupType.Base, "Base Group", true);
 
@@ -101,8 +146,6 @@ namespace NSpec
                     UoMId = Pcs.Id
                 };
                 itemService.CreateObject(item1, _uomService, _itemTypeService, _warehouseItemService, _warehouseService, _priceMutationService, _contactGroupService);
-                itemService.AdjustQuantity(item1, 1000);
-                _warehouseItemService.AdjustQuantity(_warehouseItemService.FindOrCreateObject(warehouse.Id, item1.Id), 1000);
 
                 item2 = new Item()
                 {
@@ -113,8 +156,28 @@ namespace NSpec
                     UoMId = Pcs.Id
                 };
                 itemService.CreateObject(item2, _uomService, _itemTypeService, _warehouseItemService, _warehouseService, _priceMutationService, _contactGroupService);
-                itemService.AdjustQuantity(item2, 1000);
-                _warehouseItemService.AdjustQuantity(_warehouseItemService.FindOrCreateObject(warehouse.Id, item2.Id), 1000);
+
+                StockAdjustment sa = new StockAdjustment() { AdjustmentDate = DateTime.Today, WarehouseId = warehouse.Id, Description = "item adjustment" };
+                _stockAdjustmentService.CreateObject(sa, _warehouseService);
+                StockAdjustmentDetail sadItem1 = new StockAdjustmentDetail()
+                {
+                    ItemId = item1.Id,
+                    Quantity = 1000,
+                    StockAdjustmentId = sa.Id
+                };
+                _stockAdjustmentDetailService.CreateObject(sadItem1, _stockAdjustmentService, _itemService, _warehouseItemService);
+
+                StockAdjustmentDetail sadItem2 = new StockAdjustmentDetail()
+                {
+                    ItemId = item2.Id,
+                    Quantity = 1000,
+                    StockAdjustmentId = sa.Id
+                };
+                _stockAdjustmentDetailService.CreateObject(sadItem2, _stockAdjustmentService, _itemService, _warehouseItemService);
+
+                _stockAdjustmentService.ConfirmObject(sa, DateTime.Today, _stockAdjustmentDetailService, _stockMutationService,
+                                                      _itemService, _barringService, _warehouseItemService, _generalLedgerJournalService,
+                                                      _accountService, _closingService);
 
             }
         }
@@ -167,7 +230,7 @@ namespace NSpec
 
                     it["must not allow PO confirmation if there is no PO Detail"] = () =>
                     {
-                        newPO = poService.ConfirmObject(newPO, DateTime.Today, poDetailService, stockMutationService, itemService, _barringService, _warehouseItemService, poService);
+                        newPO = poService.ConfirmObject(newPO, DateTime.Today, poDetailService, _stockMutationService, itemService, _barringService, _warehouseItemService);
                         newPO.Errors.Count().should_not_be(0);
                     };
 
@@ -277,7 +340,7 @@ namespace NSpec
 
                 it["allows confirmation"] = () =>
                 {
-                    newPO = poService.ConfirmObject(newPO, DateTime.Today, poDetailService, stockMutationService, itemService, _barringService, _warehouseItemService, poService);
+                    newPO = poService.ConfirmObject(newPO, DateTime.Today, poDetailService, _stockMutationService, itemService, _barringService, _warehouseItemService);
                     newPO.IsConfirmed.should_be(true);
                 };
 
@@ -289,7 +352,8 @@ namespace NSpec
                         item2 = itemService.GetObjectById(item2.Id);
                         Quantity1 = item1.PendingReceival;
                         Quantity2 = item2.PendingReceival;
-                        newPO = poService.ConfirmObject(newPO, DateTime.Today, poDetailService, stockMutationService, itemService, _barringService, _warehouseItemService, poService);
+
+                        newPO = poService.ConfirmObject(newPO, DateTime.Today, poDetailService, _stockMutationService, itemService, _barringService, _warehouseItemService);
                     };
 
                     it["should increase pending receival in item"] = () =>
@@ -303,8 +367,9 @@ namespace NSpec
 
                     it["should create StockMutation"] = () =>
                     {
-                        stockMutationService.GetObjectsByItemId(item1.Id).Count().should_be(1);
-                        stockMutationService.GetObjectsByItemId(item2.Id).Count().should_be(1);
+                        _stockMutationService.GetObjectsBySourceDocumentDetailForItem(item1.Id, Core.Constants.Constant.SourceDocumentDetailType.PurchaseOrderDetail, poDetail1.Id).Count().should_be(1);
+                        _stockMutationService.GetObjectsBySourceDocumentDetailForItem(item2.Id, Core.Constants.Constant.SourceDocumentDetailType.PurchaseOrderDetail, poDetail2.Id).Count().should_be(1);
+
                     };
                 };
             };

@@ -110,11 +110,11 @@ namespace TestValidation
                 before = () =>
                 {
                     rpb._retailPurchaseInvoiceService.UnpaidObject(rpb.rpi1, rpb._paymentVoucherService, rpb._paymentVoucherDetailService, rpb._cashBankService, rpb._payableService,
-                                                                   rpb._cashMutationService, rpb._generalLedgerJournalService, rpb._accountService);
+                                                                   rpb._cashMutationService, rpb._generalLedgerJournalService, rpb._accountService, rpb._closingService);
                     rpb._retailPurchaseInvoiceService.UnpaidObject(rpb.rpi2, rpb._paymentVoucherService, rpb._paymentVoucherDetailService, rpb._cashBankService, rpb._payableService,
-                                                                   rpb._cashMutationService, rpb._generalLedgerJournalService, rpb._accountService);
+                                                                   rpb._cashMutationService, rpb._generalLedgerJournalService, rpb._accountService, rpb._closingService);
                     rpb._retailPurchaseInvoiceService.UnpaidObject(rpb.rpi3, rpb._paymentVoucherService, rpb._paymentVoucherDetailService, rpb._cashBankService, rpb._payableService,
-                                                                   rpb._cashMutationService, rpb._generalLedgerJournalService, rpb._accountService);
+                                                                   rpb._cashMutationService, rpb._generalLedgerJournalService, rpb._accountService, rpb._closingService);
                     rpb.rpi1.Errors.Count().should_be(0);
                     rpb.rpi2.Errors.Count().should_be(0);
                     rpb.rpi3.Errors.Count().should_be(0);
@@ -141,9 +141,12 @@ namespace TestValidation
                 {
                     before = () =>
                     {
-                        rpb._retailPurchaseInvoiceService.UnconfirmObject(rpb.rpi1, rpb._retailPurchaseInvoiceDetailService, rpb._payableService, rpb._paymentVoucherDetailService, rpb._warehouseItemService, rpb._warehouseService, rpb._itemService, rpb._barringService, rpb._stockMutationService);
-                        rpb._retailPurchaseInvoiceService.UnconfirmObject(rpb.rpi2, rpb._retailPurchaseInvoiceDetailService, rpb._payableService, rpb._paymentVoucherDetailService, rpb._warehouseItemService, rpb._warehouseService, rpb._itemService, rpb._barringService, rpb._stockMutationService);
-                        rpb._retailPurchaseInvoiceService.UnconfirmObject(rpb.rpi3, rpb._retailPurchaseInvoiceDetailService, rpb._payableService, rpb._paymentVoucherDetailService, rpb._warehouseItemService, rpb._warehouseService, rpb._itemService, rpb._barringService, rpb._stockMutationService);
+                        rpb._retailPurchaseInvoiceService.UnconfirmObject(rpb.rpi1, rpb._retailPurchaseInvoiceDetailService, rpb._payableService, rpb._paymentVoucherDetailService, rpb._warehouseItemService, rpb._warehouseService, rpb._itemService,
+                                                                          rpb._barringService, rpb._stockMutationService, rpb._closingService);
+                        rpb._retailPurchaseInvoiceService.UnconfirmObject(rpb.rpi2, rpb._retailPurchaseInvoiceDetailService, rpb._payableService, rpb._paymentVoucherDetailService, rpb._warehouseItemService, rpb._warehouseService, rpb._itemService,
+                                                                          rpb._barringService, rpb._stockMutationService, rpb._closingService);
+                        rpb._retailPurchaseInvoiceService.UnconfirmObject(rpb.rpi3, rpb._retailPurchaseInvoiceDetailService, rpb._payableService, rpb._paymentVoucherDetailService, rpb._warehouseItemService, rpb._warehouseService, rpb._itemService,
+                                                                          rpb._barringService, rpb._stockMutationService, rpb._closingService);
                         rpb.rpi1.Errors.Count().should_be(0);
                         rpb.rpi2.Errors.Count().should_be(0);
                         rpb.rpi3.Errors.Count().should_be(0);

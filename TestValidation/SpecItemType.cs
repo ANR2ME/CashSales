@@ -114,8 +114,26 @@ namespace TestValidation
                     UoMId = d.Pcs.Id
                 };
                 glue101 = d._itemService.CreateObject(glue101, d._uomService, d._itemTypeService, d._warehouseItemService, d._warehouseService, d._priceMutationService, d._contactGroupService);
-                d._itemService.AdjustQuantity(glue101, 100);
-                d._warehouseItemService.AdjustQuantity(d._warehouseItemService.FindOrCreateObject(d.localWarehouse.Id, glue101.Id), 100);
+
+                d.stockAdjustment = new StockAdjustment()
+                {
+                    WarehouseId = d.localWarehouse.Id,
+                    AdjustmentDate = DateTime.Today,
+                    Description = "Glue Adjustment"
+                };
+                d._stockAdjustmentService.CreateObject(d.stockAdjustment, d._warehouseService);
+
+                d.stockAD1 = new StockAdjustmentDetail()
+                {
+                    StockAdjustmentId = d.stockAdjustment.Id,
+                    Quantity = 100,
+                    ItemId = glue101.Id
+                };
+                d._stockAdjustmentDetailService.CreateObject(d.stockAD1, d._stockAdjustmentService, d._itemService, d._warehouseItemService);
+
+                d._stockAdjustmentService.ConfirmObject(d.stockAdjustment, DateTime.Today, d._stockAdjustmentDetailService, d._stockMutationService,
+                                                        d._itemService, d._barringService, d._warehouseItemService, d._generalLedgerJournalService, d._accountService, d._closingService);
+
                 d.typeGlue = d._itemTypeService.SoftDeleteObject(d.typeGlue, d._itemService);
                 d.typeGlue.Errors.Count().should_not_be(0);
             };

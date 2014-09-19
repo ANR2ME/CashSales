@@ -139,7 +139,7 @@ namespace Service.Service
             }
             decimal Discount = salesInvoice.Discount / 100 * AmountReceivable;
             decimal TaxableAmount = AmountReceivable - Discount;
-            salesInvoice.AmountReceivable = TaxableAmount * (decimal)1.1; // 10% Tax
+            salesInvoice.AmountReceivable = salesInvoice.IsTaxable ? TaxableAmount * (decimal)1.1 : TaxableAmount; // 10% Tax
             _repository.Update(salesInvoice);
             return salesInvoice;
         }

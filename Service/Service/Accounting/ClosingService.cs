@@ -78,10 +78,11 @@ namespace Service.Service
                 IList<Account> leafAccounts = _accountService.GetLeafObjects();
                 foreach(var leaf in leafAccounts)
                 {
+                    DateTime EndDate = closing.EndDatePeriod.AddDays(1);
                     IList<GeneralLedgerJournal> ledgers = _generalLedgerJournalService.GetQueryable()
                                                           .Where(x => x.AccountId == leaf.Id && 
                                                                  x.TransactionDate >= closing.BeginningPeriod && 
-                                                                 x.TransactionDate < closing.EndDatePeriod.AddDays(1))
+                                                                 x.TransactionDate < EndDate)
                                                           .ToList();
                     decimal totalAmountInLedgers = 0;
                     foreach(var ledger in ledgers)

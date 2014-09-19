@@ -24,6 +24,7 @@ namespace TestValidation
         public ICashBankAdjustmentService _cashBankAdjustmentService;
         public ICashBankMutationService _cashBankMutationService;
         public ICashMutationService _cashMutationService;
+        public IClosingService _closingService;
         public ICoreBuilderService _coreBuilderService;
         public ICoreIdentificationService _coreIdentificationService;
         public ICoreIdentificationDetailService _coreIdentificationDetailService;
@@ -43,6 +44,7 @@ namespace TestValidation
         public IStockAdjustmentService _stockAdjustmentService;
         public IStockMutationService _stockMutationService;
         public IUoMService _uomService;
+        public IValidCombService _validCombService;
         public IWarehouseItemService _warehouseItemService;
         public IWarehouseService _warehouseService;
         public IWarehouseMutationOrderService _warehouseMutationOrderService;
@@ -115,6 +117,7 @@ namespace TestValidation
             _cashBankMutationService = new CashBankMutationService(new CashBankMutationRepository(), new CashBankMutationValidator());
             _cashBankService = new CashBankService(new CashBankRepository(), new CashBankValidator());
             _cashMutationService = new CashMutationService(new CashMutationRepository(), new CashMutationValidator());
+            _closingService = new ClosingService(new ClosingRepository(), new ClosingValidator());
             _coreBuilderService = new CoreBuilderService(new CoreBuilderRepository(), new CoreBuilderValidator());
             _coreIdentificationDetailService = new CoreIdentificationDetailService(new CoreIdentificationDetailRepository(), new CoreIdentificationDetailValidator());
             _coreIdentificationService = new CoreIdentificationService(new CoreIdentificationRepository(), new CoreIdentificationValidator());
@@ -152,6 +155,7 @@ namespace TestValidation
             _stockAdjustmentService = new StockAdjustmentService(new StockAdjustmentRepository(), new StockAdjustmentValidator());
             _stockMutationService = new StockMutationService(new StockMutationRepository(), new StockMutationValidator());
             _uomService = new UoMService(new UoMRepository(), new UoMValidator());
+            _validCombService = new ValidCombService(new ValidCombRepository(), new ValidCombValidator());
             _warehouseItemService = new WarehouseItemService(new WarehouseItemRepository(), new WarehouseItemValidator());
             _warehouseService = new WarehouseService(new WarehouseRepository(), new WarehouseValidator());
             _warehouseMutationOrderService = new WarehouseMutationOrderService(new WarehouseMutationOrderRepository(), new WarehouseMutationOrderValidator());
@@ -269,12 +273,10 @@ namespace TestValidation
                 Sku = "BLK1",
                 UoMId = Pcs.Id,
                 SellingPrice = 10000,
-                AvgPrice = 10000
+                AvgPrice = 10000,
             };
 
             blanket1 = _itemService.CreateObject(blanket1, _uomService, _itemTypeService, _warehouseItemService, _warehouseService, _priceMutationService, _contactGroupService);
-            _itemService.AdjustQuantity(blanket1, 100000);
-            _warehouseItemService.AdjustQuantity(_warehouseItemService.FindOrCreateObject(localWarehouse.Id, blanket1.Id), 100000);
 
             blanket2 = new Item()
             {
@@ -288,8 +290,6 @@ namespace TestValidation
             };
 
             blanket2 = _itemService.CreateObject(blanket2, _uomService, _itemTypeService, _warehouseItemService, _warehouseService, _priceMutationService, _contactGroupService);
-            _itemService.AdjustQuantity(blanket2, 100000);
-            _warehouseItemService.AdjustQuantity(_warehouseItemService.FindOrCreateObject(localWarehouse.Id, blanket2.Id), 100000);
 
             blanket3 = new Item()
             {
@@ -303,8 +303,6 @@ namespace TestValidation
             };
 
             blanket3 = _itemService.CreateObject(blanket3, _uomService, _itemTypeService, _warehouseItemService, _warehouseService, _priceMutationService, _contactGroupService);
-            _itemService.AdjustQuantity(blanket3, 100000);
-            _warehouseItemService.AdjustQuantity(_warehouseItemService.FindOrCreateObject(localWarehouse.Id, blanket3.Id), 100000);
 
             qp1 = new QuantityPricing()
             {
@@ -401,9 +399,51 @@ namespace TestValidation
             };
             _cashBankAdjustmentService.CreateObject(cashBankAdjustment2, _cashBankService);
 
-            _cashBankAdjustmentService.ConfirmObject(cashBankAdjustment, DateTime.Now, _cashMutationService, _cashBankService, _generalLedgerJournalService, _accountService);
-            _cashBankAdjustmentService.ConfirmObject(cashBankAdjustment2, DateTime.Now, _cashMutationService, _cashBankService, _generalLedgerJournalService, _accountService);
-        
+            _cashBankAdjustmentService.ConfirmObject(cashBankAdjustment, DateTime.Now, _cashMutationService, _cashBankService,
+                                                     _generalLedgerJournalService, _accountService, _closingService);
+            _cashBankAdjustmentService.ConfirmObject(cashBankAdjustment2, DateTime.Now, _cashMutationService, _cashBankService,
+                                                     _generalLedgerJournalService, _accountService, _closingService);
+
+            StockAdjustment sa = new StockAdjustment()
+            {
+                AdjustmentDate = DateTime.Now,
+                Code = "SA001",
+                WarehouseId = localWarehouse.Id
+            };
+            _stockAdjustmentService.CreateObject(sa, _warehouseService);
+
+            StockAdjustmentDetail sad1 = new StockAdjustmentDetail()
+            {
+                StockAdjustmentId = sa.Id,
+                ItemId = blanket1.Id,
+                Quantity = 100000,
+                Code = "SAD001",
+                Price = 50000
+            };
+            _stockAdjustmentDetailService.CreateObject(sad1, _stockAdjustmentService, _itemService, _warehouseItemService);
+
+            StockAdjustmentDetail sad2 = new StockAdjustmentDetail()
+            {
+                StockAdjustmentId = sa.Id,
+                ItemId = blanket2.Id,
+                Quantity = 100000,
+                Code = "SAD002",
+                Price = 50000
+            };
+            _stockAdjustmentDetailService.CreateObject(sad2, _stockAdjustmentService, _itemService, _warehouseItemService);
+
+            StockAdjustmentDetail sad3 = new StockAdjustmentDetail()
+            {
+                StockAdjustmentId = sa.Id,
+                ItemId = blanket3.Id,
+                Quantity = 100000,
+                Code = "SAD003",
+                Price = 50000
+            };
+            _stockAdjustmentDetailService.CreateObject(sad3, _stockAdjustmentService, _itemService, _warehouseItemService);
+
+            _stockAdjustmentService.ConfirmObject(sa, DateTime.Today, _stockAdjustmentDetailService, _stockMutationService, _itemService, _barringService,
+                                                  _warehouseItemService, _generalLedgerJournalService, _accountService, _closingService);
         }
 
         public void PopulateCashSalesData()
@@ -475,17 +515,19 @@ namespace TestValidation
             };
             _cashSalesInvoiceDetailService.CreateObject(csid4, _cashSalesInvoiceService, _itemService, _warehouseItemService, _quantityPricingService);
 
-
             _cashSalesInvoiceService.ConfirmObject(csi1, csi1.SalesDate, 0, 0, _cashSalesInvoiceDetailService, _contactService, _priceMutationService,_receivableService,_cashSalesInvoiceService,_warehouseItemService,_warehouseService,
-                                                   _itemService,_barringService,_stockMutationService,_cashBankService,_generalLedgerJournalService,_accountService);
+                                                   _itemService,_barringService,_stockMutationService,_cashBankService,_generalLedgerJournalService,_accountService, _closingService);
             _cashSalesInvoiceService.ConfirmObject(csi2, csi2.SalesDate, 0, 0, _cashSalesInvoiceDetailService, _contactService, _priceMutationService, _receivableService, _cashSalesInvoiceService, _warehouseItemService, _warehouseService,
-                                                   _itemService, _barringService, _stockMutationService, _cashBankService, _generalLedgerJournalService, _accountService);
+                                                   _itemService, _barringService, _stockMutationService, _cashBankService, _generalLedgerJournalService, _accountService, _closingService);
             _cashSalesInvoiceService.ConfirmObject(csi3, csi3.SalesDate, 0, 0, _cashSalesInvoiceDetailService, _contactService, _priceMutationService, _receivableService, _cashSalesInvoiceService, _warehouseItemService, _warehouseService,
-                                                   _itemService, _barringService, _stockMutationService, _cashBankService, _generalLedgerJournalService, _accountService);
+                                                   _itemService, _barringService, _stockMutationService, _cashBankService, _generalLedgerJournalService, _accountService, _closingService);
 
-            _cashSalesInvoiceService.PaidObject(csi1, 200000, 50000, _cashBankService, _receivableService, _receiptVoucherService, _receiptVoucherDetailService, _contactService, _cashMutationService, _cashSalesReturnService, _generalLedgerJournalService, _accountService);
-            _cashSalesInvoiceService.PaidObject(csi2, csi2.Total, 50000, _cashBankService, _receivableService, _receiptVoucherService, _receiptVoucherDetailService, _contactService, _cashMutationService, _cashSalesReturnService, _generalLedgerJournalService, _accountService);
-            _cashSalesInvoiceService.PaidObject(csi3, csi3.Total, 50000, _cashBankService, _receivableService, _receiptVoucherService, _receiptVoucherDetailService, _contactService, _cashMutationService, _cashSalesReturnService, _generalLedgerJournalService, _accountService);
+            _cashSalesInvoiceService.PaidObject(csi1, 200000, 50000, _cashBankService, _receivableService, _receiptVoucherService, _receiptVoucherDetailService, _contactService, _cashMutationService, _cashSalesReturnService,
+                                                _generalLedgerJournalService, _accountService, _closingService);
+            _cashSalesInvoiceService.PaidObject(csi2, csi2.Total, 50000, _cashBankService, _receivableService, _receiptVoucherService, _receiptVoucherDetailService, _contactService, _cashMutationService, _cashSalesReturnService,
+                                                _generalLedgerJournalService, _accountService, _closingService);
+            _cashSalesInvoiceService.PaidObject(csi3, csi3.Total, 50000, _cashBankService, _receivableService, _receiptVoucherService, _receiptVoucherDetailService, _contactService, _cashMutationService, _cashSalesReturnService,
+                                                _generalLedgerJournalService, _accountService, _closingService);
         
             // --------- CashSalesReturn -------------
 
@@ -508,10 +550,11 @@ namespace TestValidation
             _cashSalesReturnService.ConfirmObject(csr1, DateTime.Now, 50000, _cashSalesReturnDetailService, _contactService, _cashSalesInvoiceService,
                                                   _cashSalesInvoiceDetailService, _priceMutationService, _payableService,
                                                   _cashSalesReturnService, _warehouseItemService, _warehouseService,
-                                                  _itemService, _barringService, _stockMutationService);
+                                                  _itemService, _barringService, _stockMutationService, _closingService);
 
             _cashSalesReturnService.PaidObject(csr1, /*50000,*/ _cashBankService, _payableService, _paymentVoucherService,
-                                               _paymentVoucherDetailService, _contactService, _cashMutationService, _generalLedgerJournalService, _accountService);
+                                               _paymentVoucherDetailService, _contactService, _cashMutationService, _generalLedgerJournalService,
+                                               _accountService, _closingService);
 
             //_cashSalesReturnService.UnpaidObject(csr1, _paymentVoucherService, _paymentVoucherDetailService, _cashBankService, _payableService, _cashMutationService);
 

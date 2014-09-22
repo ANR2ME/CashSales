@@ -135,7 +135,7 @@ namespace Service.Service
                 CashBank cashBank = _cashBankService.GetObjectById((int)cashSalesInvoice.CashBankId.GetValueOrDefault());
                 cashSalesInvoice.IsBank = cashBank.IsBank;
                 
-                if (cashSalesInvoice.AmountPaid == cashSalesInvoice.Total)
+                if (cashSalesInvoice.AmountPaid + cashSalesInvoice.Allowance == cashSalesInvoice.Total)
                 {
                     cashSalesInvoice.IsFullPayment = true;
                 }

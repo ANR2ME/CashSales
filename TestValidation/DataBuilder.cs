@@ -68,6 +68,14 @@ namespace TestValidation
         public IWarehouseMutationOrderService _warehouseMutationOrderService;
         public IWarehouseMutationOrderDetailService _warehouseMutationOrderDetailService;
 
+        public ICashSalesInvoiceService _cashSalesInvoiceService;
+        public ICashSalesInvoiceDetailService _cashSalesInvoiceDetailService;
+        public IRetailPurchaseInvoiceService _retailPurchaseInvoiceService;
+        public IRetailPurchaseInvoiceDetailService _retailPurchaseInvoiceDetailService;
+        public IQuantityPricingService _quantityPricingService;
+        public ICashSalesReturnService _cashSalesReturnService;
+        public ICashSalesReturnDetailService _cashSalesReturnDetailService;
+
         public IPriceMutationService _priceMutationService;
         public IContactGroupService _contactGroupService;
         public IGroupItemPriceService _groupItemPriceService;
@@ -128,6 +136,8 @@ namespace TestValidation
         public SalesInvoiceDetail salesID1a, salesID1b, salesID2a, salesID2b, salesID3a, salesID3b;
         public ReceiptVoucher receiptVoucher1, receiptVoucher2, receiptVoucher3;
         public ReceiptVoucherDetail receiptVD1a, receiptVD1b, receiptVD2a, receiptVD2b, receiptVD3a, receiptVD3b;
+        public CashSalesInvoice cashSalesInvoice1, cashSalesInvoice2, cashSalesInvoice3;
+        public CashSalesInvoiceDetail cashSalesID1a, cashSalesID2a, cashSalesID2b, cashSalesID3a;
 
         public PurchaseOrder purchaseOrder1;
         public PurchaseOrderDetail purchaseOD1a, purchaseOD1b;
@@ -207,6 +217,14 @@ namespace TestValidation
             _warehouseMutationOrderService = new WarehouseMutationOrderService(new WarehouseMutationOrderRepository(), new WarehouseMutationOrderValidator());
             _warehouseMutationOrderDetailService = new WarehouseMutationOrderDetailService(new WarehouseMutationOrderDetailRepository(), new WarehouseMutationOrderDetailValidator());
 
+            _cashSalesInvoiceService = new CashSalesInvoiceService(new CashSalesInvoiceRepository(), new CashSalesInvoiceValidator());
+            _cashSalesInvoiceDetailService = new CashSalesInvoiceDetailService(new CashSalesInvoiceDetailRepository(), new CashSalesInvoiceDetailValidator());
+            _retailPurchaseInvoiceService = new RetailPurchaseInvoiceService(new RetailPurchaseInvoiceRepository(), new RetailPurchaseInvoiceValidator());
+            _retailPurchaseInvoiceDetailService = new RetailPurchaseInvoiceDetailService(new RetailPurchaseInvoiceDetailRepository(), new RetailPurchaseInvoiceDetailValidator());
+            _quantityPricingService = new QuantityPricingService(new QuantityPricingRepository(), new QuantityPricingValidator());
+            _cashSalesReturnService = new CashSalesReturnService(new CashSalesReturnRepository(), new CashSalesReturnValidator());
+            _cashSalesReturnDetailService = new CashSalesReturnDetailService(new CashSalesReturnDetailRepository(), new CashSalesReturnDetailValidator());
+
             _priceMutationService = new PriceMutationService(new PriceMutationRepository(), new PriceMutationValidator());
             _contactGroupService = new ContactGroupService(new ContactGroupRepository(), new ContactGroupValidator());
             _groupItemPriceService = new GroupItemPriceService(new GroupItemPriceRepository(), new GroupItemPriceValidator());
@@ -249,7 +267,7 @@ namespace TestValidation
             if (!_accountService.GetLegacyObjects().Any())
             {
                 Asset = _accountService.CreateLegacyObject(new Account() { Name = "Asset", Code = Constant.AccountCode.Asset, LegacyCode = Constant.AccountLegacyCode.Asset, Level = 1, Group = Constant.AccountGroup.Asset, IsLegacy = true }, _accountService);
-                CashBank = _accountService.CreateLegacyObject(new Account() { Name = "CashBank", IsLeaf = true, Code = Constant.AccountCode.CashBank, LegacyCode = Constant.AccountLegacyCode.CashBank, Level = 2, Group = Constant.AccountGroup.Asset, ParentId = Asset.Id, IsLegacy = true }, _accountService);
+                CashBank = _accountService.CreateLegacyObject(new Account() { Name = "CashBank", Code = Constant.AccountCode.CashBank, LegacyCode = Constant.AccountLegacyCode.CashBank, Level = 2, Group = Constant.AccountGroup.Asset, ParentId = Asset.Id, IsLegacy = true }, _accountService);
                 AccountReceivable = _accountService.CreateLegacyObject(new Account() { Name = "Account Receivable", IsLeaf = true, Code = Constant.AccountCode.AccountReceivable, LegacyCode = Constant.AccountLegacyCode.AccountReceivable, Level = 2, Group = Constant.AccountGroup.Asset, ParentId = Asset.Id, IsLegacy = true }, _accountService);
                 GBCHReceivable = _accountService.CreateLegacyObject(new Account() { Name = "GBCH Receivable", IsLeaf = true, Code = Constant.AccountCode.GBCHReceivable, LegacyCode = Constant.AccountLegacyCode.GBCHReceivable, Level = 2, Group = Constant.AccountGroup.Asset, ParentId = Asset.Id, IsLegacy = true }, _accountService);
                 Inventory = _accountService.CreateLegacyObject(new Account() { Name = "Inventory", IsLeaf = true, Code = Constant.AccountCode.Inventory, LegacyCode = Constant.AccountLegacyCode.Inventory, Level = 2, Group = Constant.AccountGroup.Asset, ParentId = Asset.Id, IsLegacy = true }, _accountService);
@@ -293,6 +311,7 @@ namespace TestValidation
             PopulateBarringOrders();
             PopulateCashBank();
             PopulateSales();
+            PopulateCashSales();
             PopulateValidComb();
         }
 
@@ -472,7 +491,7 @@ namespace TestValidation
             {
                 StockAdjustmentId = sa.Id,
                 ItemId = itemAccessory1.Id,
-                Quantity = 10,
+                Quantity = 15,
                 Code = "ITAC001",
                 Price = 50000
             };
@@ -2029,6 +2048,90 @@ namespace TestValidation
                                                  _cashMutationService, _generalLedgerJournalService, _accountService, _closingService);
             _receiptVoucherService.ConfirmObject(receiptVoucher3, DateTime.Now, _receiptVoucherDetailService, _cashBankService, _receivableService,
                                                  _cashMutationService, _generalLedgerJournalService, _accountService, _closingService);
+        }
+
+        public void PopulateCashSales()
+        {
+            TimeSpan salesDate = new TimeSpan(10, 0, 0, 0);
+            TimeSpan dueDate = new TimeSpan(3, 0, 0, 0);
+
+            // Cash without Discount & Tax
+            cashSalesInvoice1 = new CashSalesInvoice()
+            {
+                SalesDate = DateTime.Today.Subtract(salesDate),
+                WarehouseId = localWarehouse.Id,
+                CashBankId = cashBank1.Id,
+                DueDate = DateTime.Today.Subtract(dueDate),
+            };
+            _cashSalesInvoiceService.CreateObject(cashSalesInvoice1, _warehouseService, _cashBankService);
+
+            // Cash with Discount & Tax
+            cashSalesInvoice2 = new CashSalesInvoice()
+            {
+                SalesDate = DateTime.Today.Subtract(salesDate),
+                WarehouseId = localWarehouse.Id,
+                CashBankId = cashBank1.Id,
+                DueDate = DateTime.Today.Subtract(dueDate),
+                Discount = 25,
+                Tax = 10,
+            };
+            _cashSalesInvoiceService.CreateObject(cashSalesInvoice2, _warehouseService, _cashBankService);
+
+            // Bank without Discount & Tax
+            cashSalesInvoice3 = new CashSalesInvoice()
+            {
+                SalesDate = DateTime.Today.Subtract(salesDate),
+                WarehouseId = localWarehouse.Id,
+                CashBankId = cashBank2.Id,
+                DueDate = DateTime.Today.Subtract(dueDate),
+            };
+            _cashSalesInvoiceService.CreateObject(cashSalesInvoice3, _warehouseService, _cashBankService);
+
+            cashSalesID1a = new CashSalesInvoiceDetail()
+            {
+                CashSalesInvoiceId = cashSalesInvoice1.Id,
+                Quantity = 2,
+                ItemId = itemAccessory1.Id,
+            };
+            _cashSalesInvoiceDetailService.CreateObject(cashSalesID1a, _cashSalesInvoiceService, _itemService, _warehouseItemService, _quantityPricingService);
+
+            cashSalesID2a = new CashSalesInvoiceDetail()
+            {
+                CashSalesInvoiceId = cashSalesInvoice2.Id,
+                Quantity = 2,
+                ItemId = itemAccessory1.Id,
+            };
+            _cashSalesInvoiceDetailService.CreateObject(cashSalesID2a, _cashSalesInvoiceService, _itemService, _warehouseItemService, _quantityPricingService);
+
+            cashSalesID3a = new CashSalesInvoiceDetail()
+            {
+                CashSalesInvoiceId = cashSalesInvoice3.Id,
+                Quantity = 2,
+                ItemId = itemAccessory1.Id,
+            };
+            _cashSalesInvoiceDetailService.CreateObject(cashSalesID3a, _cashSalesInvoiceService, _itemService, _warehouseItemService, _quantityPricingService);
+
+            cashSalesID2b = new CashSalesInvoiceDetail()
+            {
+                CashSalesInvoiceId = cashSalesInvoice2.Id,
+                Quantity = 1,
+                ItemId = itemAccessory2.Id,
+            };
+            _cashSalesInvoiceDetailService.CreateObject(cashSalesID2b, _cashSalesInvoiceService, _itemService, _warehouseItemService, _quantityPricingService);
+
+            _cashSalesInvoiceService.ConfirmObject(cashSalesInvoice1, cashSalesInvoice1.SalesDate, 10, 0, _cashSalesInvoiceDetailService, _contactService, _priceMutationService, _receivableService, _cashSalesInvoiceService, _warehouseItemService, _warehouseService,
+                                                   _itemService, _barringService, _stockMutationService, _cashBankService, _generalLedgerJournalService, _accountService, _closingService);
+            _cashSalesInvoiceService.ConfirmObject(cashSalesInvoice2, cashSalesInvoice2.SalesDate, 0, 0, _cashSalesInvoiceDetailService, _contactService, _priceMutationService, _receivableService, _cashSalesInvoiceService, _warehouseItemService, _warehouseService,
+                                                   _itemService, _barringService, _stockMutationService, _cashBankService, _generalLedgerJournalService, _accountService, _closingService);
+            _cashSalesInvoiceService.ConfirmObject(cashSalesInvoice3, cashSalesInvoice3.SalesDate, 0, 0, _cashSalesInvoiceDetailService, _contactService, _priceMutationService, _receivableService, _cashSalesInvoiceService, _warehouseItemService, _warehouseService,
+                                                   _itemService, _barringService, _stockMutationService, _cashBankService, _generalLedgerJournalService, _accountService, _closingService);
+
+            _cashSalesInvoiceService.PaidObject(cashSalesInvoice1, 40000, 50000, _cashBankService, _receivableService, _receiptVoucherService, _receiptVoucherDetailService, _contactService, _cashMutationService, _cashSalesReturnService,
+                                                _generalLedgerJournalService, _accountService, _closingService);
+            _cashSalesInvoiceService.PaidObject(cashSalesInvoice2, cashSalesInvoice2.Total, 0, _cashBankService, _receivableService, _receiptVoucherService, _receiptVoucherDetailService, _contactService, _cashMutationService, _cashSalesReturnService,
+                                                _generalLedgerJournalService, _accountService, _closingService);
+            _cashSalesInvoiceService.PaidObject(cashSalesInvoice3, cashSalesInvoice3.Total - 50000, 50000, _cashBankService, _receivableService, _receiptVoucherService, _receiptVoucherDetailService, _contactService, _cashMutationService, _cashSalesReturnService,
+                                                _generalLedgerJournalService, _accountService, _closingService);
         }
 
         public void PopulateValidComb()

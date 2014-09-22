@@ -239,7 +239,7 @@ namespace Service.Service
                     SourceDocumentId = cashBankAdjustment.Id,
                     TransactionDate = (DateTime)cashBankAdjustment.ConfirmationDate,
                     Status = Constant.GeneralLedgerStatus.Debit,
-                    Amount = cashBankAdjustment.Amount
+                    Amount = Math.Abs(cashBankAdjustment.Amount)
                 };
                 debitcashbankadjustmentexpense = CreateObject(debitcashbankadjustmentexpense, _accountService);
 
@@ -250,7 +250,7 @@ namespace Service.Service
                     SourceDocumentId = cashBankAdjustment.Id,
                     TransactionDate = (DateTime)cashBankAdjustment.ConfirmationDate,
                     Status = Constant.GeneralLedgerStatus.Credit,
-                    Amount = cashBankAdjustment.Amount
+                    Amount = Math.Abs(cashBankAdjustment.Amount)
                 };
                 creditcashbank = CreateObject(creditcashbank, _accountService);
 
@@ -302,7 +302,7 @@ namespace Service.Service
                     SourceDocumentId = cashBankAdjustment.Id,
                     TransactionDate = UnconfirmationDate,
                     Status = Constant.GeneralLedgerStatus.Credit,
-                    Amount = cashBankAdjustment.Amount
+                    Amount = Math.Abs(cashBankAdjustment.Amount)
                 };
                 creditcashbankadjustmentexpense = CreateObject(creditcashbankadjustmentexpense, _accountService);
 
@@ -313,7 +313,7 @@ namespace Service.Service
                     SourceDocumentId = cashBankAdjustment.Id,
                     TransactionDate = UnconfirmationDate,
                     Status = Constant.GeneralLedgerStatus.Debit,
-                    Amount = cashBankAdjustment.Amount
+                    Amount = Math.Abs(cashBankAdjustment.Amount)
                 };
                 debitcashbank = CreateObject(debitcashbank, _accountService);
 
@@ -559,7 +559,7 @@ namespace Service.Service
                     SourceDocumentId = stockAdjustment.Id,
                     TransactionDate = (DateTime)stockAdjustment.ConfirmationDate,
                     Status = Constant.GeneralLedgerStatus.Debit,
-                    Amount = stockAdjustment.Total
+                    Amount = Math.Abs(stockAdjustment.Total)
                 };
                 debitstockadjustmentexpense = CreateObject(debitstockadjustmentexpense, _accountService);
 
@@ -570,7 +570,7 @@ namespace Service.Service
                     SourceDocumentId = stockAdjustment.Id,
                     TransactionDate = (DateTime)stockAdjustment.ConfirmationDate,
                     Status = Constant.GeneralLedgerStatus.Credit,
-                    Amount = stockAdjustment.Total
+                    Amount = Math.Abs(stockAdjustment.Total)
                 };
                 creditinventory = CreateObject(creditinventory, _accountService);
 
@@ -622,7 +622,7 @@ namespace Service.Service
                     SourceDocumentId = stockAdjustment.Id,
                     TransactionDate = UnconfirmationDate,
                     Status = Constant.GeneralLedgerStatus.Credit,
-                    Amount = stockAdjustment.Total
+                    Amount = Math.Abs(stockAdjustment.Total)
                 };
                 creditstockadjustmentexpense = CreateObject(creditstockadjustmentexpense, _accountService);
 
@@ -633,7 +633,7 @@ namespace Service.Service
                     SourceDocumentId = stockAdjustment.Id,
                     TransactionDate = UnconfirmationDate,
                     Status = Constant.GeneralLedgerStatus.Debit,
-                    Amount = stockAdjustment.Total
+                    Amount = Math.Abs(stockAdjustment.Total)
                 };
                 debitinventory = CreateObject(debitinventory, _accountService);
 

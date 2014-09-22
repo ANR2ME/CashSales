@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{6A18ED05-6179-4697-8648-B44594203DCC}</ProjectGuid>
+    <ProjectGuid>{588C08B9-3BB2-4242-B3DD-D3F8A9FFCDFE}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>TestValidation</RootNamespace>
-    <AssemblyName>TestValidation</AssemblyName>
+    <RootNamespace>UnitValidation</RootNamespace>
+    <AssemblyName>UnitValidation</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -31,14 +31,12 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="EntityFramework">
-      <HintPath>..\packages\EntityFramework.5.0.0\lib\net45\EntityFramework.dll</HintPath>
+      <HintPath>..\..\..\lib\EntityFramework.dll</HintPath>
     </Reference>
-    <Reference Include="NSpec, Version=0.9.68.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="NSpec">
       <HintPath>..\packages\nspec.0.9.68\tools\NSpec.dll</HintPath>
     </Reference>
     <Reference Include="System" />
-    <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data.Entity" />
     <Reference Include="System.Xml.Linq" />
@@ -48,47 +46,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CashSalesBuilder.cs" />
-    <Compile Include="SpecAccounting.cs" />
-    <Compile Include="SpecUserRole.cs" />
-    <Compile Include="SpecPaymentRequest.cs" />
-    <Compile Include="SpecCustomPurchaseInvoice.cs" />
-    <Compile Include="CustomPurchaseBuilder.cs" />
-    <Compile Include="SpecCashSalesInvoice.cs" />
-    <Compile Include="SpecRetailPurchaseInvoice.cs" />
-    <Compile Include="RetailPurchaseBuilder.cs" />
-    <Compile Include="SpecGroupItemPrice.cs" />
-    <Compile Include="RetailSalesBuilder.cs" />
-    <Compile Include="SpecRetailSalesInvoice.cs" />
-    <Compile Include="SpecContactGroup.cs" />
-    <Compile Include="SpecSalesInvoice.cs" />
-    <Compile Include="SalesBuilder.cs" />
-    <Compile Include="PurchaseBuilder.cs" />
-    <Compile Include="SpecPurchaseInvoice.cs" />
-    <Compile Include="SpecDeliveryOrder.cs" />
-    <Compile Include="SpecPurchaseOrder.cs" />
-    <Compile Include="SpecPurchaseReceival.cs" />
-    <Compile Include="SpecSalesOrder.cs" />
-    <Compile Include="SpecWarehouseMutation.cs" />
-    <Compile Include="SpecCoreIdentificationComplete.cs" />
-    <Compile Include="SpecWarehouse.cs" />
-    <Compile Include="SpecBarringOrder.cs" />
-    <Compile Include="SpecCoreIdentification.cs" />
-    <Compile Include="SpecRecoveryOrder.cs" />
-    <Compile Include="DataBuilder.cs" />
-    <Compile Include="SpecRollerType.cs" />
-    <Compile Include="SpecRollerBuilder.cs" />
-    <Compile Include="SpecCoreBuilder.cs" />
-    <Compile Include="SpecItemType.cs" />
-    <Compile Include="SpecContact.cs" />
-    <Compile Include="SpecMachine.cs" />
     <Compile Include="DebuggerShim.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SpecItem.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="App.config" />
-    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Core\Core.csproj">
@@ -103,13 +62,14 @@
       <Project>{c73dd4b2-38fd-4fb1-82ac-2744a491acd5}</Project>
       <Name>Service</Name>
     </ProjectReference>
+    <ProjectReference Include="..\TestValidation\TestValidation.csproj">
+      <Project>{6a18ed05-6179-4697-8648-b44594203dcc}</Project>
+      <Name>TestValidation</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Validation\Validation.csproj">
       <Project>{5fce3a19-3b1d-4bd3-9752-274d5efe7f2f}</Project>
       <Name>Validation</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="README.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

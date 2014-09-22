@@ -29,6 +29,8 @@ namespace Core.Interface.Validation
         CashSalesInvoice VIsConfirmed(CashSalesInvoice cashSalesInvoice);
         CashSalesInvoice VIsValidAmountPaid(CashSalesInvoice cashSalesInvoice);
         CashSalesInvoice VIsValidFullPayment(CashSalesInvoice cashSalesInvoice);
+        CashSalesInvoice VTotalPaymentIsEqualOrLessThanTotalPayable(CashSalesInvoice cashSalesInvoice);
+
         CashSalesInvoice VHasCashBank(CashSalesInvoice cashSalesInvoice, ICashBankService _cashBankService);
 
         //CashSalesInvoice VIsCashBankTypeNotBank(CashSalesInvoice cashSalesInvoice, ICashBankService _cashBankService);

@@ -115,7 +115,6 @@ namespace Service.Service
                     {
                         discount = quantityPricing.Discount;
                     };
-
                 }
                 cashSalesInvoiceDetail.Amount = (price * (100 - discount) / 100) * cashSalesInvoiceDetail.Quantity;
                 cashSalesInvoiceDetail.CoGS = cashSalesInvoiceDetail.Quantity * item.AvgPrice; 

@@ -17,5 +17,6 @@ namespace Core.Interface.Service
         ValidComb CreateObject(ValidComb validComb, IAccountService _accountService, IClosingService _closingService);
         ValidComb UpdateObject(ValidComb validComb, IAccountService _accountService, IClosingService _closingService);
         bool DeleteObject(int Id);
+        ValidComb CalculateTotalAmount(ValidComb validComb, IAccountService _accountService, IClosingService _closingService);
     }
 }

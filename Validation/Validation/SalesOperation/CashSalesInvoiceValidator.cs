@@ -229,9 +229,18 @@ namespace Validation.Validation
 
         public CashSalesInvoice VIsValidFullPayment(CashSalesInvoice cashSalesInvoice)
         {
-            if (cashSalesInvoice.AmountPaid != cashSalesInvoice.Total)
+            if (cashSalesInvoice.AmountPaid + cashSalesInvoice.Allowance != cashSalesInvoice.Total)
             {
-                cashSalesInvoice.Errors.Add("AmountPaid", "Harus sama dengan Total Payable");
+                cashSalesInvoice.Errors.Add("Generic", "Amount Paid + Allowance harus dengan Total Payable");
+            }
+            return cashSalesInvoice;
+        }
+
+        public CashSalesInvoice VTotalPaymentIsEqualOrLessThanTotalPayable(CashSalesInvoice cashSalesInvoice)
+        {
+            if (cashSalesInvoice.AmountPaid + cashSalesInvoice.Allowance > cashSalesInvoice.Total)
+            {
+                cashSalesInvoice.Errors.Add("Generic", "Amount Paid + Allowance lebih dari Total Payable");
             }
             return cashSalesInvoice;
         }
@@ -339,6 +348,8 @@ namespace Validation.Validation
             VIsValidAllowance(cashSalesInvoice);
             if (!isValid(cashSalesInvoice)) { return cashSalesInvoice; }
             VIsValidAmountPaid(cashSalesInvoice);
+            if (!isValid(cashSalesInvoice)) { return cashSalesInvoice; }
+            VTotalPaymentIsEqualOrLessThanTotalPayable(cashSalesInvoice);
             if (!isValid(cashSalesInvoice)) { return cashSalesInvoice; }
             VHasNoCashSalesReturns(cashSalesInvoice, _cashSalesReturnService);
             if (cashSalesInvoice.IsFullPayment)

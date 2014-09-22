@@ -45,7 +45,7 @@ namespace TestValidation
                 b.cashBank2.Errors.Count().should_be(0);
                 b.csi1.Errors.Count().should_be(0);
                 b.csi2.Errors.Count().should_be(0);
-                b.csi3.Errors.Count().should_not_be(0);
+                b.csi3.Errors.Count().should_be(1);
                 b.csid1.Errors.Count().should_be(0);
                 b.csid2.Errors.Count().should_be(0);
                 b.csid3.Errors.Count().should_be(0);
@@ -69,15 +69,30 @@ namespace TestValidation
                 b.csi2.IsFullPayment.should_be_true();
                 b.csi3.IsFullPayment.should_be_false();
 
+                b._cashSalesInvoiceService.PaidObject(b.csi3, b.csi3.Total - 50000, 50000, b._cashBankService, b._receivableService, b._receiptVoucherService, b._receiptVoucherDetailService, b._contactService, b._cashMutationService, b._cashSalesReturnService,
+                                                      b._generalLedgerJournalService, b._accountService, b._closingService);
+
+                b.csi3.IsPaid.should_be_true();
+                b.csi3.IsFullPayment.should_be_true();
+
+                Item item1 = b._itemService.GetObjectById(b.csid1.ItemId);
+                QuantityPricing quantityPricing1 = b._quantityPricingService.GetObjectByItemTypeIdAndQuantity(item1.ItemTypeId, b.csid1.Quantity);
+                Item item2 = b._itemService.GetObjectById(b.csid2.ItemId);
+                QuantityPricing quantityPricing2 = b._quantityPricingService.GetObjectByItemTypeIdAndQuantity(item2.ItemTypeId, b.csid2.Quantity);
+
                 b.csid1.CoGS.should_be(b.csid1.Quantity * b.blanket1.AvgPrice); // Quantity=100, AvgPrice=10000
-                b.csid1.Amount.should_be(b.csid1.Quantity * b.blanket1.SellingPrice * (100 - b.csid1.Discount)/100); // SellingPrice=10000, QuantityPricing discount = 50% for quantity>=51
+                b.csid1.Amount.should_be(b.csid1.Quantity * (b.blanket1.SellingPrice * (100 - quantityPricing1.Discount) / 100)); // SellingPrice=10000, QuantityPricing discount = 50% for quantity>=51
+
                 b.csid2.CoGS.should_be(b.csid2.Quantity * b.blanket2.AvgPrice); // Quantity=30, AvgPrice=20000
-                b.csid2.Amount.should_be(b.csid2.Quantity * b.blanket2.SellingPrice * (100 - b.csid2.Discount) / 100); // SellingPrice=20000, QuantityPricing discount = 10% for quantity=20-40, 25% for q=30-50
-                b.csid4.Amount.should_be(b.csid4.Quantity * b.blanket3.SellingPrice * (100 - b.csid4.Discount) / 100); // SellingPrice=30000, not existed QuantityPricing for Q=10
+                b.csid2.Amount.should_be(b.csid2.Quantity * (b.blanket2.SellingPrice * (100 - quantityPricing2.Discount) / 100)); // SellingPrice=20000, QuantityPricing discount = 10% for quantity=20-40, 25% for q=30-50
+                b.csid4.Amount.should_be(b.csid4.Quantity * (b.blanket3.SellingPrice * (100 - b.csid4.Discount) / 100)); // SellingPrice=30000, not existed QuantityPricing for Q=10
             };
 
             it["validates_receivables_and_receiptvouchers"] = () =>
             {
+                b._cashSalesInvoiceService.PaidObject(b.csi3, b.csi3.Total - 50000, 50000, b._cashBankService, b._receivableService, b._receiptVoucherService, b._receiptVoucherDetailService, b._contactService, b._cashMutationService, b._cashSalesReturnService,
+                                                      b._generalLedgerJournalService, b._accountService, b._closingService);
+
                 Receivable receivable1 = b._receivableService.GetObjectBySource(Core.Constants.Constant.ReceivableSource.CashSalesInvoice, b.csi1.Id);
                 Receivable receivable2 = b._receivableService.GetObjectBySource(Core.Constants.Constant.ReceivableSource.CashSalesInvoice, b.csi2.Id);
                 Receivable receivable3 = b._receivableService.GetObjectBySource(Core.Constants.Constant.ReceivableSource.CashSalesInvoice, b.csi3.Id);
@@ -96,7 +111,7 @@ namespace TestValidation
                 {
                     receiptVoucherDetail.IsConfirmed.should_be_true();
                     receivable2.RemainingAmount.should_be(b.csi2.Total - (receiptVoucherDetail.Amount + receivable2.AllowanceAmount));
-                    
+
                 }
 
                 foreach (var receiptVoucherDetail in receiptVoucherDetails3)
@@ -108,13 +123,15 @@ namespace TestValidation
 
                 receiptVoucherDetails1.Count().should_be(1);
                 receiptVoucherDetails2.Count().should_be(1);
-                receiptVoucherDetails3.Count().should_be(0);
+                receiptVoucherDetails3.Count().should_be(1);
             };
 
             context["when_unpaid_cashsalesinvoice"] = () =>
             {
                 before = () =>
                 {
+                    b._cashSalesInvoiceService.PaidObject(b.csi3, b.csi3.Total - 50000, 50000, b._cashBankService, b._receivableService, b._receiptVoucherService, b._receiptVoucherDetailService, b._contactService, b._cashMutationService, b._cashSalesReturnService,
+                                                          b._generalLedgerJournalService, b._accountService, b._closingService);
                     b._cashSalesInvoiceService.UnpaidObject(b.csi1, b._receiptVoucherService, b._receiptVoucherDetailService, b._cashBankService, b._receivableService, b._cashMutationService,
                                                             b._cashSalesReturnService, b._generalLedgerJournalService, b._accountService, b._closingService);
                     b._cashSalesInvoiceService.UnpaidObject(b.csi2, b._receiptVoucherService, b._receiptVoucherDetailService, b._cashBankService, b._receivableService, b._cashMutationService,
@@ -123,7 +140,7 @@ namespace TestValidation
                                                             b._cashSalesReturnService, b._generalLedgerJournalService, b._accountService, b._closingService);
                     b.csi1.Errors.Count().should_not_be(0); // Already have CashSalesReturn
                     b.csi2.Errors.Count().should_be(0);
-                    b.csi3.Errors.Count().should_not_be(0);
+                    b.csi3.Errors.Count().should_be(0);
                     b.csid1.Errors.Count().should_be(0);
                     b.csid2.Errors.Count().should_be(0);
                     b.csid3.Errors.Count().should_be(0);
@@ -189,15 +206,15 @@ namespace TestValidation
                 {
                     b.csr1.IsPaid.should_be_true();
 
-                    b.csr1.Total.should_be(b.csrd1.Quantity * (b.csid1.Amount/b.csid1.Quantity)); // Item price = 10000
+                    b.csr1.Total.should_be(b.csrd1.Quantity * (b.csid1.Amount / b.csid1.Quantity)); // Item price = 10000
                 };
 
                 it["validates_payables_and_paymentvouchers"] = () =>
                 {
                     Payable payable1 = b._payableService.GetObjectBySource(Core.Constants.Constant.PayableSource.CashSalesReturn, b.csr1.Id);
-                    
+
                     IList<PaymentVoucherDetail> paymentVoucherDetails1 = b._paymentVoucherDetailService.GetObjectsByPayableId(payable1.Id);
-                    
+
                     foreach (var paymentVoucherDetail in paymentVoucherDetails1)
                     {
                         paymentVoucherDetail.IsConfirmed.should_be_true();
@@ -205,14 +222,14 @@ namespace TestValidation
                     }
 
                     paymentVoucherDetails1.Count().should_be(1);
-                    
+
                 };
 
                 it["validates_unpaid_cashsalesinvoice_with_cashsalesreturn"] = () =>
                 {
                     b._cashSalesInvoiceService.UnpaidObject(b.csi1, b._receiptVoucherService, b._receiptVoucherDetailService, b._cashBankService, b._receivableService, b._cashMutationService,
                                                             b._cashSalesReturnService, b._generalLedgerJournalService, b._accountService, b._closingService);
-                    
+
                     b.csi1.Errors.Count().should_not_be(0);
                 };
 
@@ -238,7 +255,7 @@ namespace TestValidation
                             b._cashSalesReturnService.UnconfirmObject(b.csr1, b._cashSalesReturnDetailService, b._cashSalesInvoiceDetailService, b._payableService,
                                                                       b._paymentVoucherDetailService, b._warehouseItemService, b._warehouseService, b._itemService,
                                                                       b._barringService, b._stockMutationService, b._closingService);
-                            
+
                             b.csr1.Errors.Count().should_be(0);
 
                             b.csrd1.Errors.Count().should_be(0);

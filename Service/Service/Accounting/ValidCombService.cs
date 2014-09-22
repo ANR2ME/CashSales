@@ -62,6 +62,21 @@ namespace Service.Service
             return _repository.DeleteObject(Id);
         }
 
-        
+        public ValidComb CalculateTotalAmount(ValidComb validComb, IAccountService _accountService, IClosingService _closingService)
+        {
+            decimal totalAmount = 0;
+
+            IList<Account> subnodeaccounts = _accountService.GetQueryable().Where(x => x.ParentId == validComb.AccountId).ToList();
+            if (subnodeaccounts.Any())
+            {
+                foreach (var subnode in subnodeaccounts)
+                {
+                    totalAmount += FindOrCreateObjectByAccountAndClosing(subnode.Id, validComb.ClosingId).Amount;
+                }
+                validComb.Amount = totalAmount;
+                UpdateObject(validComb, _accountService, _closingService);
+            }
+            return validComb;
+        }
     }
 }

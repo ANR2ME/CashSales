@@ -78,32 +78,69 @@ namespace TestValidation
                 {
                     // Left Hand Side
                     // Assets
-                    Account inventory = d._accountService.GetObjectByLegacyCode(Core.Constants.Constant.AccountLegacyCode.Inventory);
+                    Account Asset, CashBankAccount, AccountReceivable, GBCHReceivable, Inventory;
+
+                    Inventory = d._accountService.GetObjectByLegacyCode(Core.Constants.Constant.AccountLegacyCode.Inventory);
+                    GBCHReceivable = d._accountService.GetObjectByLegacyCode(Core.Constants.Constant.AccountLegacyCode.GBCHReceivable);
+                    AccountReceivable = d._accountService.GetObjectByLegacyCode(Core.Constants.Constant.AccountLegacyCode.AccountReceivable);
+                    Account kontan = d._accountService.GetObjectByLegacyCode(Core.Constants.Constant.AccountLegacyCode.CashBank + d.cashBank1.Id);
+                    Account bca = d._accountService.GetObjectByLegacyCode(Core.Constants.Constant.AccountLegacyCode.CashBank + d.cashBank2.Id);
+                    CashBankAccount = d._accountService.GetObjectByLegacyCode(Core.Constants.Constant.AccountLegacyCode.CashBank);
+                    Asset = d._accountService.GetObjectByLegacyCode(Core.Constants.Constant.AccountLegacyCode.Asset);
+
                     decimal InventoryAmount = (d.sad1.Price * d.sad1.Quantity) + (d.sad2.Price * d.sad2.Quantity) +
                                               (d.sad3.Price * d.sad3.Quantity) + (d.sad4.Price * d.sad4.Quantity) +
                                               (d.sad5.Price * d.sad5.Quantity);
-                    Account kontan = d._accountService.GetObjectByLegacyCode(Core.Constants.Constant.AccountLegacyCode.CashBank + d.cashBank1.Id);
+                    decimal GBCHReceivableAmount = 0;
+                    decimal ReceivableAmount = (d.receiptVoucher1.TotalAmount + d.receiptVoucher2.TotalAmount + d.receiptVoucher3.TotalAmount) * (-1);
                     decimal KontanAmount = d.receiptVoucher1.TotalAmount + d.receiptVoucher2.TotalAmount + d.receiptVoucher3.TotalAmount +
-                                           d.cashBankAdjustment.Amount - d.cashBankAdjustment2.Amount - d.cashBankMutation.Amount;
-                    Account bca = d._accountService.GetObjectByLegacyCode(Core.Constants.Constant.AccountLegacyCode.CashBank + d.cashBank2.Id);
+                                           d.cashBankAdjustment.Amount + d.cashBankAdjustment2.Amount - d.cashBankMutation.Amount;
                     decimal bcaAmount = d.cashBankMutation.Amount;
+                    decimal cashBankAmount = KontanAmount + bcaAmount;
+                    decimal AssetAmount = InventoryAmount + ReceivableAmount + GBCHReceivableAmount + cashBankAmount;
+
                     // Expense
+                    Account Expense, CashBankAdjustmentExpense, COGS, Discount, SalesAllowance, StockAdjustmentExpense;
 
+                    StockAdjustmentExpense = d._accountService.GetObjectByLegacyCode(Core.Constants.Constant.AccountLegacyCode.StockAdjustmentExpense);
+                    SalesAllowance = d._accountService.GetObjectByLegacyCode(Core.Constants.Constant.AccountLegacyCode.SalesAllowance);
+                    Discount = d._accountService.GetObjectByLegacyCode(Core.Constants.Constant.AccountLegacyCode.Discount);
+                    COGS = d._accountService.GetObjectByLegacyCode(Core.Constants.Constant.AccountLegacyCode.COGS);
+                    CashBankAdjustmentExpense = d._accountService.GetObjectByLegacyCode(Core.Constants.Constant.AccountLegacyCode.CashBankAdjustmentExpense);
+                    Expense = d._accountService.GetObjectByLegacyCode(Core.Constants.Constant.AccountLegacyCode.Expense);
+
+                    decimal StockAdjustmentExpenseAmount = 0;
+                    decimal SalesAllowanceAmount = 0;
+                    decimal DiscountAmount = 0;
+                    decimal COGSAmount = 0;
+                    decimal CBAdjustmentExpenseAmount = Math.Abs(d.cashBankAdjustment2.Amount);
+                    decimal ExpenseAmount = CBAdjustmentExpenseAmount + COGSAmount + DiscountAmount + SalesAllowanceAmount +
+                                            StockAdjustmentExpenseAmount;
                     // Right Hand Side
-                    Account AccountReceivable = d._accountService.GetObjectByLegacyCode(Core.Constants.Constant.AccountLegacyCode.AccountReceivable);
-                    decimal ReceivableAmount = d.receiptVoucher1.TotalAmount + d.receiptVoucher2.TotalAmount + d.receiptVoucher3.TotalAmount;
+                    Account Liability, AccountPayable, GBCHPayable, GoodsPendingClearance;
+                    Account Equity, OwnersEquity, EquityAdjustment;
+                    Account Revenue;
 
-                    Account EquityAdjustment = d._accountService.GetObjectByLegacyCode(Core.Constants.Constant.AccountLegacyCode.EquityAdjustment);
+                    EquityAdjustment = d._accountService.GetObjectByLegacyCode(Core.Constants.Constant.AccountLegacyCode.EquityAdjustment);
                     decimal EquityAdjustmentAmount = (d.sad1.Price * d.sad1.Quantity) + (d.sad2.Price * d.sad2.Quantity) +
                                                      (d.sad3.Price * d.sad3.Quantity) + (d.sad4.Price * d.sad4.Quantity) +
-                                                     (d.sad5.Price * d.sad5.Quantity) + d.cashBankAdjustment.Amount - d.cashBankAdjustment2.Amount;
+                                                     (d.sad5.Price * d.sad5.Quantity) + d.cashBankAdjustment.Amount;
 
-                    d._validCombService.FindOrCreateObjectByAccountAndClosing(inventory.Id, d.thisMonthClosing.Id).Amount.should_be(InventoryAmount);
+                    OwnersEquity = d._accountService.GetObjectByLegacyCode(Core.Constants.Constant.AccountLegacyCode.OwnersEquity);
+                    decimal OwnersEquityAmount = EquityAdjustmentAmount;
+                    Equity = d._accountService.GetObjectByLegacyCode(Core.Constants.Constant.AccountLegacyCode.Equity);
+                    decimal EquityAmount = OwnersEquityAmount;
+
+                    d._validCombService.FindOrCreateObjectByAccountAndClosing(Inventory.Id, d.thisMonthClosing.Id).Amount.should_be(InventoryAmount);
                     d._validCombService.FindOrCreateObjectByAccountAndClosing(kontan.Id, d.thisMonthClosing.Id).Amount.should_be(KontanAmount);
                     d._validCombService.FindOrCreateObjectByAccountAndClosing(bca.Id, d.thisMonthClosing.Id).Amount.should_be(bcaAmount);
-
+                    d._validCombService.FindOrCreateObjectByAccountAndClosing(CashBankAccount.Id, d.thisMonthClosing.Id).Amount.should_be(cashBankAmount);
                     d._validCombService.FindOrCreateObjectByAccountAndClosing(AccountReceivable.Id, d.thisMonthClosing.Id).Amount.should_be(ReceivableAmount);
+                    d._validCombService.FindOrCreateObjectByAccountAndClosing(Asset.Id, d.thisMonthClosing.Id).Amount.should_be(AssetAmount);
+
                     d._validCombService.FindOrCreateObjectByAccountAndClosing(EquityAdjustment.Id, d.thisMonthClosing.Id).Amount.should_be(EquityAdjustmentAmount);
+                    d._validCombService.FindOrCreateObjectByAccountAndClosing(OwnersEquity.Id, d.thisMonthClosing.Id).Amount.should_be(OwnersEquityAmount);
+                    d._validCombService.FindOrCreateObjectByAccountAndClosing(Equity.Id, d.thisMonthClosing.Id).Amount.should_be(EquityAmount);
                 };
             };
         }

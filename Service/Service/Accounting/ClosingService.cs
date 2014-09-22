@@ -109,41 +109,21 @@ namespace Service.Service
                     _validCombService.UpdateObject(validComb, _accountService, this);
                 }
 
-                // Count validComb for all parent Nodes
-                var groupLeafAccounts = _accountService.GetLeafObjects().GroupBy(x => x.ParentId)
-                                                                        .Select(grp => grp.ToList()).ToList();
-                FillValidComb(groupLeafAccounts, closing, _accountService, _validCombService);
+                var groupNodeAccounts = _accountService.GetQueryable().Where(x => !x.IsLeaf).OrderByDescending(x => x.Level);
+                foreach (var groupNode in groupNodeAccounts)
+                {
+                    FillValidComb(groupNode, closing, _accountService, _validCombService);
+                }
 
                 _repository.CloseObject(closing);
             }
             return closing;
         }
 
-        private void FillValidComb(IList<List<Account>> nodeAccounts, Closing closing, IAccountService _accountService, IValidCombService _validCombService)
+        private void FillValidComb(Account nodeAccount, Closing closing, IAccountService _accountService, IValidCombService _validCombService)
         {
-            foreach(var group in nodeAccounts)
-            {
-                decimal totalNodeAmount = 0;
-                foreach(var node in group)
-                {
-                    ValidComb validComb = _validCombService.FindOrCreateObjectByAccountAndClosing(node.Id, closing.Id);
-                    totalNodeAmount += validComb.Amount;
-                }
-                if (group.First().ParentId == null) { return; }
-                int AccountId = (int)group.First().ParentId ;
-                ValidComb nodeValidComb = _validCombService.FindOrCreateObjectByAccountAndClosing(AccountId, closing.Id);
-                nodeValidComb.Amount = totalNodeAmount;
-                _validCombService.UpdateObject(nodeValidComb, _accountService, this);
-
-                Account currentAccount = _accountService.GetObjectById(AccountId);
-                if (currentAccount.ParentId != null)
-                {
-                    var parentNodeAccounts = _accountService.GetQueryable().Where(x => x.ParentId == currentAccount.ParentId).ToList()
-                                                            .GroupBy(x => x.ParentId).Select(grp => grp.ToList()).ToList();
-
-                    FillValidComb(parentNodeAccounts, closing, _accountService, _validCombService);
-                }
-            }
+            ValidComb validComb = _validCombService.FindOrCreateObjectByAccountAndClosing(nodeAccount.Id, closing.Id);
+            _validCombService.CalculateTotalAmount(validComb, _accountService, this);
         }
 
         public Closing OpenObject(Closing closing, IAccountService _accountService, IValidCombService _validCombService)

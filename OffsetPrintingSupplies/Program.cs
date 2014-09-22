@@ -81,7 +81,18 @@ namespace OffsetPrintingSupplies
 
         public static void DataFunction(DataBuilder d)
         {
-            d.PopulateData();
+            // d.PopulateData();
+
+            d.PopulateUserRole();
+            d.PopulateWarehouse();
+            d.PopulateItem(); // 1. Stock Adjustment
+            d.PopulateSingles();
+            d.PopulateCashBank(); // 2. CashBankAdjustment, 3. CashBankMutation, 4. CashBankAdjustment (Negative)
+
+            d.PopulateSales(); // 5. 3x Cash Invoice
+            d.PopulateCashSales();
+
+            d.PopulateValidComb(); // 7. Closing
 
             // End of Test
             Console.WriteLine("Press any key to stop...");

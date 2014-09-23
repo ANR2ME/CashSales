@@ -9,11 +9,11 @@
     }
 
     function ReloadGrid() {
-        $("#list").setGridParam({ url: base_url + 'WarehouseMutationOrder/GetList', postData: { filters: null }, page: 'first' }).trigger("reloadGrid");
+        $("#list").setGridParam({ url: base_url + 'WarehouseMutationOrder/GetList', postData: { filters: null }, page: 1 }).trigger("reloadGrid");
     }
 
     function ReloadGridDetail() {
-        $("#listdetail").setGridParam({ url: base_url + 'WarehouseMutationOrder/GetListDetail?Id=' + $("#id").val(), postData: { filters: null }, page: 'first' }).trigger("reloadGrid");
+        $("#listdetail").setGridParam({ url: base_url + 'WarehouseMutationOrder/GetListDetail?Id=' + $("#id").val(), postData: { filters: null } }).trigger("reloadGrid");
     }
 
     function ClearData() {
@@ -413,8 +413,8 @@
                   { name: 'item', index: 'item', width: 80 },
                   { name: 'quantity', index: 'quantity', width: 100, formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: false },
         ],
-        //page: '1',
-        //pager: $('#pagerdetail'),
+        page: '1',
+        pager: $('#pagerdetail'),
         rowNum: 20,
         rowList: [20, 30, 60],
         sortname: 'Code',

@@ -9,11 +9,11 @@
 	}
 
 	function ReloadGrid() {
-		$("#list").setGridParam({ url: base_url + 'RetailSalesInvoice/GetList', postData: { filters: null }, page: 'first' }).trigger("reloadGrid");
+		$("#list").setGridParam({ url: base_url + 'RetailSalesInvoice/GetList', postData: { filters: null }, page: 1 }).trigger("reloadGrid");
 	}
 
 	function ReloadGridDetail() {
-		$("#listdetail").setGridParam({ url: base_url + 'RetailSalesInvoice/GetListDetail?Id=' + $("#id").val(), postData: { filters: null }, page: 'first' }).trigger("reloadGrid");
+		$("#listdetail").setGridParam({ url: base_url + 'RetailSalesInvoice/GetListDetail?Id=' + $("#id").val(), postData: { filters: null } }).trigger("reloadGrid");
 	}
 
 	function ClearData() {
@@ -631,8 +631,8 @@
                   { name: 'ismanualpriceassignment', index: 'ismanualpriceassignment', width: 80, boolean: { defaultValue: 'false' } },
                   { name: 'assignedprice', index: 'assignedprice', width: 100, formatter: 'currency', formatoptions: { decimalSeparator: ".", thousandsSeparator: ",", decimalPlaces: 2, prefix: "", suffix: "", defaultValue: '0.00' }, sortable: false },
 		],
-		//page: '1',
-		//pager: $('#pagerdetail'),
+		page: '1',
+		pager: $('#pagerdetail'),
 		rowNum: 20,
 		rowList: [20, 30, 60],
 		sortname: 'Code',

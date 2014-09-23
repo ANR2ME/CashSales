@@ -9,11 +9,11 @@
     }
 
     function ReloadGrid() {
-        $("#list").setGridParam({ url: base_url + 'PaymentVoucher/GetList', postData: { filters: null }, page: 'first' }).trigger("reloadGrid");
+        $("#list").setGridParam({ url: base_url + 'PaymentVoucher/GetList', postData: { filters: null }, page: 1 }).trigger("reloadGrid");
     }
 
     function ReloadGridDetail() {
-        $("#listdetail").setGridParam({ url: base_url + 'PaymentVoucher/GetListDetail?Id=' + $("#id").val(), postData: { filters: null }, page: 'first' }).trigger("reloadGrid");
+        $("#listdetail").setGridParam({ url: base_url + 'PaymentVoucher/GetListDetail?Id=' + $("#id").val(), postData: { filters: null } }).trigger("reloadGrid");
     }
 
     function ClearData() {
@@ -593,8 +593,8 @@
                   { name: 'amount', index: 'amount', width: 100, formatter: 'currency', formatoptions: { decimalSeparator: ".", thousandsSeparator: ",", decimalPlaces: 0, prefix: "", suffix: "", defaultValue: '0.00' }, sortable: false },
                   { name: 'description', index: 'description', width: 200, sortable: false }
         ],
-        //page: '1',
-        //pager: $('#pagerdetail'),
+        page: '1',
+        pager: $('#pagerdetail'),
         rowNum: 20,
         rowList: [20, 30, 60],
         sortname: 'Code',

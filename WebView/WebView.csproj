@@ -61,14 +61,14 @@
     </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Recaptcha">
-      <HintPath>..\..\..\Johna\OffsetPrintingSupplies\packages\References\Recaptcha.dll</HintPath>
+      <HintPath>..\packages\References\Recaptcha.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Data.Entity" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Linq.Dynamic">
-      <HintPath>..\..\..\Johna\OffsetPrintingSupplies\packages\References\System.Linq.Dynamic.dll</HintPath>
+      <HintPath>..\packages\References\System.Linq.Dynamic.dll</HintPath>
     </Reference>
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />

@@ -143,6 +143,8 @@ namespace WebView
             _userMenuService.CreateObject(Constant.MenuName.Closing, Constant.MenuGroupName.Report);
             _userMenuService.CreateObject(Constant.MenuName.GeneralLedger, Constant.MenuGroupName.Report);
             _userMenuService.CreateObject(Constant.MenuName.ValidComb, Constant.MenuGroupName.Report);
+            _userMenuService.CreateObject(Constant.MenuName.BalanceSheet, Constant.MenuGroupName.Report);
+            _userMenuService.CreateObject(Constant.MenuName.IncomeStatement, Constant.MenuGroupName.Report);
             
             _userMenuService.CreateObject(Constant.MenuName.User, Constant.MenuGroupName.Setting);
             _userMenuService.CreateObject(Constant.MenuName.UserAccessRight, Constant.MenuGroupName.Setting);

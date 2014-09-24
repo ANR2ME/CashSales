@@ -63,10 +63,13 @@ namespace Core.Constants
             public static string Closing = "Closing";
             public static string GeneralLedger = "GeneralLedger";
             public static string ValidComb = "ValidComb";
+            public static string BalanceSheet = "BalanceSheet";
+            public static string IncomeStatement = "IncomeStatement";
+            
             public static string User = "User";
             public static string UserAccessRight = "User Access Right";
             public static string CompanyInfo = "Company Info";
-
+            
             //public static string Stock = "Stock";
             public static string Sales = "Sales";
             public static string TopSales = "Top Sales";

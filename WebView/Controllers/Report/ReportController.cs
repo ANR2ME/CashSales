@@ -125,7 +125,7 @@ namespace WebView.Controllers
             var rd = new ReportDocument();
 
             //Loading Report
-            rd.Load(Server.MapPath("~/") + "Reports/Item.rpt");
+            rd.Load(Server.MapPath("~/") + "Reports/General/Item.rpt");
 
             // Setting report data source
             rd.SetDataSource(query);
@@ -192,7 +192,7 @@ namespace WebView.Controllers
             var rd = new ReportDocument();
 
             //Loading Report
-            rd.Load(Server.MapPath("~/") + "Reports/ProfitLoss.rpt");
+            rd.Load(Server.MapPath("~/") + "Reports/General/ProfitLoss.rpt");
 
             // Setting report data source
             rd.SetDataSource(query);
@@ -243,7 +243,7 @@ namespace WebView.Controllers
             if (!query.Any()) return Content("");
 
             //Loading Report
-            rd.Load(Server.MapPath("~/") + "Reports/Sales.rpt");
+            rd.Load(Server.MapPath("~/") + "Reports/General/Sales.rpt");
 
             // Setting report data source
             rd.SetDataSource(query);
@@ -291,7 +291,7 @@ namespace WebView.Controllers
             var rd = new ReportDocument();
 
             //Loading Report
-            rd.Load(Server.MapPath("~/") + "Reports/TopSales.rpt");
+            rd.Load(Server.MapPath("~/") + "Reports/General/TopSales.rpt");
 
             // Setting report data source
             rd.SetDataSource(query);
@@ -359,7 +359,7 @@ namespace WebView.Controllers
             var rd = new ReportDocument();
 
             //Loading Report
-            rd.Load(Server.MapPath("~/") + "Reports/Funds.rpt");
+            rd.Load(Server.MapPath("~/") + "Reports/General/Funds.rpt");
 
             // Setting report data source
             rd.SetDataSource(query);
@@ -411,7 +411,7 @@ namespace WebView.Controllers
             var rd = new ReportDocument();
 
             //Loading Report
-            rd.Load(Server.MapPath("~/") + "Reports/PurchaseInvoice.rpt");
+            rd.Load(Server.MapPath("~/") + "Reports/General/PurchaseInvoice.rpt");
 
             // Setting report data source
             rd.SetDataSource(query);
@@ -457,7 +457,7 @@ namespace WebView.Controllers
             var rd = new ReportDocument();
 
             //Loading Report
-            rd.Load(Server.MapPath("~/") + "Reports/SalesInvoice.rpt");
+            rd.Load(Server.MapPath("~/") + "Reports/General/SalesInvoice.rpt");
 
             // Setting report data source
             rd.SetDataSource(query);
@@ -505,7 +505,7 @@ namespace WebView.Controllers
             var rd = new ReportDocument();
 
             //Loading Report
-            rd.Load(Server.MapPath("~/") + "Reports/SalesReturnInvoice.rpt");
+            rd.Load(Server.MapPath("~/") + "Reports/General/SalesReturnInvoice.rpt");
 
             // Setting report data source
             rd.SetDataSource(query);

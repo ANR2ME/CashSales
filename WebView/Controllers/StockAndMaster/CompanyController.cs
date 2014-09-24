@@ -131,6 +131,37 @@ namespace WebView.Controllers
              }, JsonRequestBehavior.AllowGet);
          }
 
+         public dynamic GetDefaultInfo()
+         {
+             Company model = new Company();
+             try
+             {
+                 model = _companyService.GetQueryable().FirstOrDefault();
+             }
+             catch (Exception ex)
+             {
+                 LOG.Error("GetInfo", ex);
+                 Dictionary<string, string> Errors = new Dictionary<string, string>();
+                 Errors.Add("Generic", "Error " + ex);
+
+                 return Json(new
+                 {
+                     Errors
+                 }, JsonRequestBehavior.AllowGet);
+             }
+
+             return Json(new
+             {
+                 model.Id,
+                 model.Name,
+                 model.Address,
+                 model.ContactNo,
+                 model.Logo,
+                 model.Email,
+                 model.Errors
+             }, JsonRequestBehavior.AllowGet);
+         }
+
         [HttpPost]
         public dynamic Insert(Company model)
         {

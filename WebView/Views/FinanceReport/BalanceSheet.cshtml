@@ -1,0 +1,39 @@
+﻿@{
+    ViewBag.Title = "Balance Sheet";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section Head {
+
+}
+@section Scripts {
+    <script type="text/javascript" src="@Url.Content("~/Content/apps_js/tools.js")"></script>
+    <script type="text/javascript" src="@Url.Content("~/Content/apps_js/balancesheet.js")"></script>
+}
+
+<!--  Dialog Payable Cost List -->
+<div id="summarygl" class="easyui-panel" title="Balance Sheet Report" style="width: 600px; padding: 10px 10px 10px 30px;">
+    <table width="100%" border="0">
+        <tr>
+            <td width="27%">Company</td>
+            <td colspan="3">
+                <input id="txtcompanyname" type="text" size="47" maxlength="47" align="left" value="" /></td>
+        </tr>
+        <tr>
+            <td>Period</td>
+            <td>
+                <div id="closing_div" style="text-align: left;padding:0px 0px 10px;width:343px"
+                    data-options="modal:true" title=".: Period :.">
+          
+                    <table id="closing"></table>
+                    <div id="closingpager" class="scroll" style="text-align: center;"></div>
+                </div>
+            </td>
+        <tr>
+            <td>&nbsp;</td>
+            <td><a id="btnprint" href="#" class="easyui-linkbutton" iconcls="icon-print">Print</a></td>
+        </tr>
+    </table>
+</div>
+<!-- END Dialog Payable Cost List -->
+

@@ -1022,6 +1022,7 @@
     <Content Include="Reports\Finance\BalanceSheet.rpt" />
     <Content Include="Views\FinanceReport\IncomeStatement.cshtml" />
     <Content Include="Views\FinanceReport\BalanceSheet.cshtml" />
+    <Content Include="Reports\Finance\IncomeStatement.ttx" />
     <None Include="Scripts\jquery-1.7.1.intellisense.js" />
     <Content Include="Scripts\collapsiblePanel.js" />
     <Content Include="Scripts\jquery-1.1.3.1.pack.js" />

@@ -12,6 +12,7 @@ using Validation.Validation;
 using System.Linq.Dynamic;
 using System.Data.Entity;
 using Core.DomainModel;
+using Core.Constants;
 
 namespace WebView.Controllers
 {
@@ -29,17 +30,16 @@ namespace WebView.Controllers
         public class ModelIncomeStatement
         {
             public string CompanyName { get; set; }
-            public DateTime Date { get; set; }
-            public string Title { get; set; }
-            public DateTime RangeDate { get; set; }
-            public string JenisRange { get; set; }
-            public decimal Current { get; set; }
-            public decimal Previous { get; set; }
-            public string Group { get; set; }
-            public int Level { get; set; }
-            public string GroupLevel { get; set; }
-            public string AccountCode { get; set; }
-            public string Unaudited { get; set; }
+            public DateTime BeginningDate { get; set; }
+            public DateTime EndDate { get; set; }
+            public decimal Revenue { get; set; }
+            public decimal COGS { get; set; }
+            public decimal OperationalExpenses { get; set; }
+            public decimal InterestEarning { get; set; }
+            public decimal Depreciation { get; set; }
+            public decimal Amortization { get; set; }
+            public decimal Tax { get; set; }
+            public decimal Divident { get; set; }
         }
 
         public class ModelBalanceSheet
@@ -68,9 +68,9 @@ namespace WebView.Controllers
 
         public ActionResult IncomeStatement()
         {
-            if (!AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.IncomeStatement, Core.Constants.Constant.MenuGroupName.Report))
+            if (!AuthenticationModel.IsAllowed("View", Constant.MenuName.IncomeStatement, Constant.MenuGroupName.Report))
             {
-                return Content(Core.Constants.Constant.PageViewNotAllowed);
+                return Content(Constant.PageViewNotAllowed);
             }
 
             return View();
@@ -82,30 +82,28 @@ namespace WebView.Controllers
             var company = _companyService.GetQueryable().FirstOrDefault();
             Closing closing = _closingService.GetObjectByPeriodAndYear(period, yearPeriod);
 
-            IList<ModelIncomeStatement> incomeStatements = new List<ModelIncomeStatement>();
+            ValidComb Revenue = _validCombService.FindOrCreateObjectByAccountAndClosing(_accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.Revenue).Id, closing.Id);
+            ValidComb COGS = _validCombService.FindOrCreateObjectByAccountAndClosing(_accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.COGS).Id, closing.Id);
+            // TODO
+            decimal OperationalExpensesAmount = 0, InterestEarningAmount = 0, DepreciationAmount = 0, AmortizationAmount = 0, TaxAmount = 0, DividentAmount = 0;
+ 
+            ModelIncomeStatement model = new ModelIncomeStatement()
+            {
+                CompanyName = company.Name,
+                BeginningDate = closing.BeginningPeriod.Date,
+                EndDate = closing.EndDatePeriod.Date,
+                Revenue = Revenue.Amount,
+                COGS = COGS.Amount,
+                OperationalExpenses = OperationalExpensesAmount,
+                InterestEarning = InterestEarningAmount,
+                Depreciation = DepreciationAmount,
+                Amortization = AmortizationAmount,
+                Tax = TaxAmount,
+                Divident = DividentAmount
+            };
 
-            var IncomeValidCombs = _validCombService.GetQueryable().Include("Account").Include("Closing")
-                                                    .Where(x => x.ClosingId == closing.Id && (x.Account.Group == Core.Constants.Constant.AccountGroup.Revenue || 
-                                                                                       x.Account.Group == Core.Constants.Constant.AccountGroup.Expense));
-            List<ModelIncomeStatement> query = new List<ModelIncomeStatement>();
-            query = (from obj in IncomeValidCombs
-                         select new ModelIncomeStatement()
-                         {
-                             CompanyName = company.Name,
-                             Date = closing.BeginningPeriod,
-                             Title = obj.Account.Name,
-                             RangeDate = closing.EndDatePeriod,
-                             JenisRange = "Monthly",
-                             Current = obj.Amount,
-                             Previous = obj.Amount,
-                             Group = ((obj.Account.Group == Core.Constants.Constant.AccountGroup.Expense) ? "Expense" :
-                                     (obj.Account.Group == Core.Constants.Constant.AccountGroup.Revenue) ? "Revenue" : "dll"),
-                             Level = obj.Account.Level,
-                             GroupLevel = ((obj.Account.Group == Core.Constants.Constant.AccountGroup.Expense) ? "Expense" :
-                                     (obj.Account.Group == Core.Constants.Constant.AccountGroup.Revenue) ? "Revenue" : "dll"),
-                             AccountCode = obj.Account.Code,
-                             Unaudited = "Unaudited"
-                         }).ToList();
+            List<ModelIncomeStatement> list = new List<ModelIncomeStatement>();
+            list.Add(model);
 
             var rd = new ReportDocument();
 
@@ -113,7 +111,7 @@ namespace WebView.Controllers
             rd.Load(Server.MapPath("~/") + "Reports/Finance/IncomeStatement.rpt");
 
             // Setting report data source
-            rd.SetDataSource(query);
+            rd.SetDataSource(list);
 
             var stream = rd.ExportToStream(CrystalDecisions.Shared.ExportFormatType.PortableDocFormat);
             return File(stream, "application/pdf");
@@ -121,9 +119,9 @@ namespace WebView.Controllers
 
         public ActionResult BalanceSheet()
         {
-            if (!AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.BalanceSheet, Core.Constants.Constant.MenuGroupName.Report))
+            if (!AuthenticationModel.IsAllowed("View", Constant.MenuName.BalanceSheet, Constant.MenuGroupName.Report))
             {
-                return Content(Core.Constants.Constant.PageViewNotAllowed);
+                return Content(Constant.PageViewNotAllowed);
             }
 
             return View();
@@ -134,25 +132,24 @@ namespace WebView.Controllers
             var company = _companyService.GetQueryable().FirstOrDefault();
             Closing closing = _closingService.GetObjectById(closingId);
 
-            IList<ModelIncomeStatement> incomeStatements = new List<ModelIncomeStatement>();
-
-            var IncomeValidCombs = _validCombService.GetQueryable().Include("Account").Include("Closing")
+            var balanceValidComb = _validCombService.GetQueryable().Include("Account").Include("Closing")
                                                     .Where(x => x.ClosingId == closing.Id & x.Account.Level == 2);
+
             List<ModelBalanceSheet> query = new List<ModelBalanceSheet>();
-            query = (from obj in IncomeValidCombs
+            query = (from obj in balanceValidComb
                      select new ModelBalanceSheet()
                      {
                          CompanyName = company.Name,
                          StartDate = closing.BeginningPeriod,
                          EndDate = closing.EndDatePeriod,
-                         DCNote = (obj.Account.Group == Core.Constants.Constant.AccountGroup.Asset ||
-                                  obj.Account.Group == Core.Constants.Constant.AccountGroup.Expense) ? "D" : "C",
+                         DCNote = (obj.Account.Group == Constant.AccountGroup.Asset ||
+                                  obj.Account.Group == Constant.AccountGroup.Expense) ? "D" : "C",
                          AccountName = obj.Account.Code.Substring(0, 1),
-                         AccountGroup = (obj.Account.Group == Core.Constants.Constant.AccountGroup.Asset) ? "Asset" :
-                                        (obj.Account.Group == Core.Constants.Constant.AccountGroup.Expense) ? "Expense" :
-                                        (obj.Account.Group == Core.Constants.Constant.AccountGroup.Liability) ? "Liability" :
-                                        (obj.Account.Group == Core.Constants.Constant.AccountGroup.Equity) ? "Equity" :
-                                        (obj.Account.Group == Core.Constants.Constant.AccountGroup.Revenue) ? "Revenue" : "",
+                         AccountGroup = (obj.Account.Group == Constant.AccountGroup.Asset) ? "Asset" :
+                                        (obj.Account.Group == Constant.AccountGroup.Expense) ? "Expense" :
+                                        (obj.Account.Group == Constant.AccountGroup.Liability) ? "Liability" :
+                                        (obj.Account.Group == Constant.AccountGroup.Equity) ? "Equity" :
+                                        (obj.Account.Group == Constant.AccountGroup.Revenue) ? "Revenue" : "",
                         AccountTitle = obj.Account.Name,
                         CurrentAmount = obj.Amount,
                         PrevAmount = obj.Amount,

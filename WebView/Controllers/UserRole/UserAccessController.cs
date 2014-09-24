@@ -140,7 +140,7 @@ namespace WebView.Controllers
         {
             if (!AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.UserAccessRight, Core.Constants.Constant.MenuGroupName.Setting))
             {
-                return Content(Core.Constants.Constant.PageViewNotAllowed);
+                return Content(Core.Constants.Constant.ErrorPage.PageViewNotAllowed);
             }
 
             return View();

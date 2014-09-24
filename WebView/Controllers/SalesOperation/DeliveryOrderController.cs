@@ -48,7 +48,7 @@ namespace WebView.Controllers
         {
             if (!AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.DeliveryOrder, Core.Constants.Constant.MenuGroupName.Transaction))
             {
-                return Content(Core.Constants.Constant.PageViewNotAllowed);
+                return Content(Core.Constants.Constant.ErrorPage.PageViewNotAllowed);
             }
 
             return View();

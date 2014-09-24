@@ -181,7 +181,7 @@ namespace Validation.Validation
             CashBank cashBank = _cashBankService.GetObjectById((int)cashSalesReturn.CashBankId.GetValueOrDefault());
             if (cashBank == null)
             {
-                cashSalesReturn.Errors.Add("CashBank", "Tidak valid");
+                cashSalesReturn.Errors.Add("CashBankId", "Tidak valid");
             }
             return cashSalesReturn;
         }
@@ -216,7 +216,7 @@ namespace Validation.Validation
             CashSalesInvoice cashSalesInvoice = _cashSalesInvoiceService.GetObjectById(cashSalesReturn.CashSalesInvoiceId);
             if (cashSalesInvoice == null)
             {
-                cashSalesReturn.Errors.Add("CashSalesInvoice", "Tidak valid");
+                cashSalesReturn.Errors.Add("CashSalesInvoiceId", "Tidak valid");
             }
             return cashSalesReturn;
         }

@@ -21,14 +21,14 @@ namespace Validation.Validation
             return closing;
         }
 
-        /*public Closing VIsValidYearPeriod(Closing closing)
+        public Closing VIsValidYearPeriod(Closing closing)
         {
             if (closing.YearPeriod > DateTime.Now.Year)
             {
                 closing.Errors.Add("YearPeriod", "Tidak boleh lebih besar dari tahun ini");
             }
             return closing;
-        }*/
+        }
 
         public Closing VHasBeginningPeriod(Closing closing)
         {
@@ -48,32 +48,94 @@ namespace Validation.Validation
             return closing;
         }
 
-        public Closing VCreateObject(Closing closing)
+        public Closing VHasBeenClosed(Closing closing)
         {
-            VHasBeginningPeriod(closing);
+            if (!closing.IsClosed)
+            {
+                closing.Errors.Add("Generic", "Belum tutup buku");
+            }
             return closing;
         }
 
-        public Closing VCloseObject(Closing closing)
+        public Closing VHasNotBeenClosed(Closing closing)
         {
+            if (closing.IsClosed)
+            {
+                closing.Errors.Add("Generic", "Sudah tutup buku");
+            }
+            return closing;
+        }
+
+        public Closing VIsBackToBackToPreviousClosing(Closing closing, IClosingService _closingService)
+        {
+            IList<Closing> closings = _closingService.GetQueryable().Where(x => x.Id != closing.Id).OrderByDescending(x => x.Id).ToList();
+            if (closings.Any())
+            {
+                if (closings.FirstOrDefault().EndDatePeriod.AddDays(1).Date != closing.BeginningPeriod)
+                {
+                    closing.Errors.Add("Generic", "Tanggal Beginning Date harus " + closings.FirstOrDefault().EndDatePeriod.AddDays(1).ToLongDateString());
+                }
+            }
+            return closing;
+
+            /*
+            int PreviousMonth = closing.Period == 1 ? 12 : closing.Period - 1;
+            int PreviousYear = closing.Period == 1 ? closing.YearPeriod - 1 : closing.YearPeriod;
+            Closing previousClosing = _closingService.GetObjectByPeriodAndYear(PreviousMonth, PreviousYear);
+            */
+        }
+
+        public Closing VCreateObject(Closing closing, IClosingService _closingService)
+        {
+            VHasBeginningPeriod(closing);
+            if (!isValid(closing)) { return closing; }
             VHasEndDatePeriod(closing);
+            if (!isValid(closing)) { return closing; }
+            VIsValidPeriod(closing);
+            if (!isValid(closing)) { return closing; }
+            VIsValidYearPeriod(closing);
+            if (!isValid(closing)) { return closing; }
+            VIsBackToBackToPreviousClosing(closing, _closingService);
+            if (!isValid(closing)) { return closing; }
+            VHasNotBeenClosed(closing);
+            return closing;
+        }
+
+        public Closing VCloseObject(Closing closing, IClosingService _closingService)
+        {
+            VCreateObject(closing, _closingService);
+            return closing;
+        }
+
+        public Closing VOpenObject(Closing closing)
+        {
+            VHasBeenClosed(closing);
             return closing;
         }
 
         public Closing VDeleteObject(Closing closing)
         {
+            VHasNotBeenClosed(closing);
             return closing;
         }
 
-        public bool ValidCreateObject(Closing closing)
+        public bool ValidCreateObject(Closing closing, IClosingService _closingService)
         {
-            VCreateObject(closing);
+            VCreateObject(closing, _closingService);
             return isValid(closing);
         }
 
-        public bool ValidCloseObject(Closing closing)
+        public bool ValidCloseObject(Closing closing, IClosingService _closingService)
         {
-            VCloseObject(closing);
+            closing.Errors.Clear();
+            VCloseObject(closing, _closingService);
+            return isValid(closing);
+        }
+
+        public bool ValidOpenObject(Closing closing)
+        {
+            closing.Errors.Clear();
+            VOpenObject(closing);
             return isValid(closing);
         }
 

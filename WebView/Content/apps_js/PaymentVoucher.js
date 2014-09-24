@@ -9,11 +9,11 @@
     }
 
     function ReloadGrid() {
-        $("#list").setGridParam({ url: base_url + 'PaymentVoucher/GetList', postData: { filters: null }, page: 'first' }).trigger("reloadGrid");
+        $("#list").setGridParam({ url: base_url + 'PaymentVoucher/GetList', postData: { filters: null }, page: 1 }).trigger("reloadGrid");
     }
 
     function ReloadGridDetail() {
-        $("#listdetail").setGridParam({ url: base_url + 'PaymentVoucher/GetListDetail?Id=' + $("#id").val(), postData: { filters: null }, page: 'first' }).trigger("reloadGrid");
+        $("#listdetail").setGridParam({ url: base_url + 'PaymentVoucher/GetListDetail?Id=' + $("#id").val(), postData: { filters: null } }).trigger("reloadGrid");
     }
 
     function ClearData() {
@@ -59,7 +59,7 @@
                   { name: 'code', index: 'code', width: 100 },
 				  { name: 'contactid', index: 'contactid', width: 100, hidden: true },
                   { name: 'contact', index: 'contact', width: 100 },
-                  { name: 'totalamount', index: 'totalamount', width: 100, formatter: 'currency', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: false },
+                  { name: 'totalamount', index: 'totalamount', width: 100, formatter: 'currency', formatoptions: { decimalSeparator: ".", thousandsSeparator: ",", decimalPlaces: 0, prefix: "", suffix: "", defaultValue: '0.00' }, sortable: false },
                   { name: 'cashbankid', index: 'cashbankid', width: 100, hidden: true },
                   { name: 'cashbank', index: 'cashbank', width: 100 },
                   { name: 'isbank', index: 'isbank', width: 100, stype: 'select', editoptions: { value: ':All;true:Yes;false:No' } },
@@ -590,11 +590,11 @@
                   { name: 'code', index: 'code', width: 100, sortable: false },
                   { name: 'payableid', index: 'payableid', width: 130, sortable: false, hidden: true },
                   { name: 'payable', index: 'payable', width: 130, sortable: false },
-                  { name: 'amount', index: 'amount', width: 100, formatter: 'currency', formatoptions: { decimalSeparator: ".", thousandsSeparator: ",", decimalPlaces: 2, prefix: "", suffix: "", defaultValue: '0.00' }, sortable: false },
+                  { name: 'amount', index: 'amount', width: 100, formatter: 'currency', formatoptions: { decimalSeparator: ".", thousandsSeparator: ",", decimalPlaces: 0, prefix: "", suffix: "", defaultValue: '0.00' }, sortable: false },
                   { name: 'description', index: 'description', width: 200, sortable: false }
         ],
-        //page: '1',
-        //pager: $('#pagerdetail'),
+        page: '1',
+        pager: $('#pagerdetail'),
         rowNum: 20,
         rowList: [20, 30, 60],
         sortname: 'Code',
@@ -836,7 +836,7 @@
     			  { name: 'id', index: 'id', hidden:true, width: 50, align: "center" },
                   { name: 'name', index: 'name', width: 100 },
                   { name: 'description', index: 'description', width: 250 },
-                  { name: 'amount', index: 'amount', width: 150, align: "right", formatter: 'currency', formatoptions: { thousandsSeparator: ",", prefix: "", suffix: "", defaultValue: '0' } },
+                  { name: 'amount', index: 'amount', width: 150, align: "right", formatter: 'currency', formatoptions: { decimalSeparator: ".", thousandsSeparator: ",", decimalPlaces: 0, prefix: "", suffix: "", defaultValue: '0.00' } },
         ],
         page: '1',
         pager: $('#lookup_pager_cashbank'),
@@ -899,9 +899,9 @@
                   { name: 'payablesource', index: 'payablesource', width: 100, sortable: false },
                   { name: 'payablesourceid', index: 'payablesourceid', hidden: true, width: 100, sortable: false },
                   { name: 'payablesourcecode', index: 'payablesourcecode', width: 100, sortable: false },
-                  { name: 'amount', index: 'amount', width: 100, formatter: 'currency', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: false },
-                  { name: 'remainingamount', index: 'remainingamount', width: 100, formatter: 'currency', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: false },
-                  { name: 'pendingclearanceamount', index: 'pendingclearanceamount', width: 100, formatter: 'currency', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: false },
+                  { name: 'amount', index: 'amount', width: 100, formatter: 'currency', formatoptions: { decimalSeparator: ".", thousandsSeparator: ",", decimalPlaces: 0, prefix: "", suffix: "", defaultValue: '0.00' }, sortable: false },
+                  { name: 'remainingamount', index: 'remainingamount', width: 100, formatter: 'currency', formatoptions: { decimalSeparator: ".", thousandsSeparator: ",", decimalPlaces: 0, prefix: "", suffix: "", defaultValue: '0.00' }, sortable: false },
+                  { name: 'pendingclearanceamount', index: 'pendingclearanceamount', width: 100, formatter: 'currency', formatoptions: { decimalSeparator: ".", thousandsSeparator: ",", decimalPlaces: 0, prefix: "", suffix: "", defaultValue: '0.00' }, sortable: false },
                   { name: 'duedate', index: 'duedate', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' }, sortable: false },
         ],
         page: '1',

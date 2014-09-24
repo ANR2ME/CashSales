@@ -60,7 +60,8 @@ namespace Service.Service
                                                 IRetailSalesInvoiceDetailService _retailSalesInvoiceDetailService, IContactService _contactService,
                                                 IPriceMutationService _priceMutationService, IReceivableService _receivableService, 
                                                 IRetailSalesInvoiceService _retailSalesInvoiceService, IWarehouseItemService _warehouseItemService,
-                                                IWarehouseService _warehouseService, IItemService _itemService, IBarringService _barringService, IStockMutationService _stockMutationService)
+                                                IWarehouseService _warehouseService, IItemService _itemService, IBarringService _barringService,
+                                                IStockMutationService _stockMutationService, IClosingService _closingService)
         {
             retailSalesInvoice.ContactId = ContactId;
             retailSalesInvoice.ConfirmationDate = ConfirmationDate;
@@ -93,7 +94,7 @@ namespace Service.Service
         public RetailSalesInvoice UnconfirmObject(RetailSalesInvoice retailSalesInvoice, IRetailSalesInvoiceDetailService _retailSalesInvoiceDetailService,
                                                   IReceivableService _receivableService, IReceiptVoucherDetailService _receiptVoucherDetailService,
                                                   IWarehouseItemService _warehouseItemService, IWarehouseService _warehouseService, IItemService _itemService, 
-                                                  IBarringService _barringService, IStockMutationService _stockMutationService)
+                                                  IBarringService _barringService, IStockMutationService _stockMutationService, IClosingService _closingService)
         {
             if (_validator.ValidUnconfirmObject(retailSalesInvoice, _retailSalesInvoiceDetailService, _receivableService, _receiptVoucherDetailService))
             {
@@ -111,8 +112,8 @@ namespace Service.Service
         }
 
         public RetailSalesInvoice PaidObject(RetailSalesInvoice retailSalesInvoice, decimal AmountPaid, ICashBankService _cashBankService, IReceivableService _receivableService, 
-                                             IReceiptVoucherService _receiptVoucherService, IReceiptVoucherDetailService _receiptVoucherDetailService, 
-                                             IContactService _contactService, ICashMutationService _cashMutationService)
+                                             IReceiptVoucherService _receiptVoucherService, IReceiptVoucherDetailService _receiptVoucherDetailService,  IContactService _contactService,
+                                             ICashMutationService _cashMutationService, IGeneralLedgerJournalService _generalLedgerJournalService, IAccountService _accountService, IClosingService _closingService)
         {
             retailSalesInvoice.AmountPaid = AmountPaid;
             if (_validator.ValidPaidObject(retailSalesInvoice, _cashBankService, _receiptVoucherService))
@@ -136,13 +137,15 @@ namespace Service.Service
                 ReceiptVoucherDetail receiptVoucherDetail = _receiptVoucherDetailService.CreateObject(receiptVoucher.Id, receivable.Id, (decimal)retailSalesInvoice.AmountPaid.GetValueOrDefault(), 
                                                                             "Automatic Payment", _receiptVoucherService, _cashBankService, _receivableService);
                 retailSalesInvoice = _repository.PaidObject(retailSalesInvoice);
-                _receiptVoucherService.ConfirmObject(receiptVoucher, (DateTime)retailSalesInvoice.ConfirmationDate, _receiptVoucherDetailService, _cashBankService, _receivableService, _cashMutationService);
+                _receiptVoucherService.ConfirmObject(receiptVoucher, (DateTime)retailSalesInvoice.ConfirmationDate, _receiptVoucherDetailService, _cashBankService,
+                                                     _receivableService, _cashMutationService, _generalLedgerJournalService, _accountService, _closingService);
             }
             return retailSalesInvoice;
         }
 
         public RetailSalesInvoice UnpaidObject(RetailSalesInvoice retailSalesInvoice, IReceiptVoucherService _receiptVoucherService, IReceiptVoucherDetailService _receiptVoucherDetailService,
-                                               ICashBankService _cashBankService, IReceivableService _receivableService, ICashMutationService _cashMutationService)
+                                               ICashBankService _cashBankService, IReceivableService _receivableService, ICashMutationService _cashMutationService,
+                                               IGeneralLedgerJournalService _generalLedgerJournalService, IAccountService _accountService, IClosingService _closingService)
         {
             if (_validator.ValidUnpaidObject(retailSalesInvoice))
             {
@@ -153,7 +156,8 @@ namespace Service.Service
                     if (receiptVoucher.ContactId == retailSalesInvoice.ContactId)
                     {
                         receiptVoucher.Errors = new Dictionary<string, string>();
-                        _receiptVoucherService.UnconfirmObject(receiptVoucher, _receiptVoucherDetailService, _cashBankService, _receivableService, _cashMutationService);
+                        _receiptVoucherService.UnconfirmObject(receiptVoucher, _receiptVoucherDetailService, _cashBankService, _receivableService,
+                                                               _cashMutationService, _generalLedgerJournalService, _accountService, _closingService);
 
                         IList<ReceiptVoucherDetail> receiptVoucherDetails = _receiptVoucherDetailService.GetObjectsByReceiptVoucherId(receiptVoucher.Id);
                         foreach (var receiptVoucherDetail in receiptVoucherDetails)

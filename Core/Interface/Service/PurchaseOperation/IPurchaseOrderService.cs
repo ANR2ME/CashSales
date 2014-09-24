@@ -24,7 +24,7 @@ namespace Core.Interface.Service
         bool DeleteObject(int Id);
         PurchaseOrder ConfirmObject(PurchaseOrder purchaseOrder, DateTime ConfirmationDate, IPurchaseOrderDetailService _purchaseOrderDetailService,
                                     IStockMutationService _stockMutationService, IItemService _itemService, IBarringService _barringService,
-                                    IWarehouseItemService _warehouseItemService, IPurchaseOrderService _purchaseOrderService);
+                                    IWarehouseItemService _warehouseItemService);
         PurchaseOrder UnconfirmObject(PurchaseOrder purchaseOrder, IPurchaseOrderDetailService _purchaseOrderDetailService, IPurchaseReceivalService _purchaseReceivalService,
                                     IPurchaseReceivalDetailService _purchaseReceivalDetailService, IStockMutationService _stockMutationService,
                                     IItemService _itemService, IBarringService _barringService, IWarehouseItemService _warehouseItemService);

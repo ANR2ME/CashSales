@@ -9,11 +9,11 @@
 	}
 
 	function ReloadGrid() {
-		$("#list").setGridParam({ url: base_url + 'CashSalesInvoice/GetList', postData: { filters: null }, page: 'first' }).trigger("reloadGrid");
+		$("#list").setGridParam({ url: base_url + 'CashSalesInvoice/GetList', postData: { filters: null }, page: 1 }).trigger("reloadGrid");
 	}
 
 	function ReloadGridDetail() {
-		$("#listdetail").setGridParam({ url: base_url + 'CashSalesInvoice/GetListDetail?Id=' + $("#id").val(), postData: { filters: null }, page: 'first' }).trigger("reloadGrid");
+		$("#listdetail").setGridParam({ url: base_url + 'CashSalesInvoice/GetListDetail?Id=' + $("#id").val(), postData: { filters: null } }).trigger("reloadGrid");
 	}
 
 	function onManualAssignedPrice() {
@@ -27,6 +27,31 @@
 	document.getElementById('IsManualPriceAssignment').onchange = function () {
 	    onManualAssignedPrice();
 	};
+
+	function CalcTotal() {
+	    var tot = parseFloat($('#confirmTotal').numberbox('getValue'));
+	    var disc = parseFloat($('#confirmDiscount').numberbox('getValue'));
+	    var tax = parseFloat($('#confirmTax').numberbox('getValue'));
+	    tot = (tot * (100.0 - disc) / 100.0);
+	    tot = (tot * (100.0 + tax) / 100.0);
+	    $('#confirmTotal2').numberbox('setValue', tot);
+	};
+
+	//document.getElementById('confirmDiscount').onchange = function () {
+	//    CalcTotal();
+	//};
+
+	//document.getElementById('confirmTax').onchange = function () {
+	//    CalcTotal();
+	//};
+
+	//$('#confirmDiscount').bind('keypress', function (e) {
+	//    CalcTotal();
+	//});
+
+	//$('#confirmTax').bind('keypress', function (e) {
+	//    CalcTotal();
+	//});
 
 	function ClearData() {
 		$('#Description').removeClass('errormessage');
@@ -61,11 +86,11 @@
 				  { name: 'description', index: 'description', width: 150 },
 				  { name: 'discount', index: 'discount', width: 80, decimal: { thousandsSeparator: ",", defaultValue: '0' } },
 				  { name: 'tax', index: 'tax', width: 80, decimal: { thousandsSeparator: ",", defaultValue: '0' } },
-				  { name: 'allowance', index: 'allowance', width: 80, formatter: 'currency' },
-                  { name: 'amountpaid', index: 'amountpaid', width: 80, formatter: 'currency' },
-                  { name: 'total', index: 'total', width: 80, formatter: 'currency' },
-				  { name: 'cogs', index: 'cogs', width: 80, formatter: 'currency' },
-                  { name: 'profitloss', index: 'profitloss', width: 80, formatter: 'currency' },
+				  { name: 'allowance', index: 'allowance', width: 80, formatter: 'currency', formatoptions: { decimalSeparator: ".", thousandsSeparator: ",", decimalPlaces: 0, prefix: "", suffix: "", defaultValue: '0.00' } },
+                  { name: 'amountpaid', index: 'amountpaid', width: 80, formatter: 'currency', formatoptions: { decimalSeparator: ".", thousandsSeparator: ",", decimalPlaces: 0, prefix: "", suffix: "", defaultValue: '0.00' } },
+                  { name: 'total', index: 'total', width: 80, formatter: 'currency', formatoptions: { decimalSeparator: ".", thousandsSeparator: ",", decimalPlaces: 0, prefix: "", suffix: "", defaultValue: '0.00' } },
+				  { name: 'cogs', index: 'cogs', width: 80, formatter: 'currency', formatoptions: { decimalSeparator: ".", thousandsSeparator: ",", decimalPlaces: 0, prefix: "", suffix: "", defaultValue: '0.00' } },
+                  { name: 'profitloss', index: 'profitloss', width: 80, formatter: 'currency', formatoptions: { decimalSeparator: ".", thousandsSeparator: ",", decimalPlaces: 0, prefix: "", suffix: "", defaultValue: '0.00' } },
                   { name: 'isconfirmed', index: 'isconfirmed', width: 80, boolean: { defaultValue: 'false' }, stype: 'select', editoptions: { value: ':All;true:Yes;false:No' } },
 				  { name: 'confirmationdate', index: 'confirmationdate', hidden:true, search: false, width: 120, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
 				  { name: 'cashbankid', index: 'cashbankid', width: 80, hidden:true },
@@ -299,8 +324,11 @@
 			$('#ConfirmationDate').datebox('setValue', $.datepicker.formatDate('mm/dd/yy', new Date()));
 			$('#confirmDiscount').numberbox('setValue', ret.discount);
 			$('#confirmTax').numberbox('setValue', ret.tax);
+			$('#confirmTotal').numberbox('setValue', ret.total);
+			$('#confirmTotal2').numberbox('setValue', ret.total);
 			$('#confirmCode').val(ret.code);
 			$('#idconfirm').val(ret.id);
+			CalcTotal();
 			$("#confirm_div").dialog("open");
 		} else {
 			$.messager.alert('Information', 'Please Select Data...!!', 'info');
@@ -587,23 +615,23 @@
 	$("#listdetail").jqGrid({
 		url: base_url,
 		datatype: "json",
-		colNames: ['Code', 'CashSalesInvoice Id', 'CashSalesInvoice Code', 'Item Id', 'Item Name', 'Quantity', 'Amount', 'CoGS', 'PriceMutation Id', 'Discount', 'Is Manual Price Assignment', 'Assigned Price'],
+		colNames: ['Code', 'CashSalesInvoice Id', 'CashSalesInvoice Code', 'Item Id', 'Item Name', 'Quantity', 'Amount', 'CoGS', 'PriceMutation Id', 'Manual Discount', 'Is Manual Price Assignment', 'Assigned Price'],
 		colModel: [
 				  { name: 'code', index: 'code', width: 100, sortable: false },
 				  { name: 'cashsalesinvoiceid', index: 'cashsalesinvoiceid', hidden:true, width: 130, sortable: false },
-				  { name: 'cashsalesinvoice', index: 'cashsalesinvoice', width: 150, sortable: false },
+				  { name: 'cashsalesinvoice', index: 'cashsalesinvoice', hidden:true, width: 150, sortable: false },
 				  { name: 'itemid', index: 'itemid', width: 80, hidden:true, sortable: false },
 				  { name: 'item', index: 'item', width: 80, sortable: false },
 				  { name: 'quantity', index: 'quantity', width: 100, formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: false },
-				  { name: 'amount', index: 'amount', width: 100, formatter: 'currency', formatoptions: { decimalSeparator: ".", thousandsSeparator: ",", decimalPlaces: 2, prefix: "", suffix: "", defaultValue: '0.00' }, sortable: false },
-				  { name: 'cogs', index: 'cogs', width: 100, formatter: 'currency', formatoptions: { decimalSeparator: ".", thousandsSeparator: ",", decimalPlaces: 2, prefix: "", suffix: "", defaultValue: '0.00' }, sortable: false },
+				  { name: 'amount', index: 'amount', width: 100, formatter: 'currency', formatoptions: { decimalSeparator: ".", thousandsSeparator: ",", decimalPlaces: 0, prefix: "", suffix: "", defaultValue: '0.00' }, sortable: false },
+				  { name: 'cogs', index: 'cogs', width: 100, formatter: 'currency', formatoptions: { decimalSeparator: ".", thousandsSeparator: ",", decimalPlaces: 0, prefix: "", suffix: "", defaultValue: '0.00' }, sortable: false },
 				  { name: 'pricemutationid', index: 'pricemutationid', hidden:true, width: 105, sortable: false },
                   { name: 'discount', index: 'discount', width: 100, formatter: 'currency', formatoptions: { decimalSeparator: ".", thousandsSeparator: ",", decimalPlaces: 2, prefix: "", suffix: "", defaultValue: '0.00' }, sortable: false },
                   { name: 'ismanualpriceassignment', index: 'ismanualpriceassignment', width: 165, boolean: { defaultValue: 'false' } },
-                  { name: 'assignedprice', index: 'assignedprice', width: 100, formatter: 'currency', formatoptions: { decimalSeparator: ".", thousandsSeparator: ",", decimalPlaces: 2, prefix: "", suffix: "", defaultValue: '0.00' }, sortable: false },
+                  { name: 'assignedprice', index: 'assignedprice', width: 100, formatter: 'currency', formatoptions: { decimalSeparator: ".", thousandsSeparator: ",", decimalPlaces: 0, prefix: "", suffix: "", defaultValue: '0.00' }, sortable: false },
 		],
-		//page: '1',
-		//pager: $('#pagerdetail'),
+		page: '1',
+		pager: $('#pagerdetail'),
 		rowNum: 20,
 		rowList: [20, 30, 60],
 		sortname: 'Code',
@@ -823,11 +851,13 @@
 		url: base_url,
 		datatype: "json",
 		mtype: 'GET',
-		colNames: ['Id', 'Name', 'Description'],
+		colNames: ['Id', 'Name', 'Description', 'Amount'],
 		colModel: [
-				  { name: 'id', index: 'id', width: 80, align: 'right' },
+				  { name: 'id', index: 'id', hidden:true, width: 80, align: 'right' },
 				  { name: 'name', index: 'name', width: 200 },
-				  { name: 'description', index: 'description', width: 200 }],
+				  { name: 'description', index: 'description', width: 200 },
+                  { name: 'amount', index: 'amount', width: 150, align: "right", formatter: 'currency', formatoptions: { decimalSeparator: ".", thousandsSeparator: ",", decimalPlaces: 0, prefix: "", suffix: "", defaultValue: '0.00' } },
+		],
 		page: '1',
 		pager: $('#lookup_pager_cashbank'),
 		rowNum: 20,
@@ -882,7 +912,7 @@
 		mtype: 'GET',
 		colNames: ['Id', 'Code', 'Name', 'Description'],
 		colModel: [
-				  { name: 'id', index: 'id', width: 80, align: 'right' },
+				  { name: 'id', index: 'id', hidden:true, width: 80, align: 'right' },
 				  { name: 'code', index: 'code', width: 200 },
 				  { name: 'name', index: 'name', width: 200 },
 				  { name: 'description', index: 'description', width: 200 }],
@@ -926,7 +956,8 @@
 
 	// -------------------------------------------------------Look Up item-------------------------------------------------------
 	$('#btnItem').click(function () {
-		var lookUpURL = base_url + 'MstItem/GetList';
+	    //var lookUpURL = base_url + 'MstItem/GetList';
+	    var lookUpURL = base_url + 'WarehouseItem/GetListItem?Id=' + $('#WarehouseId').val();
 		var lookupGrid = $('#lookup_table_item');
 		lookupGrid.setGridParam({
 			url: lookUpURL
@@ -938,13 +969,29 @@
 		url: base_url,
 		datatype: "json",
 		mtype: 'GET',
-		colNames: ['Id', 'SKU', 'Name', 'Item Type', 'UoM'],
+		//colNames: ['Id', 'SKU', 'Name', 'Item Type', 'UoM'],
+		//colModel: [
+		//		  { name: 'id', index: 'id', width: 80, align: 'right', hidden:true },
+		//		  { name: 'sku', index: 'sku', width: 100 },
+        //          { name: 'name', index: 'name', width: 100 },
+        //          { name: 'itemtype', index: 'itemtype', width: 120 },
+        //          { name: 'uom', index: 'uom', width: 100 },
+	    //],
+		colNames: ['ID', 'SKU', 'Item Name', 'Item Type Id', 'Item Type Name',
+                       'Category', 'Uom Id', 'UoM Name', 'Quantity', 'Pending Delivery', 'Pending Receival'
+		],
 		colModel: [
-				  { name: 'id', index: 'id', width: 80, align: 'right', hidden:true },
-				  { name: 'sku', index: 'sku', width: 100 },
-                  { name: 'name', index: 'name', width: 100 },
-                  { name: 'itemtype', index: 'itemtype', width: 120 },
+                  { name: 'id', index: 'id', width: 80, align: "center", frozen: true, hidden: true },
+                  { name: 'sku', index: 'sku', width: 80 },
+                  { name: 'item', index: 'item', width: 200, frozen: true },
+                  { name: 'itemtypeid', index: 'itemtypeid', width: 80, align: "center", hidden: true },
+                  { name: 'itemtype', index: 'itemtype', width: 200 },
+                  { name: 'category', index: 'category', width: 100, hidden: true },
+                  { name: 'uomid', index: 'uomid', width: 100, hidden: true },
                   { name: 'uom', index: 'uom', width: 100 },
+                  { name: 'quantity', index: 'quantity', width: 100, formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: false },
+                  { name: 'pendingdelivery', index: 'pendingdelivery', width: 100, formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: false },
+                  { name: 'pendingreceival', index: 'pendingreceival', width: 100, formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: false },
 		],
 		page: '1',
 		pager: $('#lookup_pager_item'),
@@ -972,8 +1019,8 @@
 		if (id) {
 			var ret = jQuery("#lookup_table_item").jqGrid('getRowData', id);
 
-			$('#ItemId').val(ret.id).data("kode", id);
-			$('#Item').val(ret.name);
+			$('#ItemId').val(ret.id).data("kode", id); //ret.id
+			$('#Item').val(ret.item); //ret.name
 
 			$('#lookup_div_item').dialog('close');
 		} else {

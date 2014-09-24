@@ -9,11 +9,11 @@
 	}
 
 	function ReloadGrid() {
-		$("#list").setGridParam({ url: base_url + 'CashSalesReturn/GetList', postData: { filters: null }, page: 'first' }).trigger("reloadGrid");
+		$("#list").setGridParam({ url: base_url + 'CashSalesReturn/GetList', postData: { filters: null }, page: 1 }).trigger("reloadGrid");
 	}
 
 	function ReloadGridDetail() {
-		$("#listdetail").setGridParam({ url: base_url + 'CashSalesReturn/GetListDetail?Id=' + $("#id").val(), postData: { filters: null }, page: 'first' }).trigger("reloadGrid");
+		$("#listdetail").setGridParam({ url: base_url + 'CashSalesReturn/GetListDetail?Id=' + $("#id").val(), postData: { filters: null } }).trigger("reloadGrid");
 	}
 
 	function ClearData() {
@@ -48,8 +48,8 @@
 				  { name: 'description', index: 'description', width: 150 },
                   { name: 'cashsalesinvoiceid', index: 'cashsalesinvoiceid', width: 125, hidden:true },
 				  { name: 'cashsalesinvoice', index: 'cashsalesinvoice', width: 155 },
-                  { name: 'allowance', index: 'allowance', width: 80, formatter: 'currency' },
-                  { name: 'total', index: 'total', width: 80, formatter: 'currency' },
+                  { name: 'allowance', index: 'allowance', width: 80, formatter: 'currency', formatter: 'currency', formatoptions: { decimalSeparator: ".", thousandsSeparator: ",", decimalPlaces: 0, prefix: "", suffix: "", defaultValue: '0.00' } },
+                  { name: 'total', index: 'total', width: 80, formatter: 'currency', formatter: 'currency', formatoptions: { decimalSeparator: ".", thousandsSeparator: ",", decimalPlaces: 0, prefix: "", suffix: "", defaultValue: '0.00' } },
                   { name: 'isconfirmed', index: 'isconfirmed', width: 80, boolean: { defaultValue: 'false' }, stype: 'select', editoptions: { value: ':All;true:Yes;false:No' } },
 				  { name: 'confirmationdate', index: 'confirmationdate', hidden:true, search: false, width: 120, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
 				  { name: 'cashbankid', index: 'cashbankid', width: 80, hidden:true },
@@ -529,18 +529,19 @@
 	$("#listdetail").jqGrid({
 		url: base_url,
 		datatype: "json",
-		colNames: ['Code', 'CashSalesReturn Id', 'CashSalesReturn Code', 'CashSalesInvoiceDetail Id', 'CashSalesInvoiceDetail Code', 'Quantity', 'TotalPrice'],
+		colNames: ['Code', 'CashSalesReturn Id', 'CashSalesReturn Code', 'CashSalesInvoiceDetail Id', 'CashSalesInvoiceDetail Code', 'Item Name', 'Quantity', 'TotalPrice'],
 		colModel: [
-				  { name: 'code', index: 'code', width: 100, sortable: false },
+				  { name: 'code', index: 'code', width: 100, hidden:true, sortable: false },
 				  { name: 'cashsalesreturnid', index: 'cashsalesreturnid', hidden:true, width: 130, sortable: false },
-				  { name: 'cashsalesreturn', index: 'cashsalesreturn', width: 140, sortable: false },
+				  { name: 'cashsalesreturn', index: 'cashsalesreturn', hidden:true, width: 140, sortable: false },
 				  { name: 'cashsalesinvoicedetailid', index: 'cashsalesinvoicedetailid', hidden:true,width: 160, sortable: false },
 				  { name: 'cashsalesinvoicedetail', index: 'cashsalesinvoicedetail', width: 185, sortable: false },
+                  { name: 'item', index: 'item', width: 100, sortable: false },
 				  { name: 'quantity', index: 'quantity', width: 100, formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: false },
-				  { name: 'totalprice', index: 'totalprice', width: 100, formatter: 'currency', formatoptions: { decimalSeparator: ".", thousandsSeparator: ",", decimalPlaces: 2, prefix: "", suffix: "", defaultValue: '0.00' }, sortable: false },
+				  { name: 'totalprice', index: 'totalprice', width: 100, formatter: 'currency', formatoptions: { decimalSeparator: ".", thousandsSeparator: ",", decimalPlaces: 0, prefix: "", suffix: "", defaultValue: '0.00' }, sortable: false },
 		],
-		//page: '1',
-		//pager: $('#pagerdetail'),
+		page: '1',
+		pager: $('#pagerdetail'),
 		rowNum: 20,
 		rowList: [20, 30, 60],
 		sortname: 'Code',
@@ -734,11 +735,13 @@
 		url: base_url,
 		datatype: "json",
 		mtype: 'GET',
-		colNames: ['Id', 'Name', 'Description'],
+		colNames: ['Id', 'Name', 'Description', 'Amount'],
 		colModel: [
 				  { name: 'id', index: 'id', width: 80, align: 'right', hidden:true },
 				  { name: 'name', index: 'name', width: 200 },
-				  { name: 'description', index: 'description', width: 200 }],
+				  { name: 'description', index: 'description', width: 200 },
+                  { name: 'amount', index: 'amount', width: 150, align: "right", formatter: 'currency', formatoptions: { decimalSeparator: ".", thousandsSeparator: ",", decimalPlaces: 0, prefix: "", suffix: "", defaultValue: '0.00' } },
+		],
 		page: '1',
 		pager: $('#lookup_pager_cashbank'),
 		rowNum: 20,
@@ -779,7 +782,7 @@
 
 	// -------------------------------------------------------Look Up CashSalesInvoice-------------------------------------------------------
 	$('#btnCashSalesInvoice').click(function () {
-		var lookUpURL = base_url + 'CashSalesInvoice/GetList';
+		var lookUpURL = base_url + 'CashSalesInvoice/GetPaidList';
 		var lookupGrid = $('#lookup_table_cashsalesinvoice');
 		lookupGrid.setGridParam({
 			url: lookUpURL
@@ -836,7 +839,7 @@
 
 	// -------------------------------------------------------Look Up cashsalesinvoicedetail-------------------------------------------------------
 	$('#btnCashSalesInvoiceDetail').click(function () {
-	    var lookUpURL = base_url + 'CashSalesInvoice/GetListDetail?Id=' + $('#CashSalesInvoiceId').val();
+	    var lookUpURL = base_url + 'CashSalesInvoice/GetPaidListDetail?Id=' + $('#CashSalesInvoiceId').val();
 		var lookupGrid = $('#lookup_table_cashsalesinvoicedetail');
 		lookupGrid.setGridParam({
 			url: lookUpURL

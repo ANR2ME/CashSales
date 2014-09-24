@@ -26,13 +26,16 @@ namespace Core.Interface.Service
         ReceiptVoucher SoftDeleteObject(ReceiptVoucher receiptVoucher, IReceiptVoucherDetailService _receiptVoucherDetailService);
         bool DeleteObject(int Id);
         ReceiptVoucher ConfirmObject(ReceiptVoucher receiptVoucher, DateTime ConfirmationDate, IReceiptVoucherDetailService _receiptVoucherDetailService,
-                                     ICashBankService _cashBankService, IReceivableService _receivableService, ICashMutationService _cashMutationService);
+                                     ICashBankService _cashBankService, IReceivableService _receivableService, ICashMutationService _cashMutationService,
+                                     IGeneralLedgerJournalService _generalLedgerJournalService, IAccountService _accountService, IClosingService _closingService);
         ReceiptVoucher UnconfirmObject(ReceiptVoucher receiptVoucher, IReceiptVoucherDetailService _receiptVoucherDetailService,
-                                       ICashBankService _cashBankService, IReceivableService _receivableService, ICashMutationService _cashMutationService);
-        ReceiptVoucher ReconcileObject(ReceiptVoucher receiptVoucher, DateTime ReconciliationDate,
-                                       IReceiptVoucherDetailService _receiptVoucherDetailService, ICashMutationService _cashMutationService,
-                                       ICashBankService _cashBankService, IReceivableService _receivableService);
+                                       ICashBankService _cashBankService, IReceivableService _receivableService, ICashMutationService _cashMutationService,
+                                       IGeneralLedgerJournalService _generalLedgerJournalService, IAccountService _accountService, IClosingService _closingService);
+        ReceiptVoucher ReconcileObject(ReceiptVoucher receiptVoucher, DateTime ReconciliationDate, IReceiptVoucherDetailService _receiptVoucherDetailService,
+                                       ICashMutationService _cashMutationService, ICashBankService _cashBankService, IReceivableService _receivableService,
+                                       IGeneralLedgerJournalService _generalLedgerJournalService, IAccountService _accountService, IClosingService _closingService);
         ReceiptVoucher UnreconcileObject(ReceiptVoucher receiptVoucher, IReceiptVoucherDetailService _receiptVoucherDetailService,
-                                         ICashMutationService _cashMutationService, ICashBankService _cashBankService, IReceivableService _receivableService);
+                                         ICashMutationService _cashMutationService, ICashBankService _cashBankService, IReceivableService _receivableService,
+                                         IGeneralLedgerJournalService _generalLedgerJournalService, IAccountService _accountService, IClosingService _closingService);
     }
 }

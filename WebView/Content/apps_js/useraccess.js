@@ -365,6 +365,7 @@
         height: 380
     });
     $("#tbl_access_master").jqGrid('navGrid', '#toolbar_lookup_table_so_container', { del: false, add: false, edit: false, search: false });
+    jQuery("#tbl_access_master").jqGrid('setFrozenColumns');
     // END Table User Access Group - Master
 
     // Table User Access Group - Transaction
@@ -458,6 +459,7 @@
         height: 380
     });
     $("#tbl_access_transaction").jqGrid('navGrid', '#toolbar_lookup_table_so_container', { del: false, add: false, edit: false, search: false });
+    jQuery("#tbl_access_transaction").jqGrid('setFrozenColumns');
     // END Table User Access Group - File
 
     // Table User Access Group - Report
@@ -545,6 +547,7 @@
         height: 380
     });
     $("#tbl_access_report").jqGrid('navGrid', '#toolbar_lookup_table_so_container', { del: false, add: false, edit: false, search: false });
+    jQuery("#tbl_access_report").jqGrid('setFrozenColumns');
     // END Table User Access Group - Report
 
     // Table User Access Group - Setting
@@ -553,8 +556,8 @@
         datatype: "json",
         mtype: 'GET',
         colNames: ['Code', 'Name', 'View', 'Create', 'Edit', 'Delete', 'Confirm', 'UnConfirm', /*'Paid', 'UnPaid', 'Reconcile', 'UnReconcile',*/ 'Print'],
-        colModel: [{ name: 'code', index: 'code', width: 50, align: 'center' },
-                  { name: 'name', index: 'name', width: 160 },
+        colModel: [{ name: 'code', index: 'code', width: 50, align: 'center', frozen:true },
+                  { name: 'name', index: 'name', width: 160, frozen:true },
                   {
                       name: 'read', index: 'read', width: 50, align: 'center', sortable: false,
                       editable: true,
@@ -632,6 +635,7 @@
         height: 380
     });
     $("#tbl_access_setting").jqGrid('navGrid', '#toolbar_lookup_table_so_container', { del: false, add: false, edit: false, search: false });
+    jQuery("#tbl_access_setting").jqGrid('setFrozenColumns');
     // END Table User Access Group - Setting
 
     function cboxIsAdmin(cellvalue, options, rowObject) {
@@ -644,8 +648,8 @@
         url: base_url + 'User/GetList',
         datatype: "json",
         colNames: ['ID', 'UserName', 'Name', 'Description', 'Is Admin'],
-        colModel: [{ name: 'id', index: 'id', width: 50 },
-                  { name: 'username', index: 'username', width: 100 },
+        colModel: [{ name: 'id', index: 'id', width: 50, frozen: true },
+                  { name: 'username', index: 'username', width: 100, frozen:true },
                   { name: 'name', index: 'name', width: 150 },
                   { name: 'description', index: 'description', width: 150 },
                   {
@@ -681,6 +685,7 @@
     });
     $("#tbl_users").jqGrid('navGrid', '#toolbar_lookup_table_so_container', { del: false, add: false, edit: false, search: false })
            .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: false });
+    jQuery("#tbl_users").jqGrid('setFrozenColumns');
     // Table User List
 
     // Save

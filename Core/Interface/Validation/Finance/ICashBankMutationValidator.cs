@@ -18,17 +18,18 @@ namespace Core.Interface.Validation
         CashBankMutation VNonNegativeNorZeroAmount(CashBankMutation cashBankMutation);
         CashBankMutation VNonNegativeNorZeroSourceCashBank(CashBankMutation cashBankMutation, ICashBankService _cashBankService);
         CashBankMutation VNonNegativeNorZeroTargetCashBank(CashBankMutation cashBankMutation, ICashBankService _cashBankService);
+        CashBankMutation VGeneralLedgerPostingHasNotBeenClosed(CashBankMutation cashBankMutation, IClosingService _closingService, int CaseConfirmUnconfirm);
         CashBankMutation VCreateObject(CashBankMutation cashBankMutation, ICashBankService _cashBankService);
         CashBankMutation VUpdateObject(CashBankMutation cashBankMutation, ICashBankService _cashBankService);
         CashBankMutation VDeleteObject(CashBankMutation cashBankMutation);
         CashBankMutation VHasConfirmationDate(CashBankMutation cashBankMutation);
-        CashBankMutation VConfirmObject(CashBankMutation cashBankMutation, ICashBankService _cashBankService);
-        CashBankMutation VUnconfirmObject(CashBankMutation cashBankMutation, ICashBankService _cashBankService);
+        CashBankMutation VConfirmObject(CashBankMutation cashBankMutation, ICashBankService _cashBankService, IClosingService _closingService);
+        CashBankMutation VUnconfirmObject(CashBankMutation cashBankMutation, ICashBankService _cashBankService, IClosingService _closingService);
         bool ValidCreateObject(CashBankMutation cashBankMutation, ICashBankService _cashBankService);
         bool ValidUpdateObject(CashBankMutation cashBankMutation, ICashBankService _cashBankService);
         bool ValidDeleteObject(CashBankMutation cashBankMutation);
-        bool ValidConfirmObject(CashBankMutation cashBankMutation, ICashBankService _cashBankService);
-        bool ValidUnconfirmObject(CashBankMutation cashBankMutation, ICashBankService _cashBankService);
+        bool ValidConfirmObject(CashBankMutation cashBankMutation, ICashBankService _cashBankService, IClosingService _closingService);
+        bool ValidUnconfirmObject(CashBankMutation cashBankMutation, ICashBankService _cashBankService, IClosingService _closingService);
         bool isValid(CashBankMutation cashBankMutation);
         string PrintError(CashBankMutation cashBankMutation);
     }

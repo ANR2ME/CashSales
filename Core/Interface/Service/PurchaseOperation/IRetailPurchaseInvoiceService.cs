@@ -22,16 +22,19 @@ namespace Core.Interface.Service
                                          IRetailPurchaseInvoiceDetailService _retailPurchaseInvoiceDetailService, IContactService _contactService,
                                          IPriceMutationService _priceMutationService, IPayableService _payableService,
                                          IRetailPurchaseInvoiceService _retailPurchaseInvoiceService, IWarehouseItemService _warehouseItemService,
-                                         IWarehouseService _warehouseService, IItemService _itemService, IBarringService _barringService, IStockMutationService _stockMutationService);
+                                         IWarehouseService _warehouseService, IItemService _itemService, IBarringService _barringService,
+                                         IStockMutationService _stockMutationService, IClosingService _closingService);
         RetailPurchaseInvoice UnconfirmObject(RetailPurchaseInvoice retailPurchaseInvoice, IRetailPurchaseInvoiceDetailService _retailPurchaseInvoiceDetailService,
                                            IPayableService _payableService, IPaymentVoucherDetailService _paymentVoucherDetailService,
                                            IWarehouseItemService _warehouseItemService, IWarehouseService _warehouseService, IItemService _itemService,
-                                           IBarringService _barringService, IStockMutationService _stockMutationService);
+                                           IBarringService _barringService, IStockMutationService _stockMutationService, IClosingService _closingService);
         RetailPurchaseInvoice PaidObject(RetailPurchaseInvoice retailPurchaseInvoice, decimal AmountPaid, ICashBankService _cashBankService, IPayableService _payableService,
                                            IPaymentVoucherService _paymentVoucherService, IPaymentVoucherDetailService _paymentVoucherDetailService,
-                                           IContactService _contactService, ICashMutationService _cashMutationService);
+                                           IContactService _contactService, ICashMutationService _cashMutationService,
+                                           IGeneralLedgerJournalService _generalLedgerJournalService, IAccountService _accountService, IClosingService _closingService);
         RetailPurchaseInvoice UnpaidObject(RetailPurchaseInvoice retailPurchaseInvoice, IPaymentVoucherService _paymentVoucherService, IPaymentVoucherDetailService _paymentVoucherDetailService,
-                                           ICashBankService _cashBankService, IPayableService _payableService, ICashMutationService _cashMutationService);
+                                           ICashBankService _cashBankService, IPayableService _payableService, ICashMutationService _cashMutationService,
+                                           IGeneralLedgerJournalService _generalLedgerJournalService, IAccountService _accountService, IClosingService _closingService);
         bool DeleteObject(int Id);
     }
 }

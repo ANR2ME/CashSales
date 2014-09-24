@@ -109,9 +109,12 @@ namespace TestValidation
             {
                 before = () =>
                 {
-                    rsb._retailSalesInvoiceService.UnpaidObject(rsb.rsi1, rsb._receiptVoucherService, rsb._receiptVoucherDetailService, rsb._cashBankService, rsb._receivableService, rsb._cashMutationService);
-                    rsb._retailSalesInvoiceService.UnpaidObject(rsb.rsi2, rsb._receiptVoucherService, rsb._receiptVoucherDetailService, rsb._cashBankService, rsb._receivableService, rsb._cashMutationService);
-                    rsb._retailSalesInvoiceService.UnpaidObject(rsb.rsi3, rsb._receiptVoucherService, rsb._receiptVoucherDetailService, rsb._cashBankService, rsb._receivableService, rsb._cashMutationService);
+                    rsb._retailSalesInvoiceService.UnpaidObject(rsb.rsi1, rsb._receiptVoucherService, rsb._receiptVoucherDetailService, rsb._cashBankService,
+                                                                rsb._receivableService, rsb._cashMutationService, rsb._generalLedgerJournalService, rsb._accountService, rsb._closingService);
+                    rsb._retailSalesInvoiceService.UnpaidObject(rsb.rsi2, rsb._receiptVoucherService, rsb._receiptVoucherDetailService, rsb._cashBankService,
+                                                                rsb._receivableService, rsb._cashMutationService, rsb._generalLedgerJournalService, rsb._accountService, rsb._closingService);
+                    rsb._retailSalesInvoiceService.UnpaidObject(rsb.rsi3, rsb._receiptVoucherService, rsb._receiptVoucherDetailService, rsb._cashBankService,
+                                                                rsb._receivableService, rsb._cashMutationService, rsb._generalLedgerJournalService, rsb._accountService, rsb._closingService);
                     rsb.rsi1.Errors.Count().should_be(0);
                     rsb.rsi2.Errors.Count().should_be(0);
                     rsb.rsi3.Errors.Count().should_be(0);
@@ -138,9 +141,11 @@ namespace TestValidation
                 {
                     before = () =>
                     {
-                        rsb._retailSalesInvoiceService.UnconfirmObject(rsb.rsi1, rsb._retailSalesInvoiceDetailService, rsb._receivableService, rsb._receiptVoucherDetailService, rsb._warehouseItemService, rsb._warehouseService, rsb._itemService, rsb._barringService, rsb._stockMutationService);
-                        rsb._retailSalesInvoiceService.UnconfirmObject(rsb.rsi2, rsb._retailSalesInvoiceDetailService, rsb._receivableService, rsb._receiptVoucherDetailService, rsb._warehouseItemService, rsb._warehouseService, rsb._itemService, rsb._barringService, rsb._stockMutationService);
-                        rsb._retailSalesInvoiceService.UnconfirmObject(rsb.rsi3, rsb._retailSalesInvoiceDetailService, rsb._receivableService, rsb._receiptVoucherDetailService, rsb._warehouseItemService, rsb._warehouseService, rsb._itemService, rsb._barringService, rsb._stockMutationService);
+                        rsb._retailSalesInvoiceService.UnconfirmObject(rsb.rsi1, rsb._retailSalesInvoiceDetailService, rsb._receivableService, rsb._receiptVoucherDetailService,
+                                                                       rsb._warehouseItemService, rsb._warehouseService, rsb._itemService,
+                                                                       rsb._barringService, rsb._stockMutationService, rsb._closingService);
+                        rsb._retailSalesInvoiceService.UnconfirmObject(rsb.rsi2, rsb._retailSalesInvoiceDetailService, rsb._receivableService, rsb._receiptVoucherDetailService, rsb._warehouseItemService, rsb._warehouseService, rsb._itemService, rsb._barringService, rsb._stockMutationService, rsb._closingService);
+                        rsb._retailSalesInvoiceService.UnconfirmObject(rsb.rsi3, rsb._retailSalesInvoiceDetailService, rsb._receivableService, rsb._receiptVoucherDetailService, rsb._warehouseItemService, rsb._warehouseService, rsb._itemService, rsb._barringService, rsb._stockMutationService, rsb._closingService);
                         rsb.rsi1.Errors.Count().should_be(0);
                         rsb.rsi2.Errors.Count().should_be(0);
                         rsb.rsi3.Errors.Count().should_be(0);

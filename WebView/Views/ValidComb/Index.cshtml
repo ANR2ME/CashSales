@@ -1,0 +1,39 @@
+﻿@{
+    ViewBag.Title = "Valid Combination";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section Head {
+}
+
+@section Scripts {
+    <script type="text/javascript" src="@Url.Content("~/Content/apps_js/tools.js")"></script>
+    <script type="text/javascript" src="@Url.Content("~/Content/apps_js/validcomb.js")"></script>
+}
+<div id="ua_panel" class="easyui-panel" style="text-align: left;" data-options="modal:true" 
+    title=".: Valid Combination :.">
+    <div id="toolbar" class="form_toolbar">
+        <a id="btn_reload" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-reload'">Reload Data</a>
+        <a id="btn_search" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-search'">Search by Date</a>
+        <a id="btn_print" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-print'">Print Data</a>
+    </div>
+
+    <div id="table_div">
+        <table id="list"></table>
+        <div id="pager" class="scroll" style="text-align: center;"></div>
+    </div>
+  </div>
+
+    <!-- Dialog Box Search-->
+    <div id="search_div" class="easyui-dialog" style="text-align: left;padding:0px 0px 10px;width :500px"
+        data-options="modal:true" title=".: Search by Closing Period :.">
+
+        <div id="search_toolbar" class="form_toolbar">
+            <a id="search_btn_submit" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-save'">Submit</a>
+            <a id="search_btn_cancel" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-remove'">Close</a>
+        </div>
+          
+        <table id="closing"></table>
+        <div id="closingpager" class="scroll" style="text-align: center;"></div>
+    </div>
+<!-- End Dialog Box Search-->

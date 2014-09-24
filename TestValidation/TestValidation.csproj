@@ -33,8 +33,9 @@
     <Reference Include="EntityFramework">
       <HintPath>..\packages\EntityFramework.5.0.0\lib\net45\EntityFramework.dll</HintPath>
     </Reference>
-    <Reference Include="NSpec">
-      <HintPath>..\packages\nspec.0.9.68\lib\NSpec.dll</HintPath>
+    <Reference Include="NSpec, Version=0.9.68.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\nspec.0.9.68\tools\NSpec.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
@@ -48,6 +49,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CashSalesBuilder.cs" />
+    <Compile Include="SpecAccounting.cs" />
     <Compile Include="SpecUserRole.cs" />
     <Compile Include="SpecPaymentRequest.cs" />
     <Compile Include="SpecCustomPurchaseInvoice.cs" />

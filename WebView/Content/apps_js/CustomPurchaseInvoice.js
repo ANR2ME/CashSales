@@ -9,11 +9,11 @@
 	}
 
 	function ReloadGrid() {
-		$("#list").setGridParam({ url: base_url + 'CustomPurchaseInvoice/GetList', postData: { filters: null }, page: 'first' }).trigger("reloadGrid");
+		$("#list").setGridParam({ url: base_url + 'CustomPurchaseInvoice/GetList', postData: { filters: null }, page: 1 }).trigger("reloadGrid");
 	}
 
 	function ReloadGridDetail() {
-		$("#listdetail").setGridParam({ url: base_url + 'CustomPurchaseInvoice/GetListDetail?Id=' + $("#id").val(), postData: { filters: null }, page: 'first' }).trigger("reloadGrid");
+		$("#listdetail").setGridParam({ url: base_url + 'CustomPurchaseInvoice/GetListDetail?Id=' + $("#id").val(), postData: { filters: null } }).trigger("reloadGrid");
 	}
 
 	function ClearData() {
@@ -94,10 +94,10 @@
 				  { name: 'description', index: 'description', width: 100 },
 				  { name: 'discount', index: 'discount', width: 80, decimal: { thousandsSeparator: ",", defaultValue: '0' } },
 				  { name: 'tax', index: 'tax', width: 80, decimal: { thousandsSeparator: ",", defaultValue: '0' } },
-				  { name: 'allowance', index: 'allowance', width: 80, formatter: 'currency' },
-                  { name: 'total', index: 'total', width: 80, formatter: 'currency' },
-				  { name: 'cogs', index: 'cogs', width: 80, hidden: true, formatter: 'currency' },
-                  { name: 'amountpaid', index: 'amountpaid', width: 80, formatter: 'currency' },
+				  { name: 'allowance', index: 'allowance', width: 80, formatter: 'currency', formatoptions: { decimalSeparator: ".", thousandsSeparator: ",", decimalPlaces: 0, prefix: "", suffix: "", defaultValue: '0.00' } },
+                  { name: 'total', index: 'total', width: 80, formatter: 'currency', formatoptions: { decimalSeparator: ".", thousandsSeparator: ",", decimalPlaces: 0, prefix: "", suffix: "", defaultValue: '0.00' } },
+				  { name: 'cogs', index: 'cogs', width: 80, hidden: true, formatter: 'currency', formatoptions: { decimalSeparator: ".", thousandsSeparator: ",", decimalPlaces: 0, prefix: "", suffix: "", defaultValue: '0.00' } },
+                  { name: 'amountpaid', index: 'amountpaid', width: 80, formatter: 'currency', formatoptions: { decimalSeparator: ".", thousandsSeparator: ",", decimalPlaces: 0, prefix: "", suffix: "", defaultValue: '0.00' } },
                   { name: 'isgrouppricing', index: 'isgrouppricing', hidden: true, width: 80, boolean: { defaultValue: 'false' } },
                   { name: 'contactid', index: 'contactid', width: 80, hidden: true },
                   { name: 'contact', index: 'contact', width: 100 },
@@ -697,19 +697,21 @@
 	$("#listdetail").jqGrid({
 		url: base_url,
 		datatype: "json",
-		colNames: ['Code', 'CustomPurchaseInvoice Id', 'CustomPurchaseInvoice Code', 'Item Id', 'Item Name', 'Quantity', 'Amount', 'CoGS'],
+		colNames: ['Code', 'CustomPurchaseInvoice Id', 'CustomPurchaseInvoice Code', 'Item Id', 'Item Name', 'Quantity', 'Discount', 'Listed Unit Price', 'Amount', 'CoGS'],
 		colModel: [
-				  { name: 'code', index: 'code', width: 100, sortable: false },
+				  { name: 'code', index: 'code', hidden:true, width: 100, sortable: false },
 				  { name: 'cashsalesinvoiceid', index: 'cashsalesinvoiceid', hidden:true, width: 130, sortable: false },
-				  { name: 'cashsalesinvoice', index: 'cashsalesinvoice', width: 130, sortable: false },
+				  { name: 'cashsalesinvoice', index: 'cashsalesinvoice', hidden:true, width: 130, sortable: false },
 				  { name: 'itemid', index: 'itemid', width: 80, sortable: false, hidden:true },
 				  { name: 'item', index: 'item', width: 80, sortable: false },
-				  { name: 'quantity', index: 'quantity', width: 100, formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: false },
-				  { name: 'amount', index: 'amount', width: 100, formatter: 'currency', formatoptions: { decimalSeparator: ".", thousandsSeparator: ",", decimalPlaces: 2, prefix: "", suffix: "", defaultValue: '0.00' }, sortable: false },
-				  { name: 'cogs', index: 'cogs', hidden:true, width: 100, formatter: 'currency', formatoptions: { decimalSeparator: ".", thousandsSeparator: ",", decimalPlaces: 2, prefix: "", suffix: "", defaultValue: '0.00' }, sortable: false },
+				  { name: 'quantity', index: 'quantity', width: 80, formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: false },
+                  { name: 'discount', index: 'discount', width: 80, formatter: 'currency', formatoptions: { decimalSeparator: ".", thousandsSeparator: ",", decimalPlaces: 2, prefix: "", suffix: "", defaultValue: '0.00' }, sortable: false },
+                  { name: 'listedunitprice', index: 'listedunitprice', width: 100, formatter: 'currency', formatoptions: { decimalSeparator: ".", thousandsSeparator: ",", decimalPlaces: 0, prefix: "", suffix: "", defaultValue: '0.00' }, sortable: false },
+				  { name: 'amount', index: 'amount', width: 100, formatter: 'currency', formatoptions: { decimalSeparator: ".", thousandsSeparator: ",", decimalPlaces: 0, prefix: "", suffix: "", defaultValue: '0.00' }, sortable: false },
+				  { name: 'cogs', index: 'cogs', hidden:true, width: 100, formatter: 'currency', formatoptions: { decimalSeparator: ".", thousandsSeparator: ",", decimalPlaces: 0, prefix: "", suffix: "", defaultValue: '0.00' }, sortable: false },
 		],
-		//page: '1',
-		//pager: $('#pagerdetail'),
+		page: '1',
+		pager: $('#pagerdetail'),
 		rowNum: 20,
 		rowList: [20, 30, 60],
 		sortname: 'Code',
@@ -907,7 +909,7 @@
 	    mtype: 'GET',
 	    colNames: ['Id', 'Name', 'Description'],
 	    colModel: [
-				  { name: 'id', index: 'id', width: 80, align: 'right' },
+				  { name: 'id', index: 'id', hidden:true, width: 80, align: 'right' },
 				  { name: 'name', index: 'name', width: 200 },
 				  { name: 'description', index: 'description', width: 200 }],
 	    page: '1',
@@ -964,11 +966,13 @@
 		url: base_url,
 		datatype: "json",
 		mtype: 'GET',
-		colNames: ['Id', 'Name', 'Description'],
+		colNames: ['Id', 'Name', 'Description', 'Amount'],
 		colModel: [
-				  { name: 'id', index: 'id', width: 80, align: 'right' },
+				  { name: 'id', index: 'id', hidden:true, width: 80, align: 'right' },
 				  { name: 'name', index: 'name', width: 200 },
-				  { name: 'description', index: 'description', width: 200 }],
+				  { name: 'description', index: 'description', width: 200 },
+                  { name: 'amount', index: 'amount', width: 150, align: "right", formatter: 'currency', formatoptions: { decimalSeparator: ".", thousandsSeparator: ",", decimalPlaces: 0, prefix: "", suffix: "", defaultValue: '0.00' } },
+		],
 		page: '1',
 		pager: $('#lookup_pager_cashbank'),
 		rowNum: 20,
@@ -1023,7 +1027,7 @@
 		mtype: 'GET',
 		colNames: ['Id', 'Code', 'Name', 'Description'],
 		colModel: [
-				  { name: 'id', index: 'id', width: 80, align: 'right' },
+				  { name: 'id', index: 'id', hidden:true, width: 80, align: 'right' },
 				  { name: 'code', index: 'code', width: 200 },
 				  { name: 'name', index: 'name', width: 200 },
 				  { name: 'description', index: 'description', width: 200 }],

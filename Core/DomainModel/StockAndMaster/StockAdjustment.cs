@@ -13,6 +13,7 @@ namespace Core.DomainModel
         public DateTime AdjustmentDate { get; set; }
         public string Description { get; set; }
         public string Code { get; set; }
+        public decimal Total { get; set; }
 
         public bool IsConfirmed { get; set; }
         public Nullable<DateTime> ConfirmationDate { get; set; }

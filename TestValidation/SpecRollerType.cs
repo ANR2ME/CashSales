@@ -110,8 +110,24 @@ namespace TestValidation
                         UoMId = d.Pcs.Id
                     };
                     d.itemCompound = d._itemService.CreateObject(d.itemCompound, d._uomService, d._itemTypeService, d._warehouseItemService, d._warehouseService, d._priceMutationService, d._contactGroupService);
-                    d._itemService.AdjustQuantity(d.itemCompound, 2);
-                    d._warehouseItemService.AdjustQuantity(d._warehouseItemService.FindOrCreateObject(d.localWarehouse.Id, d.itemCompound.Id), 2);
+
+                    d.stockAdjustment = new StockAdjustment()
+                    {
+                        AdjustmentDate = DateTime.Today,
+                        WarehouseId = d.localWarehouse.Id
+                    };
+                    d._stockAdjustmentService.CreateObject(d.stockAdjustment, d._warehouseService);
+                    d.stockAD1 = new StockAdjustmentDetail()
+                    {
+                        StockAdjustmentId = d.stockAdjustment.Id,
+                        Quantity = 2,
+                        ItemId = d.itemCompound.Id
+                    };
+                    d._stockAdjustmentDetailService.CreateObject(d.stockAD1, d._stockAdjustmentService, d._itemService, d._warehouseItemService);
+
+                    d._stockAdjustmentService.ConfirmObject(d.stockAdjustment, DateTime.Today, d._stockAdjustmentDetailService, d._stockMutationService,
+                                                            d._itemService, d._barringService, d._warehouseItemService, d._generalLedgerJournalService,
+                                                            d._accountService, d._closingService);
 
                     d.contact = d._contactService.CreateObject("Abbey", "1 Abbey St", "001234567", "Daddy", "001234888", "abbey@abbeyst.com", d._contactGroupService);
 

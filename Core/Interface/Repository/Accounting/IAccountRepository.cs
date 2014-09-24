@@ -13,6 +13,7 @@ namespace Core.Interface.Repository
         Account GetObjectById(int Id);
         Account GetObjectByIsLegacy(bool IsLegacy);
         Account CreateObject(Account account);
+        Account UpdateObject(Account account);
         Account SoftDeleteObject(Account account);
         bool DeleteObject(int Id);
     }

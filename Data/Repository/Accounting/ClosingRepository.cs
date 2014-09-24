@@ -34,6 +34,13 @@ namespace Data.Repository
             return closing;
         }
 
+        public Closing GetObjectByPeriodAndYear(int Period, int YearPeriod)
+        {
+            Closing closing = Find(x => x.Period == Period && x.YearPeriod == YearPeriod);
+            if (closing != null) { closing.Errors = new Dictionary<string, string>(); }
+            return closing;
+        }
+
         public Closing CreateObject(Closing closing)
         {
             //closing.IsDeleted = false;
@@ -43,7 +50,15 @@ namespace Data.Repository
 
         public Closing CloseObject(Closing closing)
         {
-            closing.ClosedAt = DateTime.Now;
+            closing.IsClosed = true;    
+            Update(closing);
+            return closing;
+        }
+
+        public Closing OpenObject(Closing closing)
+        {
+            closing.IsClosed = false;
+            closing.ClosedAt = null;
             Update(closing);
             return closing;
         }

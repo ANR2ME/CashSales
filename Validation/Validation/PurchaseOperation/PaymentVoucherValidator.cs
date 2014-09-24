@@ -136,6 +136,7 @@ namespace Validation.Validation
             {
                 detail.Errors = new Dictionary<string, string>();
                 detail.ConfirmationDate = paymentVoucher.ConfirmationDate;
+                detail.Errors = new Dictionary<string, string>();
                 if (!_paymentVoucherDetailService.GetValidator().ValidConfirmObject(detail, _payableService))
                 {
                     foreach (var error in detail.Errors)
@@ -192,6 +193,46 @@ namespace Validation.Validation
             return paymentVoucher;
         }
 
+        public PaymentVoucher VGeneralLedgerPostingHasNotBeenClosed(PaymentVoucher paymentVoucher, IClosingService _closingService, int CaseConfirmUnconfirmReconcileUnreconcile)
+        {
+            switch(CaseConfirmUnconfirmReconcileUnreconcile)
+            {
+                case(1): // Confirm
+                {
+                    if (_closingService.IsDateClosed(paymentVoucher.ConfirmationDate.GetValueOrDefault()))
+                    {
+                        paymentVoucher.Errors.Add("Generic", "Ledger sudah tutup buku");
+                    }
+                    break;
+                }
+                case(2): // Unconfirm
+                {
+                    if (_closingService.IsDateClosed(DateTime.Now))
+                    {
+                        paymentVoucher.Errors.Add("Generic", "Ledger sudah tutup buku");
+                    }
+                    break;
+                }
+                case(3): // Reconcile
+                {
+                    if (_closingService.IsDateClosed(paymentVoucher.ReconciliationDate.GetValueOrDefault()))
+                    {
+                        paymentVoucher.Errors.Add("Generic", "Ledger sudah tutup buku");
+                    }
+                    break;
+                }
+                case (4): // Unreconcile
+                {
+                    if (_closingService.IsDateClosed(DateTime.Now))
+                    {
+                        paymentVoucher.Errors.Add("Generic", "Ledger sudah tutup buku");
+                    }
+                    break;
+                }
+            }
+            return paymentVoucher;
+        }
+
         public PaymentVoucher VCreateObject(PaymentVoucher paymentVoucher, IPaymentVoucherService _paymentVoucherService, IPaymentVoucherDetailService _paymentVoucherDetailService,
                                             IPayableService _payableService, IContactService _contactService, ICashBankService _cashBankService)
         {
@@ -239,7 +280,7 @@ namespace Validation.Validation
 
         public PaymentVoucher VConfirmObject(PaymentVoucher paymentVoucher, IPaymentVoucherService _paymentVoucherService,
                                              IPaymentVoucherDetailService _paymentVoucherDetailService, ICashBankService _cashBankService,
-                                             IPayableService _payableService)
+                                             IPayableService _payableService, IClosingService _closingService)
         {
             VHasConfirmationDate(paymentVoucher);
             if (!isValid(paymentVoucher)) { return paymentVoucher; }
@@ -254,32 +295,40 @@ namespace Validation.Validation
             VAllPaymentVoucherDetailsAreConfirmable(paymentVoucher, _paymentVoucherService, _paymentVoucherDetailService, _cashBankService, _payableService);
             if (!isValid(paymentVoucher)) { return paymentVoucher; }
             VCashBankHasMoreAmountPaymentVoucherDetails(paymentVoucher, _paymentVoucherDetailService, _cashBankService);
+            if (!isValid(paymentVoucher)) { return paymentVoucher; }
+            VGeneralLedgerPostingHasNotBeenClosed(paymentVoucher, _closingService, 1);
             return paymentVoucher;
         }
 
-        public PaymentVoucher VUnconfirmObject(PaymentVoucher paymentVoucher)
+        public PaymentVoucher VUnconfirmObject(PaymentVoucher paymentVoucher, IClosingService _closingService)
         {
             VHasBeenConfirmed(paymentVoucher);
             if (!isValid(paymentVoucher)) { return paymentVoucher; }
             VHasNotBeenReconciled(paymentVoucher);
+            if (!isValid(paymentVoucher)) { return paymentVoucher; }
+            VGeneralLedgerPostingHasNotBeenClosed(paymentVoucher, _closingService, 2);
             return paymentVoucher;
         }
 
-        public PaymentVoucher VReconcileObject(PaymentVoucher paymentVoucher)
+        public PaymentVoucher VReconcileObject(PaymentVoucher paymentVoucher, IClosingService _closingService)
         {
             VHasBeenConfirmed(paymentVoucher);
             if (!isValid(paymentVoucher)) { return paymentVoucher; }
             VHasNotBeenReconciled(paymentVoucher);
             if (!isValid(paymentVoucher)) { return paymentVoucher; }
             VHasReconciliationDate(paymentVoucher);
+            if (!isValid(paymentVoucher)) { return paymentVoucher; }
+            VGeneralLedgerPostingHasNotBeenClosed(paymentVoucher, _closingService, 3);
             return paymentVoucher;
         }
 
-        public PaymentVoucher VUnreconcileObject(PaymentVoucher paymentVoucher)
+        public PaymentVoucher VUnreconcileObject(PaymentVoucher paymentVoucher, IClosingService _closingService)
         {
             VHasBeenConfirmed(paymentVoucher);
             if (!isValid(paymentVoucher)) { return paymentVoucher; }
             VHasBeenReconciled(paymentVoucher);
+            if (!isValid(paymentVoucher)) { return paymentVoucher; }
+            VGeneralLedgerPostingHasNotBeenClosed(paymentVoucher, _closingService, 4);
             return paymentVoucher;
         }
 
@@ -307,31 +356,31 @@ namespace Validation.Validation
 
         public bool ValidConfirmObject(PaymentVoucher paymentVoucher, IPaymentVoucherService _paymentVoucherService,
                                        IPaymentVoucherDetailService _paymentVoucherDetailService, ICashBankService _cashBankService,
-                                       IPayableService _payableService)
+                                       IPayableService _payableService, IClosingService _closingService)
         {
             paymentVoucher.Errors.Clear();
-            VConfirmObject(paymentVoucher, _paymentVoucherService, _paymentVoucherDetailService, _cashBankService, _payableService);
+            VConfirmObject(paymentVoucher, _paymentVoucherService, _paymentVoucherDetailService, _cashBankService, _payableService, _closingService);
             return isValid(paymentVoucher);
         }
 
-        public bool ValidUnconfirmObject(PaymentVoucher paymentVoucher)
+        public bool ValidUnconfirmObject(PaymentVoucher paymentVoucher, IClosingService _closingService)
         {
             paymentVoucher.Errors.Clear();
-            VUnconfirmObject(paymentVoucher);
+            VUnconfirmObject(paymentVoucher, _closingService);
             return isValid(paymentVoucher);
         }
 
-        public bool ValidReconcileObject(PaymentVoucher paymentVoucher)
+        public bool ValidReconcileObject(PaymentVoucher paymentVoucher, IClosingService _closingService)
         {
             paymentVoucher.Errors.Clear();
-            VReconcileObject(paymentVoucher);
+            VReconcileObject(paymentVoucher, _closingService);
             return isValid(paymentVoucher);
         }
 
-        public bool ValidUnreconcileObject(PaymentVoucher paymentVoucher)
+        public bool ValidUnreconcileObject(PaymentVoucher paymentVoucher, IClosingService _closingService)
         {
             paymentVoucher.Errors.Clear();
-            VUnreconcileObject(paymentVoucher);
+            VUnreconcileObject(paymentVoucher, _closingService);
             return isValid(paymentVoucher);
         }
 

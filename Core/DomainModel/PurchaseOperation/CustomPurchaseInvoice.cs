@@ -38,7 +38,8 @@ namespace Core.DomainModel
         public bool IsDeleted { get; set; }
         public Nullable<DateTime> UpdatedAt { get; set; }
         public Nullable<DateTime> ConfirmationDate { get; set; }
-
+        // TODO:
+        //public Nullable<DateTime> PaymentDate { get; set; }
         public Dictionary<string, string> Errors { get; set; }
 
         public virtual Contact Contact { get; set; }

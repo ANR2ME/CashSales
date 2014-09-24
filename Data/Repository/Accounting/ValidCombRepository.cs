@@ -34,11 +34,33 @@ namespace Data.Repository
             return validComb;
         }
 
+        public ValidComb FindOrCreateObjectByAccountAndClosing(int accountId, int closingId)
+        {
+            ValidComb validComb = Find(x => x.AccountId == accountId && x.ClosingId == closingId);
+            if (validComb == null)
+            {
+                validComb = new ValidComb()
+                {
+                    AccountId = accountId,
+                    ClosingId = closingId,
+                    Amount = 0
+                };
+                validComb = CreateObject(validComb);
+            }
+            validComb.Errors = new Dictionary<string, string>();
+            return validComb;
+        }
+     
         public ValidComb CreateObject(ValidComb validComb)
         {
-            //validComb.IsDeleted = false;
             validComb.CreatedAt = DateTime.Now;
             return Create(validComb);
+        }
+
+        public ValidComb UpdateObject(ValidComb validComb)
+        {
+            Update(validComb);
+            return validComb;
         }
 
         /*public ValidComb SoftDeleteObject(ValidComb validComb)

@@ -229,9 +229,18 @@ namespace Validation.Validation
 
         public CashSalesInvoice VIsValidFullPayment(CashSalesInvoice cashSalesInvoice)
         {
-            if (cashSalesInvoice.AmountPaid != cashSalesInvoice.Total)
+            if (cashSalesInvoice.AmountPaid + cashSalesInvoice.Allowance != cashSalesInvoice.Total)
             {
-                cashSalesInvoice.Errors.Add("AmountPaid", "Harus sama dengan Total Payable");
+                cashSalesInvoice.Errors.Add("Generic", "Amount Paid + Allowance harus dengan Total Payable");
+            }
+            return cashSalesInvoice;
+        }
+
+        public CashSalesInvoice VTotalPaymentIsEqualOrLessThanTotalPayable(CashSalesInvoice cashSalesInvoice)
+        {
+            if (cashSalesInvoice.AmountPaid + cashSalesInvoice.Allowance > cashSalesInvoice.Total)
+            {
+                cashSalesInvoice.Errors.Add("Generic", "Amount Paid + Allowance lebih dari Total Payable");
             }
             return cashSalesInvoice;
         }
@@ -257,8 +266,33 @@ namespace Validation.Validation
             return cashSalesInvoice;
         }*/
 
+        public CashSalesInvoice VGeneralLedgerPostingHasNotBeenClosed(CashSalesInvoice cashSalesInvoice, IClosingService _closingService, int CaseConfirmUnconfirm)
+        {
+            switch (CaseConfirmUnconfirm)
+            {
+                case (1): // Confirm & Paid
+                {
+                    if (_closingService.IsDateClosed(cashSalesInvoice.ConfirmationDate.GetValueOrDefault()))
+                    {
+                        cashSalesInvoice.Errors.Add("Generic", "Ledger sudah tutup buku");
+                    }
+                    break;
+                }
+                case (2): // Unconfirm & Unpaid
+                {
+                    if (_closingService.IsDateClosed(DateTime.Now))
+                    {
+                        cashSalesInvoice.Errors.Add("Generic", "Ledger sudah tutup buku");
+                    }
+                    break;
+                }
+            }
+            return cashSalesInvoice;
+        }
+
         public CashSalesInvoice VConfirmObject(CashSalesInvoice cashSalesInvoice, ICashSalesInvoiceDetailService _cashSalesInvoiceDetailService, 
-                                                 ICashSalesInvoiceService _cashSalesInvoiceService, IWarehouseItemService _warehouseItemService, IContactService _contactService, ICashBankService _cashBankService)
+                                               ICashSalesInvoiceService _cashSalesInvoiceService, IWarehouseItemService _warehouseItemService, IContactService _contactService,
+                                               ICashBankService _cashBankService, IClosingService _closingService)
         {
             VHasCashSalesInvoiceDetails(cashSalesInvoice, _cashSalesInvoiceDetailService);
             if (!isValid(cashSalesInvoice)) { return cashSalesInvoice; }
@@ -277,11 +311,14 @@ namespace Validation.Validation
             //VHasCashBank(cashSalesInvoice, _cashBankService);
             //if (!isValid(cashSalesInvoice)) { return cashSalesInvoice; }
             //VIsCashBankTypeNotBank(cashSalesInvoice, _cashBankService);
+            if (!isValid(cashSalesInvoice)) { return cashSalesInvoice; }
+            VGeneralLedgerPostingHasNotBeenClosed(cashSalesInvoice, _closingService, 1);
             return cashSalesInvoice;
         }
 
         public CashSalesInvoice VUnconfirmObject(CashSalesInvoice cashSalesInvoice, ICashSalesInvoiceDetailService _cashSalesInvoiceDetailService, 
-                                                   IReceivableService _receivableService, IReceiptVoucherDetailService _receiptVoucherDetailService)
+                                                 IReceivableService _receivableService, IReceiptVoucherDetailService _receiptVoucherDetailService,
+                                                 IClosingService _closingService)
         {
             VIsNotDeleted(cashSalesInvoice);
             if (!isValid(cashSalesInvoice)) { return cashSalesInvoice; }
@@ -292,10 +329,13 @@ namespace Validation.Validation
             VIsUnconfirmableCashSalesInvoiceDetails(cashSalesInvoice, _cashSalesInvoiceDetailService);
             if (!isValid(cashSalesInvoice)) { return cashSalesInvoice; }
             VHasNoReceiptVoucherDetails(cashSalesInvoice, _receivableService, _receiptVoucherDetailService);
+            if (!isValid(cashSalesInvoice)) { return cashSalesInvoice; }
+            VGeneralLedgerPostingHasNotBeenClosed(cashSalesInvoice, _closingService, 2);
             return cashSalesInvoice;
         }
 
-        public CashSalesInvoice VPaidObject(CashSalesInvoice cashSalesInvoice, ICashBankService _cashBankService, IReceiptVoucherService _receiptVoucherService, ICashSalesReturnService _cashSalesReturnService)
+        public CashSalesInvoice VPaidObject(CashSalesInvoice cashSalesInvoice, ICashBankService _cashBankService, IReceiptVoucherService _receiptVoucherService, ICashSalesReturnService _cashSalesReturnService,
+                                            IClosingService _closingService)
         {
             VIsNotPaid(cashSalesInvoice);
             if (!isValid(cashSalesInvoice)) { return cashSalesInvoice; }
@@ -309,37 +349,47 @@ namespace Validation.Validation
             if (!isValid(cashSalesInvoice)) { return cashSalesInvoice; }
             VIsValidAmountPaid(cashSalesInvoice);
             if (!isValid(cashSalesInvoice)) { return cashSalesInvoice; }
+            VTotalPaymentIsEqualOrLessThanTotalPayable(cashSalesInvoice);
+            if (!isValid(cashSalesInvoice)) { return cashSalesInvoice; }
             VHasNoCashSalesReturns(cashSalesInvoice, _cashSalesReturnService);
             if (cashSalesInvoice.IsFullPayment)
             {
                 if (!isValid(cashSalesInvoice)) { return cashSalesInvoice; }
                 VIsValidFullPayment(cashSalesInvoice);
             }
+            if (!isValid(cashSalesInvoice)) { return cashSalesInvoice; }
+            VGeneralLedgerPostingHasNotBeenClosed(cashSalesInvoice, _closingService, 1);
             return cashSalesInvoice;
         }
 
-        public CashSalesInvoice VUnpaidObject(CashSalesInvoice cashSalesInvoice, ICashSalesReturnService _cashSalesReturnService)
+        public CashSalesInvoice VUnpaidObject(CashSalesInvoice cashSalesInvoice, ICashSalesReturnService _cashSalesReturnService,
+                                              IClosingService _closingService)
         {
             VIsPaid(cashSalesInvoice);
+            if (!isValid(cashSalesInvoice)) { return cashSalesInvoice; }
             VHasNoCashSalesReturns(cashSalesInvoice, _cashSalesReturnService);
+            if (!isValid(cashSalesInvoice)) { return cashSalesInvoice; }
+            VGeneralLedgerPostingHasNotBeenClosed(cashSalesInvoice, _closingService, 2);
             return cashSalesInvoice;
         }
 
-        public CashSalesInvoice VCreateObject(CashSalesInvoice cashSalesInvoice, IWarehouseService _warehouseService)
+        public CashSalesInvoice VCreateObject(CashSalesInvoice cashSalesInvoice, IWarehouseService _warehouseService, ICashBankService _cashBankService)
         {
+            VHasCashBank(cashSalesInvoice, _cashBankService);
+            if (!isValid(cashSalesInvoice)) { return cashSalesInvoice; }
             VHasSalesDate(cashSalesInvoice);
             if (!isValid(cashSalesInvoice)) { return cashSalesInvoice; }
             VHasWarehouse(cashSalesInvoice, _warehouseService);
             return cashSalesInvoice;
         }
 
-        public CashSalesInvoice VUpdateObject(CashSalesInvoice cashSalesInvoice, IWarehouseService _warehouseService)
+        public CashSalesInvoice VUpdateObject(CashSalesInvoice cashSalesInvoice, IWarehouseService _warehouseService, ICashBankService _cashBankService)
         {
             VIsNotDeleted(cashSalesInvoice);
             if (!isValid(cashSalesInvoice)) { return cashSalesInvoice; }
             VIsNotConfirmed(cashSalesInvoice);
             if (!isValid(cashSalesInvoice)) { return cashSalesInvoice; }
-            VCreateObject(cashSalesInvoice, _warehouseService);
+            VCreateObject(cashSalesInvoice, _warehouseService, _cashBankService);
             return cashSalesInvoice;
         }
 
@@ -353,46 +403,48 @@ namespace Validation.Validation
             return cashSalesInvoice;
         }
 
-        public bool ValidCreateObject(CashSalesInvoice cashSalesInvoice, IWarehouseService _warehouseService)
+        public bool ValidCreateObject(CashSalesInvoice cashSalesInvoice, IWarehouseService _warehouseService, ICashBankService _cashBankService)
         {
-            VCreateObject(cashSalesInvoice, _warehouseService);
+            VCreateObject(cashSalesInvoice, _warehouseService, _cashBankService);
             return isValid(cashSalesInvoice);
         }
 
         public bool ValidConfirmObject(CashSalesInvoice cashSalesInvoice, ICashSalesInvoiceDetailService _cashSalesInvoiceDetailService, ICashSalesInvoiceService _cashSalesInvoiceService, 
-                                       IWarehouseItemService _warehouseItemService, IContactService _contactService, ICashBankService _cashBankService)
+                                       IWarehouseItemService _warehouseItemService, IContactService _contactService, ICashBankService _cashBankService, IClosingService _closingService)
         {
             cashSalesInvoice.Errors.Clear();
-            VConfirmObject(cashSalesInvoice, _cashSalesInvoiceDetailService, _cashSalesInvoiceService, _warehouseItemService, _contactService, _cashBankService);
+            VConfirmObject(cashSalesInvoice, _cashSalesInvoiceDetailService, _cashSalesInvoiceService, _warehouseItemService, _contactService, _cashBankService, _closingService);
             return isValid(cashSalesInvoice);
         }
 
         public bool ValidUnconfirmObject(CashSalesInvoice cashSalesInvoice, ICashSalesInvoiceDetailService _cashSalesInvoiceDetailService, 
-                                         IReceivableService _receivableService, IReceiptVoucherDetailService _receiptVoucherDetailService)
+                                         IReceivableService _receivableService, IReceiptVoucherDetailService _receiptVoucherDetailService,
+                                         IClosingService _closingService)
         {
             cashSalesInvoice.Errors.Clear();
-            VUnconfirmObject(cashSalesInvoice, _cashSalesInvoiceDetailService, _receivableService, _receiptVoucherDetailService);
+            VUnconfirmObject(cashSalesInvoice, _cashSalesInvoiceDetailService, _receivableService, _receiptVoucherDetailService, _closingService);
             return isValid(cashSalesInvoice);
         }
 
-        public bool ValidPaidObject(CashSalesInvoice cashSalesInvoice, ICashBankService _cashBankService, IReceiptVoucherService _receiptVoucherService, ICashSalesReturnService _cashSalesReturnService)
+        public bool ValidPaidObject(CashSalesInvoice cashSalesInvoice, ICashBankService _cashBankService, IReceiptVoucherService _receiptVoucherService,
+                                    ICashSalesReturnService _cashSalesReturnService, IClosingService _closingService)
         {
             cashSalesInvoice.Errors.Clear();
-            VPaidObject(cashSalesInvoice, _cashBankService, _receiptVoucherService, _cashSalesReturnService);
+            VPaidObject(cashSalesInvoice, _cashBankService, _receiptVoucherService, _cashSalesReturnService, _closingService);
             return isValid(cashSalesInvoice);
         }
 
-        public bool ValidUnpaidObject(CashSalesInvoice cashSalesInvoice, ICashSalesReturnService _cashSalesReturnService)
+        public bool ValidUnpaidObject(CashSalesInvoice cashSalesInvoice, ICashSalesReturnService _cashSalesReturnService, IClosingService _closingService)
         {
             cashSalesInvoice.Errors.Clear();
-            VUnpaidObject(cashSalesInvoice, _cashSalesReturnService);
+            VUnpaidObject(cashSalesInvoice, _cashSalesReturnService, _closingService);
             return isValid(cashSalesInvoice);
         }
 
-        public bool ValidUpdateObject(CashSalesInvoice cashSalesInvoice, IWarehouseService _warehouseService)
+        public bool ValidUpdateObject(CashSalesInvoice cashSalesInvoice, IWarehouseService _warehouseService, ICashBankService _cashBankService)
         {
             cashSalesInvoice.Errors.Clear();
-            VUpdateObject(cashSalesInvoice, _warehouseService);
+            VUpdateObject(cashSalesInvoice, _warehouseService, _cashBankService);
             return isValid(cashSalesInvoice);
         }
 

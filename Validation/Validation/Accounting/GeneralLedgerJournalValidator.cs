@@ -14,20 +14,36 @@ namespace Validation.Validation
 
         public GeneralLedgerJournal VIsValidSourceDocument(GeneralLedgerJournal generalLedgerJournal)
         {
-            if (!generalLedgerJournal.SourceDocument.Equals(Constant.SourceDocument.PaymentVoucherDetail) &&
-                !generalLedgerJournal.SourceDocument.Equals(Constant.SourceDocument.ReceiptVoucherDetail) &&
-                !generalLedgerJournal.SourceDocument.Equals(Constant.SourceDocument.CustomPurchaseInvoiceDetail) &&
-                !generalLedgerJournal.SourceDocument.Equals(Constant.SourceDocument.CashSalesInvoiceDetailDetail) &&
-                !generalLedgerJournal.SourceDocument.Equals(Constant.SourceDocument.RetailSalesInvoiceDetail))
+            if (!generalLedgerJournal.SourceDocument.Equals(Constant.GeneralLedgerSource.CashBankAdjustment) &&
+                !generalLedgerJournal.SourceDocument.Equals(Constant.GeneralLedgerSource.CashBankMutation) &&
+                !generalLedgerJournal.SourceDocument.Equals(Constant.GeneralLedgerSource.CashSalesInvoice) &&
+                !generalLedgerJournal.SourceDocument.Equals(Constant.GeneralLedgerSource.CustomPurchaseInvoice) &&
+                !generalLedgerJournal.SourceDocument.Equals(Constant.GeneralLedgerSource.PaymentVoucher) &&
+                !generalLedgerJournal.SourceDocument.Equals(Constant.GeneralLedgerSource.ReceiptVoucher) &&
+                !generalLedgerJournal.SourceDocument.Equals(Constant.GeneralLedgerSource.RetailSalesInvoice) &&
+                !generalLedgerJournal.SourceDocument.Equals(Constant.GeneralLedgerSource.StockAdjustment))
             {
                 generalLedgerJournal.Errors.Add("SourceDocument", "Harus merupakan bagian dari Constant.SourceDocument");
             }
             return generalLedgerJournal;
         }
 
-        public GeneralLedgerJournal VCreateObject(GeneralLedgerJournal generalLedgerJournal)
+        public GeneralLedgerJournal VIsLeafAccount(GeneralLedgerJournal generalLedgerJournal, IAccountService _accountService)
+        {
+            Account account = _accountService.GetObjectById(generalLedgerJournal.AccountId);
+
+            if (!account.IsLeaf)
+            {
+                generalLedgerJournal.Errors.Add("Generic", "Non leaf account bukan sebuah item journal"); 
+            }
+            return generalLedgerJournal;
+        }
+
+        public GeneralLedgerJournal VCreateObject(GeneralLedgerJournal generalLedgerJournal, IAccountService _accountService)
         {
             VIsValidSourceDocument(generalLedgerJournal);
+            if (!isValid(generalLedgerJournal)) { return generalLedgerJournal; }
+            VIsLeafAccount(generalLedgerJournal, _accountService);
             return generalLedgerJournal;
         }
 
@@ -36,9 +52,9 @@ namespace Validation.Validation
             return generalLedgerJournal;
         }
 
-        public bool ValidCreateObject(GeneralLedgerJournal generalLedgerJournal)
+        public bool ValidCreateObject(GeneralLedgerJournal generalLedgerJournal, IAccountService _accountService)
         {
-            VCreateObject(generalLedgerJournal);
+            VCreateObject(generalLedgerJournal, _accountService);
             return isValid(generalLedgerJournal);
         }
 

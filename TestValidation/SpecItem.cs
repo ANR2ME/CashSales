@@ -123,14 +123,50 @@ namespace TestValidation
 
             it["adjust_quantity_valid"] = () =>
             {
-                d.item = d._itemService.AdjustQuantity(d.item, 10);
+                d.stockAdjustment = new StockAdjustment()
+                {
+                    WarehouseId = d.localWarehouse.Id,
+                    AdjustmentDate = DateTime.Today,
+                    Description = "Stock Adjust Positive"
+                };
+                d._stockAdjustmentService.CreateObject(d.stockAdjustment, d._warehouseService);
+
+                d.stockAD1 = new StockAdjustmentDetail()
+                {
+                    ItemId = d.item.Id,
+                    Quantity = 10,
+                    StockAdjustmentId = d.stockAdjustment.Id
+                };
+                d._stockAdjustmentDetailService.CreateObject(d.stockAD1, d._stockAdjustmentService, d._itemService, d._warehouseItemService);
+
+                d._stockAdjustmentService.ConfirmObject(d.stockAdjustment, DateTime.Today, d._stockAdjustmentDetailService, d._stockMutationService,
+                                                        d._itemService, d._barringService, d._warehouseItemService, d._generalLedgerJournalService, d._accountService,
+                                                        d._closingService);
                 d.item.Errors.Count().should_be(0);
             };
 
             it["adjust_quantity_invalid"] = () =>
             {
-                d.item = d._itemService.AdjustQuantity(d.item, -10);
-                d.item.Errors.Count().should_not_be(0);
+                d.stockAdjustment = new StockAdjustment()
+                {
+                    WarehouseId = d.localWarehouse.Id,
+                    AdjustmentDate = DateTime.Today,
+                    Description = "Stock Adjust Positive"
+                };
+                d._stockAdjustmentService.CreateObject(d.stockAdjustment, d._warehouseService);
+
+                d.stockAD1 = new StockAdjustmentDetail()
+                {
+                    ItemId = d.item.Id,
+                    Quantity = -10,
+                    StockAdjustmentId = d.stockAdjustment.Id
+                };
+                d._stockAdjustmentDetailService.CreateObject(d.stockAD1, d._stockAdjustmentService, d._itemService, d._warehouseItemService);
+
+                d._stockAdjustmentService.ConfirmObject(d.stockAdjustment, DateTime.Today, d._stockAdjustmentDetailService, d._stockMutationService,
+                                                        d._itemService, d._barringService, d._warehouseItemService, d._generalLedgerJournalService, d._accountService, d._closingService);
+                d.stockAdjustment.Errors.Count().should_not_be(0);
+                d.item.Quantity.should_be(0);
             };
 
             it["delete_item"] = () =>
@@ -206,8 +242,26 @@ namespace TestValidation
                     UoMId = d.Pcs.Id
                 };
                 compound = d._itemService.CreateObject(compound, d._uomService, d._itemTypeService, d._warehouseItemService, d._warehouseService, d._priceMutationService, d._contactGroupService);
-                d._itemService.AdjustQuantity(compound, 2);
-                d._warehouseItemService.AdjustQuantity(d._warehouseItemService.FindOrCreateObject(d.localWarehouse.Id, compound.Id), 2);
+
+                d.stockAdjustment = new StockAdjustment()
+                {
+                    WarehouseId = d.localWarehouse.Id,
+                    AdjustmentDate = DateTime.Today,
+                    Description = "Compound"
+                };
+                d._stockAdjustmentService.CreateObject(d.stockAdjustment, d._warehouseService);
+
+                d.stockAD1 = new StockAdjustmentDetail()
+                {
+                    StockAdjustmentId = d.stockAdjustment.Id,
+                    Quantity = 2,
+                    ItemId = compound.Id
+                };
+                d._stockAdjustmentDetailService.CreateObject(d.stockAD1, d._stockAdjustmentService, d._itemService, d._warehouseItemService);
+
+                d._stockAdjustmentService.ConfirmObject(d.stockAdjustment, DateTime.Today, d._stockAdjustmentDetailService, d._stockMutationService,
+                                                        d._itemService, d._barringService, d._warehouseItemService, d._generalLedgerJournalService,
+                                                        d._accountService, d._closingService);
 
                 d.rollerBuilder = new RollerBuilder()
                 {

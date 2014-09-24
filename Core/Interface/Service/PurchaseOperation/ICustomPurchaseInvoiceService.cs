@@ -15,24 +15,28 @@ namespace Core.Interface.Service
         ICustomPurchaseInvoiceRepository GetRepository();
         IList<CustomPurchaseInvoice> GetAll();
         CustomPurchaseInvoice GetObjectById(int Id);
-        CustomPurchaseInvoice CreateObject(CustomPurchaseInvoice customPurchaseInvoice, IWarehouseService _warehouseService, IContactService _contactService);
+        CustomPurchaseInvoice CreateObject(CustomPurchaseInvoice customPurchaseInvoice, IWarehouseService _warehouseService, IContactService _contactService, ICashBankService _cashBankService);
         CustomPurchaseInvoice UpdateObject(CustomPurchaseInvoice customPurchaseInvoice, ICustomPurchaseInvoiceDetailService _customPurchaseInvoiceDetailService,
-                                           IWarehouseService _warehouseService, IContactService _contactService);
+                                           IWarehouseService _warehouseService, IContactService _contactService, ICashBankService _cashBankService);
         CustomPurchaseInvoice SoftDeleteObject(CustomPurchaseInvoice customPurchaseInvoice, ICustomPurchaseInvoiceDetailService _customPurchaseInvoiceDetailService);
         CustomPurchaseInvoice ConfirmObject(CustomPurchaseInvoice customPurchaseInvoice, DateTime ConfirmationDate,
                                          ICustomPurchaseInvoiceDetailService _customPurchaseInvoiceDetailService, IContactService _contactService,
                                          IPriceMutationService _priceMutationService, IPayableService _payableService,
                                          ICustomPurchaseInvoiceService _customPurchaseInvoiceService, IWarehouseItemService _warehouseItemService,
-                                         IWarehouseService _warehouseService, IItemService _itemService, IBarringService _barringService, IStockMutationService _stockMutationService);
+                                         IWarehouseService _warehouseService, IItemService _itemService, IBarringService _barringService, IStockMutationService _stockMutationService,
+                                         IGeneralLedgerJournalService _generalLedgerJournalService, IAccountService _accountService, IClosingService _closingService);
         CustomPurchaseInvoice UnconfirmObject(CustomPurchaseInvoice customPurchaseInvoice, ICustomPurchaseInvoiceDetailService _customPurchaseInvoiceDetailService,
                                            IPayableService _payableService, IPaymentVoucherDetailService _paymentVoucherDetailService,
                                            IWarehouseItemService _warehouseItemService, IWarehouseService _warehouseService, IItemService _itemService,
-                                           IBarringService _barringService, IStockMutationService _stockMutationService, IPriceMutationService _priceMutationService);
+                                           IBarringService _barringService, IStockMutationService _stockMutationService, IPriceMutationService _priceMutationService,
+                                           IGeneralLedgerJournalService _generalLedgerJournalService, IAccountService _accountService, IClosingService _closingService);
         CustomPurchaseInvoice PaidObject(CustomPurchaseInvoice customPurchaseInvoice, decimal AmountPaid, ICashBankService _cashBankService, IPayableService _payableService,
                                            IPaymentVoucherService _paymentVoucherService, IPaymentVoucherDetailService _paymentVoucherDetailService,
-                                           IContactService _contactService, ICashMutationService _cashMutationService);
+                                           IContactService _contactService, ICashMutationService _cashMutationService,
+                                           IGeneralLedgerJournalService _generalLedgerJournalService, IAccountService _accountService, IClosingService _closingService);
         CustomPurchaseInvoice UnpaidObject(CustomPurchaseInvoice customPurchaseInvoice, IPaymentVoucherService _paymentVoucherService, IPaymentVoucherDetailService _paymentVoucherDetailService,
-                                           ICashBankService _cashBankService, IPayableService _payableService, ICashMutationService _cashMutationService);
+                                           ICashBankService _cashBankService, IPayableService _payableService, ICashMutationService _cashMutationService,
+                                           IGeneralLedgerJournalService _generalLedgerJournalService, IAccountService _accountService, IClosingService _closingService);
         bool DeleteObject(int Id);
         decimal CalculateTotalAmountAfterDiscountAndTax(CustomPurchaseInvoice customPurchaseInvoice);
     }

@@ -83,7 +83,7 @@ namespace WebView.Controllers
         {
             if (!AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.Item, Core.Constants.Constant.MenuGroupName.Report))
             {
-                return Content(Core.Constants.Constant.PageViewNotAllowed);
+                return Content(Core.Constants.Constant.ErrorPage.PageViewNotAllowed);
             }
 
             return View();
@@ -138,7 +138,7 @@ namespace WebView.Controllers
         {
             if (!AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.ProfitLoss, Core.Constants.Constant.MenuGroupName.Report))
             {
-                return Content(Core.Constants.Constant.PageViewNotAllowed);
+                return Content(Core.Constants.Constant.ErrorPage.PageViewNotAllowed);
             }
 
             return View();
@@ -205,7 +205,7 @@ namespace WebView.Controllers
         {
             if (!AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.Sales, Core.Constants.Constant.MenuGroupName.Report))
             {
-                return Content(Core.Constants.Constant.PageViewNotAllowed);
+                return Content(Core.Constants.Constant.ErrorPage.PageViewNotAllowed);
             }
 
             return View();
@@ -256,7 +256,7 @@ namespace WebView.Controllers
         {
             if (!AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.TopSales, Core.Constants.Constant.MenuGroupName.Report))
             {
-                return Content(Core.Constants.Constant.PageViewNotAllowed);
+                return Content(Core.Constants.Constant.ErrorPage.PageViewNotAllowed);
             }
 
             return View();

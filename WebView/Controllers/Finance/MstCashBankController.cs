@@ -29,7 +29,7 @@ namespace WebView.Controllers
         {
             if (!AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.CashBank, Core.Constants.Constant.MenuGroupName.Master))
             {
-                return Content(Core.Constants.Constant.PageViewNotAllowed);
+                return Content(Core.Constants.Constant.ErrorPage.PageViewNotAllowed);
             }
 
             return View();

@@ -70,7 +70,7 @@ namespace WebView.Controllers
         {
             if (!AuthenticationModel.IsAllowed("View", Constant.MenuName.IncomeStatement, Constant.MenuGroupName.Report))
             {
-                return Content(Constant.PageViewNotAllowed);
+                return Content(Constant.ErrorPage.PageViewNotAllowed);
             }
 
             return View();
@@ -81,6 +81,8 @@ namespace WebView.Controllers
         {
             var company = _companyService.GetQueryable().FirstOrDefault();
             Closing closing = _closingService.GetObjectByPeriodAndYear(period, yearPeriod);
+
+            if (closing == null) return Content(Constant.ErrorPage.ClosingNotFound);
 
             ValidComb Revenue = _validCombService.FindOrCreateObjectByAccountAndClosing(_accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.Revenue).Id, closing.Id);
             ValidComb COGS = _validCombService.FindOrCreateObjectByAccountAndClosing(_accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.COGS).Id, closing.Id);
@@ -121,16 +123,18 @@ namespace WebView.Controllers
         {
             if (!AuthenticationModel.IsAllowed("View", Constant.MenuName.BalanceSheet, Constant.MenuGroupName.Report))
             {
-                return Content(Constant.PageViewNotAllowed);
+                return Content(Constant.ErrorPage.PageViewNotAllowed);
             }
 
             return View();
         }
 
-        public ActionResult ReportBalanceSheet(int closingId)
+        public ActionResult ReportBalanceSheet(Nullable<int> closingId)
         {
             var company = _companyService.GetQueryable().FirstOrDefault();
-            Closing closing = _closingService.GetObjectById(closingId);
+            Closing closing = _closingService.GetObjectById(closingId.GetValueOrDefault());
+
+            if (closing == null) return Content(Constant.ErrorPage.ClosingNotFound);
 
             var balanceValidComb = _validCombService.GetQueryable().Include("Account").Include("Closing")
                                                     .Where(x => x.ClosingId == closing.Id & x.Account.Level == 2);

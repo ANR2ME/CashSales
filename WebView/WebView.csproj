@@ -1190,8 +1190,6 @@
     <Content Include="Views\Report\Sales.cshtml" />
     <Content Include="Views\Report\TopSales.cshtml" />
     <Content Include="Views\GeneralLedger\Index.cshtml" />
-    <Content Include="Views\ClosingMonthly\Index.cshtml" />
-    <Content Include="Views\ClosingMonthly\Restore.cshtml" />
     <Content Include="Views\ChartOfAccount\Index.cshtml" />
     <Content Include="Views\ValidComb\Index.cshtml" />
     <Content Include="Views\Closing\Index.cshtml" />

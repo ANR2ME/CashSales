@@ -1001,7 +1001,6 @@
     <None Include="Properties\PublishProfiles\sampleapp.pubxml" />
     <Content Include="Reports\General\Item.rpt" />
     <Content Include="Reports\General\Item.ttx" />
-    <Content Include="Reports\General\Logo.png" />
     <Content Include="Reports\General\ProfitLoss.rpt" />
     <Content Include="Reports\General\ProfitLoss.ttx" />
     <Content Include="Reports\General\Sales.rpt" />

@@ -64,7 +64,7 @@ namespace WebView
             baseCompany = _companyService.GetQueryable().FirstOrDefault();
             if (baseCompany == null)
             {
-                baseCompany = _companyService.CreateObject("Jakarta Andalan Bike", "Jl. Hos Cokroaminoto No.12A Mencong Ciledug, Tangerang", "021-7316575", "", "jakartaandalanbike@gmail.com");
+                baseCompany = _companyService.CreateObject("Ramayana", "Jl. Panjang Banget No.1", "021-5556666", "", "ramayana@gmail.com");
             }
             
             if (!_accountService.GetLegacyObjects().Any())

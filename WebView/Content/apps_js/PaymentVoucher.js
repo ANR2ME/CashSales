@@ -135,7 +135,13 @@
     });
 
     $('#btn_print').click(function () {
-        window.open(base_url + 'Print_Forms/Printmstbank.aspx');
+        //window.open(base_url + 'Print_Forms/Printmstbank.aspx');
+        var id = jQuery("#list").jqGrid('getGridParam', 'selrow');
+        if (id) {
+            window.open(base_url + "Report/ReportPaymentVoucher?Id=" + id);
+        } else {
+            $.messager.alert('Information', 'Please Select Data...!!', 'info');
+        }
     });
 
     $('#btn_add_new').click(function () {
@@ -288,6 +294,7 @@
                             $('#IsGBCH').removeAttr('disabled');
                             $('#IsBank').removeAttr('disabled');
                             $('#tabledetail_div').hide();
+                            $('#form_btn_save').show();
                             $('#form_div').dialog('open');
                         }
                     }
@@ -305,6 +312,7 @@
             $('#ConfirmationDate').datebox('setValue', $.datepicker.formatDate('mm/dd/yy', new Date()));
             $('#idconfirm').val(ret.id);
             $('#confirmCode').val(ret.code);
+            $('#confirmTotalAmount').numberbox('setValue', ret.totalamount);
             $("#confirm_div").dialog("open");
         } else {
             $.messager.alert('Information', 'Please Select Data...!!', 'info');
@@ -389,6 +397,7 @@
             $('#ConfirmationDate').datebox('setValue', $.datepicker.formatDate('mm/dd/yy', new Date()));
             $('#idreconcile').val(ret.id);
             $('#reconcileCode').val(ret.code);
+            $('#reconcileTotalAmount').numberbox('setValue', ret.totalamount);
             $("#reconcile_div").dialog("open");
         } else {
             $.messager.alert('Information', 'Please Select Data...!!', 'info');
@@ -889,7 +898,7 @@
         url: base_url,
         datatype: "json",
         mtype: 'GET',
-        colNames: ['Code', 'Contact Id', 'Contact Name', 'Payable Source', 'Payable Source Id', 'Payable Source Code',
+        colNames: ['Code', 'Contact Id', 'Contact Name', 'Payable Source', 'Source Id', 'Source Code',
                    'Amount', 'Remaining Amount', 'PendingClearanceAmount', 'Due Date',
                   ],
         colModel: [

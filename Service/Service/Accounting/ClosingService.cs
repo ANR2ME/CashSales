@@ -54,7 +54,7 @@ namespace Service.Service
             if (_validator.ValidCreateObject(closing, this))
             {
                 _repository.CreateObject(closing);
-                IList<Account> allAccounts = _accountService.GetQueryable().OrderBy(x => x.Code).ToList();
+                IList<Account> allAccounts = _accountService.GetQueryable().Where(x => !x.IsDeleted).OrderBy(x => x.Code).ToList();
                 foreach (var account in allAccounts)
                 {
                     ValidComb validComb = new ValidComb()
@@ -109,7 +109,7 @@ namespace Service.Service
                     _validCombService.UpdateObject(validComb, _accountService, this);
                 }
 
-                var groupNodeAccounts = _accountService.GetQueryable().Where(x => !x.IsLeaf).OrderByDescending(x => x.Level);
+                var groupNodeAccounts = _accountService.GetQueryable().Where(x => !x.IsLeaf && !x.IsDeleted).OrderByDescending(x => x.Level).ToList();
                 foreach (var groupNode in groupNodeAccounts)
                 {
                     FillValidComb(groupNode, closing, _accountService, _validCombService);
@@ -143,13 +143,18 @@ namespace Service.Service
 
         public bool DeleteObject(int Id, IAccountService _accountService, IValidCombService _validCombService)
         {
-            IList<Account> allAccounts = _accountService.GetAll();
-            foreach (var account in allAccounts)
+            Closing closing = GetObjectById(Id);
+            if (_validator.ValidDeleteObject(closing))
             {
-                ValidComb validComb = _validCombService.FindOrCreateObjectByAccountAndClosing(account.Id, Id);
-                _validCombService.DeleteObject(validComb.Id);
+                IList<Account> allAccounts = _accountService.GetAll();
+                foreach (var account in allAccounts)
+                {
+                    ValidComb validComb = _validCombService.FindOrCreateObjectByAccountAndClosing(account.Id, Id);
+                    _validCombService.DeleteObject(validComb.Id);
+                }
+                return _repository.DeleteObject(Id);
             }
-            return _repository.DeleteObject(Id);
+            return false;
         }
 
         public bool IsDateClosed(DateTime DateToCheck)

@@ -267,6 +267,7 @@
 
     $('#confirm_btn_submit').click(function () {
         ClearErrorMessage();
+        $("#confirm_div").dialog('close');
         $.ajax({
             url: base_url + "StockAdjustment/Confirm",
             type: "POST",
@@ -276,6 +277,7 @@
             }),
             success: function (result) {
                 if (JSON.stringify(result.Errors) != '{}') {
+                    $("#confirm_div").dialog('open');
                     for (var key in result.Errors) {
                         if (key != null && key != undefined && key != 'Generic') {
                             $('input[name=' + key + ']').addClass('errormessage').after('<span class="errormessage">**' + result.Errors[key] + '</span>');
@@ -287,8 +289,8 @@
                     }
                 }
                 else {
+                    //$("#confirm_div").dialog('close');
                     ReloadGrid();
-                    $("#confirm_div").dialog('close');
                 }
             }
         });

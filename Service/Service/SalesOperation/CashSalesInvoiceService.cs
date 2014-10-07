@@ -85,7 +85,7 @@ namespace Service.Service
                 cashSalesInvoice.Total = (cashSalesInvoice.Total * ((100 - cashSalesInvoice.Discount) / 100) * ((100 + cashSalesInvoice.Tax) / 100));
                 Contact contact = _contactService.GetObjectByName(Core.Constants.Constant.BaseContact);
                 Receivable receivable = _receivableService.CreateObject(contact.Id, Core.Constants.Constant.ReceivableSource.CashSalesInvoice, cashSalesInvoice.Id, cashSalesInvoice.Code, cashSalesInvoice.Total, (DateTime)cashSalesInvoice.DueDate.GetValueOrDefault());
-                _generalLedgerJournalService.CreateConfirmationJournalForCashSalesInvoice(cashSalesInvoice, _accountService);
+                //_generalLedgerJournalService.CreateConfirmationJournalForCashSalesInvoice(cashSalesInvoice, _accountService);
                 cashSalesInvoice = _repository.ConfirmObject(cashSalesInvoice);
             }
             else
@@ -113,7 +113,7 @@ namespace Service.Service
                 }
                 Receivable receivable = _receivableService.GetObjectBySource(Core.Constants.Constant.ReceivableSource.CashSalesInvoice, cashSalesInvoice.Id);
                 _receivableService.SoftDeleteObject(receivable);
-                _generalLedgerJournalService.CreateUnconfirmationJournalForCashSalesInvoice(cashSalesInvoice, _accountService);
+                //_generalLedgerJournalService.CreateUnconfirmationJournalForCashSalesInvoice(cashSalesInvoice, _accountService);
                 cashSalesInvoice.CoGS = 0;
                 cashSalesInvoice.Total = 0;
                 cashSalesInvoice.Discount = 0;
@@ -148,10 +148,22 @@ namespace Service.Service
                                                                             _receivableService, _contactService, _cashBankService);
                 ReceiptVoucherDetail receiptVoucherDetail = _receiptVoucherDetailService.CreateObject(receiptVoucher.Id, receivable.Id, cashSalesInvoice.AmountPaid.GetValueOrDefault(), 
                                                                             "Automatic Payment", _receiptVoucherService, _cashBankService, _receivableService);
-                cashSalesInvoice = _repository.PaidObject(cashSalesInvoice);
-                _generalLedgerJournalService.CreatePaidJournalForCashSalesInvoice(cashSalesInvoice, _accountService);
                 _receiptVoucherService.ConfirmObject(receiptVoucher, (DateTime)cashSalesInvoice.ConfirmationDate.GetValueOrDefault(), _receiptVoucherDetailService, _cashBankService,
                                                      _receivableService, _cashMutationService, _generalLedgerJournalService, _accountService, _closingService);
+                if (!receiptVoucher.Errors.Any())
+                {
+                    cashSalesInvoice = _repository.PaidObject(cashSalesInvoice);
+                    _generalLedgerJournalService.CreateConfirmationJournalForCashSalesInvoice(cashSalesInvoice, _accountService);
+                    _generalLedgerJournalService.CreatePaidJournalForCashSalesInvoice(cashSalesInvoice, _accountService);
+                }
+                else
+                {
+                    cashSalesInvoice.Errors.Clear();
+                    foreach (var error in receiptVoucher.Errors)
+                    {
+                        cashSalesInvoice.Errors.Add(error.Key, error.Value);
+                    }
+                }
             }
             return cashSalesInvoice;
         }
@@ -182,12 +194,13 @@ namespace Service.Service
                         _receiptVoucherService.SoftDeleteObject(receiptVoucher, _receiptVoucherDetailService);
                     }
                 }
+                _generalLedgerJournalService.CreateUnpaidJournalForCashSalesInvoice(cashSalesInvoice, _accountService);
+                _generalLedgerJournalService.CreateUnconfirmationJournalForCashSalesInvoice(cashSalesInvoice, _accountService);
                 receivable.AllowanceAmount = 0;
                 _receivableService.UpdateObject(receivable);
                 cashSalesInvoice.AmountPaid = 0;
                 cashSalesInvoice.IsFullPayment = false;
                 cashSalesInvoice.Allowance = 0;
-                _generalLedgerJournalService.CreateUnpaidJournalForCashSalesInvoice(cashSalesInvoice, _accountService);
                 cashSalesInvoice = _repository.UnpaidObject(cashSalesInvoice);
             }
             return cashSalesInvoice;

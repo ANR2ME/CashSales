@@ -156,7 +156,7 @@ namespace Service.Service
                                               IGeneralLedgerJournalService _generalLedgerJournalService, IAccountService _accountService, IClosingService _closingService)
         {
             paymentVoucher.ReconciliationDate = ReconciliationDate;
-            if (_validator.ValidReconcileObject(paymentVoucher, _closingService))
+            if (_validator.ValidReconcileObject(paymentVoucher, _paymentVoucherDetailService, _cashBankService, _closingService))
             {
                 _repository.ReconcileObject(paymentVoucher);
 

@@ -1023,6 +1023,10 @@
     <Content Include="Views\FinanceReport\IncomeStatement.cshtml" />
     <Content Include="Views\FinanceReport\BalanceSheet.cshtml" />
     <Content Include="Reports\Finance\IncomeStatement.ttx" />
+    <Content Include="Reports\General\ReceiptVoucher.rpt" />
+    <Content Include="Reports\General\ReceiptVoucher.ttx" />
+    <Content Include="Reports\General\PaymentVoucher.rpt" />
+    <Content Include="Reports\General\PaymentVoucher.ttx" />
     <None Include="Scripts\jquery-1.7.1.intellisense.js" />
     <Content Include="Scripts\collapsiblePanel.js" />
     <Content Include="Scripts\jquery-1.1.3.1.pack.js" />
@@ -1237,7 +1241,7 @@
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>52383</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost:61677/</IISUrl>
+          <IISUrl>http://localhost:61677/cashsales_sepeda</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>

@@ -41,7 +41,7 @@ namespace WebView.Controllers
             GeneralFunction.ConstructWhereInLinq(strWhere, out filter);
             if (filter == "") filter = "true";
             // Get Data
-           var all = _accountService.GetQueryable();
+           var all = _accountService.GetQueryable().Where(x => !x.IsDeleted);
            var parent = _accountService.GetQueryable().Where(x => x.Level < 5 && !x.IsDeleted);
             /*
              * this does not work

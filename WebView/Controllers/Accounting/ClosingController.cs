@@ -279,25 +279,24 @@ namespace WebView.Controllers
         [HttpPost]
         public dynamic Delete(Closing model)
         {
+            Dictionary<string, string> Errors = new Dictionary<string, string>();
             try
             {
                 if (!AuthenticationModel.IsAllowed("Delete", Core.Constants.Constant.MenuName.Closing, Core.Constants.Constant.MenuGroupName.Report))
                 {
-                    Dictionary<string, string> Errors = new Dictionary<string, string>();
                     Errors.Add("Generic", "You are Not Allowed to Confirm Record");
-
                     return Json(new
                     {
                         Errors
                     }, JsonRequestBehavior.AllowGet);
                 }
 
-                _closingService.DeleteObject(model.Id, _accountService, _validCombService);
+                bool result = _closingService.DeleteObject(model.Id, _accountService, _validCombService);
+                if (!result) { Errors.Add("Generic", "Tidak boleh sudah ditutup"); }
             }
             catch (Exception ex)
             {
                 LOG.Error("Confirm Failed", ex);
-                Dictionary<string, string> Errors = new Dictionary<string, string>();
                 Errors.Add("Generic", "Error " + ex);
 
                 return Json(new
@@ -308,7 +307,7 @@ namespace WebView.Controllers
 
             return Json(new
             {
-                model.Errors
+                Errors
             });
         }
     }

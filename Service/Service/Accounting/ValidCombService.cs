@@ -66,7 +66,7 @@ namespace Service.Service
         {
             decimal totalAmount = 0;
 
-            IList<Account> subnodeaccounts = _accountService.GetQueryable().Where(x => x.ParentId == validComb.AccountId).ToList();
+            IList<Account> subnodeaccounts = _accountService.GetQueryable().Where(x => x.ParentId == validComb.AccountId && !x.IsDeleted).ToList();
             if (subnodeaccounts.Any())
             {
                 foreach (var subnode in subnodeaccounts)

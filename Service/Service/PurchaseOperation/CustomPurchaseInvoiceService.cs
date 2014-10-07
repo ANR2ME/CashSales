@@ -81,7 +81,7 @@ namespace Service.Service
                 //customPurchaseInvoice.Total = (customPurchaseInvoice.Total * (100 - customPurchaseInvoice.Discount) / 100) * (100 - customPurchaseInvoice.Tax) / 100;
                 customPurchaseInvoice.Total = CalculateTotalAmountAfterDiscountAndTax(customPurchaseInvoice);
                 Payable payable = _payableService.CreateObject(customPurchaseInvoice.ContactId, Core.Constants.Constant.PayableSource.CustomPurchaseInvoice, customPurchaseInvoice.Id, customPurchaseInvoice.Code, customPurchaseInvoice.Total, (DateTime)customPurchaseInvoice.DueDate.GetValueOrDefault());
-                _generalLedgerJournalService.CreateConfirmationJournalForCustomPurchaseInvoice(customPurchaseInvoice, _accountService);
+                //_generalLedgerJournalService.CreateConfirmationJournalForCustomPurchaseInvoice(customPurchaseInvoice, _accountService);
                 customPurchaseInvoice = _repository.ConfirmObject(customPurchaseInvoice);
             }
             else
@@ -110,7 +110,7 @@ namespace Service.Service
                 _payableService.SoftDeleteObject(payable);
                 customPurchaseInvoice.Total = 0;
                 customPurchaseInvoice.CoGS = 0;
-                _generalLedgerJournalService.CreateUnconfirmationJournalForCustomPurchaseInvoice(customPurchaseInvoice, _accountService);
+                //_generalLedgerJournalService.CreateUnconfirmationJournalForCustomPurchaseInvoice(customPurchaseInvoice, _accountService);
                 customPurchaseInvoice = _repository.UnconfirmObject(customPurchaseInvoice);
             }
             return customPurchaseInvoice;
@@ -146,10 +146,23 @@ namespace Service.Service
                 PaymentVoucherDetail paymentVoucherDetail = _paymentVoucherDetailService.CreateObject(paymentVoucher.Id, payable.Id, customPurchaseInvoice.AmountPaid.GetValueOrDefault(),
                                                                             "Automatic Payment", _paymentVoucherService, _cashBankService, _payableService);
 
-                customPurchaseInvoice = _repository.PaidObject(customPurchaseInvoice);
-                _generalLedgerJournalService.CreatePaidJournalForCustomPurchaseInvoice(customPurchaseInvoice, _accountService);
-                _paymentVoucherService.ConfirmObject(paymentVoucher, (DateTime)customPurchaseInvoice.ConfirmationDate.GetValueOrDefault(), _paymentVoucherDetailService,
+                
+                _paymentVoucherService.ConfirmObject(paymentVoucher, (DateTime)customPurchaseInvoice.PaymentDate.GetValueOrDefault(), _paymentVoucherDetailService,
                                                      _cashBankService, _payableService, _cashMutationService,_generalLedgerJournalService, _accountService, _closingService);
+                if (!paymentVoucher.Errors.Any())
+                {
+                    customPurchaseInvoice = _repository.PaidObject(customPurchaseInvoice);
+                    _generalLedgerJournalService.CreateConfirmationJournalForCustomPurchaseInvoice(customPurchaseInvoice, _accountService);
+                    _generalLedgerJournalService.CreatePaidJournalForCustomPurchaseInvoice(customPurchaseInvoice, _accountService);
+                }
+                else
+                {
+                    customPurchaseInvoice.Errors.Clear();
+                    foreach (var error in paymentVoucher.Errors)
+                    {
+                        customPurchaseInvoice.Errors.Add(error.Key, error.Value);
+                    }
+                }
             }
             
             return customPurchaseInvoice;
@@ -181,9 +194,10 @@ namespace Service.Service
                         _paymentVoucherService.SoftDeleteObject(paymentVoucher, _paymentVoucherDetailService);
                     }
                 }
+                _generalLedgerJournalService.CreateUnpaidJournalForCustomPurchaseInvoice(customPurchaseInvoice, _accountService);
+                _generalLedgerJournalService.CreateUnconfirmationJournalForCustomPurchaseInvoice(customPurchaseInvoice, _accountService);
                 customPurchaseInvoice.AmountPaid = 0;
                 customPurchaseInvoice.IsFullPayment = false;
-                _generalLedgerJournalService.CreateUnpaidJournalForCustomPurchaseInvoice(customPurchaseInvoice, _accountService);
                 customPurchaseInvoice = _repository.UnpaidObject(customPurchaseInvoice);
             }
             return customPurchaseInvoice;

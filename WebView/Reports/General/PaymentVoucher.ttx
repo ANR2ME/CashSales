@@ -1,0 +1,11 @@
+CompanyName	String	80	
+CompanyAddress	String	255	
+CompanyContactNo	String	100	
+Contact	String	80	
+Code	String	80	
+Date	Date		
+SourceCode	String	80	
+Source	String	80			
+Amount	Currency				
+User	String	80
+Description	String	255	

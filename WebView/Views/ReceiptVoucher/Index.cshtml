@@ -23,7 +23,7 @@
         <a id="btn_reconcile" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-approval'">Reconcile</a>
         <a id="btn_unreconcile" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-undo'">UnReconcile</a>
         <a id="btn_del" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-remove'">Delete</a>
-        @*<a id="btn_print" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-print'">Print Data</a>*@
+        <a id="btn_print" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-print'">Print Data</a>
     </div>
 
     <div id="table_div">
@@ -83,6 +83,7 @@
                             <td colspan="5">
                                 <div id="ReceiptDateDiv"><input id="ReceiptDate" class="easyui-datebox" title="mm/dd/yyyy" type="text" size="10" value="@DateTime.Today.ToShortDateString()"/> </div>
                                 <div id="ReceiptDateDiv2"><input id="ReceiptDate2" type="text" size="10" disabled="disabled"/></div>
+                                <input name="ReceiptDate" type="text" size="1" hidden="hidden"/>
                             </td>
                         </tr>
                        <tr>
@@ -90,7 +91,7 @@
                             <td>
                                 <select id="IsGBCH">
                                   <option value="True">Yes</option>
-                                  <option value="False">No</option>
+                                    <option value="False">No</option>
                                </select>
                             </td>
                             <td>
@@ -98,6 +99,7 @@
                              <td>
                                 <div id="DueDateDiv"><input id="DueDate" class="easyui-datebox" title="mm/dd/yyyy" type="text" size="10" value="@DateTime.Today.ToShortDateString()"/> </div>
                                 <div id="DueDateDiv2"><input id="DueDate2" type="text" size="10" disabled="disabled"/></div>
+                                <input name="DueDate" type="text" size="1" hidden="hidden"/>
                             </td>
                              <td hidden>Bank</td>
                             <td hidden>
@@ -207,6 +209,13 @@
                             </td>
                   </tr>
                   <tr>
+                             <td >
+                                <label>Total Amount</label></td>
+                             <td colspan="5">
+                               <input id="confirmTotalAmount" name="TotalAmount" type="text" size="15" maxlength="20" class="textright easyui-numberbox" data-options="groupSeparator:','" value="0" disabled="disabled" />
+                                </td>     
+                  </tr>
+                  <tr>
                       <td>
                           Confirmation Date
                       </td>
@@ -248,6 +257,13 @@
                             <td colspan="5" >
                                <input id="reconcileCode" name="Code" type="text" size="10" disabled="disabled"/>
                             </td>
+                  </tr>
+                  <tr>
+                             <td >
+                                <label>Total Amount</label></td>
+                             <td colspan="5">
+                               <input id="reconcileTotalAmount" name="TotalAmount" type="text" size="15" maxlength="20" class="textright easyui-numberbox" data-options="groupSeparator:','" value="0" disabled="disabled" />
+                                </td>     
                   </tr>
                   <tr>
                       <td>

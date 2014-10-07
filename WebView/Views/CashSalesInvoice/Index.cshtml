@@ -22,7 +22,8 @@
         <a id="btn_paid" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-approval'">Paid</a>
         <a id="btn_unpaid" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-undo'">Unpaid</a>
         <a id="btn_del" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-remove'">Delete</a>
-        <a id="btn_print" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-print'">Print Data</a>
+        <a id="btn_print" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-print'">Print For Internal</a>
+        <a id="btn_print2" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-print'">Print For Customer</a>
     </div>
 
     <div id="table_div">
@@ -59,7 +60,9 @@
                             <td>
                                 <label>Description</label></td>
                             <td >
-                                <input id="Description" name ="Description" type="text" size="60" maxlength="60" align="left"/></td>
+                                @*<input id="Description" name ="Description" type="text" size="60" maxlength="60" align="left"/>*@
+                                <textarea name="Description" id="Description" cols="60" rows="3"></textarea>
+                            </td>
                         </tr>
                         <tr>
                             <td>
@@ -110,6 +113,7 @@
                              <div id="SalesDateDiv"><input id="SalesDate" class="easyui-datebox" title="mm/dd/yyyy" type="text" size="10" value="@DateTime.Today.ToShortDateString()"/>
                             </div>
                              <div id="SalesDateDiv2"><input id="SalesDate2" type="text" size="10" disabled="disabled"/></div>
+                                 <input name="SalesDate" type="text" size="1" hidden="hidden"/>
                              </td>
                         </tr>
                         <tr>
@@ -119,6 +123,7 @@
                              <div id="DueDateDiv"><input id="DueDate" class="easyui-datebox" title="mm/dd/yyyy" type="text" size="10" value="@DateTime.Today.ToShortDateString()"/>
                             </div>
                              <div id="DueDateDiv2"><input id="DueDate2" type="text" size="10" disabled="disabled"/></div>
+                                 <input name="DueDate" type="text" size="1" hidden="hidden"/>
                              </td>
                         </tr>
                     </table>

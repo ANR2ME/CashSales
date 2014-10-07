@@ -16,19 +16,19 @@ namespace Core.Interface.Validation
         ReceiptVoucherDetail VHasNotBeenDeleted(ReceiptVoucherDetail receiptVoucherDetail);
         ReceiptVoucherDetail VReceivableHasNotBeenCompleted(ReceiptVoucherDetail receiptVoucherDetail, IReceivableService _receivableService);
         ReceiptVoucherDetail VNonNegativeAmount(ReceiptVoucherDetail receiptVoucherDetail);
-        ReceiptVoucherDetail VAmountLessOrEqualReceivable(ReceiptVoucherDetail receiptVoucherDetail, IReceivableService _receivableService);
+        ReceiptVoucherDetail VAmountLessOrEqualReceivable(ReceiptVoucherDetail receiptVoucherDetail, IReceivableService _receivableService, IReceiptVoucherDetailService _receiptVoucherDetailService);
         ReceiptVoucherDetail VUniqueReceivableId(ReceiptVoucherDetail receiptVoucherDetail, IReceiptVoucherDetailService _receiptVoucherDetailService, IReceivableService _receivableService);
 
         ReceiptVoucherDetail VCreateObject(ReceiptVoucherDetail receiptVoucherDetail, IReceiptVoucherService _receiptVoucherService, IReceiptVoucherDetailService _receiptVoucherDetailService, ICashBankService _cashBankService, IReceivableService _receivableService);
         ReceiptVoucherDetail VUpdateObject(ReceiptVoucherDetail receiptVoucherDetail, IReceiptVoucherService _receiptVoucherService, IReceiptVoucherDetailService _receiptVoucherDetailService, ICashBankService _cashBankService, IReceivableService _receivableService);
         ReceiptVoucherDetail VDeleteObject(ReceiptVoucherDetail receiptVoucherDetail);
         ReceiptVoucherDetail VHasConfirmationDate(ReceiptVoucherDetail receiptVoucherDetail);
-        ReceiptVoucherDetail VConfirmObject(ReceiptVoucherDetail receiptVoucherDetail, IReceivableService _receivableService);
+        ReceiptVoucherDetail VConfirmObject(ReceiptVoucherDetail receiptVoucherDetail, IReceivableService _receivableService, IReceiptVoucherDetailService _receiptVoucherDetailService);
         ReceiptVoucherDetail VUnconfirmObject(ReceiptVoucherDetail receiptVoucherDetail);
         bool ValidCreateObject(ReceiptVoucherDetail receiptVoucherDetail, IReceiptVoucherService _receiptVoucherService, IReceiptVoucherDetailService _receiptVoucherDetailService, ICashBankService _cashBankService, IReceivableService _receivableService);
         bool ValidUpdateObject(ReceiptVoucherDetail receiptVoucherDetail, IReceiptVoucherService _receiptVoucherService, IReceiptVoucherDetailService _receiptVoucherDetailService, ICashBankService _cashBankService, IReceivableService _receivableService);
         bool ValidDeleteObject(ReceiptVoucherDetail receiptVoucherDetail);
-        bool ValidConfirmObject(ReceiptVoucherDetail receiptVoucherDetail, IReceivableService _receivableService);
+        bool ValidConfirmObject(ReceiptVoucherDetail receiptVoucherDetail, IReceivableService _receivableService, IReceiptVoucherDetailService _receiptVoucherDetailService);
         bool ValidUnconfirmObject(ReceiptVoucherDetail receiptVoucherDetail);
         bool isValid(ReceiptVoucherDetail receiptVoucherDetail);
         string PrintError(ReceiptVoucherDetail receiptVoucherDetail);

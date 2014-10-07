@@ -99,10 +99,10 @@ namespace Service.Service
             return _repository.DeleteObject(Id);
         }
 
-        public ReceiptVoucherDetail ConfirmObject(ReceiptVoucherDetail receiptVoucherDetail, DateTime ConfirmationDate, IReceiptVoucherService _receiptVoucherService, IReceivableService _receivableService)
+        public ReceiptVoucherDetail ConfirmObject(ReceiptVoucherDetail receiptVoucherDetail, DateTime ConfirmationDate, IReceiptVoucherService _receiptVoucherService, IReceivableService _receivableService, IReceiptVoucherDetailService _receiptVoucherDetailService)
         {
             receiptVoucherDetail.ConfirmationDate = ConfirmationDate;
-            if (_validator.ValidConfirmObject(receiptVoucherDetail, _receivableService))
+            if (_validator.ValidConfirmObject(receiptVoucherDetail, _receivableService, _receiptVoucherDetailService))
             {
                 ReceiptVoucher receiptVoucher = _receiptVoucherService.GetObjectById(receiptVoucherDetail.ReceiptVoucherId);
                 Receivable receivable = _receivableService.GetObjectById(receiptVoucherDetail.ReceivableId);
@@ -140,6 +140,17 @@ namespace Service.Service
                 receiptVoucherDetail = _repository.UnconfirmObject(receiptVoucherDetail);
             }
             return receiptVoucherDetail;
+        }
+
+        public decimal CalcTotalAmount(int ReceiptVoucherId)
+        {
+            decimal totalamount = 0;
+            IList<ReceiptVoucherDetail> details = GetObjectsByReceiptVoucherId(ReceiptVoucherId);
+            foreach (var detail in details)
+            {
+                totalamount += detail.Amount;
+            }
+            return totalamount;
         }
     }
 }

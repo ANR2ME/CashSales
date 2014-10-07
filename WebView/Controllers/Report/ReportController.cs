@@ -26,7 +26,9 @@ namespace WebView.Controllers
         private ICompanyService _companyService;
         private ICashBankService _cashBankService;
         private IPayableService _payableService;
+        private IPaymentVoucherDetailService _paymentVoucherDetailService;
         private IReceivableService _receivableService;
+        private IReceiptVoucherDetailService _receiptVoucherDetailService;
         private ICashSalesInvoiceService _cashSalesInvoiceService;
         private ICashSalesInvoiceDetailService _cashSalesInvoiceDetailService;
         private ICashSalesReturnService _cashSalesReturnService;
@@ -69,7 +71,9 @@ namespace WebView.Controllers
             _companyService = new CompanyService(new CompanyRepository(), new CompanyValidator());
             _cashBankService = new CashBankService(new CashBankRepository(), new CashBankValidator());
             _payableService = new PayableService(new PayableRepository(), new PayableValidator());
+            _paymentVoucherDetailService = new PaymentVoucherDetailService(new PaymentVoucherDetailRepository(), new PaymentVoucherDetailValidator());
             _receivableService = new ReceivableService(new ReceivableRepository(), new ReceivableValidator());
+            _receiptVoucherDetailService = new ReceiptVoucherDetailService(new ReceiptVoucherDetailRepository(), new ReceiptVoucherDetailValidator());
 
             _cashSalesInvoiceService = new CashSalesInvoiceService(new CashSalesInvoiceRepository(), new CashSalesInvoiceValidator());
             _cashSalesInvoiceDetailService = new CashSalesInvoiceDetailService(new CashSalesInvoiceDetailRepository(), new CashSalesInvoiceDetailValidator());
@@ -238,9 +242,9 @@ namespace WebView.Controllers
                              CompanyContactNo = company.ContactNo
                          }).ToList();
 
-            var rd = new ReportDocument();
+            if (!query.Any()) return Content(Core.Constants.Constant.ErrorPage.RecordNotFound);
 
-            if (!query.Any()) return Content("");
+            var rd = new ReportDocument();
 
             //Loading Report
             rd.Load(Server.MapPath("~/") + "Reports/General/Sales.rpt");
@@ -267,7 +271,7 @@ namespace WebView.Controllers
             var company = _companyService.GetQueryable().FirstOrDefault();
             var q = _cashSalesInvoiceDetailService.GetQueryable().Include("CashSalesInvoice").Include("Item").Include("UoM").Where(x => x.CashSalesInvoice.IsPaid && x.CashSalesInvoice.SalesDate >= startDate && x.CashSalesInvoice.SalesDate <= endDate);
 
-            if (maxItem <= 0 || !q.Any()) return Content("");
+            if (maxItem <= 0 || !q.Any()) return Content(Core.Constants.Constant.ErrorPage.RecordNotFound);
 
             var query = (from m in q
                          group m by m.ItemId into g
@@ -408,6 +412,8 @@ namespace WebView.Controllers
                              Description = model.CustomPurchaseInvoice.Description,
                          }).ToList();
 
+            if (!query.Any()) return Content(Core.Constants.Constant.ErrorPage.RecordDetailNotFound);
+
             var rd = new ReportDocument();
 
             //Loading Report
@@ -415,6 +421,122 @@ namespace WebView.Controllers
 
             // Setting report data source
             rd.SetDataSource(query);
+
+            var stream = rd.ExportToStream(CrystalDecisions.Shared.ExportFormatType.PortableDocFormat);
+            return File(stream, "application/pdf");
+        }
+
+        public ActionResult PaymentVoucher()
+        {
+            return View();
+        }
+
+        public ActionResult ReportPaymentVoucher(int Id)
+        {
+            var company = _companyService.GetQueryable().FirstOrDefault();
+            //var paymentVoucher = _paymentVoucherService.GetObjectById(Id);
+            var q = _paymentVoucherDetailService.GetQueryableObjectsByPaymentVoucherId(Id).Include("PaymentVoucher").Include("Payable");
+            string user = AuthenticationModel.GetUserName();
+
+            var query = (from model in q
+                         select new
+                         {
+                             Code = model.PaymentVoucher.Code,
+                             Date = (model.PaymentVoucher.ConfirmationDate != null) ? model.PaymentVoucher.ConfirmationDate.Value : DateTime.Today,
+                             SourceCode = model.Payable.PayableSourceCode,
+                             Source = model.Payable.PayableSource,
+                             Amount = model.Amount,
+                             Description = model.Description,
+                             contact = "",
+                             CompanyName = company.Name,
+                             CompanyAddress = company.Address,
+                             CompanyContactNo = company.ContactNo,
+                             User = user,
+                         }).ToList();
+
+            if (!query.Any()) return Content(Core.Constants.Constant.ErrorPage.RecordDetailNotFound);
+
+            var rd = new ReportDocument();
+
+            //Loading Report
+            rd.Load(Server.MapPath("~/") + "Reports/General/PaymentVoucher.rpt");
+
+            // Setting report data source
+            rd.SetDataSource(query);
+
+            // Set printer paper size
+            System.Drawing.Printing.PrintDocument doctoprint = new System.Drawing.Printing.PrintDocument();
+            doctoprint.PrinterSettings.PrinterName = "Microsoft XPS Document Writer";
+            int i = 0;
+            for (i = 0; i <= doctoprint.PrinterSettings.PaperSizes.Count; i++)
+            {
+                int rawKind = 0;
+                if (doctoprint.PrinterSettings.PaperSizes[i].PaperName.ToLower() == "struck")
+                {
+                    rawKind = Convert.ToInt32(doctoprint.PrinterSettings.PaperSizes[i].GetType().GetField("kind", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic).GetValue(doctoprint.PrinterSettings.PaperSizes[i]));
+                    rd.PrintOptions.PaperSize = (CrystalDecisions.Shared.PaperSize)rawKind;
+                    //rd.PrintOptions.PaperOrientation = PaperOrientation.Landscape;
+                    break;
+                }
+            }
+
+            var stream = rd.ExportToStream(CrystalDecisions.Shared.ExportFormatType.PortableDocFormat);
+            return File(stream, "application/pdf");
+        }
+
+        public ActionResult ReceiptVoucher()
+        {
+            return View();
+        }
+
+        public ActionResult ReportReceiptVoucher(int Id)
+        {
+            var company = _companyService.GetQueryable().FirstOrDefault();
+            //var receiptVoucher = _receiptVoucherService.GetObjectById(Id);
+            var q = _receiptVoucherDetailService.GetQueryableObjectsByReceiptVoucherId(Id).Include("ReceiptVoucher").Include("Receivable");
+            string user = AuthenticationModel.GetUserName();
+
+            var query = (from model in q
+                         select new
+                         {
+                             Code = model.ReceiptVoucher.Code,
+                             Date = (model.ReceiptVoucher.ConfirmationDate != null) ? model.ReceiptVoucher.ConfirmationDate.Value : DateTime.Today,
+                             SourceCode = model.Receivable.ReceivableSourceCode,
+                             Source = model.Receivable.ReceivableSource,
+                             Amount = model.Amount,
+                             Description = model.Description,
+                             contact = "",
+                             CompanyName = company.Name,
+                             CompanyAddress = company.Address,
+                             CompanyContactNo = company.ContactNo,
+                             User = user,
+                         }).ToList();
+
+            if (!query.Any()) return Content(Core.Constants.Constant.ErrorPage.RecordDetailNotFound);
+
+            var rd = new ReportDocument();
+
+            //Loading Report
+            rd.Load(Server.MapPath("~/") + "Reports/General/ReceiptVoucher.rpt");
+
+            // Setting report data source
+            rd.SetDataSource(query);
+
+            // Set printer paper size
+            System.Drawing.Printing.PrintDocument doctoprint = new System.Drawing.Printing.PrintDocument();
+            doctoprint.PrinterSettings.PrinterName = "Microsoft XPS Document Writer";
+            int i = 0;
+            for (i = 0; i <= doctoprint.PrinterSettings.PaperSizes.Count; i++)
+            {
+                int rawKind = 0;
+                if (doctoprint.PrinterSettings.PaperSizes[i].PaperName.ToLower() == "struck")
+                {
+                    rawKind = Convert.ToInt32(doctoprint.PrinterSettings.PaperSizes[i].GetType().GetField("kind", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic).GetValue(doctoprint.PrinterSettings.PaperSizes[i]));
+                    rd.PrintOptions.PaperSize = (CrystalDecisions.Shared.PaperSize)rawKind;
+                    //rd.PrintOptions.PaperOrientation = PaperOrientation.Landscape;
+                    break;
+                }
+            }
 
             var stream = rd.ExportToStream(CrystalDecisions.Shared.ExportFormatType.PortableDocFormat);
             return File(stream, "application/pdf");
@@ -445,7 +567,7 @@ namespace WebView.Controllers
                              Tax = model.CashSalesInvoice.Tax,
                              Allowance = model.CashSalesInvoice.Allowance,
                              Code = model.CashSalesInvoice.Code,
-                             Date = model.CashSalesInvoice.ConfirmationDate.Value,
+                             Date = (model.CashSalesInvoice.ConfirmationDate != null) ? model.CashSalesInvoice.ConfirmationDate.Value : DateTime.Today,
                              contact = "",
                              CompanyName = company.Name,
                              CompanyAddress = company.Address,
@@ -454,6 +576,8 @@ namespace WebView.Controllers
                              Description = model.CashSalesInvoice.Description,
                          }).ToList();
 
+            if (!query.Any()) return Content(Core.Constants.Constant.ErrorPage.RecordDetailNotFound);
+
             var rd = new ReportDocument();
 
             //Loading Report
@@ -461,6 +585,81 @@ namespace WebView.Controllers
 
             // Setting report data source
             rd.SetDataSource(query);
+
+            // Set printer paper size
+            System.Drawing.Printing.PrintDocument doctoprint = new System.Drawing.Printing.PrintDocument();
+            doctoprint.PrinterSettings.PrinterName = "Microsoft XPS Document Writer";
+            int i = 0;
+            for (i = 0; i <= doctoprint.PrinterSettings.PaperSizes.Count; i++)
+            {
+                int rawKind = 0;
+                if (doctoprint.PrinterSettings.PaperSizes[i].PaperName.ToLower() == "struck")
+                {
+                    rawKind = Convert.ToInt32(doctoprint.PrinterSettings.PaperSizes[i].GetType().GetField("kind", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic).GetValue(doctoprint.PrinterSettings.PaperSizes[i]));
+                    rd.PrintOptions.PaperSize = (CrystalDecisions.Shared.PaperSize)rawKind;
+                    //rd.PrintOptions.PaperOrientation = PaperOrientation.Landscape;
+                    break;
+                }
+            }
+
+            var stream = rd.ExportToStream(CrystalDecisions.Shared.ExportFormatType.PortableDocFormat);
+            return File(stream, "application/pdf");
+        }
+
+        public ActionResult ReportSalesInvoiceForCustomer(int Id)
+        {
+            var company = _companyService.GetQueryable().FirstOrDefault();
+            //var cashSalesInvoice = _cashSalesInvoiceService.GetObjectById(Id);
+            var q = _cashSalesInvoiceDetailService.GetQueryableObjectsByCashSalesInvoiceId(Id).Include("CashSalesInvoice").Include("Item").Include("UoM");
+            string user = AuthenticationModel.GetUserName();
+
+            var query = (from model in q
+                         select new
+                         {
+                             SKU = model.Item.Sku,
+                             Name = model.Item.Name,
+                             UoM = model.Item.UoM.Name,
+                             model.Quantity,
+                             Price = model.IsManualPriceAssignment ? model.AssignedPrice : model.Item.SellingPrice,
+                             Discount = model.Discount,
+                             GlobalDiscount = model.CashSalesInvoice.Discount,
+                             Tax = model.CashSalesInvoice.Tax,
+                             Allowance = 0, //model.CashSalesInvoice.Allowance,
+                             Code = model.CashSalesInvoice.Code,
+                             Date = (model.CashSalesInvoice.ConfirmationDate != null) ? model.CashSalesInvoice.ConfirmationDate.Value : DateTime.Today,
+                             contact = "",
+                             CompanyName = company.Name,
+                             CompanyAddress = company.Address,
+                             CompanyContactNo = company.ContactNo,
+                             User = user,
+                             Description = model.CashSalesInvoice.Description,
+                         }).ToList();
+
+            if (!query.Any()) return Content(Core.Constants.Constant.ErrorPage.RecordDetailNotFound);
+
+            var rd = new ReportDocument();
+
+            //Loading Report
+            rd.Load(Server.MapPath("~/") + "Reports/General/SalesInvoice.rpt");
+
+            // Setting report data source
+            rd.SetDataSource(query);
+
+            // Set printer paper size
+            System.Drawing.Printing.PrintDocument doctoprint = new System.Drawing.Printing.PrintDocument();
+            doctoprint.PrinterSettings.PrinterName = "Microsoft XPS Document Writer";
+            int i = 0;
+            for (i = 0; i <= doctoprint.PrinterSettings.PaperSizes.Count; i++)
+            {
+                int rawKind = 0;
+                if (doctoprint.PrinterSettings.PaperSizes[i].PaperName.ToLower() == "struck")
+                {
+                    rawKind = Convert.ToInt32(doctoprint.PrinterSettings.PaperSizes[i].GetType().GetField("kind", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic).GetValue(doctoprint.PrinterSettings.PaperSizes[i]));
+                    rd.PrintOptions.PaperSize = (CrystalDecisions.Shared.PaperSize)rawKind;
+                    //rd.PrintOptions.PaperOrientation = PaperOrientation.Landscape;
+                    break;
+                }
+            }
 
             var stream = rd.ExportToStream(CrystalDecisions.Shared.ExportFormatType.PortableDocFormat);
             return File(stream, "application/pdf");

@@ -107,7 +107,7 @@ namespace Service.Service
                 foreach (var detail in details)
                 {
                     detail.Errors = new Dictionary<string, string>();
-                    _receiptVoucherDetailService.ConfirmObject(detail, ConfirmationDate, this, _receivableService);
+                    _receiptVoucherDetailService.ConfirmObject(detail, ConfirmationDate, this, _receivableService, _receiptVoucherDetailService);
                 }
                 _repository.ConfirmObject(receiptVoucher);
 
@@ -126,7 +126,7 @@ namespace Service.Service
                                             ICashBankService _cashBankService, IReceivableService _receivableService, ICashMutationService _cashMutationService,
                                             IGeneralLedgerJournalService _generalLedgerJournalService, IAccountService _accountService, IClosingService _closingService)
         {
-            if (_validator.ValidUnconfirmObject(receiptVoucher, _closingService))
+            if (_validator.ValidUnconfirmObject(receiptVoucher, _receiptVoucherDetailService, _cashBankService, _closingService))
             {
                 IList<ReceiptVoucherDetail> details = _receiptVoucherDetailService.GetObjectsByReceiptVoucherId(receiptVoucher.Id);
                 foreach (var detail in details)
@@ -183,7 +183,7 @@ namespace Service.Service
                                                 ICashMutationService _cashMutationService, ICashBankService _cashBankService, IReceivableService _receivableService,
                                                 IGeneralLedgerJournalService _generalLedgerJournalService, IAccountService _accountService, IClosingService _closingService)
         {
-            if (_validator.ValidUnreconcileObject(receiptVoucher, _closingService))
+            if (_validator.ValidUnreconcileObject(receiptVoucher, _receiptVoucherDetailService, _cashBankService, _closingService))
             {
                 _repository.UnreconcileObject(receiptVoucher);
 
@@ -210,5 +210,7 @@ namespace Service.Service
             }
             return receiptVoucher;
         }
+
+        
     }
 }

@@ -107,7 +107,7 @@ namespace Service.Service
         {
             int ParentId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.CashBank).Id;
             string parentCode = _accountService.GetObjectById(ParentId).Code;
-            int newId = _accountService.GetQueryable().Where(x => x.ParentId == ParentId).Count() + 1;
+            int newId = _accountService.GetQueryable().Where(x => x.ParentId == ParentId && !x.IsDeleted).Count() + 1;
             while (true)
             {
                 if (_accountService.GetObjectByLegacyCode(parentCode + newId.ToString()) == null)

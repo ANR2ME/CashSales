@@ -297,6 +297,22 @@ namespace WebView.Controllers
             try
             {
                 model = _receiptVoucherService.GetObjectById(Id);
+
+                return Json(new
+                {
+                    model.Id,
+                    model.Code,
+                    model.ContactId,
+                    Contact = _contactService.GetObjectById(model.ContactId).Name,
+                    model.CashBankId,
+                    CashBank = _cashBankService.GetObjectById(model.CashBankId).Name,
+                    model.ReceiptDate,
+                    model.IsGBCH,
+                    model.DueDate,
+                    _cashBankService.GetObjectById(model.CashBankId).IsBank,
+                    model.TotalAmount,
+                    model.Errors
+                }, JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)
             {
@@ -310,21 +326,7 @@ namespace WebView.Controllers
                 }, JsonRequestBehavior.AllowGet);
             }
 
-            return Json(new
-            {
-                model.Id,
-                model.Code,
-                model.ContactId,
-                Contact = _contactService.GetObjectById(model.ContactId).Name,
-                model.CashBankId,
-                CashBank = _cashBankService.GetObjectById(model.CashBankId).Name,
-                model.ReceiptDate,
-                model.IsGBCH,
-                model.DueDate,
-                _cashBankService.GetObjectById(model.CashBankId).IsBank,
-                model.TotalAmount,
-                model.Errors
-            }, JsonRequestBehavior.AllowGet);
+            
         }
 
         public dynamic GetInfoDetail(int Id)

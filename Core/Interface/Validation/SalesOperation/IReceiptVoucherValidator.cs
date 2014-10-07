@@ -23,8 +23,8 @@ namespace Core.Interface.Validation
         ReceiptVoucher VAllReceiptVoucherDetailsAreConfirmable(ReceiptVoucher receiptVoucher, IReceiptVoucherService _paymetnVoucherService,
                                                                IReceiptVoucherDetailService receiptVoucherDetailService, ICashBankService _cashBankService,
                                                                IReceivableService _receivableService);
-        ReceiptVoucher VCashBankHasMoreAmountReceiptVoucherDetails(ReceiptVoucher receiptVoucher, IReceiptVoucherDetailService _receiptVoucherDetailService,
-                                                                   ICashBankService _cashBankService);
+        //ReceiptVoucher VCashBankHasMoreAmountReceiptVoucherDetails(ReceiptVoucher receiptVoucher, IReceiptVoucherDetailService _receiptVoucherDetailService,
+        //                                                           ICashBankService _cashBankService);
         ReceiptVoucher VHasBeenReconciled(ReceiptVoucher receiptVoucher);
         ReceiptVoucher VHasNotBeenReconciled(ReceiptVoucher receiptVoucher);
         ReceiptVoucher VHasReconciliationDate(ReceiptVoucher receiptVoucher);
@@ -38,9 +38,11 @@ namespace Core.Interface.Validation
         ReceiptVoucher VConfirmObject(ReceiptVoucher receiptVoucher, IReceiptVoucherService _receiptVoucherService,
                                        IReceiptVoucherDetailService _receiptVoucherDetailService, ICashBankService _cashBankService,
                                        IReceivableService _receivableService, IClosingService _closingService);
-        ReceiptVoucher VUnconfirmObject(ReceiptVoucher receiptVoucher, IClosingService _closingService);
+        ReceiptVoucher VUnconfirmObject(ReceiptVoucher receiptVoucher, IReceiptVoucherDetailService _receiptVoucherDetailService, ICashBankService _cashBankService, 
+                                       IClosingService _closingService);
         ReceiptVoucher VReconcileObject(ReceiptVoucher receiptVoucher, IClosingService _closingService);
-        ReceiptVoucher VUnreconcileObject(ReceiptVoucher receiptVoucher, IClosingService _closingService);
+        ReceiptVoucher VUnreconcileObject(ReceiptVoucher receiptVoucher, IReceiptVoucherDetailService _receiptVoucherDetailService, ICashBankService _cashBankService, 
+                                       IClosingService _closingService);
         bool ValidCreateObject(ReceiptVoucher receiptVoucher, IReceiptVoucherService _receiptVoucherService, IReceiptVoucherDetailService _receiptVoucherDetailService,
                                IReceivableService _receivableService, IContactService _contactService, ICashBankService _cashBankService);
         bool ValidUpdateObject(ReceiptVoucher receiptVoucher, IReceiptVoucherService _receiptVoucherService, IReceiptVoucherDetailService _receiptVoucherDetailService,
@@ -49,9 +51,11 @@ namespace Core.Interface.Validation
         bool ValidConfirmObject(ReceiptVoucher receiptVoucher, IReceiptVoucherService _receiptVoucherService,
                                 IReceiptVoucherDetailService _receiptVoucherDetailService, ICashBankService _cashBankService,
                                 IReceivableService _receivableService, IClosingService _closingService);
-        bool ValidUnconfirmObject(ReceiptVoucher receiptVoucher, IClosingService _closingService);
+        bool ValidUnconfirmObject(ReceiptVoucher receiptVoucher, IReceiptVoucherDetailService _receiptVoucherDetailService, ICashBankService _cashBankService, 
+                                IClosingService _closingService);
         bool ValidReconcileObject(ReceiptVoucher receiptVoucher, IClosingService _closingService);
-        bool ValidUnreconcileObject(ReceiptVoucher receiptVoucher, IClosingService _closingService);
+        bool ValidUnreconcileObject(ReceiptVoucher receiptVoucher, IReceiptVoucherDetailService _receiptVoucherDetailService, ICashBankService _cashBankService, 
+                                IClosingService _closingService);
         bool isValid(ReceiptVoucher receiptVoucher);
         string PrintError(ReceiptVoucher receiptVoucher);
     }

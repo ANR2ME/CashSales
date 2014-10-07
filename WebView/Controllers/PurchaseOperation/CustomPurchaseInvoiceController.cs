@@ -120,6 +120,7 @@ namespace WebView.Controllers
                              cashbank = model.CashBank.Name,
                              model.IsBank,
                              model.IsPaid,
+                             model.PaymentDate,
                              model.IsFullPayment,
                              model.WarehouseId,
                              warehouse = model.Warehouse.Name,
@@ -179,6 +180,7 @@ namespace WebView.Controllers
                             model.cashbank,
                             model.IsBank,
                             model.IsPaid,
+                            model.PaymentDate,
                             model.IsFullPayment,
                             model.WarehouseId,
                             model.warehouse,
@@ -649,6 +651,7 @@ namespace WebView.Controllers
                 }
 
                 var data = _customPurchaseInvoiceService.GetObjectById(model.Id);
+                data.PaymentDate = model.PaymentDate;
                 data.Allowance = model.Allowance;
                 data.IsGBCH = model.IsGBCH;
                 data.GBCH_No = model.GBCH_No;

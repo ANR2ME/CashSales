@@ -49,6 +49,16 @@ namespace Validation.Validation
             return paymentVoucherDetail;
         }
 
+        public PaymentVoucherDetail VParentHasNotBeenConfirmed(PaymentVoucherDetail paymentVoucherDetail, IPaymentVoucherService _paymentVoucherService)
+        {
+            PaymentVoucher paymentVoucher = _paymentVoucherService.GetObjectById(paymentVoucherDetail.PaymentVoucherId);
+            if (paymentVoucher.IsConfirmed)
+            {
+                paymentVoucherDetail.Errors.Add("Generic", "PaymentVoucher tidak boleh terkonfirmasi");
+            }
+            return paymentVoucherDetail;
+        }
+
         public PaymentVoucherDetail VHasNotBeenDeleted(PaymentVoucherDetail paymentVoucherDetail)
         {
             if (paymentVoucherDetail.IsDeleted)
@@ -87,6 +97,17 @@ namespace Validation.Validation
             return paymentVoucherDetail;
         }
 
+        public PaymentVoucherDetail VTotalAmountLessOrEqualPaymentVoucher(PaymentVoucherDetail paymentVoucherDetail, IPaymentVoucherService _paymentVoucherService, IPaymentVoucherDetailService _paymentVoucherDetailService)
+        {
+            PaymentVoucher paymentVoucher = _paymentVoucherService.GetObjectById(paymentVoucherDetail.PaymentVoucherId);
+            decimal totalamount = _paymentVoucherDetailService.CalcTotalAmount(paymentVoucherDetail.PaymentVoucherId);
+            if (totalamount + paymentVoucherDetail.Amount > paymentVoucher.TotalAmount)
+            {
+                paymentVoucherDetail.Errors.Add("Generic", "Total detail Amount Tidak boleh lebih dari TotalAmount PaymentVoucher");
+            }
+            return paymentVoucherDetail;
+        }
+
         public PaymentVoucherDetail VUniquePayableId(PaymentVoucherDetail paymentVoucherDetail, IPaymentVoucherDetailService _paymentVoucherDetailService,
                                                     IPayableService _payableService)
         {
@@ -115,6 +136,10 @@ namespace Validation.Validation
             VHasPayable(paymentVoucherDetail, _payableService);
             if (!isValid(paymentVoucherDetail)) { return paymentVoucherDetail; }
             VPayableHasNotBeenCompleted(paymentVoucherDetail, _payableService);
+            if (!isValid(paymentVoucherDetail)) { return paymentVoucherDetail; }
+            VParentHasNotBeenConfirmed(paymentVoucherDetail, _paymentVoucherService);
+            if (!isValid(paymentVoucherDetail)) { return paymentVoucherDetail; }
+            VTotalAmountLessOrEqualPaymentVoucher(paymentVoucherDetail, _paymentVoucherService, _paymentVoucherDetailService);
             if (!isValid(paymentVoucherDetail)) { return paymentVoucherDetail; }
             VAmountLessOrEqualPayable(paymentVoucherDetail, _payableService);
             if (!isValid(paymentVoucherDetail)) { return paymentVoucherDetail; }
@@ -150,6 +175,8 @@ namespace Validation.Validation
 
         public PaymentVoucherDetail VConfirmObject(PaymentVoucherDetail paymentVoucherDetail, IPayableService _payableService)
         {
+            VHasNotBeenConfirmed(paymentVoucherDetail);
+            if (!isValid(paymentVoucherDetail)) { return paymentVoucherDetail; }
             VHasConfirmationDate(paymentVoucherDetail);
             if (!isValid(paymentVoucherDetail)) { return paymentVoucherDetail; }
             VAmountLessOrEqualPayable(paymentVoucherDetail, _payableService);

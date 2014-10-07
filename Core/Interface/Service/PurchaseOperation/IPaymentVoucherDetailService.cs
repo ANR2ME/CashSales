@@ -27,5 +27,6 @@ namespace Core.Interface.Service
         bool DeleteObject(int Id);
         PaymentVoucherDetail ConfirmObject(PaymentVoucherDetail paymentVoucherDetail, DateTime ConfirmationDate, IPaymentVoucherService _paymentVoucherService, IPayableService _payableService);
         PaymentVoucherDetail UnconfirmObject(PaymentVoucherDetail paymentVoucherDetail, IPaymentVoucherService _paymentVoucherService, IPayableService _payableService);
+        decimal CalcTotalAmount(int PaymentVoucherId);
     }
 }

@@ -142,5 +142,16 @@ namespace Service.Service
             }
             return paymentVoucherDetail;
         }
+
+        public decimal CalcTotalAmount(int PaymentVoucherId)
+        {
+            decimal totalamount = 0;
+            IList<PaymentVoucherDetail> details = GetObjectsByPaymentVoucherId(PaymentVoucherId);
+            foreach (var detail in details)
+            {
+                totalamount += detail.Amount;
+            }
+            return totalamount;
+        }
     }
 }

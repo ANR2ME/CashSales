@@ -45,6 +45,19 @@ namespace Validation.Validation
             return customPurchaseInvoice;
         }
 
+        public CustomPurchaseInvoice VHasPaymentDate(CustomPurchaseInvoice customPurchaseInvoice)
+        {
+            if (customPurchaseInvoice.PaymentDate == null || customPurchaseInvoice.PaymentDate.Equals(DateTime.FromBinary(0)))
+            {
+                customPurchaseInvoice.Errors.Add("PaymentDate", "Tidak ada");
+            }
+            //else if (customPurchaseInvoice.PaymentDate.GetValueOrDefault().Date.AddDays(1) < customPurchaseInvoice.ConfirmationDate.Date)
+            //{
+            //    customPurchaseInvoice.Errors.Add("PaymentDate", "Harus lebih besar atau sama dengan Confirmation Date");
+            //}
+            return customPurchaseInvoice;
+        }
+
         public CustomPurchaseInvoice VIsValidDiscount(CustomPurchaseInvoice customPurchaseInvoice)
         {
             if (customPurchaseInvoice.Discount < 0 || customPurchaseInvoice.Discount > 100)
@@ -266,6 +279,16 @@ namespace Validation.Validation
             return customPurchaseInvoice;
         }
 
+        public CustomPurchaseInvoice VHasEnoughCash(CustomPurchaseInvoice customPurchaseInvoice, ICashBankService _cashBankService)
+        {
+            CashBank cashBank = _cashBankService.GetObjectById(customPurchaseInvoice.CashBankId.GetValueOrDefault());
+            if (!customPurchaseInvoice.IsGBCH && cashBank.Amount < customPurchaseInvoice.Total) //
+            {
+                customPurchaseInvoice.Errors.Add("Generic", "CashBank tidak boleh kurang dari Total amount");
+            }
+            return customPurchaseInvoice;
+        }
+
         public CustomPurchaseInvoice VGeneralLedgerPostingHasNotBeenClosed(CustomPurchaseInvoice customPurchaseInvoice, IClosingService _closingService, int CaseConfirmUnconfirm)
         {
             switch (CaseConfirmUnconfirm)
@@ -288,13 +311,10 @@ namespace Validation.Validation
                 }
                 case (3): // Paid
                 {
-                    // TODO:
-                    /*
                     if (_closingService.IsDateClosed(customPurchaseInvoice.PaymentDate.GetValueOrDefault()))
                     {
                         customPurchaseInvoice.Errors.Add("Generic", "Ledger sudah tutup buku");
                     }
-                     */
                     break;
                 }
                 case (4): // Unpaid
@@ -371,12 +391,16 @@ namespace Validation.Validation
                 VIsCashBankTypeBank(customPurchaseInvoice, _cashBankService);
             }
             if (!isValid(customPurchaseInvoice)) { return customPurchaseInvoice; }
+            VHasPaymentDate(customPurchaseInvoice);
+            if (!isValid(customPurchaseInvoice)) { return customPurchaseInvoice; }
             VIsValidAmountPaid(customPurchaseInvoice);
             if (customPurchaseInvoice.IsFullPayment)
             {
                 if (!isValid(customPurchaseInvoice)) { return customPurchaseInvoice; }
                 VIsValidFullPayment(customPurchaseInvoice);
             }
+            if (!isValid(customPurchaseInvoice)) { return customPurchaseInvoice; }
+            VHasEnoughCash(customPurchaseInvoice, _cashBankService);
             if (!isValid(customPurchaseInvoice)) { return customPurchaseInvoice; }
             VGeneralLedgerPostingHasNotBeenClosed(customPurchaseInvoice, _closingService, 3);
             return customPurchaseInvoice;

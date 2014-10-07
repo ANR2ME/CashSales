@@ -23,9 +23,9 @@ namespace Validation.Validation
 
         public Closing VIsValidYearPeriod(Closing closing)
         {
-            if (closing.YearPeriod > DateTime.Now.Year)
+            if (closing.YearPeriod > DateTime.Now.Year || closing.YearPeriod < DateTime.MinValue.Year)
             {
-                closing.Errors.Add("YearPeriod", "Tidak boleh lebih besar dari tahun ini");
+                closing.Errors.Add("YearPeriod", "Tidak boleh lebih besar dari tahun ini atau kurang dari " + DateTime.MinValue.Year);
             }
             return closing;
         }

@@ -59,7 +59,9 @@
                             <td>
                                 <label>Description</label></td>
                             <td >
-                                <input id="Description" name ="Description" type="text" size="60" maxlength="60" align="left"/></td>
+                                @*<input id="Description" name ="Description" type="text" size="60" maxlength="60" align="left"/>*@
+                                <textarea name="Description" id="Description" cols="60" rows="3"></textarea>
+                            </td>
                         </tr>
                         <tr>
                             <td>
@@ -97,6 +99,7 @@
                              <div id="ReturnDateDiv"><input id="ReturnDate" class="easyui-datebox" title="mm/dd/yyyy" type="text" size="10" value="@DateTime.Today.ToShortDateString()"/>
                             </div>
                              <div id="ReturnDateDiv2"><input id="ReturnDate2" type="text" size="10" disabled="disabled"/></div>
+                                 <input name="ReturnDate" type="text" size="1" hidden="hidden"/>
                              </td>
                         </tr>
                     </table>

@@ -60,7 +60,9 @@
                             <td>
                                 <label>Description</label></td>
                             <td >
-                                <input id="Description" name ="Description" type="text" size="60" maxlength="60" align="left"/></td>
+                                @*<input id="Description" name ="Description" type="text" size="60" maxlength="60" align="left"/>*@
+                                <textarea name="Description" id="Description" cols="60" rows="3"></textarea>
+                            </td>
                         </tr>
                         <tr>
                             <td>
@@ -97,9 +99,10 @@
                             <td>
                                 <label>Purchase Date</label></td>
                              <td>
-                             <div id="PurchaseDateDiv"><input id="PurchaseDate" class="easyui-datebox" title="mm/dd/yyyy" type="text" size="10" value="@DateTime.Today.ToShortDateString()"/>
-                            </div>
-                             <div id="PurchaseDateDiv2"><input id="PurchaseDate2" type="text" size="10" disabled="disabled"/></div>
+                             <div id="PurchaseDateDiv"><input id="PurchaseDate"  class="easyui-datebox" title="mm/dd/yyyy" type="text" size="10" value="@DateTime.Today.ToShortDateString()"/>
+                             </div>
+                             <div id="PurchaseDateDiv2"><input id="PurchaseDate2"  type="text" size="10" disabled="disabled"/></div>
+                             <input name="PurchaseDate" type="text" size="1" hidden="hidden"/>
                              </td>
                         </tr>
                         <tr>
@@ -109,6 +112,7 @@
                              <div id="DueDateDiv"><input id="DueDate" class="easyui-datebox" title="mm/dd/yyyy" type="text" size="10" value="@DateTime.Today.ToShortDateString()"/>
                             </div>
                              <div id="DueDateDiv2"><input id="DueDate2" type="text" size="10" disabled="disabled"/></div>
+                                 <input name="DueDate" type="text" size="1" hidden="hidden"/>
                              </td>
                         </tr>
                     </table>
@@ -357,6 +361,16 @@
                       </td>
                       <td>
                          <input id="paidCode" name="Code" type="text" size="10" disabled="disabled"/>
+                      </td>
+                  </tr>
+                  <tr>
+                      <td>
+                          Payment Date
+                      </td>
+                      <td>
+                         <input id="PaymentDate"class="easyui-datebox" title="mm/dd/yyyy" type="text" size="10" value="@DateTime.Today.ToShortDateString()"/>
+                         <input name="PaymentDate" type="text" size="1" hidden="hidden"/>
+                         <input name="IsPaid" type="text" size="1" hidden="hidden"/>
                       </td>
                   </tr>
                   <tr>

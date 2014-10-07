@@ -474,8 +474,10 @@ namespace WebView.Controllers
                 if (doctoprint.PrinterSettings.PaperSizes[i].PaperName.ToLower() == "struck")
                 {
                     rawKind = Convert.ToInt32(doctoprint.PrinterSettings.PaperSizes[i].GetType().GetField("kind", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic).GetValue(doctoprint.PrinterSettings.PaperSizes[i]));
-                    rd.PrintOptions.PaperSize = (CrystalDecisions.Shared.PaperSize)rawKind;
-                    //rd.PrintOptions.PaperOrientation = PaperOrientation.Landscape;
+                    if (Enum.IsDefined(typeof(CrystalDecisions.Shared.PaperSize), rawKind)) {
+                        rd.PrintOptions.PaperSize = (CrystalDecisions.Shared.PaperSize)rawKind;
+                        //rd.PrintOptions.PaperOrientation = PaperOrientation.Landscape;
+                    }
                     break;
                 }
             }
@@ -532,8 +534,11 @@ namespace WebView.Controllers
                 if (doctoprint.PrinterSettings.PaperSizes[i].PaperName.ToLower() == "struck")
                 {
                     rawKind = Convert.ToInt32(doctoprint.PrinterSettings.PaperSizes[i].GetType().GetField("kind", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic).GetValue(doctoprint.PrinterSettings.PaperSizes[i]));
-                    rd.PrintOptions.PaperSize = (CrystalDecisions.Shared.PaperSize)rawKind;
-                    //rd.PrintOptions.PaperOrientation = PaperOrientation.Landscape;
+                    if (Enum.IsDefined(typeof(CrystalDecisions.Shared.PaperSize), rawKind))
+                    {
+                        rd.PrintOptions.PaperSize = (CrystalDecisions.Shared.PaperSize)rawKind;
+                        //rd.PrintOptions.PaperOrientation = PaperOrientation.Landscape;
+                    }
                     break;
                 }
             }
@@ -596,8 +601,11 @@ namespace WebView.Controllers
                 if (doctoprint.PrinterSettings.PaperSizes[i].PaperName.ToLower() == "struck")
                 {
                     rawKind = Convert.ToInt32(doctoprint.PrinterSettings.PaperSizes[i].GetType().GetField("kind", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic).GetValue(doctoprint.PrinterSettings.PaperSizes[i]));
-                    rd.PrintOptions.PaperSize = (CrystalDecisions.Shared.PaperSize)rawKind;
-                    //rd.PrintOptions.PaperOrientation = PaperOrientation.Landscape;
+                    if (Enum.IsDefined(typeof(CrystalDecisions.Shared.PaperSize), rawKind))
+                    {
+                        rd.PrintOptions.PaperSize = (CrystalDecisions.Shared.PaperSize)rawKind;
+                        //rd.PrintOptions.PaperOrientation = PaperOrientation.Landscape;
+                    }
                     break;
                 }
             }
@@ -655,8 +663,11 @@ namespace WebView.Controllers
                 if (doctoprint.PrinterSettings.PaperSizes[i].PaperName.ToLower() == "struck")
                 {
                     rawKind = Convert.ToInt32(doctoprint.PrinterSettings.PaperSizes[i].GetType().GetField("kind", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic).GetValue(doctoprint.PrinterSettings.PaperSizes[i]));
-                    rd.PrintOptions.PaperSize = (CrystalDecisions.Shared.PaperSize)rawKind;
-                    //rd.PrintOptions.PaperOrientation = PaperOrientation.Landscape;
+                    if (Enum.IsDefined(typeof(CrystalDecisions.Shared.PaperSize), rawKind))
+                    {
+                        rd.PrintOptions.PaperSize = (CrystalDecisions.Shared.PaperSize)rawKind;
+                        //rd.PrintOptions.PaperOrientation = PaperOrientation.Landscape;
+                    }
                     break;
                 }
             }

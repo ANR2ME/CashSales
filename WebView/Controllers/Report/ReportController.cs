@@ -465,22 +465,22 @@ namespace WebView.Controllers
             rd.SetDataSource(query);
 
             // Set printer paper size
-            System.Drawing.Printing.PrintDocument doctoprint = new System.Drawing.Printing.PrintDocument();
-            doctoprint.PrinterSettings.PrinterName = "Microsoft XPS Document Writer";
-            int i = 0;
-            for (i = 0; i <= doctoprint.PrinterSettings.PaperSizes.Count; i++)
-            {
-                int rawKind = 0;
-                if (doctoprint.PrinterSettings.PaperSizes[i].PaperName.ToLower() == "struck")
-                {
-                    rawKind = Convert.ToInt32(doctoprint.PrinterSettings.PaperSizes[i].GetType().GetField("kind", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic).GetValue(doctoprint.PrinterSettings.PaperSizes[i]));
-                    if (Enum.IsDefined(typeof(CrystalDecisions.Shared.PaperSize), rawKind)) {
-                        rd.PrintOptions.PaperSize = (CrystalDecisions.Shared.PaperSize)rawKind;
-                        //rd.PrintOptions.PaperOrientation = PaperOrientation.Landscape;
-                    }
-                    break;
-                }
-            }
+            //System.Drawing.Printing.PrintDocument doctoprint = new System.Drawing.Printing.PrintDocument();
+            //doctoprint.PrinterSettings.PrinterName = "Microsoft XPS Document Writer";
+            //int i = 0;
+            //for (i = 0; i <= doctoprint.PrinterSettings.PaperSizes.Count; i++)
+            //{
+            //    int rawKind = 0;
+            //    if (doctoprint.PrinterSettings.PaperSizes[i].PaperName.ToLower() == "struck")
+            //    {
+            //        rawKind = Convert.ToInt32(doctoprint.PrinterSettings.PaperSizes[i].GetType().GetField("kind", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic).GetValue(doctoprint.PrinterSettings.PaperSizes[i]));
+            //        if (Enum.IsDefined(typeof(CrystalDecisions.Shared.PaperSize), rawKind)) {
+            //            rd.PrintOptions.PaperSize = (CrystalDecisions.Shared.PaperSize)rawKind;
+            //            //rd.PrintOptions.PaperOrientation = PaperOrientation.Landscape;
+            //        }
+            //        break;
+            //    }
+            //}
 
             var stream = rd.ExportToStream(CrystalDecisions.Shared.ExportFormatType.PortableDocFormat);
             return File(stream, "application/pdf");
@@ -525,23 +525,23 @@ namespace WebView.Controllers
             rd.SetDataSource(query);
 
             // Set printer paper size
-            System.Drawing.Printing.PrintDocument doctoprint = new System.Drawing.Printing.PrintDocument();
-            doctoprint.PrinterSettings.PrinterName = "Microsoft XPS Document Writer";
-            int i = 0;
-            for (i = 0; i <= doctoprint.PrinterSettings.PaperSizes.Count; i++)
-            {
-                int rawKind = 0;
-                if (doctoprint.PrinterSettings.PaperSizes[i].PaperName.ToLower() == "struck")
-                {
-                    rawKind = Convert.ToInt32(doctoprint.PrinterSettings.PaperSizes[i].GetType().GetField("kind", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic).GetValue(doctoprint.PrinterSettings.PaperSizes[i]));
-                    if (Enum.IsDefined(typeof(CrystalDecisions.Shared.PaperSize), rawKind))
-                    {
-                        rd.PrintOptions.PaperSize = (CrystalDecisions.Shared.PaperSize)rawKind;
-                        //rd.PrintOptions.PaperOrientation = PaperOrientation.Landscape;
-                    }
-                    break;
-                }
-            }
+            //System.Drawing.Printing.PrintDocument doctoprint = new System.Drawing.Printing.PrintDocument();
+            //doctoprint.PrinterSettings.PrinterName = "Microsoft XPS Document Writer";
+            //int i = 0;
+            //for (i = 0; i <= doctoprint.PrinterSettings.PaperSizes.Count; i++)
+            //{
+            //    int rawKind = 0;
+            //    if (doctoprint.PrinterSettings.PaperSizes[i].PaperName.ToLower() == "struck")
+            //    {
+            //        rawKind = Convert.ToInt32(doctoprint.PrinterSettings.PaperSizes[i].GetType().GetField("kind", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic).GetValue(doctoprint.PrinterSettings.PaperSizes[i]));
+            //        if (Enum.IsDefined(typeof(CrystalDecisions.Shared.PaperSize), rawKind))
+            //        {
+            //            rd.PrintOptions.PaperSize = (CrystalDecisions.Shared.PaperSize)rawKind;
+            //            //rd.PrintOptions.PaperOrientation = PaperOrientation.Landscape;
+            //        }
+            //        break;
+            //    }
+            //}
 
             var stream = rd.ExportToStream(CrystalDecisions.Shared.ExportFormatType.PortableDocFormat);
             return File(stream, "application/pdf");
@@ -592,23 +592,23 @@ namespace WebView.Controllers
             rd.SetDataSource(query);
 
             // Set printer paper size
-            System.Drawing.Printing.PrintDocument doctoprint = new System.Drawing.Printing.PrintDocument();
-            doctoprint.PrinterSettings.PrinterName = "Microsoft XPS Document Writer";
-            int i = 0;
-            for (i = 0; i <= doctoprint.PrinterSettings.PaperSizes.Count; i++)
-            {
-                int rawKind = 0;
-                if (doctoprint.PrinterSettings.PaperSizes[i].PaperName.ToLower() == "struck")
-                {
-                    rawKind = Convert.ToInt32(doctoprint.PrinterSettings.PaperSizes[i].GetType().GetField("kind", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic).GetValue(doctoprint.PrinterSettings.PaperSizes[i]));
-                    if (Enum.IsDefined(typeof(CrystalDecisions.Shared.PaperSize), rawKind))
-                    {
-                        rd.PrintOptions.PaperSize = (CrystalDecisions.Shared.PaperSize)rawKind;
-                        //rd.PrintOptions.PaperOrientation = PaperOrientation.Landscape;
-                    }
-                    break;
-                }
-            }
+            //System.Drawing.Printing.PrintDocument doctoprint = new System.Drawing.Printing.PrintDocument();
+            //doctoprint.PrinterSettings.PrinterName = "Microsoft XPS Document Writer";
+            //int i = 0;
+            //for (i = 0; i <= doctoprint.PrinterSettings.PaperSizes.Count; i++)
+            //{
+            //    int rawKind = 0;
+            //    if (doctoprint.PrinterSettings.PaperSizes[i].PaperName.ToLower() == "struck")
+            //    {
+            //        rawKind = Convert.ToInt32(doctoprint.PrinterSettings.PaperSizes[i].GetType().GetField("kind", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic).GetValue(doctoprint.PrinterSettings.PaperSizes[i]));
+            //        if (Enum.IsDefined(typeof(CrystalDecisions.Shared.PaperSize), rawKind))
+            //        {
+            //            rd.PrintOptions.PaperSize = (CrystalDecisions.Shared.PaperSize)rawKind;
+            //            //rd.PrintOptions.PaperOrientation = PaperOrientation.Landscape;
+            //        }
+            //        break;
+            //    }
+            //}
 
             var stream = rd.ExportToStream(CrystalDecisions.Shared.ExportFormatType.PortableDocFormat);
             return File(stream, "application/pdf");
@@ -654,23 +654,23 @@ namespace WebView.Controllers
             rd.SetDataSource(query);
 
             // Set printer paper size
-            System.Drawing.Printing.PrintDocument doctoprint = new System.Drawing.Printing.PrintDocument();
-            doctoprint.PrinterSettings.PrinterName = "Microsoft XPS Document Writer";
-            int i = 0;
-            for (i = 0; i <= doctoprint.PrinterSettings.PaperSizes.Count; i++)
-            {
-                int rawKind = 0;
-                if (doctoprint.PrinterSettings.PaperSizes[i].PaperName.ToLower() == "struck")
-                {
-                    rawKind = Convert.ToInt32(doctoprint.PrinterSettings.PaperSizes[i].GetType().GetField("kind", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic).GetValue(doctoprint.PrinterSettings.PaperSizes[i]));
-                    if (Enum.IsDefined(typeof(CrystalDecisions.Shared.PaperSize), rawKind))
-                    {
-                        rd.PrintOptions.PaperSize = (CrystalDecisions.Shared.PaperSize)rawKind;
-                        //rd.PrintOptions.PaperOrientation = PaperOrientation.Landscape;
-                    }
-                    break;
-                }
-            }
+            //System.Drawing.Printing.PrintDocument doctoprint = new System.Drawing.Printing.PrintDocument();
+            //doctoprint.PrinterSettings.PrinterName = "Microsoft XPS Document Writer";
+            //int i = 0;
+            //for (i = 0; i <= doctoprint.PrinterSettings.PaperSizes.Count; i++)
+            //{
+            //    int rawKind = 0;
+            //    if (doctoprint.PrinterSettings.PaperSizes[i].PaperName.ToLower() == "struck")
+            //    {
+            //        rawKind = Convert.ToInt32(doctoprint.PrinterSettings.PaperSizes[i].GetType().GetField("kind", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic).GetValue(doctoprint.PrinterSettings.PaperSizes[i]));
+            //        if (Enum.IsDefined(typeof(CrystalDecisions.Shared.PaperSize), rawKind))
+            //        {
+            //            rd.PrintOptions.PaperSize = (CrystalDecisions.Shared.PaperSize)rawKind;
+            //            //rd.PrintOptions.PaperOrientation = PaperOrientation.Landscape;
+            //        }
+            //        break;
+            //    }
+            //}
 
             var stream = rd.ExportToStream(CrystalDecisions.Shared.ExportFormatType.PortableDocFormat);
             return File(stream, "application/pdf");

@@ -30,12 +30,13 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="EntityFramework">
+    <Reference Include="EntityFramework, Version=5.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\EntityFramework.5.0.0\lib\net45\EntityFramework.dll</HintPath>
     </Reference>
     <Reference Include="NSpec, Version=0.9.68.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\nspec.0.9.68\tools\NSpec.dll</HintPath>
+      <HintPath>..\packages\nspec.0.9.68\lib\NSpec.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
@@ -49,6 +50,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CashSalesBuilder.cs" />
+    <Compile Include="DebuggerShim.cs" />
     <Compile Include="SpecAccounting.cs" />
     <Compile Include="SpecUserRole.cs" />
     <Compile Include="SpecPaymentRequest.cs" />
@@ -82,7 +84,6 @@
     <Compile Include="SpecItemType.cs" />
     <Compile Include="SpecContact.cs" />
     <Compile Include="SpecMachine.cs" />
-    <Compile Include="DebuggerShim.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SpecItem.cs" />
   </ItemGroup>

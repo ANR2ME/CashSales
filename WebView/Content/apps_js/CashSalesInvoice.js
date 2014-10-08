@@ -422,7 +422,7 @@
 	    if (id) {
 	        var ret = jQuery("#list").jqGrid('getRowData', id);
 	        $('#paidAllowance').numberbox('setValue', ret.allowance);
-	        $('#AmountPaid').numberbox('setValue', ret.amountpaid);
+	        $('#AmountPaid').numberbox('setValue', ret.total); //amountpaid
 	        $('#paidTotal').numberbox('setValue', ret.total);
 	        $('#paidCode').val(ret.code);
 	        $('#idpaid').val(ret.id);

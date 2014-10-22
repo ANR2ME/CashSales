@@ -9,7 +9,6 @@ namespace Data.Mapping
 {
     public class UserAccountMapping : EntityTypeConfiguration<UserAccount>
     {
-
         public UserAccountMapping()
         {
             HasKey(u => u.Id);

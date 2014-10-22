@@ -151,7 +151,7 @@ input, textarea {
     width: 500px;
     text-align: left;
     color: #fff;
-    font-family: Copperplate, "Copperplate Gothic Light", fantasy;
+    /*font-family: Copperplate, "Copperplate Gothic Light", fantasy;*/
     text-transform: uppercase;
 }
 

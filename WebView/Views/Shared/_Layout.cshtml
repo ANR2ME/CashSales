@@ -9,13 +9,14 @@
         }
     }
 
-    if (!WebView.AuthenticationModel.IsAuthenticated())
+    // NOT Loggin YET
+    if (!infoss.Models.AccountModels.IsAuthenticated())
     {
     <!DOCTYPE html>
     <html lang="en">
     <head>
         <meta charset="utf-8" />
-        <title>@ViewBag.Title </title>
+        <title>@ViewBag.Title - @infoss.Models.AccountModels.GetCompanyName()</title>
         <link href="~/favicon.ico" rel="shortcut icon" type="image/x-icon" />
         <meta name="viewport" content="width=device-width" />
         @Styles.Render("~/Content/css")
@@ -38,14 +39,14 @@
         
     }
 
-       if (underMaintenance)
+    if (underMaintenance)
     {           // **************************************** Under Maintenance page
         
     <!DOCTYPE html>
     <html lang="en">
     <head>
         <meta charset="utf-8" />
-        <title>@*@ViewBag.Title -  @infoss.Models.AccountModels.GetCompanyName()*@</title>
+        <title>@ViewBag.Title -  @infoss.Models.AccountModels.GetCompanyName()</title>
         <link href="~/favicon.ico" rel="shortcut icon" type="image/x-icon" />
         <meta name="viewport" content="width=device-width" />
 
@@ -62,416 +63,420 @@
     else
     {       // NOT Under Maintenance
 
-	<!DOCTYPE html>
-	<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<title>@ViewBag.Title</title>
-		<link href="~/favicon.ico" rel="shortcut icon" type="image/x-icon" />
-		<meta name="viewport" content="width=device-width" />
-		@Styles.Render("~/Content/css")
-		@Styles.Render("~/Content/themes/base/css")
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <title>@ViewBag.Title -  @infoss.Models.AccountModels.GetCompanyName()</title>
+        <link href="~/favicon.ico" rel="shortcut icon" type="image/x-icon" />
+        <meta name="viewport" content="width=device-width" />
+        @Styles.Render("~/Content/css")
+        @Styles.Render("~/Content/themes/base/css")
 
-		<script type="text/javascript">
-			var base_url = '@Url.Content("~//")';
-		</script>
+        <script type="text/javascript">
+            var base_url = '@Url.Content("~//")';
+        </script>
 
-		<script type="text/javascript" src="@Url.Content("~/scripts/jquery-1.8.0.min.js")"></script>
-		<script type="text/javascript" src="@Url.Content("~/scripts/jquery-ui-1.8.2.custom.min.js")"></script>
-		<script type='text/javascript' src="@Url.Content("~/scripts/jquery.hoverIntent.minified.js")"></script>
-		<script type='text/javascript' src="@Url.Content("~/scripts/jquery.dcverticalmegamenu.1.1.js")"></script>
-		<script type="text/javascript" src="@Url.Content("~/scripts/jquery.blockUI.js")"></script>
-		<script type="text/javascript" src="@Url.Content("~/scripts/locale/i18n/grid.locale-en.js")"></script>
-		<script type="text/javascript" src="@Url.Content("~/scripts/jquery.jqGrid-4.4.5.min.js")"></script>
-		<script type="text/javascript" src="@Url.Content("~/scripts/jquery.easyui.min.js")"></script>
-		<script type="text/javascript" src="@Url.Content("~/Content/apps_js/tools.js")"></script>
+        <script type="text/javascript" src="@Url.Content("~/scripts/jquery-1.8.0.min.js")"></script>
+        <script type="text/javascript" src="@Url.Content("~/scripts/jquery-ui-1.8.2.custom.min.js")"></script>
+        <script type='text/javascript' src="@Url.Content("~/scripts/jquery.hoverIntent.minified.js")"></script>
+        <script type='text/javascript' src="@Url.Content("~/scripts/jquery.dcverticalmegamenu.1.1.js")"></script>
+        <script type="text/javascript" src="@Url.Content("~/scripts/jquery.blockUI.js")"></script>
+        <script type="text/javascript" src="@Url.Content("~/scripts/locale/i18n/grid.locale-en.js")"></script>
+        <script type="text/javascript" src="@Url.Content("~/scripts/jquery.jqGrid-4.4.5.min.js")"></script>
+        <script type="text/javascript" src="@Url.Content("~/scripts/jquery.easyui.min.js")"></script>
+        <script type="text/javascript" src="@Url.Content("~/Content/apps_js/tools.js")"></script>
 
-		@RenderSection("scripts", required: false)
+        @RenderSection("scripts", required: false)
 
-		<link rel="stylesheet" type="text/css" href="@Url.Content("~/Content/themes/easyui/default/easyui.css")">
-		<link rel="stylesheet" type="text/css" href="@Url.Content("~/Content/themes/easyui/icon.css")">
+        <link rel="stylesheet" type="text/css" href="@Url.Content("~/Content/themes/easyui/default/easyui.css")">
+        <link rel="stylesheet" type="text/css" href="@Url.Content("~/Content/themes/easyui/icon.css")">
 
-		<link rel="stylesheet" type="text/css"  href="@Url.Content("~/COntent/vertical_menu.css")" />
-		<link rel="stylesheet" type="text/css" href="@Url.Content("~/Content/redmond/jquery-ui-1.8.2.custom.css")" media="screen"/>
-		<link rel="stylesheet" type="text/css" href="@Url.Content("~/Content/ui.jqgrid.css")" media="screen"/>
-		<link rel="stylesheet" type="text/css" href="@Url.Content("~/Content/easyui/default/easyui.css")">
-		<link rel="stylesheet" type="text/css" href="@Url.Content("~/Content/easyui/icon.css")">
-		<link rel="stylesheet" type="text/css" href="@Url.Content("~/Content/infoss.css")">
+        <link rel="stylesheet" type="text/css"  href="@Url.Content("~/COntent/vertical_menu.css")" />
+        <link rel="stylesheet" type="text/css" href="@Url.Content("~/Content/redmond/jquery-ui-1.8.2.custom.css")" media="screen"/>
+        <link rel="stylesheet" type="text/css" href="@Url.Content("~/Content/ui.jqgrid.css")" media="screen"/>
+        <link rel="stylesheet" type="text/css" href="@Url.Content("~/Content/easyui/default/easyui.css")">
+        <link rel="stylesheet" type="text/css" href="@Url.Content("~/Content/easyui/icon.css")">
+        <link rel="stylesheet" type="text/css" href="@Url.Content("~/Content/accounting.css")">
 
-		@RenderSection("head", required: false)
-		<script type="text/javascript">
-			function ShowLoadingImage() {
-				//jQuery.blockUI({ message: jQuery('#loading-panel'), css: { border: 'none', backgroundColor: 'none' } });
-			}
+        @RenderSection("head", required: false)
+        <script type="text/javascript">
+            function ShowLoadingImage() {
+                //jQuery.blockUI({ message: jQuery('#loading-panel'), css: { border: 'none', backgroundColor: 'none' } });
+            }
 
-			function HideLoadingImage() {
-				//jQuery.unblockUI();
-			}
+            function HideLoadingImage() {
+                //jQuery.unblockUI();
+            }
 
-			$(window).load(function () {
-				$(".page-loader").fadeOut("slow");
-			})
+            $(window).load(function () {
+                $(".page-loader").fadeOut("slow");
+            })
 
-			$(document).ajaxStart(function () {
-				jQuery.blockUI({ message: jQuery('#loading-panel'), css: { border: 'none', backgroundColor: 'none' }, baseZ: 2000 });
-				//timer = setTimeout(function () { body.addClass("loading"); }, 50)
-			});
-			$(document).ajaxStop(function () {
-				jQuery.unblockUI();
-			});
+            $(document).ajaxStart(function () {
+                jQuery.blockUI({ message: jQuery('#loading-panel'), css: { border: 'none', backgroundColor: 'none' }, baseZ: 2000 });
+                //timer = setTimeout(function () { body.addClass("loading"); }, 50)
+            });
+            $(document).ajaxStop(function () {
+                jQuery.unblockUI();
+            });
 
-			$(document).ready(function () {
-				$('#mega-1, .mega-menu').dcVerticalMegaMenu({
-					rowItems: '4',
-					speed: 'fast',
-					effect: 'slide',
-					direction: 'right'
-				});
+            $(document).ready(function () {
+                $('#mega-1, .mega-menu').dcVerticalMegaMenu({
+                    rowItems: '4',
+                    speed: 'fast',
+                    effect: 'slide',
+                    direction: 'right'
+                });
 
-				Date.prototype.toString = function () { return [['Sunday,', 'Monday,', 'Tuesday,', 'Wednesday,', 'Thursday,', 'Friday,', 'Saturday,'][this.getDay()], this.getDate(), ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'][this.getMonth()], this.getFullYear()].join(' ') }
-				var datetime = new Date();
-				$('#datetime_message').text(datetime);
+                Date.prototype.toString = function () { return [['Sunday,', 'Monday,', 'Tuesday,', 'Wednesday,', 'Thursday,', 'Friday,', 'Saturday,'][this.getDay()], this.getDate(), ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'][this.getMonth()], this.getFullYear()].join(' ') }
+                var datetime = new Date();
+                $('#datetime_message').text(datetime);
 
 
-				if ($.browser.msie) {
-					$('#menusisi').stop().animate({ 'marginLeft': '-180px' }, 1000);
-					$('#menusisi > li.out').hover(function () {
-						$('ul', $(this)).stop().animate({ 'marginLeft': '-2px' }, 400);
-					}, function () {
-						$('ul', $(this)).stop().animate({ 'marginLeft': '-180px' }, 400);
-					}
-				);
-				} else {
-					$('#menusisi').stop().animate({ 'margin-Left': '-240px' }, 1000);
-					$('#menusisi > div.menuimage, #menusisi').mouseover(function () {
-						//alert('hover')
-						$('#menusisi').stop().animate({ 'margin-left': '-2px' }, 400);
-					});
-					$('#menusisi').mouseout(function () {
-						$('#menusisi').stop().animate({ 'margin-left': '-240px' }, 400);
-					});
-				}
+                if ($.browser.msie) {
+                    $('#menusisi').stop().animate({ 'marginLeft': '-180px' }, 1000);
+                    $('#menusisi > li.out').hover(function () {
+                        $('ul', $(this)).stop().animate({ 'marginLeft': '-2px' }, 400);
+                    }, function () {
+                        $('ul', $(this)).stop().animate({ 'marginLeft': '-180px' }, 400);
+                    }
+                );
+                } else {
+                    $('#menusisi').stop().animate({ 'margin-Left': '-240px' }, 1000);
+                    $('#menusisi > div.menuimage, #menusisi').mouseover(function () {
+                        //alert('hover')
+                        $('#menusisi').stop().animate({ 'margin-left': '-2px' }, 400);
+                    });
+                    $('#menusisi').mouseout(function () {
+                        $('#menusisi').stop().animate({ 'margin-left': '-240px' }, 400);
+                    });
+                }
 
-				// Export buttons display toggle
-				$(".btnExport").click(function () {
-					$(".exportpanel").slideToggle('slow');
+                // Export buttons display toggle
+                $(".btnExport").click(function () {
+                    $(".exportpanel").slideToggle('slow');
 
-					// Set Active Class
-					if ($(this).hasClass('btnExportActive'))
-						$(this).removeClass('btnExportActive');
-					else
-						$(this).addClass('btnExportActive');
+                    // Set Active Class
+                    if ($(this).hasClass('btnExportActive'))
+                        $(this).removeClass('btnExportActive');
+                    else
+                        $(this).addClass('btnExportActive');
 
-				});
+                });
 
-				/*-------- Change Password -------- */
-				$('#frm_change_pass_div').dialog('close');
-				$("#frm_change_pass_btn_save").click(function () {
-					var v_old_password = $($.trim('#txtoldpass')).val(),
-						v_new_password = $($.trim('#txtnewpass')).val(),
-						v_confirm_password = $($.trim('#txtconfirmpass')).val();
+                /*-------- Change Password -------- */
+                $('#frm_change_pass_div').dialog('close');
+                $("#frm_change_pass_btn_save").click(function () {
+                    var v_old_password = $($.trim('#txtoldpass')).val(),
+                        v_new_password = $($.trim('#txtnewpass')).val(),
+                        v_confirm_password = $($.trim('#txtconfirmpass')).val();
 
-					$.ajax({
-						url: base_url + "User/ChangePassword",
-						type: "POST",
-						contentType: "application/json",
-						data: JSON.stringify({
-							OldPassword: v_old_password, NewPassword: v_new_password, ConfirmPassword: v_confirm_password
-						}),
-						success: function (result) {
-							$.messager.alert('Result', result, 'info');
-							clearForm();
-						}
-					});
-				});
+                    $.ajax({
+                        url: base_url + "User/ChangePassword",
+                        type: "POST",
+                        contentType: "application/json",
+                        data: JSON.stringify({
+                            OldPassword: v_old_password, NewPassword: v_new_password, ConfirmPassword: v_confirm_password
+                        }),
+                        success: function (result) {
+                            $.messager.alert('Result', result, 'info');
+                            clearForm();
+                        }
+                    });
+                });
 
-				$('#frm_change_pass_btn_cancel').click(function () {
-					$('#frm_change_pass_div').dialog('close');
-				});
+                $('#frm_change_pass_btn_cancel').click(function () {
+                    $('#frm_change_pass_div').dialog('close');
+                });
 
-				function clearForm(form) {
-					$('#txtoldpass').val("");
-					$('#txtnewpass').val("");
-					$('#txtconfirmpass').val("");
-				}
+                function clearForm(form) {
+                    $('#txtoldpass').val("");
+                    $('#txtnewpass').val("");
+                    $('#txtconfirmpass').val("");
+                }
 
-				$('#menu_change_pass').click(function () {
-					$('#txtoldpass').focus();
-					$('#frm_change_pass_div').dialog('open');
-				});
-				/*-------- End Change Password -------- */
+                $('#menu_change_pass').click(function () {
+                    $('#txtoldpass').focus();
+                    $('#frm_change_pass_div').dialog('open');
+                });
+                /*-------- End Change Password -------- */
 
-				$(".btnPrintSA").click(function () {
-					$(".printsapanel").slideToggle('slow');
+                $(".btnPrintSA").click(function () {
+                    $(".printsapanel").slideToggle('slow');
 
-				});
+                });
 
-				$(window).bind('resize', function () {
-					$(".list_master").setGridWidth($(window).width() - 20).setGridHeight($(window).height() - 200);
-				}).trigger('resize');
+                $(window).bind('resize', function () {
+                    $(".list_master").setGridWidth($(window).width() - 20).setGridHeight($(window).height() - 200);
+                }).trigger('resize');
 
-				$(window).bind('resize', function () {
-					$(".list_master_verify").setGridWidth($(window).width() - 80).setGridHeight($(window).height() - 250);
-				}).trigger('resize');
-			});
-		</script>
-	</head>
-	<body class="easyui-layout">
-		<div class="page-loader"></div>
-		<div id="loading-panel" style="display: none">
-			<div id="loading-overlay">
-			</div>
-			<div id="loading">
-				<span>Loading... </span>
-			</div>
-		</div>
-		<div data-options="region:'north',border:false,draggable:false" style="height: 35px; padding: 10px; background: #727272 !important;">
+                $(window).bind('resize', function () {
+                    $(".list_master_verify").setGridWidth($(window).width() - 80).setGridHeight($(window).height() - 250);
+                }).trigger('resize');
+            });
+        </script>
+    </head>
+    <body class="easyui-layout">
+        <div class="page-loader"></div>
+        <div id="loading-panel" style="display: none">
+            <div id="loading-overlay">
+            </div>
+            <div id="loading">
+                <span>Loading... </span>
+            </div>
+        </div>
+        <div data-options="region:'north',border:false,draggable:false" style="height: 35px; padding: 10px; background: #727272 !important;">
 
-			<div id="datetime_message">
-			</div>
-			<div id="header-message">| &nbsp; ACCOUNTING SYSTEM</div>
+            <div id="datetime_message">
+            </div>
+            <div id="header-message">| &nbsp; ACCOUNTING SYSTEM</div>
 
-		      @if (WebView.AuthenticationModel.IsAuthenticated())
-     {
-				<div id="user-greeting">
-					Welcome <strong>@*@infoss.Models.AccountModels.GetUserName()*@</strong> &nbsp;|&nbsp; <a href="@Url.Action("Logout", "Account")">Logout
-					</a>
-				</div>
-     }
-		</div>
-		<div data-options="region:'south',border:false" style="height: 10px; background: #E7EBF2 !important;">
-			&nbsp;
-		</div>
-		<div data-options="region:'center',border:false" style="margin-right: 5px;">
+            @if (infoss.Models.AccountModels.IsAuthenticated())
+            {
+                <div id="user-greeting">
+                    Welcome <strong>@infoss.Models.AccountModels.GetUserName()</strong> &nbsp;|&nbsp; <a href="@Url.Action("Logout", "Account")">Logout
+                    </a>
+                </div>
+            }
+        </div>
+        <div data-options="region:'south',border:false" style="height: 10px; background: #E7EBF2 !important;">
+            &nbsp;
+        </div>
+        <div data-options="region:'center',border:false" style="margin-right: 5px;">
 
-			<div id="menusisi">
-				<div id="menusisixx">
-					<div id="logo">
-					   @* <img src='@Url.Content(infoss.Models.AccountModels.GetCompanyLogoPath())' 
-							title='@infoss.Models.AccountModels.GetCompanyName()' width='200' height='105'>*@
-					</div>
+            <div id="menusisi">
+                <div id="menusisixx">
+                    <div id="logo">
+                        <img src='~/@Url.Content(infoss.Models.AccountModels.GetCompanyLogoPath())' 
+                            title='@infoss.Models.AccountModels.GetCompanyName()' width='200' height='105'>
+                    </div>
 
-					<div id="panel-menu">
-						<div class="dcjq-container clear">
-							<div class="dcjq-vertical-mega-menu">
-								<ul id="mega-1" class="mega-menu">
-									<li><a href="#">Home</a></li>
-									<li><a href="#">Master</a>
-										<ul>
-											   <li><a href="#">Data</a>
-												<ul>
-											   <li><a href="@Url.Action("Index", "MstContact")">Contact</a> </li>
-											   @*<li><a href="@Url.Action("Index", "MstContactGroup")">Contact Group</a> </li>
-											   <li><a href="@Url.Action("Index", "MstRollerType")">RollerType</a> </li>
-											   <li><a href="@Url.Action("Index", "MstMachine")">Machine</a> </li>*@
-											   <li><a href="@Url.Action("Index", "MstItemType")">ItemType</a> </li>
-                                               <li><a href="@Url.Action("Index", "MstUom")">UoM</a> </li>
-                                               <li><a href="@Url.Action("Index", "QuantityPricing")">Quantity Pricing</a> </li>
-												</ul>
-											</li>
-												<li><a href="#">Finance</a>
-												<ul>
-													<li><a href="@Url.Action("Index", "MstCashBank")">CashBank</a> </li>
-													<li><a href="@Url.Action("Index", "CashMutation")">Cash Mutation</a></li>
-                                                    <li><a href="@Url.Action("Index", "CashBankAdjustment")">CashBank Adjustment</a></li>
-													<li><a href="@Url.Action("Index", "CashBankMutation")">CashBank Mutation</a></li>
-													<li><a href="@Url.Action("Index", "PaymentRequest")">Payment Request</a></li>
-												</ul>
-											</li>
-											   <li><a href="#">Stock</a>
-												<ul>
-													@*<li><a href="@Url.Action("Index", "MstBarring")">Barring</a> </li>
-													<li><a href="@Url.Action("Index", "MstCoreBuilder")">CoreBuilder</a> </li>
-												   <li><a href="@Url.Action("Index", "MstRollerBuilder")">RollerBuilder</a> </li>*@
-													<li><a href="@Url.Action("Index", "MstItem")">Item </a> </li>
-                                                    <li><a href="@Url.Action("Index", "StockAdjustment")">Stock Adjustment</a></li>
-                                                    <li><a href="@Url.Action("Index", "StockMutation")">Stock Mutation</a></li>
-												   <li><a href="@Url.Action("Index", "MstWarehouse")">Warehouse</a> </li>
-													<li><a href="@Url.Action("Index", "WarehouseItem")">Warehouse Item</a> </li>
-												   <li><a href="@Url.Action("Index", "WarehouseMutationOrder")">Warehouse Mutation</a></li>
-                                                    
-												</ul>
-											</li>
-										</ul>
-										
-									</li>
-									@*<li><a href="#">Manufacturing</a>
-										<ul>
-											<li><a href="#">Barring</a>
-												<ul>
-											<li><a href="@Url.Action("Index", "BarringWorkOrder")">Barring Work Order</a></li>
-												</ul>
-											</li>
-										   <li><a href="#">Roller Recovery</a>
-											 <ul>
-											<li><a href="@Url.Action("Index", "CoreIdentification")">Roller Identification</a></li>
-											<li><a href="@Url.Action("Index", "RollerWarehouseMutation")">Roller Warehouse Mutation</a></li>
-											<li><a href="@Url.Action("Index", "RecoveryWorkOrder")">Recovery Work Order</a></li>
-											 </ul>
-											</li>
-										</ul>
-									</li>*@
-									<li><a href="#">Transaction</a>
-										<ul>
-											 <li><a href="#">Purchase</a>
-												<ul>
-													<li><a href="@Url.Action("Index", "PurchaseOrder")">Purchase Order</a></li>
-													<li><a href="@Url.Action("Index", "PurchaseReceival")">Purchase Receival</a></li>
-													<li><a href="@Url.Action("Index", "PurchaseInvoice")">Purchase Invoice</a></li>
-													<li><a href="@Url.Action("Index", "PaymentVoucher")">Payment Voucher</a></li>
-                                                    <li><a href="@Url.Action("Index", "Payable")">Payable</a></li>
-                                                    <li><a href="@Url.Action("Index", "CustomPurchaseInvoice")">Custom Purchase Invoice</a></li>
-												</ul>
-											</li>
-											   <li><a href="#">Sales</a>
-												<ul>
-													<li><a href="@Url.Action("Index", "SalesOrder")">Sales Order</a></li>
-													<li><a href="@Url.Action("Index", "DeliveryOrder")">Delivery Order</a></li>
-													<li><a href="@Url.Action("Index", "SalesInvoice")">Sales Invoice</a></li>
-													<li><a href="@Url.Action("Index", "ReceiptVoucher")">Receipt Voucher</a></li>
-                                                    <li><a href="@Url.Action("Index", "Receivable")">Receivable</a></li>
-													<li><a href="@Url.Action("Index", "CashSalesInvoice")">Cash Sales Invoice</a></li>
-                                                    <li><a href="@Url.Action("Index", "CashSalesReturn")">Cash Sales Return</a></li>
-                                                    <li><a href="@Url.Action("Index", "RetailSalesInvoice")">Retail Sales Invoice</a></li>
-												</ul>
-											</li>
-										</ul>
-									</li>
-									<li><a href="#">Report</a>
-										@*<ul>
-											<li><a href="#">Finance Report</a>
-												<ul>
-													<li><a href="@Url.Action("BalanceSheet", "FinanceReport")">Balance Sheet</a></li>
-													<li><a href="#">Cash Flow Per Period</a></li>
-													<li><a href="#">Chart Of Account</a></li>
-													<li><a href="#">Daily Report</a></li>
-													<li><a href="#">General Ledger</a></li>
-													<li><a href="#">General Trial Balance</a></li>
-													<li><a href="@Url.Action("IncomeStatement", "FinanceReport")">Income Statement</a></li>
-													<li><a href="#">Outstanding AR & AP</a></li>
-													<li><a href="@Url.Action("SummaryGeneralJurnal", "FinanceReport")">Summary General Journal</a></li>
-												</ul>
-											</li>
-											<li><a href="#">Control Report</a>
-												<ul>
-													<li><a href="#">Customer Invoices</a></li>
-													<li><a href="#">Progress Invoices Per Month</a></li>
-													<li><a href="#">Customer Payment</a></li>
-													<li><a href="#">Outstanding Invoice</a></li>
-													<li><a href="#">Shipment Order Without Invoices</a></li>
-													<li><a href="#">Income and Cost Variance Report</a></li>
-													<li><a href="#">Actual and Estimate Profit Margin Report</a></li>
-													<li><a href="#">Bad Debt Invoices List</a></li>
-													<li><a href="#">Paid Invoices Bad Debt</a></li>
-												</ul>
-											</li>
-											<li><a href="#">Control Report</a>
-												<ul>
-													<li><a href="#">Cost of Sales and Sales</a></li>
-													<li><a href="#">Outstanding Temporary Receipt</a></li>
-													<li><a href="#">Temporary Receipt List</a></li>
-													<li><a href="#">Activity</a></li>
-													<li><a href="#">Perhitungan Hari Bunga</a></li>
-													<li><a href="#">Outstanding Temporary Payment</a></li>
-													<li><a href="#">Down Payment List</a></li>
-												</ul>
-											</li>
-											<li><a href="#">Account Receivable</a>
-												<ul>
-													<li><a href="#">Detail Subsequent</a></li>
-													<li><a href="#">Receivable Aging</a></li>
-													<li><a href="#">Statement Of Account</a></li>
-													<li><a href="#">Subsidiary Ledger</a></li>
-												</ul>
-											</li>
-											<li><a href="#">Account Payable</a>
-												<ul>
-													<li><a href="#">Balance A/P Per Shipment Order</a></li>
-													<li><a href="#">Balance A/P Detail</a></li>
-													<li><a href="#">Balance A/P Per Payment Order</a></li>
-													<li><a href="#">Payable Aging</a></li>
-													<li><a href="#">Subsidiary Ledger</a></li>
-												</ul>
-											</li>
-											<li><a href="#">Estimate Income Statement</a>
-											</li>
-											<li><a href="#">Validitas Posting</a>
-											</li>
-										</ul>*@
-									</li>
-									<li id="menu-item-51"><a href="#">Setting</a>
-										<ul>
-                                            <li><a href="@Url.Action("Index", "User")">User</a></li>
-											<li><a href="@Url.Action("Index", "UserAccess")">User Access Right</a></li>
-											<li><a href="#" id="menu_change_pass">Change Password</a></li>
-										</ul>
-									</li>
-								</ul>
-							</div>
-						</div>
-					</div>
-					<div style="clear: both"></div>
-					<div id="sidebar-footer">
-						Copyright &copy; 2014
-						<br />
-						PT. Solusi Sentral Data
-					</div>
-				</div>
-				<div class="menuimage" style="text-align: center; width: 15px; height: 170px; border: solid 1px #4cff00; float: left; background: #b6ff00; margin-top: 150px; border-bottom-right-radius: 10px; border-top-right-radius: 10px;">
-					<br />
-					M<br />
-					A<br />
-					I<br />
-					N<br />
-					<br />
-					M<br />
-					E<br />
-					N<br />
-					U
-				</div>
-			</div>
+                    <div id="panel-menu">
+                        <div class="dcjq-container clear">
+                            <div class="dcjq-vertical-mega-menu">
+                                <ul id="mega-1" class="mega-menu">
+                                    <li><a href="#">Home</a></li>
+                                    <li><a href="#">Master</a>
+                                        <ul>
+                                            <li><a href="@Url.Action("Index", "MstBank")">Bank</a>
+                                            </li>
+                                            <li><a href="@Url.Action("Index", "MstCOA")">Chart Of Account (COA)</a>
+                                            </li>
+                                            <li><a href="@Url.Action("Index", "ExchangeRate")">Exchange Rate</a>
+                                            </li>
+                                            <li><a href="#">Link Account</a>
+                                                <ul>
+                                                    <li><a href="@Url.Action("LinkTR", "AccountLink")">Link Account TR</a></li>
+                                                    <li><a href="@Url.Action("LinkTP", "AccountLink")">Link Account TP</a></li>
+                                                </ul>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                    <li><a href="#">Cashier</a>
+                                        <ul>
+                                            <li><a href="@Url.Action("Index", "OfficialReceipt")">Official Receipt</a></li>
+                                            <li><a href="@Url.Action("Index", "ReceiptVoucher")">Receipt Voucher</a></li>
+                                            <li><a href="@Url.Action("Index", "TemporaryReceipt")">Temporary Receipt</a>
+                                            <li><a href="@Url.Action("Index", "PaymentVoucher")">Payment Voucher</a></li>
+                                            <li><a href="@Url.Action("Index", "TemporaryPayment")">Temporary Payment</a></li>
+                                            <li><a href="@Url.Action("Index", "CashAdvance")">Cash Advance</a></li>
+                                            <li><a href="@Url.Action("Index", "CashAdvanceSettlement")">Cash Advance Settlement</a></li>
+                                            <li><a href="@Url.Action("Index", "DailyClosing")">Daily Closing</a></li>
+                                            <li><a href="@Url.Action("Restore", "DailyClosing")">Restore Daily Closing</a></li>
+                                            <li><a href="#">Valid Combination</a>
+                                                <ul>
+                                                    <li><a href="@Url.Action("Index", "ValidCombinationBalanceCashCompany")">Balance Cash Per Company</a></li>
+                                                    <li><a href="@Url.Action("Index", "ValidCombinationBankCompany")">Bank Per Company</a></li>
+                                                    <li><a href="@Url.Action("Index", "ValidCombinationCashCompany")">Cash Per Company</a></li>
+                                                    <li><a href="@Url.Action("Index", "ValidCombination")">General Ledger</a></li>
+                                                    <li><a href="@Url.Action("Index", "ValidCombinationContact")">Contact</a></li>
+                                                </ul>
+                                            </li>
+                                            <li><a href="#">Report</a>
+                                                <ul>
+                                                    <li><a href="@Url.Action("Cash", "CashierReport")">Daily Report Cash</a></li>
+                                                    <li><a href="@Url.Action("Bank", "CashierReport")">Daily Report Bank</a></li>
+                                                    <li><a href="@Url.Action("RecapitulationCashAdvance", "CashierReport")">Daily Report Recapitulation Cash Advance</a></li>
+                                                    <li><a href="@Url.Action("BalanceCashAdvanceList", "CashierReport")">Balance Cash Advance List</a></li>
+                                                    <li><a href="@Url.Action("DepositInTransit", "CashierReport")">Deposit In Transit</a></li>
+                                                </ul>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                    <li><a href="#">Transaction</a>
+                                        <ul>
+                                            <li><a href="@Url.Action("Index", "GeneralInvoice")">General Invoice</a></li>
+                                            <li><a href="#">Verify</a>
+                                                <ul>
+                                                    <li><a href="@Url.Action("Memorial", "Verify")">Memorial</a></li>
+                                                    <li><a href="@Url.Action("OfficialReceipt", "Verify")">Official Receipt</a></li>
+                                                    <li><a href="@Url.Action("TemporaryReceipt", "Verify")">Temporary Receipt</a></li>
+                                                    <li><a href="@Url.Action("ReceiptVoucher", "Verify")">Receipt Voucher</a></li>
+                                                    <li><a href="@Url.Action("TemporaryPayment", "Verify")">Temporary Payment</a></li>
+                                                    <li><a href="@Url.Action("PaymentVoucher", "Verify")">Payment Voucher</a></li>
+                                                </ul>
+                                            </li>
+                                            <li><a href="@Url.Action("Index", "AdjustmentAP")" >Adjustment AP</a></li>
+                                            <li><a href="@Url.Action("Index", "Memorial")" >Memorial</a>
+                                                <ul>
+                                                    <li><a href="@Url.Action("Index", "OutstandingIncomeEPL")">Outstanding Income EPL</a></li>
+                                                    <li><a href="@Url.Action("Index", "IncomeNextPeriod")">Income Next Period</a></li>
+                                                    <li><a href="@Url.Action("Index", "CostEPLNextPeriod")">Cost EPL Next Period</a></li>
+                                                    <li><a href="@Url.Action("Index", "OutstandingCostAgent")">Outstanding Cost Agent</a></li>
+                                                </ul>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                    <li><a href="#">Process</a>
+                                        <ul>
+                                            <li><a href="@Url.Action("Index", "DueDate")" >Due Date</a></li>
+                                            <li><a href="@Url.Action("Index", "PostingProcess")">Posting</a></li>
+                                            <li><a href="@Url.Action("Index", "ClosingMonthly")">Closing Monthly</a></li>
+                                            <li><a href="@Url.Action("Restore", "ClosingMonthly")">Restore Closing Monthly</a></li>
+                                            <li><a href="@Url.Action("Journal", "Invoice")">Invoice Journal</a></li>
+                                            <li><a href="@Url.Action("Journal", "PaymentRequest")">Payment Request Journal</a>
+                                                <ul>
+                                                    <li><a href="#"></a></li>
+                                                </ul>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                    <li><a href="#">Report</a>
+                                        <ul>
+                                            <li><a href="#">Finance Report</a>
+                                                <ul>
+                                                    <li><a href="@Url.Action("BalanceSheet", "FinanceReport")">Balance Sheet</a></li>
+                                                    <li><a href="#">Cash Flow Per Period</a></li>
+                                                    <li><a href="#">Chart Of Account</a></li>
+                                                    <li><a href="#">Daily Report</a></li>
+                                                    <li><a href="#">General Ledger</a></li>
+                                                    <li><a href="#">General Trial Balance</a></li>
+                                                    <li><a href="@Url.Action("IncomeStatement", "FinanceReport")">Income Statement</a></li>
+                                                    <li><a href="#">Outstanding AR & AP</a></li>
+                                                    <li><a href="@Url.Action("SummaryGeneralJurnal", "FinanceReport")">Summary General Journal</a></li>
+                                                </ul>
+                                            </li>
+                                            <li><a href="#">Control Report</a>
+                                                <ul>
+                                                    <li><a href="#">Customer Invoices</a></li>
+                                                    <li><a href="#">Progress Invoices Per Month</a></li>
+                                                    <li><a href="#">Customer Payment</a></li>
+                                                    <li><a href="#">Outstanding Invoice</a></li>
+                                                    <li><a href="#">Shipment Order Without Invoices</a></li>
+                                                    <li><a href="#">Income and Cost Variance Report</a></li>
+                                                    <li><a href="#">Actual and Estimate Profit Margin Report</a></li>
+                                                    <li><a href="#">Bad Debt Invoices List</a></li>
+                                                    <li><a href="#">Paid Invoices Bad Debt</a></li>
+                                                </ul>
+                                            </li>
+                                            <li><a href="#">Control Report</a>
+                                                <ul>
+                                                    <li><a href="#">Cost of Sales and Sales</a></li>
+                                                    <li><a href="#">Outstanding Temporary Receipt</a></li>
+                                                    <li><a href="#">Temporary Receipt List</a></li>
+                                                    <li><a href="#">Activity</a></li>
+                                                    <li><a href="#">Perhitungan Hari Bunga</a></li>
+                                                    <li><a href="#">Outstanding Temporary Payment</a></li>
+                                                    <li><a href="#">Down Payment List</a></li>
+                                                </ul>
+                                            </li>
+                                            <li><a href="#">Account Receivable</a>
+                                                <ul>
+                                                    <li><a href="#">Detail Subsequent</a></li>
+                                                    <li><a href="#">Receivable Aging</a></li>
+                                                    <li><a href="#">Statement Of Account</a></li>
+                                                    <li><a href="#">Subsidiary Ledger</a></li>
+                                                </ul>
+                                            </li>
+                                            <li><a href="#">Account Payable</a>
+                                                <ul>
+                                                    <li><a href="#">Balance A/P Per Shipment Order</a></li>
+                                                    <li><a href="#">Balance A/P Detail</a></li>
+                                                    <li><a href="#">Balance A/P Per Payment Order</a></li>
+                                                    <li><a href="#">Payable Aging</a></li>
+                                                    <li><a href="#">Subsidiary Ledger</a></li>
+                                                </ul>
+                                            </li>
+                                            <li><a href="#">Estimate Income Statement</a>
+                                            </li>
+                                            <li><a href="#">Validitas Posting</a>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                    <li id="menu-item-51"><a href="#">Setting</a>
+                                        <ul>
+                                            <li><a href="@Url.Action("Index", "UserAccess")">User Access Right</a></li>
+                                            <li><a href="#" id="menu_change_pass">Change Password</a></li>
+                                        </ul>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div style="clear: both"></div>
+                    <div id="sidebar-footer">
+                        Copyright &copy; @DateTime.Today.Year
+                        <br />
+                        PT. Solusi Sentral Data
+                    </div>
+                </div>
+                <div class="menuimage" style="text-align: center; width: 15px; height: 170px; border: solid 1px #4cff00; float: left; background: #b6ff00; margin-top: 150px; border-bottom-right-radius: 10px; border-top-right-radius: 10px;">
+                    <br />
+                    M<br />
+                    a<br />
+                    i<br />
+                    n<br />
+                    <br />
+                    M<br />
+                    e<br />
+                    n<br />
+                    u
+                </div>
+            </div>
 
-			<div style="margin: 10px;">
-				@RenderBody()
-			</div>
-		</div>
+            <div style="margin: 10px;">
+                @RenderBody()
+            </div>
+        </div>
 
-		<div id="frm_change_pass_div" class="easyui-dialog" style="text-align: left; width: 360px;"
-			data-options="modal:true" title=".: CHANGE PASSWORD :.">
+        <div id="frm_change_pass_div" class="easyui-dialog" style="text-align: left; width: 360px;"
+            data-options="modal:true" title=".: CHANGE PASSWORD :.">
 
-			<div id="frm_change_pass_toolbar" style="border: 1px solid #ddd;" class="form_toolbar">
-				<a id="frm_change_pass_btn_save" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-save'">SAVE</a>
-				<a id="frm_change_pass_btn_cancel" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-remove'">Close</a>
-			</div>
+            <div id="frm_change_pass_toolbar" style="border: 1px solid #ddd;" class="form_toolbar">
+                <a id="frm_change_pass_btn_save" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-save'">SAVE</a>
+                <a id="frm_change_pass_btn_cancel" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-remove'">Close</a>
+            </div>
 
-			<div style="height: 160px; overflow: auto">
-				<form id="frm_change_pass">
-					<fieldset class="ui-widget-content ui-corner-all input_form_div">
-						<table width="100%" border="0" cellpadding="1" cellspacing="1" class="input_form_tbl">
-							<tr>
-								<td>
-									<label>Old Password</label></td>
-								<td>
-									<input id="txtoldpass" type="password" size="20" maxlength="20" align="left" /></td>
-							</tr>
-							<tr>
-								<td>
-									<label>New Password</label></td>
-								<td>
-									<input id="txtnewpass" type="password" size="20" maxlength="20" align="left" /></td>
-							</tr>
-							<tr>
-								<td>
-									<label>Confirm Password</label></td>
-								<td>
-									<input id="txtconfirmpass" type="password" size="20" maxlength="20" align="left" /></td>
-							</tr>
-						</table>
-					</fieldset>
-				</form>
-			</div>
-		</div>
-	</body>
-	</html>
-}
+            <div style="height: 160px; overflow: auto">
+                <form id="frm_change_pass">
+                    <fieldset class="ui-widget-content ui-corner-all input_form_div">
+                        <table width="100%" border="0" cellpadding="1" cellspacing="1" class="input_form_tbl">
+                            <tr>
+                                <td>
+                                    <label>Old Password</label></td>
+                                <td>
+                                    <input id="txtoldpass" type="password" size="20" maxlength="20" align="left" /></td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <label>New Password</label></td>
+                                <td>
+                                    <input id="txtnewpass" type="password" size="20" maxlength="20" align="left" /></td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <label>Confirm Password</label></td>
+                                <td>
+                                    <input id="txtconfirmpass" type="password" size="20" maxlength="20" align="left" /></td>
+                            </tr>
+                        </table>
+                    </fieldset>
+                </form>
+            </div>
+        </div>
+    </body>
+    </html>
+
     }   // END NOT Under Maintenance
+}

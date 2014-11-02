@@ -338,8 +338,8 @@ namespace Validation.Validation
             VIsConfirmableCustomPurchaseInvoiceDetails(customPurchaseInvoice, _customPurchaseInvoiceDetailService, _customPurchaseInvoiceService, _warehouseItemService);
             if (!isValid(customPurchaseInvoice)) { return customPurchaseInvoice; }
             VIsNotConfirmed(customPurchaseInvoice);
-            if (!isValid(customPurchaseInvoice)) { return customPurchaseInvoice; }
-            VHasDueDate(customPurchaseInvoice);
+            //if (!isValid(customPurchaseInvoice)) { return customPurchaseInvoice; }
+            //VHasDueDate(customPurchaseInvoice);
             if (!isValid(customPurchaseInvoice)) { return customPurchaseInvoice; }
             VIsValidDiscount(customPurchaseInvoice);
             if (!isValid(customPurchaseInvoice)) { return customPurchaseInvoice; }
@@ -419,6 +419,8 @@ namespace Validation.Validation
             VHasCashBank(customPurchaseInvoice, _cashBankService);
             if (!isValid(customPurchaseInvoice)) { return customPurchaseInvoice; }
             VHasPurchaseDate(customPurchaseInvoice);
+            if (!isValid(customPurchaseInvoice)) { return customPurchaseInvoice; }
+            VHasDueDate(customPurchaseInvoice);
             if (!isValid(customPurchaseInvoice)) { return customPurchaseInvoice; }
             VHasContact(customPurchaseInvoice, _contactService);
             if (!isValid(customPurchaseInvoice)) { return customPurchaseInvoice; }

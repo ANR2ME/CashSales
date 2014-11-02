@@ -299,8 +299,8 @@ namespace Validation.Validation
             VIsConfirmableCashSalesInvoiceDetails(cashSalesInvoice, _cashSalesInvoiceDetailService, _cashSalesInvoiceService, _warehouseItemService);
             if (!isValid(cashSalesInvoice)) { return cashSalesInvoice; }
             VIsNotConfirmed(cashSalesInvoice);
-            if (!isValid(cashSalesInvoice)) { return cashSalesInvoice; }
-            VHasDueDate(cashSalesInvoice);
+            //if (!isValid(cashSalesInvoice)) { return cashSalesInvoice; }
+            //VHasDueDate(cashSalesInvoice);
             if (!isValid(cashSalesInvoice)) { return cashSalesInvoice; }
             VIsValidDiscount(cashSalesInvoice);
             if (!isValid(cashSalesInvoice)) { return cashSalesInvoice; }
@@ -378,6 +378,8 @@ namespace Validation.Validation
             VHasCashBank(cashSalesInvoice, _cashBankService);
             if (!isValid(cashSalesInvoice)) { return cashSalesInvoice; }
             VHasSalesDate(cashSalesInvoice);
+            if (!isValid(cashSalesInvoice)) { return cashSalesInvoice; }
+            VHasDueDate(cashSalesInvoice);
             if (!isValid(cashSalesInvoice)) { return cashSalesInvoice; }
             VHasWarehouse(cashSalesInvoice, _warehouseService);
             return cashSalesInvoice;

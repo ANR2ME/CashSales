@@ -102,6 +102,7 @@ namespace WebView.Controllers
                             model.Description,
                             model.Discount,
                             model.Tax,
+                            model.ShippingFee,
                             model.Allowance,
                             model.AmountPaid,
                             model.Total,
@@ -156,6 +157,7 @@ namespace WebView.Controllers
                             model.Description,
                             model.Discount,
                             model.Tax,
+                            model.ShippingFee,
                             model.Allowance,
                             model.AmountPaid,
                             model.Total,
@@ -198,6 +200,7 @@ namespace WebView.Controllers
                              model.Description,
                              model.Discount,
                              model.Tax,
+                             model.ShippingFee,
                              model.Allowance,
                              model.AmountPaid,
                              model.Total,
@@ -252,6 +255,7 @@ namespace WebView.Controllers
                             model.Description,
                             model.Discount,
                             model.Tax,
+                            model.ShippingFee,
                             model.Allowance,
                             model.AmountPaid,
                             model.Total,
@@ -713,6 +717,7 @@ namespace WebView.Controllers
                 }
 
                 var data = _cashSalesInvoiceService.GetObjectById(model.Id);
+                data.ShippingFee = model.ShippingFee;
                 model = _cashSalesInvoiceService.ConfirmObject(data, model.ConfirmationDate.Value, model.Discount, model.Tax, _cashSalesInvoiceDetailService, 
                                                     _contactService, _priceMutationService, _receivableService, _cashSalesInvoiceService, _warehouseItemService, 
                                                     _warehouseService, _itemService, _barringService, _stockMutationService, _cashBankService,

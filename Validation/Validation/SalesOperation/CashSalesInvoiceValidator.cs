@@ -63,6 +63,15 @@ namespace Validation.Validation
             return cashSalesInvoice;
         }
 
+        public CashSalesInvoice VIsValidShippingFee(CashSalesInvoice cashSalesInvoice)
+        {
+            if (cashSalesInvoice.ShippingFee < 0)
+            {
+                cashSalesInvoice.Errors.Add("ShippingFee", "Harus lebih besar atau sama dengan 0");
+            }
+            return cashSalesInvoice;
+        }
+
         public CashSalesInvoice VIsValidAllowance(CashSalesInvoice cashSalesInvoice)
         {
             if (cashSalesInvoice.Allowance < 0 || cashSalesInvoice.Allowance > cashSalesInvoice.Total)
@@ -224,6 +233,10 @@ namespace Validation.Validation
             {
                 cashSalesInvoice.Errors.Add("AmountPaid", "Harus lebih kecil atau sama dengan Total Payable");
             }
+            else if(cashSalesInvoice.AmountPaid < 0)
+            {
+                cashSalesInvoice.Errors.Add("AmountPaid", "Harus lebih besar atau sama dengan 0");
+            }
             return cashSalesInvoice;
         }
 
@@ -305,6 +318,8 @@ namespace Validation.Validation
             VIsValidDiscount(cashSalesInvoice);
             if (!isValid(cashSalesInvoice)) { return cashSalesInvoice; }
             VIsValidTax(cashSalesInvoice);
+            if (!isValid(cashSalesInvoice)) { return cashSalesInvoice; }
+            VIsValidShippingFee(cashSalesInvoice);
             if (!isValid(cashSalesInvoice)) { return cashSalesInvoice; }
             VHasConfirmationDate(cashSalesInvoice);
             //if (!isValid(cashSalesInvoice)) { return cashSalesInvoice; }

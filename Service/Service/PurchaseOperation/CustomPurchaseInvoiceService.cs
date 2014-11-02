@@ -216,7 +216,9 @@ namespace Service.Service
 
         public decimal CalculateTotalAmountAfterDiscountAndTax(CustomPurchaseInvoice customPurchaseInvoice)
         {
-            return ((customPurchaseInvoice.Total * (100 - customPurchaseInvoice.Discount) / 100) * (100 - customPurchaseInvoice.Tax) / 100);
+            decimal total = ((customPurchaseInvoice.Total * (100 - customPurchaseInvoice.Discount) / 100) * (100 - customPurchaseInvoice.Tax) / 100);
+            total += customPurchaseInvoice.ShippingFee;
+            return total;
         }
     }
 }

@@ -83,6 +83,8 @@ namespace Service.Service
                 }
                 // Tax dihitung setelah Discount
                 cashSalesInvoice.Total = (cashSalesInvoice.Total * ((100 - cashSalesInvoice.Discount) / 100) * ((100 + cashSalesInvoice.Tax) / 100));
+                // Tambahkan ongkos kirim
+                cashSalesInvoice.Total += cashSalesInvoice.ShippingFee;
                 Contact contact = _contactService.GetObjectByName(Core.Constants.Constant.BaseContact);
                 Receivable receivable = _receivableService.CreateObject(contact.Id, Core.Constants.Constant.ReceivableSource.CashSalesInvoice, cashSalesInvoice.Id, cashSalesInvoice.Code, cashSalesInvoice.Total, (DateTime)cashSalesInvoice.DueDate.GetValueOrDefault());
                 //_generalLedgerJournalService.CreateConfirmationJournalForCashSalesInvoice(cashSalesInvoice, _accountService);
@@ -118,6 +120,7 @@ namespace Service.Service
                 cashSalesInvoice.Total = 0;
                 cashSalesInvoice.Discount = 0;
                 cashSalesInvoice.Tax = 0;
+                cashSalesInvoice.ShippingFee = 0;
                 cashSalesInvoice = _repository.UnconfirmObject(cashSalesInvoice);
             }
             return cashSalesInvoice;

@@ -18,6 +18,7 @@ namespace Core.DomainModel
         public decimal Allowance { get; set; }
         public decimal Discount { get; set; }
         public decimal Tax { get; set; }
+        public decimal ShippingFee { get; set; } // Delivery Cost
         public bool IsConfirmed { get; set; }
 
         public bool IsGBCH { get; set; }

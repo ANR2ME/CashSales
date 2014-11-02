@@ -104,6 +104,7 @@ namespace WebView.Controllers
                              model.Description,
                              model.Discount,
                              model.Tax,
+                             model.ShippingFee,
                              model.Allowance,
                              model.Total,
                              model.CoGS,
@@ -164,6 +165,7 @@ namespace WebView.Controllers
                             model.Description,
                             model.Discount,
                             model.Tax,
+                            model.ShippingFee,
                             model.Allowance,
                             model.Total,
                             model.CoGS,
@@ -571,6 +573,7 @@ namespace WebView.Controllers
                 var data = _customPurchaseInvoiceService.GetObjectById(model.Id);
                 data.Discount = model.Discount;
                 data.Tax = model.Tax;
+                data.ShippingFee = model.ShippingFee;
                 model = _customPurchaseInvoiceService.ConfirmObject(data, model.ConfirmationDate.Value, _customPurchaseInvoiceDetailService, 
                                                     _contactService, _priceMutationService, _payableService, _customPurchaseInvoiceService, _warehouseItemService, 
                                                     _warehouseService, _itemService, _barringService, _stockMutationService,_generalLedgerJournalService,_accountService,

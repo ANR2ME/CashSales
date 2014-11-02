@@ -76,6 +76,15 @@ namespace Validation.Validation
             return customPurchaseInvoice;
         }
 
+        public CustomPurchaseInvoice VIsValidShippingFee(CustomPurchaseInvoice customPurchaseInvoice)
+        {
+            if (customPurchaseInvoice.ShippingFee < 0)
+            {
+                customPurchaseInvoice.Errors.Add("ShippingFee", "Harus lebih besar atau sama dengan 0");
+            }
+            return customPurchaseInvoice;
+        }
+
         public CustomPurchaseInvoice VHasWarehouse(CustomPurchaseInvoice customPurchaseInvoice, IWarehouseService _warehouseService)
         {
             Warehouse warehouse = _warehouseService.GetObjectById(customPurchaseInvoice.WarehouseId);
@@ -246,6 +255,10 @@ namespace Validation.Validation
             {
                 customPurchaseInvoice.Errors.Add("AmountPaid", "Harus lebih kecil atau sama dengan Total Payable");
             }
+            else if (customPurchaseInvoice.AmountPaid < 0)
+            {
+                customPurchaseInvoice.Errors.Add("AmountPaid", "Harus lebih besar atau sama dengan 0");
+            }
             return customPurchaseInvoice;
         }
 
@@ -344,6 +357,8 @@ namespace Validation.Validation
             VIsValidDiscount(customPurchaseInvoice);
             if (!isValid(customPurchaseInvoice)) { return customPurchaseInvoice; }
             VIsValidTax(customPurchaseInvoice);
+            if (!isValid(customPurchaseInvoice)) { return customPurchaseInvoice; }
+            VIsValidShippingFee(customPurchaseInvoice);
             if (!isValid(customPurchaseInvoice)) { return customPurchaseInvoice; }
             VHasConfirmationDate(customPurchaseInvoice);
             if (customPurchaseInvoice.IsGroupPricing)

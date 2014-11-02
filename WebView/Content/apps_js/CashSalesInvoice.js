@@ -32,8 +32,10 @@
 	    var tot = parseFloat($('#confirmTotal').numberbox('getValue'));
 	    var disc = parseFloat($('#confirmDiscount').numberbox('getValue'));
 	    var tax = parseFloat($('#confirmTax').numberbox('getValue'));
+	    var fee = parseFloat($('#confirmShippingFee').numberbox('getValue'));
 	    tot = (tot * (100.0 - disc) / 100.0);
 	    tot = (tot * (100.0 + tax) / 100.0);
+	    tot += fee;
 	    $('#confirmTotal2').numberbox('setValue', tot);
 	};
 
@@ -76,7 +78,7 @@
 		url: base_url + 'CashSalesInvoice/GetList',
 		datatype: "json",
 		colNames: ['ID', 'Code', 'Description', 
-				   'Discount', 'Tax', 'Allowance', 'Amount Paid', 'Total', 'CoGS', 'Profit/Loss', 'Is Confirmed', 'Confirmation Date',
+				   'Discount', 'Tax', 'Shipping Fee', 'Allowance', 'Amount Paid', 'Total', 'CoGS', 'Profit/Loss', 'Is Confirmed', 'Confirmation Date',
 				   'CashBank ID', 'CashBank Name', 'Is Bank', 'Is Paid', 'Is Full Payment',
 				   'Warehouse ID', 'Warehouse Name',
 				   'Sales Date', 'Due Date', 'Created At', 'Updated At'],
@@ -86,6 +88,7 @@
 				  { name: 'description', index: 'description', width: 150 },
 				  { name: 'discount', index: 'discount', width: 80, decimal: { thousandsSeparator: ",", defaultValue: '0' } },
 				  { name: 'tax', index: 'tax', width: 80, decimal: { thousandsSeparator: ",", defaultValue: '0' } },
+                  { name: 'shippingfee', index: 'shippingfee', width: 80, formatter: 'currency', formatoptions: { decimalSeparator: ".", thousandsSeparator: ",", decimalPlaces: 0, prefix: "", suffix: "", defaultValue: '0' } },
 				  { name: 'allowance', index: 'allowance', width: 80, formatter: 'currency', formatoptions: { decimalSeparator: ".", thousandsSeparator: ",", decimalPlaces: 0, prefix: "", suffix: "", defaultValue: '0' } },
                   { name: 'amountpaid', index: 'amountpaid', width: 80, formatter: 'currency', formatoptions: { decimalSeparator: ".", thousandsSeparator: ",", decimalPlaces: 0, prefix: "", suffix: "", defaultValue: '0' } },
                   { name: 'total', index: 'total', width: 80, formatter: 'currency', formatoptions: { decimalSeparator: ".", thousandsSeparator: ",", decimalPlaces: 0, prefix: "", suffix: "", defaultValue: '0' } },
@@ -241,6 +244,7 @@
 							$('#WarehouseName').val(result.Warehouse);
 							$('#Discount').numberbox('setValue', result.Discount);
 							$('#Tax').numberbox('setValue', result.Tax);
+							$('#ShippingFee').numberbox('setValue', result.ShippingFee);
 							$('#Allowance').numberbox('setValue', result.Allowance);
 							$('#Total').numberbox('setValue', result.Total);
 							$('#SalesDate2').val(dateEnt(result.SalesDate));
@@ -250,6 +254,7 @@
 							$('#btnWarehouse').attr('disabled', true);
 							$('#Discount').attr('disabled', true);
 							$('#Tax').attr('disabled', true);
+							$('#ShippingFee').attr('disabled', true);
 							$('#Allowance').attr('disabled', true);
 							$('#Total').attr('disabled', true);
 							$('#SalesDateDiv').hide();
@@ -334,6 +339,7 @@
 			$('#ConfirmationDate').datebox('setValue', $.datepicker.formatDate('mm/dd/yy', new Date()));
 			$('#confirmDiscount').numberbox('setValue', ret.discount);
 			$('#confirmTax').numberbox('setValue', ret.tax);
+			$('#confirmShippingFee').numberbox('setValue', ret.shippingfee);
 			$('#confirmTotal').numberbox('setValue', ret.total);
 			$('#confirmTotal2').numberbox('setValue', ret.total);
 			$('#confirmCode').val(ret.code);
@@ -392,6 +398,7 @@
 			data: JSON.stringify({
 				Id: $('#idconfirm').val(), ConfirmationDate: $('#ConfirmationDate').datebox('getValue'),
 				Discount: $('#confirmDiscount').numberbox('getValue'), Tax: $('#confirmTax').numberbox('getValue'),
+				ShippingFee: $('#confirmShippingFee').numberbox('getValue'),
 			}),
 			success: function (result) {
 				if (JSON.stringify(result.Errors) != '{}') {

@@ -82,7 +82,7 @@
 		url: base_url + 'CustomPurchaseInvoice/GetList',
 		datatype: "json",
 		colNames: ['ID', 'Code', 'Description', 
-				   'Discount', 'Tax', 'Allowance', 'Total', 'CoGS', 'Amount Paid', 'Is GroupPricing', 'Contact ID', 'Contact Name',
+				   'Discount', 'Tax', 'Shipping Fee', 'Allowance', 'Total', 'CoGS', 'Amount Paid', 'Is GroupPricing', 'Contact ID', 'Contact Name',
                    'Is Confirmed', 'Confirmation Date', 
                    'Is GBCH', 'GBCH No.', 'GBCH Due Date',
 				   'CashBank ID', 'CashBank Name', 'Is Bank', 'Is Paid', 'Payment Date', 'Is Full Payment',
@@ -94,6 +94,7 @@
 				  { name: 'description', index: 'description', width: 100 },
 				  { name: 'discount', index: 'discount', width: 80, decimal: { thousandsSeparator: ",", defaultValue: '0' } },
 				  { name: 'tax', index: 'tax', width: 80, decimal: { thousandsSeparator: ",", defaultValue: '0' } },
+                  { name: 'shippingfee', index: 'shippingfee', width: 80, formatter: 'currency', formatoptions: { decimalSeparator: ".", thousandsSeparator: ",", decimalPlaces: 0, prefix: "", suffix: "", defaultValue: '0' } },
 				  { name: 'allowance', index: 'allowance', width: 80, formatter: 'currency', formatoptions: { decimalSeparator: ".", thousandsSeparator: ",", decimalPlaces: 0, prefix: "", suffix: "", defaultValue: '0' } },
                   { name: 'total', index: 'total', width: 80, formatter: 'currency', formatoptions: { decimalSeparator: ".", thousandsSeparator: ",", decimalPlaces: 0, prefix: "", suffix: "", defaultValue: '0' } },
 				  { name: 'cogs', index: 'cogs', width: 80, hidden: true, formatter: 'currency', formatoptions: { decimalSeparator: ".", thousandsSeparator: ",", decimalPlaces: 0, prefix: "", suffix: "", defaultValue: '0' } },
@@ -335,6 +336,7 @@
 	        $('#checkDueDate').datebox('setValue', $.datepicker.formatDate('mm/dd/yy', new Date()));
 	        $('#checkDiscount').numberbox('setValue', ret.discount);
 	        $('#checkTax').numberbox('setValue', ret.tax);
+	        $('#checkShippingFee').numberbox('setValue', ret.shippingfee);
 	        $('#checkAllowance').numberbox('setValue', ret.allowance);
 	        $('#idcheck').val(ret.id);
 	        $('#checkCode').val(ret.code);
@@ -352,7 +354,8 @@
 	        contentType: "application/json",
 	        data: JSON.stringify({
 	            Id: $('#idcheck').val(), DueDate: $('#checkDueDate').datebox('getValue'),
-	            Discount: $('#checkDiscount').numberbox('getValue'), Tax: $('#checkTax').numberbox('getValue'), Allowance: $('#checkAllowance').numberbox('getValue'),
+	            Discount: $('#checkDiscount').numberbox('getValue'), Tax: $('#checkTax').numberbox('getValue'), ShippingFee: $('#checkShippingFee').numberbox('getValue'),
+	            Allowance: $('#checkAllowance').numberbox('getValue'),
 	        }),
 	        success: function (result) {
 	            if (JSON.stringify(result.Errors) != '{}') {
@@ -378,7 +381,7 @@
 	$('#check_btn_print').click(function () {
 	    window.open(base_url + "Report/ReportFunds?DailySalesProjection=" + $('#DailySalesProjection').numberbox('getValue') + "&IncludeSaturdaySales=" + document.getElementById('IncludeSaturdaySales').checked + "&IncludeSundaySales=" + document.getElementById('IncludeSundaySales').checked +
 	        "&Id=" + $('#idcheck').val() + "&DueDate=" + $('#checkDueDate').datebox('getValue') +
-	        "&Discount=" + $('#checkDiscount').numberbox('getValue') + "&Tax=" + $('#checkTax').numberbox('getValue') + "&Allowance=" + $('#checkAllowance').numberbox('getValue'));
+	        "&Discount=" + $('#checkDiscount').numberbox('getValue') + "&Tax=" + $('#checkTax').numberbox('getValue') + "&ShippingFee=" + $('#checkShippingFee').numberbox('getValue') + "&Allowance=" + $('#checkAllowance').numberbox('getValue'));
 	});
 
 
@@ -393,6 +396,7 @@
 			$('#ConfirmationDate').datebox('setValue', $.datepicker.formatDate('mm/dd/yy', new Date()));
 			$('#confirmDiscount').numberbox('setValue', ret.discount);
 			$('#confirmTax').numberbox('setValue', ret.tax);
+			$('#confirmShippingFee').numberbox('setValue', ret.shippingfee);
 			$('#confirmCode').val(ret.code);
 			//$('#confirmAllowance').numberbox('setValue', ret.allowance);
 			$('#idconfirm').val(ret.id);
@@ -449,6 +453,7 @@
 			data: JSON.stringify({
 				Id: $('#idconfirm').val(), ConfirmationDate: $('#ConfirmationDate').datebox('getValue'),
 				Discount: $('#confirmDiscount').numberbox('getValue'), Tax: $('#confirmTax').numberbox('getValue'),
+				ShippingFee: $('#confirmShippingFee').numberbox('getValue'),
 				//Allowance: $('#confirmAllowance').numberbox('getValue'),
 			}),
 			success: function (result) {

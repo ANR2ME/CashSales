@@ -309,7 +309,7 @@ namespace WebView.Controllers
             return View();
         }
 
-        public ActionResult ReportFunds(int Id, DateTime DueDate, decimal Discount, decimal Tax, decimal Allowance, decimal DailySalesProjection, bool IncludeSaturdaySales, bool IncludeSundaySales)
+        public ActionResult ReportFunds(int Id, DateTime DueDate, decimal Discount, decimal Tax, decimal ShippingFee, decimal Allowance, decimal DailySalesProjection, bool IncludeSaturdaySales, bool IncludeSundaySales)
         {
             var company = _companyService.GetQueryable().FirstOrDefault();
             DateTime startDate = DateTime.Today;
@@ -319,6 +319,7 @@ namespace WebView.Controllers
             data.DueDate = DueDate;
             data.Discount = Discount;
             data.Tax = Tax;
+            data.ShippingFee = ShippingFee;
             data.Allowance = Allowance;
             decimal total = _customPurchaseInvoiceService.CalculateTotalAmountAfterDiscountAndTax(data) - Allowance;
             decimal totalcashbank = _cashBankService.GetTotalCashBank();

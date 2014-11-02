@@ -12,6 +12,7 @@ Price	Currency
 Discount	Number		
 GlobalDiscount	Number
 Tax	Number		
+ShippingFee	Currency	
 Allowance	Currency		
 User	String	80
 Description	String	255	

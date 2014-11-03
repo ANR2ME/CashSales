@@ -78,7 +78,7 @@
 		url: base_url + 'CashSalesInvoice/GetList',
 		datatype: "json",
 		colNames: ['ID', 'Code', 'Description', 
-				   'Discount', 'Tax', 'Shipping Fee', 'Allowance', 'Amount Paid', 'Total', 'CoGS', 'Profit/Loss', 'Is Confirmed', 'Confirmation Date',
+				   'Discount', 'Tax', 'Delivery Cost', 'Allowance', 'Amount Paid', 'Total', 'CoGS', 'Profit/Loss', 'Is Confirmed', 'Confirmation Date',
 				   'CashBank ID', 'CashBank Name', 'Is Bank', 'Is Paid', 'Is Full Payment',
 				   'Warehouse ID', 'Warehouse Name',
 				   'Sales Date', 'Due Date', 'Created At', 'Updated At'],

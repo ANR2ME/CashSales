@@ -172,3 +172,8 @@ textarea {
     margin-left: 10px;
     margin-right: 5px;
 }
+
+
+span.errormessage {
+    color: red;
+}

@@ -82,7 +82,7 @@
 		url: base_url + 'CustomPurchaseInvoice/GetList',
 		datatype: "json",
 		colNames: ['ID', 'Code', 'Description', 
-				   'Discount', 'Tax', 'Shipping Fee', 'Allowance', 'Total', 'CoGS', 'Amount Paid', 'Is GroupPricing', 'Contact ID', 'Contact Name',
+				   'Discount', 'Tax', 'Delivery Cost', 'Allowance', 'Total', 'CoGS', 'Amount Paid', 'Is GroupPricing', 'Contact ID', 'Contact Name',
                    'Is Confirmed', 'Confirmation Date', 
                    'Is GBCH', 'GBCH No.', 'GBCH Due Date',
 				   'CashBank ID', 'CashBank Name', 'Is Bank', 'Is Paid', 'Payment Date', 'Is Full Payment',

@@ -65,11 +65,11 @@ namespace Service.Service
                                                 IGeneralLedgerJournalService _generalLedgerJournalService, IAccountService _accountService, IClosingService _closingService)
        {
             cashSalesInvoice.ConfirmationDate = ConfirmationDate;
+            cashSalesInvoice.Discount = Discount;
+            cashSalesInvoice.Tax = Tax;
             if (_validator.ValidConfirmObject(cashSalesInvoice, _cashSalesInvoiceDetailService, _cashSalesInvoiceService, _warehouseItemService, _contactService,
                                               _cashBankService, _closingService))
             {
-                cashSalesInvoice.Discount = Discount;
-                cashSalesInvoice.Tax = Tax;
                 IList<CashSalesInvoiceDetail> cashSalesInvoiceDetails = _cashSalesInvoiceDetailService.GetObjectsByCashSalesInvoiceId(cashSalesInvoice.Id);
                 cashSalesInvoice.Total = 0;
                 cashSalesInvoice.CoGS = 0;
@@ -152,8 +152,10 @@ namespace Service.Service
                     receiptVoucher = _receiptVoucherService.CreateObject((int)cashSalesInvoice.CashBankId.GetValueOrDefault(), receivable.ContactId, DateTime.Now, cashSalesInvoice.AmountPaid.GetValueOrDefault()/*receivable.RemainingAmount*/,
                                                                             false, (DateTime)cashSalesInvoice.DueDate.GetValueOrDefault(), cashSalesInvoice.IsBank, _receiptVoucherDetailService,
                                                                             _receivableService, _contactService, _cashBankService);
+                    
                     ReceiptVoucherDetail receiptVoucherDetail = _receiptVoucherDetailService.CreateObject(receiptVoucher.Id, receivable.Id, cashSalesInvoice.AmountPaid.GetValueOrDefault(),
-                                                                                "Automatic Payment", _receiptVoucherService, _cashBankService, _receivableService);
+                                                                                "Automatic Receipt", _receiptVoucherService, _cashBankService, _receivableService);
+                    
                     _receiptVoucherService.ConfirmObject(receiptVoucher, (DateTime)cashSalesInvoice.ConfirmationDate.GetValueOrDefault(), _receiptVoucherDetailService, _cashBankService,
                                                          _receivableService, _cashMutationService, _generalLedgerJournalService, _accountService, _closingService);
                 }

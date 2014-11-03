@@ -145,16 +145,20 @@ namespace Service.Service
                 payable.AllowanceAmount = customPurchaseInvoice.Allowance;
                 payable.RemainingAmount = payable.Amount - customPurchaseInvoice.Allowance;
                 _payableService.UpdateObject(payable);
-                PaymentVoucher paymentVoucher = _paymentVoucherService.CreateObject((int)customPurchaseInvoice.CashBankId.GetValueOrDefault(), customPurchaseInvoice.ContactId, DateTime.Now, customPurchaseInvoice.AmountPaid.GetValueOrDefault()/*payable.RemainingAmount*/,
-                                                                            customPurchaseInvoice.IsGBCH, (DateTime)customPurchaseInvoice.DueDate.GetValueOrDefault(), customPurchaseInvoice.IsBank, _paymentVoucherDetailService,
-                                                                            _payableService, _contactService, _cashBankService);
-                PaymentVoucherDetail paymentVoucherDetail = _paymentVoucherDetailService.CreateObject(paymentVoucher.Id, payable.Id, customPurchaseInvoice.AmountPaid.GetValueOrDefault(),
-                                                                            "Automatic Payment", _paymentVoucherService, _cashBankService, _payableService);
+                PaymentVoucher paymentVoucher = null;
+                if (customPurchaseInvoice.AmountPaid.GetValueOrDefault() > 0)
+                {
+                    paymentVoucher = _paymentVoucherService.CreateObject((int)customPurchaseInvoice.CashBankId.GetValueOrDefault(), customPurchaseInvoice.ContactId, DateTime.Now, customPurchaseInvoice.AmountPaid.GetValueOrDefault()/*payable.RemainingAmount*/,
+                                                                                customPurchaseInvoice.IsGBCH, (DateTime)customPurchaseInvoice.DueDate.GetValueOrDefault(), customPurchaseInvoice.IsBank, _paymentVoucherDetailService,
+                                                                                _payableService, _contactService, _cashBankService);
+                    
+                    PaymentVoucherDetail paymentVoucherDetail = _paymentVoucherDetailService.CreateObject(paymentVoucher.Id, payable.Id, customPurchaseInvoice.AmountPaid.GetValueOrDefault(),
+                                                                                "Automatic Payment", _paymentVoucherService, _cashBankService, _payableService);
 
-                
-                _paymentVoucherService.ConfirmObject(paymentVoucher, (DateTime)customPurchaseInvoice.PaymentDate.GetValueOrDefault(), _paymentVoucherDetailService,
-                                                     _cashBankService, _payableService, _cashMutationService,_generalLedgerJournalService, _accountService, _closingService);
-                if (!paymentVoucher.Errors.Any())
+                    _paymentVoucherService.ConfirmObject(paymentVoucher, (DateTime)customPurchaseInvoice.PaymentDate.GetValueOrDefault(), _paymentVoucherDetailService,
+                                                         _cashBankService, _payableService, _cashMutationService, _generalLedgerJournalService, _accountService, _closingService);
+                }
+                if (paymentVoucher == null || !paymentVoucher.Errors.Any())
                 {
                     customPurchaseInvoice = _repository.PaidObject(customPurchaseInvoice);
                     //_generalLedgerJournalService.CreateConfirmationJournalForCustomPurchaseInvoice(customPurchaseInvoice, _accountService);

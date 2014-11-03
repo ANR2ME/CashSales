@@ -135,7 +135,7 @@ namespace Service.Service
                                                                             retailSalesInvoice.IsGBCH, (DateTime)retailSalesInvoice.DueDate.GetValueOrDefault(), retailSalesInvoice.IsBank, _receiptVoucherDetailService,
                                                                             _receivableService, _contactService, _cashBankService);
                 ReceiptVoucherDetail receiptVoucherDetail = _receiptVoucherDetailService.CreateObject(receiptVoucher.Id, receivable.Id, (decimal)retailSalesInvoice.AmountPaid.GetValueOrDefault(), 
-                                                                            "Automatic Payment", _receiptVoucherService, _cashBankService, _receivableService);
+                                                                            "Automatic Receipt", _receiptVoucherService, _cashBankService, _receivableService);
                 retailSalesInvoice = _repository.PaidObject(retailSalesInvoice);
                 _receiptVoucherService.ConfirmObject(receiptVoucher, (DateTime)retailSalesInvoice.ConfirmationDate, _receiptVoucherDetailService, _cashBankService,
                                                      _receivableService, _cashMutationService, _generalLedgerJournalService, _accountService, _closingService);

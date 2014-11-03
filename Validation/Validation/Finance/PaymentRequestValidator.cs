@@ -16,25 +16,7 @@ namespace Validation.Validation
             Contact contact = _contactService.GetObjectById(paymentRequest.ContactId);
             if (contact == null)
             {
-                paymentRequest.Errors.Add("Contact", "Tidak valid");
-            }
-            return paymentRequest;
-        }
-
-        public PaymentRequest VHasRequestedDate(PaymentRequest paymentRequest)
-        {
-            if (paymentRequest.RequestedDate == null)
-            {
-                paymentRequest.Errors.Add("RequestedDate", "Tidak boleh kosong");
-            }
-            return paymentRequest;
-        }
-
-        public PaymentRequest VHasDueDate(PaymentRequest paymentRequest)
-        {
-            if (paymentRequest.DueDate == null)
-            {
-                paymentRequest.Errors.Add("DueDate", "Tidak boleh kosong");
+                paymentRequest.Errors.Add("ContactcId", "Tidak boleh kosong");
             }
             return paymentRequest;
         }
@@ -48,11 +30,28 @@ namespace Validation.Validation
             return paymentRequest;
         }
 
+        public PaymentRequest VDebitEqualCreditEqualAmount(PaymentRequest paymentRequest, IPaymentRequestDetailService _paymentRequestDetailService)
+        {
+            IList<PaymentRequestDetail> paymentRequestDetails = _paymentRequestDetailService.GetObjectsByPaymentRequestId(paymentRequest.Id);
+            decimal debit = 0;
+            decimal credit = 0;
+            foreach (var detail in paymentRequestDetails)
+            {
+                debit += detail.Status == Constant.GeneralLedgerStatus.Debit ? detail.Amount : 0;
+                credit += detail.Status == Constant.GeneralLedgerStatus.Credit ? detail.Amount : 0;
+            }
+            if (debit != credit || debit != paymentRequest.Amount)
+            {
+                paymentRequest.Errors.Add("Generic", "Jumlah debit, credit, dan amount harus sama: " + paymentRequest.Amount.ToString("f0"));
+            }
+            return paymentRequest;
+        }
+
         public PaymentRequest VHasBeenConfirmed(PaymentRequest paymentRequest)
         {
             if (!paymentRequest.IsConfirmed)
             {
-                paymentRequest.Errors.Add("Generic", "Sudah dikonfirmasi");
+                paymentRequest.Errors.Add("Generic", "Belum dikonfirmasi");
             }
             return paymentRequest;
         }
@@ -75,18 +74,6 @@ namespace Validation.Validation
             return paymentRequest;
         }
 
-        public PaymentRequest VPayableHasNoOtherAssociation(PaymentRequest paymentRequest, IPayableService _payableService, IPaymentVoucherDetailService _paymentVoucherDetailService)
-        {
-            Payable payable = _payableService.GetObjectBySource(Constant.PayableSource.PaymentRequest, paymentRequest.Id);
-            IList<PaymentVoucherDetail> paymentVoucherDetails = _paymentVoucherDetailService.GetObjectsByPayableId(payable.Id);
-            if (paymentVoucherDetails.Any())
-            {
-                paymentRequest.Errors.Add("Generic", "Payable memiliki asosiasi dengan payment voucher detail");
-                return paymentRequest;
-            }
-            return paymentRequest;
-        }
-
         public PaymentRequest VHasConfirmationDate(PaymentRequest obj)
         {
             if (obj.ConfirmationDate == null)
@@ -96,13 +83,33 @@ namespace Validation.Validation
             return obj;
         }
 
+        public PaymentRequest VGeneralLedgerPostingHasNotBeenClosed(PaymentRequest paymentRequest, IClosingService _closingService, int CaseConfirmUnconfirm)
+        {
+            switch (CaseConfirmUnconfirm)
+            {
+                case (1): // Confirm
+                    {
+                        if (_closingService.IsDateClosed(paymentRequest.ConfirmationDate.GetValueOrDefault()))
+                        {
+                            paymentRequest.Errors.Add("Generic", "Ledger sudah tutup buku");
+                        }
+                        break;
+                    }
+                case (2): // Unconfirm
+                    {
+                        if (_closingService.IsDateClosed(DateTime.Now))
+                        {
+                            paymentRequest.Errors.Add("Generic", "Ledger sudah tutup buku");
+                        }
+                        break;
+                    }
+            }
+            return paymentRequest;
+        }
+
         public PaymentRequest VCreateObject(PaymentRequest paymentRequest, IContactService _contactService)
         {
             VHasContact(paymentRequest, _contactService);
-            if (!isValid(paymentRequest)) { return paymentRequest; }
-            VHasRequestedDate(paymentRequest);
-            if (!isValid(paymentRequest)) { return paymentRequest; }
-            VHasDueDate(paymentRequest);
             if (!isValid(paymentRequest)) { return paymentRequest; }
             VIsValidAmount(paymentRequest);
             return paymentRequest;
@@ -126,25 +133,27 @@ namespace Validation.Validation
             return paymentRequest;
         }
 
-        
-
-        public PaymentRequest VConfirmObject(PaymentRequest paymentRequest)
+        public PaymentRequest VConfirmObject(PaymentRequest paymentRequest, IPaymentRequestDetailService _paymentRequestDetailService, IClosingService _closingService)
         {
             VHasConfirmationDate(paymentRequest);
             if (!isValid(paymentRequest)) { return paymentRequest; }
             VHasNotBeenDeleted(paymentRequest);
             if (!isValid(paymentRequest)) { return paymentRequest; }
             VHasNotBeenConfirmed(paymentRequest);
+            if (!isValid(paymentRequest)) { return paymentRequest; }
+            VDebitEqualCreditEqualAmount(paymentRequest, _paymentRequestDetailService);
+            if (!isValid(paymentRequest)) { return paymentRequest; }
+            VGeneralLedgerPostingHasNotBeenClosed(paymentRequest, _closingService, 1);
             return paymentRequest;
         }
 
-        public PaymentRequest VUnconfirmObject(PaymentRequest paymentRequest, IPaymentVoucherDetailService _paymentVoucherDetailService, IPayableService _payableService)
+        public PaymentRequest VUnconfirmObject(PaymentRequest paymentRequest, IPaymentRequestDetailService _paymentRequestDetailService, IClosingService _closingService)
         {
             VHasBeenConfirmed(paymentRequest);
             if (!isValid(paymentRequest)) { return paymentRequest; }
             VHasNotBeenDeleted(paymentRequest);
             if (!isValid(paymentRequest)) { return paymentRequest; }
-            VPayableHasNoOtherAssociation(paymentRequest, _payableService, _paymentVoucherDetailService); 
+            VGeneralLedgerPostingHasNotBeenClosed(paymentRequest, _closingService, 2);
             return paymentRequest;
         }
 
@@ -168,17 +177,17 @@ namespace Validation.Validation
             return isValid(paymentRequest);
         }
 
-        public bool ValidConfirmObject(PaymentRequest paymentRequest)
+        public bool ValidConfirmObject(PaymentRequest paymentRequest, IPaymentRequestDetailService _paymentRequestDetailService, IClosingService _closingService)
         {
             paymentRequest.Errors.Clear();
-            VConfirmObject(paymentRequest);
+            VConfirmObject(paymentRequest, _paymentRequestDetailService, _closingService);
             return isValid(paymentRequest);
         }
 
-        public bool ValidUnconfirmObject(PaymentRequest paymentRequest, IPaymentVoucherDetailService _paymentVoucherDetailService, IPayableService _payableService)
+        public bool ValidUnconfirmObject(PaymentRequest paymentRequest, IPaymentRequestDetailService _paymentRequestDetailService, IClosingService _closingService)
         {
             paymentRequest.Errors.Clear();
-            VUnconfirmObject(paymentRequest, _paymentVoucherDetailService, _payableService);
+            VUnconfirmObject(paymentRequest, _paymentRequestDetailService, _closingService);
             return isValid(paymentRequest);
         }
 

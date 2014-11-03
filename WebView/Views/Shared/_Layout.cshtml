@@ -290,8 +290,8 @@
 													<li><a href="@Url.Action("Index", "CashMutation")">Cash Mutation</a></li>
                                                     <li><a href="@Url.Action("Index", "CashBankAdjustment")">CashBank Adjustment</a></li>
 													<li><a href="@Url.Action("Index", "CashBankMutation")">CashBank Mutation</a></li>
-													<li><a href="@Url.Action("Index", "PaymentRequest")">Payment Request</a></li>
-                                                    <li><a href="@Url.Action("Index", "Memorial")">Memorial</a></li>
+												    <li><a href="@Url.Action("Index", "ChartOfAccount")">Chart Of Account</a></li>
+                                                    <li><a href="@Url.Action("Index", "GeneralLedger")">General Ledger</a></li>
 												</ul>
 											</li>
 											   <li><a href="#">Stock</a>
@@ -334,21 +334,32 @@
 													@*<li><a href="@Url.Action("Index", "PurchaseOrder")">Purchase Order</a></li>
 													<li><a href="@Url.Action("Index", "PurchaseReceival")">Purchase Receival</a></li>
 													<li><a href="@Url.Action("Index", "PurchaseInvoice")">Purchase Invoice</a></li>*@
-													<li><a href="@Url.Action("Index", "PaymentVoucher")">Payment Voucher</a></li>
-                                                    <li><a href="@Url.Action("Index", "Payable")">Payable</a></li>
+													@*<li><a href="@Url.Action("Index", "PaymentVoucher")">Payment Voucher</a></li>
+                                                    <li><a href="@Url.Action("Index", "Payable")">Payable</a></li>*@
                                                     <li><a href="@Url.Action("Index", "CustomPurchaseInvoice")">Custom Purchase Invoice</a></li>
 												</ul>
 											</li>
-											   <li><a href="#">Sales</a>
+											<li><a href="#">Sales</a>
 												<ul>
 													@*<li><a href="@Url.Action("Index", "SalesOrder")">Sales Order</a></li>
 													<li><a href="@Url.Action("Index", "DeliveryOrder")">Delivery Order</a></li>
 													<li><a href="@Url.Action("Index", "SalesInvoice")">Sales Invoice</a></li>*@
-													<li><a href="@Url.Action("Index", "ReceiptVoucher")">Receipt Voucher</a></li>
-                                                    <li><a href="@Url.Action("Index", "Receivable")">Receivable</a></li>
+													@*<li><a href="@Url.Action("Index", "ReceiptVoucher")">Receipt Voucher</a></li>
+                                                    <li><a href="@Url.Action("Index", "Receivable")">Receivable</a></li>*@
 													<li><a href="@Url.Action("Index", "CashSalesInvoice")">Cash Sales Invoice</a></li>
                                                     <li><a href="@Url.Action("Index", "CashSalesReturn")">Cash Sales Return</a></li>
                                                     @*<li><a href="@Url.Action("Index", "RetailSalesInvoice")">Retail Sales Invoice</a></li>*@
+												</ul>
+											</li>
+                                            <li><a href="#">Finance</a>
+												<ul>
+													<li><a href="@Url.Action("Index", "ReceiptVoucher")">Receipt Voucher</a></li>
+                                                    <li><a href="@Url.Action("Index", "Receivable")">Receivable</a></li>
+                                                    <li><a href="@Url.Action("Index", "PaymentVoucher")">Payment Voucher</a></li>
+                                                    <li><a href="@Url.Action("Index", "Payable")">Payable</a></li>
+                                                    <li><a href="@Url.Action("Index", "PaymentRequest")">Payment Request</a></li>
+                                                    <li><a href="@Url.Action("Index", "Memorial")">Memorial</a></li>
+                                                    <li><a href="@Url.Action("Index", "Closing")">Closing</a></li>
 												</ul>
 											</li>
 										</ul>
@@ -357,10 +368,7 @@
 										<ul>
 											<li><a href="#">Finance Report</a>
                                                 <ul>
-												    <li><a href="@Url.Action("Index", "ChartOfAccount")">Chart Of Account</a></li>
-													@*<li><a href="">Daily Report</a></li>
-													*@<li><a href="@Url.Action("Index", "GeneralLedger")">General Ledger</a></li>
-                                                    <li><a href="@Url.Action("Index", "Closing")">Closing</a></li>
+													@*<li><a href="">Daily Report</a></li>*@
                                                     @*<li><a href="@Url.Action("Index", "ValidComb")">Valid Combination</a></li>*@
 													<li><a href="@Url.Action("IncomeStatement", "FinanceReport")">Income Statement</a></li>
                                                     <li><a href="@Url.Action("BalanceSheet", "FinanceReport")">Balance Sheet</a></li>

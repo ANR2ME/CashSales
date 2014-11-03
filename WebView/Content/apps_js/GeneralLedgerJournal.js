@@ -34,7 +34,7 @@
 				  { name: 'transactiondate', index: 'transactiondate', search: false, width: 120, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
                   { name: 'status', index: 'status', width: 70, stype: 'select', editoptions: { value: ':;1:Debit;2:Credit' } },
 				  { name: 'accountcode', index: 'accountcode', width: 120 },
-				  { name: 'account', index: 'account', width: 150 },
+				  { name: 'account', index: 'account', width: 200 },
 				  { name: 'amount', index: 'amount', width: 120, align: 'right', formatter: 'currency', formatoptions: { decimalSeparator: ".", thousandsSeparator: ",", decimalPlaces: 0, prefix: "", suffix: "", defaultValue: '0' } },
                   { name: 'sourcedocument', index: 'sourcedocument', width: 150 },
                   { name: 'sourcedocumentid', index: 'sourcedocumentid', width: 80, align: 'right', formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' } },

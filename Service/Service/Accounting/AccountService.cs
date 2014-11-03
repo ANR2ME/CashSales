@@ -74,6 +74,20 @@ namespace Service.Service
             return (_validator.ValidCreateObject(account, _accountService) ? _repository.CreateObject(account) : account);
         }
 
+        public Account FindOrCreateLegacyObject(Account account, IAccountService _accountService)
+        {
+            Account legacyAccount = GetObjectByLegacyCode(account.LegacyCode);
+            if (legacyAccount == null)
+            {
+                legacyAccount = CreateLegacyObject(account, _accountService);
+            }
+            //else
+            //{
+            //    legacyAccount.Errors = new Dictionary<String, String>();
+            //}
+            return legacyAccount;
+        }
+
         public Account CreateCashBankAccount(Account account, IAccountService _accountService)
         {
             account.Errors = new Dictionary<String, String>();

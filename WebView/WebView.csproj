@@ -211,11 +211,11 @@
     <Compile Include="Controllers\Accounting\ClosingController.cs" />
     <Compile Include="Controllers\Accounting\GeneralLedgerController.cs" />
     <Compile Include="Controllers\Accounting\ChartOfAccountController.cs" />
-    <Compile Include="Controllers\SalesOperation\ReceivableController.cs" />
-    <Compile Include="Controllers\PurchaseOperation\PayableController.cs" />
+    <Compile Include="Controllers\Finance\ReceivableController.cs" />
+    <Compile Include="Controllers\Finance\PayableController.cs" />
     <Compile Include="Controllers\Report\ReportController.cs" />
     <Compile Include="Controllers\SalesOperation\RetailSalesInvoiceController.cs" />
-    <Compile Include="Controllers\PurchaseOperation\PaymentRequestController.cs" />
+    <Compile Include="Controllers\Finance\PaymentRequestController.cs" />
     <Compile Include="Controllers\StockAndMaster\QuantityPricingController.cs" />
     <Compile Include="Controllers\PurchaseOperation\CustomPurchaseInvoiceController.cs" />
     <Compile Include="Controllers\Manufacturing\CoreIdentificationController.cs" />
@@ -238,11 +238,11 @@
     <Compile Include="Controllers\UserRole\UserAccessController.cs" />
     <Compile Include="Controllers\UserRole\UserController.cs" />
     <Compile Include="Controllers\StockAndMaster\WarehouseItemController.cs" />
-    <Compile Include="Controllers\PurchaseOperation\PaymentVoucherController.cs" />
+    <Compile Include="Controllers\Finance\PaymentVoucherController.cs" />
     <Compile Include="Controllers\PurchaseOperation\PurchaseInvoiceController.cs" />
     <Compile Include="Controllers\PurchaseOperation\PurchaseOrderController.cs" />
     <Compile Include="Controllers\PurchaseOperation\PurchaseReceivalController.cs" />
-    <Compile Include="Controllers\SalesOperation\ReceiptVoucherController.cs" />
+    <Compile Include="Controllers\Finance\ReceiptVoucherController.cs" />
     <Compile Include="Controllers\Manufacturing\RecoveryWorkOrderController.cs" />
     <Compile Include="Controllers\Manufacturing\RollerWarehouseMutationController.cs" />
     <Compile Include="Controllers\SalesOperation\SalesInvoiceController.cs" />
@@ -1288,7 +1288,7 @@
     <VisualStudio>
       <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
         <WebProjectProperties>
-          <UseIIS>True</UseIIS>
+          <UseIIS>False</UseIIS>
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>52383</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>

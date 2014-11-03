@@ -13,9 +13,10 @@
 }
 <div id="ua_panel" class="easyui-panel" style="text-align: left;" data-options="modal:true" 
     title=".: @ViewBag.Title :.">
-<div id="toolbar" class="form_toolbar">
+    <div id="toolbar" class="form_toolbar">
         <a id="btn_reload" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-reload'">Reload Data</a>
         <a id="btn_add_new" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-add'">Add New</a>
+        <a id="btn_add_detail" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-add'">Add Detail</a>
         <a id="btn_edit" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-edit'">Edit</a>
         <a id="btn_confirm" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-approval'">Confirm</a>
         <a id="btn_unconfirm" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-undo'">Unconfirm</a>
@@ -28,7 +29,7 @@
         <div id="pager" class="scroll" style="text-align: center;"></div>
     </div>
 
-<!-- Dialog Box -->
+    <!-- Dialog Box -->
     <div id="form_div" class="easyui-dialog" style="text-align: left; padding:0px 0px 10px" data-options="modal:true"  
         title=".:  @ViewBag.Title :.">
 
@@ -62,9 +63,9 @@
                             <td colspan="3">
                                 <input id="ContactId" hidden class="textright" type="text" size="10" maxlength="7" disabled="disabled" />
                                 <input id="btnContact" name="buttonactivated" type="button" style="cursor: pointer;" class="ui-corner-all ui-state-default" value=".." />
-                                <input id="Contact" name="Contact" type="text" size="56" maxlength="50" class="editable upper" disabled="disabled" />
-                        
-                            </tr>
+                                <input id="Contact" name="Contact" type="text" size="46" maxlength="40" class="editable upper" disabled="disabled" />
+                            </td>
+                        </tr>
                         <tr>
                             <td >
                                 <label>Description</label></td>
@@ -76,33 +77,25 @@
                             <td>
                                 <label>Requested Date</label></td>
                             <td>
-                                <div id="RequestedDateDiv"><input id="RequestedDate" class="easyui-datebox" title="mm/dd/yyyy" type="text" size="10" value="@DateTime.Today.ToShortDateString()"/>
-                                </div>
+                                <div id="RequestedDateDiv"><input id="RequestedDate" class="easyui-datebox" title="mm/dd/yyyy" type="text" size="10" value="@DateTime.Today.ToShortDateString()"/></div>
                                 <div id="RequestedDateDiv2"><input id="RequestedDate2" type="text" size="10" disabled="disabled"/></div>
-                                <input name="RequestedDate" type="text" size="1" hidden="hidden"/>
                             </td>
                         </tr>
                         <tr>
                             <td>
                                 <label>Due Date</label></td>
                              <td>
-                                <div id="DueDateDiv"><input id="DueDate" class="easyui-datebox" title="mm/dd/yyyy" type="text" size="10" value="@DateTime.Today.ToShortDateString()"/>
-                                </div>
+                                <div id="DueDateDiv"><input id="DueDate" class="easyui-datebox" title="mm/dd/yyyy" type="text" size="10" value="@DateTime.Today.ToShortDateString()"/></div>
                                 <div id="DueDateDiv2"><input id="DueDate2" type="text" size="10" disabled="disabled"/></div>
-                                 <input name="DueDate" type="text" size="1" hidden="hidden"/>
                              </td>
                         </tr>
                          <tr>
                              <td >
                                 <label>Amount</label></td>
                              <td colspan="3">
-                               <input id="Amount" name="Amount" type="text" size="15" maxlength="20" class="textright easyui-numberbox" data-options="groupSeparator:','" value="0" />
-                                </td>     
+                               <input id="TotalAmount" name="TotalAmount" type="text" size="15" maxlength="20" class="textright easyui-numberbox" data-options="groupSeparator:','" value="0" />
+                             </td>     
                          </tr>
-                          <tr>
-                                
-
-                          </tr>
                     </table>
                     <div id="tabledetail_div">
                         <div id="toolbardetail" class="grid_toolbar">
@@ -110,17 +103,59 @@
                             <a id="btn_edit_detail" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-edit'">Edit</a>
                             <a id="btn_del_detail" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-remove'">Delete</a>
                         </div>
-                                  <table id="listdetail" class="scroll" cellpadding="0" cellspacing="0"></table>
+                        <table id="listdetail" class="scroll" cellpadding="0" cellspacing="0"></table>
                         <div id="pagerdetail" class="scroll" style="text-align: center;"></div>
                     </div>
                @* </fieldset>*@
             </form>
         </div>
     </div>
-<!-- End Dialog Box -->
+    <!-- End Dialog Box -->
 
+    <!-- Dialog Box  Item-->
+    <div id="item_div" class="easyui-dialog" style="text-align: left;padding:0px 0px 10px"
+        data-options="modal:true" title=".: Input Account :.">
 
-<!-- Dialog Box Confirm-->
+        <div id="item_toolbar" class="form_toolbar">
+            <a id="item_btn_submit" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-save'">Submit</a>
+            <a id="item_btn_cancel" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-remove'">Close</a>
+        </div>
+        <div id="item_info">
+              <table  width="100%" border="0" cellpadding="5" cellspacing="5" class="input_form_tbl">
+                  <tr>
+                      <td width="139" nowrap style="width: 100px">
+                          Account
+                      </td>
+                      <td>
+                         <input id="AccountId"  class="textright" type="text" size="10" maxlength="7" disabled="disabled" />
+                         <input id="btnAccount" name="buttonactivated" type="button" style="cursor: pointer;" class="ui-corner-all ui-state-default" value=".." />
+                         <input id="Account" name="AccountId" type="text" size="56" maxlength="50" class="editable upper" disabled="disabled" />
+                         <input id="PaymentRequestId" name="PaymentRequestId" type="text" size ="10" hidden="hidden" />
+                      </td>
+                  </tr>
+                  <tr>
+                    <td>Status</td>
+                    <td>
+                        <select id="Status" disabled="disabled">
+                            <option value="1" selected="selected">Debit</option>
+                            <option value="2">Credit</option>
+                        </select>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                        Amount
+                    </td>
+                    <td>
+                        <input id="Amount" name="Amount" type="text" size="15" maxlength="20" class="textright easyui-numberbox" data-options="groupSeparator:','" value="0" />
+                    </td>
+                  </tr>
+              </table>
+        </div>
+    </div>
+    <!-- End Dialog Box Item-->
+
+    <!-- Dialog Box Confirm-->
     <div id="confirm_div" class="easyui-dialog" style="text-align: left;padding:0px 0px 10px;width :500px"
         data-options="modal:true" title=".: Confirm Payment Request :.">
 
@@ -139,21 +174,6 @@
                       </td>
                   </tr>
                   <tr>
-                            <td>
-                             <label>Code</label>
-                            </td>
-                            <td  colspan="3">
-                               <input id="confirmCode" name="Code" type="text" size="10" disabled="disabled"/>
-                            </td>
-                  </tr>
-                  <tr>
-                      <td >
-                            <label>Amount</label></td>
-                            <td colspan="3">
-                            <input id="confirmAmount" name="Amount" type="text" size="15" maxlength="20" class="textright easyui-numberbox" data-options="groupSeparator:','" value="0" disabled="disabled" />
-                      </td>     
-                  </tr>
-                  <tr>
                       <td>
                           Confirmation Date
                       </td>
@@ -167,9 +187,9 @@
           
         </div>
     </div>
-<!-- End Dialog Box Confirm-->
+    <!-- End Dialog Box Confirm-->
 
-<!-- Dialog Box  Delete-->
+    <!-- Dialog Box  Delete-->
     <div id="delete_confirm_div" class="easyui-dialog" style="text-align: left; height: 130px; width: 300px;"
         data-options="modal:true" title=".: Confirmation :.">
 
@@ -182,10 +202,23 @@
             <input id="delete_confirm_id" type="hidden" />
         </div>
     </div>
-<!-- End Dialog Box Delete-->
+    <!-- End Dialog Box Delete-->
+    
+    <!-- Look Up account -->
+    <div id="lookup_div_account" class="easyui-dialog" title="List Account" style="padding: 0px 5px; height: 490px; width: 480px;"
+        data-options="iconCls:'icon-tip',modal:true">
 
+        <div id="lookup_toolbar_account" class="grid_toolbar">
+            <a id="lookup_btn_add_account" href="javascript:void(0)" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-add'">Select Data</a>
+            <a id="lookup_btn_cancel_account" href="javascript:void(0)" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-remove'">Close Window</a>
+        </div>
 
-<!-- Look Up Contact -->
+        <table id="lookup_table_account" class="scroll" cellpadding="0" cellspacing="0"></table>
+        <div id="lookup_pager_account" class="scroll" style="text-align: center;"></div>
+    </div>
+    <!-- END Look Up account -->
+
+    <!-- Look Up Contact -->
     <div id="lookup_div_contact" class="easyui-dialog" title="List Contact" style="padding: 0px 5px; height: 490px; width: 480px;"
         data-options="iconCls:'icon-tip',modal:true">
 
@@ -197,6 +230,6 @@
         <table id="lookup_table_contact" class="scroll" cellpadding="0" cellspacing="0"></table>
         <div id="lookup_pager_contact" class="scroll" style="text-align: center;"></div>
     </div>
-<!-- END Look Up Contact -->
+    <!-- END Look Up Contact -->
 </div>
 

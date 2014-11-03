@@ -244,6 +244,7 @@
 
     $('#confirm_btn_submit').click(function () {
         ClearErrorMessage();
+        $("#confirm_div").dialog('close');
         $.ajax({
             url: base_url + "Memorial/Confirm",
             type: "POST",
@@ -264,8 +265,8 @@
                     }
                 }
                 else {
+                    //$("#confirm_div").dialog('close');
                     ReloadGrid();
-                    $("#confirm_div").dialog('close');
                 }
             }
         });

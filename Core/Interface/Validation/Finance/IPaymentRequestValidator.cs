@@ -9,26 +9,25 @@ namespace Core.Interface.Validation
 {
     public interface IPaymentRequestValidator
     {
-        PaymentRequest VHasContact(PaymentRequest paymentRequest, IContactService _contactService);
-        PaymentRequest VHasRequestedDate(PaymentRequest paymentRequest);
-        PaymentRequest VHasDueDate(PaymentRequest paymentRequest);
+        PaymentRequest VHasContact(PaymentRequest paymentRequest, IContactService _contatService);
         PaymentRequest VIsValidAmount(PaymentRequest paymentRequest);
+        PaymentRequest VDebitEqualCreditEqualAmount(PaymentRequest paymentRequest, IPaymentRequestDetailService _paymentRequestDetailService);
         PaymentRequest VHasNotBeenConfirmed(PaymentRequest paymentRequest);
         PaymentRequest VHasBeenConfirmed(PaymentRequest paymentRequest);
         PaymentRequest VHasNotBeenDeleted(PaymentRequest paymentRequest);
-        PaymentRequest VPayableHasNoOtherAssociation(PaymentRequest paymentRequest, IPayableService _payableService, IPaymentVoucherDetailService _paymentVoucherDetailService);
         PaymentRequest VHasConfirmationDate(PaymentRequest paymentRequest);
+        PaymentRequest VGeneralLedgerPostingHasNotBeenClosed(PaymentRequest paymentRequest, IClosingService _closingService, int CaseConfirmUnconfirm);
 
         PaymentRequest VCreateObject(PaymentRequest paymentRequest, IContactService _contactService);
         PaymentRequest VUpdateObject(PaymentRequest paymentRequest, IContactService _contactService);
         PaymentRequest VDeleteObject(PaymentRequest paymentRequest);
-        PaymentRequest VConfirmObject(PaymentRequest paymentRequest);
-        PaymentRequest VUnconfirmObject(PaymentRequest paymentRequest, IPaymentVoucherDetailService _paymentVoucherDetailService, IPayableService _payableService);
+        PaymentRequest VConfirmObject(PaymentRequest paymentRequest, IPaymentRequestDetailService _paymentRequestDetailService, IClosingService _closingService);
+        PaymentRequest VUnconfirmObject(PaymentRequest paymentRequest, IPaymentRequestDetailService _paymentRequestDetailService, IClosingService _closingService);
         bool ValidCreateObject(PaymentRequest paymentRequest, IContactService _contactService);
         bool ValidUpdateObject(PaymentRequest paymentRequest, IContactService _contactService);
         bool ValidDeleteObject(PaymentRequest paymentRequest);
-        bool ValidConfirmObject(PaymentRequest paymentRequest);
-        bool ValidUnconfirmObject(PaymentRequest paymentRequest, IPaymentVoucherDetailService _paymentVoucherDetailService, IPayableService _payableService);
+        bool ValidConfirmObject(PaymentRequest paymentRequest, IPaymentRequestDetailService _paymentRequestDetailService, IClosingService _closingService);
+        bool ValidUnconfirmObject(PaymentRequest paymentRequest, IPaymentRequestDetailService _paymentRequestDetailService, IClosingService _closingService);
         bool isValid(PaymentRequest paymentRequest);
         string PrintError(PaymentRequest paymentRequest);
     }

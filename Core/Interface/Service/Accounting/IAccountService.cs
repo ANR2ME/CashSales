@@ -19,6 +19,7 @@ namespace Core.Interface.Service
         Account GetObjectByIsLegacy(bool IsLegacy);
         Account CreateObject(Account account, IAccountService _accountService);
         Account CreateLegacyObject(Account account, IAccountService _accountService);
+        Account FindOrCreateLegacyObject(Account account, IAccountService _accountService);
         Account CreateCashBankAccount(Account account, IAccountService _accountService);
         Account UpdateObject(Account account, IAccountService _accountService);
         Account SoftDeleteObject(Account account);

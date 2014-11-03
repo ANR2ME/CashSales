@@ -122,6 +122,61 @@ namespace Service.Service
             #endregion
         }
 
+        public IList<GeneralLedgerJournal> CreateConfirmationJournalForPaymentRequest(PaymentRequest paymentRequest, IPaymentRequestDetailService _paymentRequestDetailService, IAccountService _accountService)
+        {
+            // Credit AccountPayableNonTrading, Debit User Input
+            #region Credit AccountPayableNonTrading, Debit User Input
+
+            IList<PaymentRequestDetail> details = _paymentRequestDetailService.GetObjectsByPaymentRequestId(paymentRequest.Id);
+            IList<GeneralLedgerJournal> journals = new List<GeneralLedgerJournal>();
+
+            foreach (var paymentRequestDetail in details)
+            {
+                GeneralLedgerJournal journal = new GeneralLedgerJournal()
+                {
+                    AccountId = paymentRequestDetail.AccountId,
+                    SourceDocument = Constant.GeneralLedgerSource.PaymentRequest,
+                    SourceDocumentId = paymentRequest.Id,
+                    TransactionDate = (DateTime)paymentRequest.ConfirmationDate,
+                    Status = paymentRequestDetail.Status,
+                    Amount = paymentRequestDetail.Amount
+                };
+                journal = CreateObject(journal, _accountService);
+                journals.Add(journal);
+            }
+
+            return journals;
+            #endregion
+        }
+
+        public IList<GeneralLedgerJournal> CreateUnconfirmationJournalForPaymentRequest(PaymentRequest paymentRequest, IPaymentRequestDetailService _paymentRequestDetailService, IAccountService _accountService)
+        {
+            // Debit AccountPayableNonTrading, Credit User Input
+            #region Debit AccountPayableNonTrading, Credit User Input
+
+            IList<PaymentRequestDetail> details = _paymentRequestDetailService.GetObjectsByPaymentRequestId(paymentRequest.Id);
+            IList<GeneralLedgerJournal> journals = new List<GeneralLedgerJournal>();
+            DateTime UnconfirmationDate = DateTime.Now;
+
+            foreach (var paymentRequestDetail in details)
+            {
+                GeneralLedgerJournal journal = new GeneralLedgerJournal()
+                {
+                    AccountId = paymentRequestDetail.AccountId,
+                    SourceDocument = Constant.GeneralLedgerSource.PaymentRequest,
+                    SourceDocumentId = paymentRequest.Id,
+                    TransactionDate = UnconfirmationDate,
+                    Status = (paymentRequestDetail.Status == Constant.GeneralLedgerStatus.Debit) ? Constant.GeneralLedgerStatus.Credit : Constant.GeneralLedgerStatus.Debit,
+                    Amount = paymentRequestDetail.Amount
+                };
+                journal = CreateObject(journal, _accountService);
+                journals.Add(journal);
+            }
+
+            return journals;
+            #endregion
+        }
+
         public IList<GeneralLedgerJournal> CreateConfirmationJournalForPaymentVoucher(PaymentVoucher paymentVoucher, CashBank cashBank, IAccountService _accountService)
         {
             IList<GeneralLedgerJournal> journals = new List<GeneralLedgerJournal>();

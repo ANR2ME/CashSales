@@ -29,20 +29,21 @@ namespace Data.Context
             IList<String> accountingNames = new List<String>() { "MemorialDetail", "Memorial", "GeneralLedgerJournal", "ValidComb", "Closing", "Account" };
 
             IList<String> financeNames = new List<String>()
-                                        { "CashMutation", "CashBankAdjustment", "CashBankMutation", "CashBank"};
+                                        {   "PaymentVoucherDetail", "PaymentVoucher", "Payable",
+                                            "ReceiptVoucherDetail", "ReceiptVoucher", "Receivable",
+                                            "PaymentRequestDetail", "PaymentRequest",
+                                            "CashMutation", "CashBankAdjustment", "CashBankMutation", "CashBank"};
             IList<String> manufacturingNames = new List<String>()
                                         { "RollerWarehouseMutationDetail", "RollerWarehouseMutation",
                                           "RecoveryAccessoryDetail", "RecoveryOrderDetail", "RecoveryOrder",
                                           "CoreIdentificationDetail", "CoreIdentification",
                                           "BarringOrderDetail", "BarringOrder" };
             IList<String> purchaseOperationNames = new List<String>()
-                                        { "PaymentVoucherDetail", "PaymentVoucher", "Payable", 
-                                          "RetailPurchaseInvoice", "RetailPurchaseInvoiceDetail", "PurchaseInvoiceDetail", "PurchaseInvoice",
+                                        { "RetailPurchaseInvoice", "RetailPurchaseInvoiceDetail", "PurchaseInvoiceDetail", "PurchaseInvoice",
                                           "PurchaseReceivalDetail", "PurchaseReceival", "PurchaseOrderDetail", "PurchaseOrder",
-                                          "CustomPurchaseInvoice", "CustomPurchaseInvoiceDetail", "PaymentRequest" };
+                                          "CustomPurchaseInvoiceDetail", "CustomPurchaseInvoice" };
             IList<String> salesOperationNames = new List<String>()
-                                        { "ReceiptVoucherDetail", "ReceiptVoucher", "Receivable",
-                                          "RetailSalesInvoiceDetail", "RetailSalesInvoice", "SalesInvoiceDetail", "SalesInvoice",
+                                        { "RetailSalesInvoiceDetail", "RetailSalesInvoice", "SalesInvoiceDetail", "SalesInvoice",
                                           "DeliveryOrderDetail", "DeliveryOrder", "SalesOrderDetail", "SalesOrder", "CashSalesReturnDetail", "CashSalesReturn", 
                                           "CashSalesInvoiceDetail", "CashSalesInvoice"};
             IList<String> stockAndMasterNames = new List<String>()
@@ -132,6 +133,7 @@ namespace Data.Context
             modelBuilder.Configurations.Add(new CustomPurchaseInvoiceMapping());
             modelBuilder.Configurations.Add(new CustomPurchaseInvoiceDetailMapping());
             modelBuilder.Configurations.Add(new PaymentRequestMapping());
+            modelBuilder.Configurations.Add(new PaymentRequestDetailMapping());
             modelBuilder.Configurations.Add(new MemorialMapping());
             modelBuilder.Configurations.Add(new MemorialDetailMapping());
             modelBuilder.Configurations.Add(new AccountMapping());
@@ -207,6 +209,7 @@ namespace Data.Context
         public DbSet<CustomPurchaseInvoice> CustomPurchaseInvoices { get; set; }
         public DbSet<CustomPurchaseInvoiceDetail> CustomPurchaseInvoiceDetails { get; set; }
         public DbSet<PaymentRequest> PaymentRequests { get; set; }
+        public DbSet<PaymentRequestDetail> PaymentRequestDetails { get; set; }
         public DbSet<Memorial> Memorials { get; set; }
         public DbSet<MemorialDetail> MemorialDetails { get; set; }
         public DbSet<Account> Accounts { get; set; }

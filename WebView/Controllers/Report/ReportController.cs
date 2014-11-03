@@ -705,7 +705,7 @@ namespace WebView.Controllers
                              Allowance = model.CashSalesReturn.Allowance,
                              Code = model.CashSalesReturn.Code,
                              SalesCode = model.CashSalesInvoiceDetail.CashSalesInvoice.Code,
-                             Date = model.CashSalesReturn.ConfirmationDate.Value,
+                             Date = (model.CashSalesReturn.ConfirmationDate != null) ? model.CashSalesReturn.ConfirmationDate.Value : model.CashSalesReturn.ReturnDate.Value,
                              contact = "",
                              CompanyName = company.Name,
                              CompanyAddress = company.Address,

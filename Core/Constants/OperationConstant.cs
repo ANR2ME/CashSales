@@ -34,6 +34,7 @@ namespace Core.Constants
             public static string CashBankMutation = "CashBank Mutation";
             public static string CashMutation = "Cash Mutation";
             public static string PaymentRequest = "Payment Request";
+            public static string Memorial = "Memorial";
 
             public static string Item = "Item";
             public static string StockAdjustment = "Stock Adjustment";

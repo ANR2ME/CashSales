@@ -48,6 +48,8 @@
     <Compile Include="Mapping\Accounting\AccountMapping.cs" />
     <Compile Include="Mapping\Accounting\ClosingMapping.cs" />
     <Compile Include="Mapping\Accounting\GeneralLedgerJournalMapping.cs" />
+    <Compile Include="Mapping\Accounting\MemorialDetailMapping.cs" />
+    <Compile Include="Mapping\Accounting\MemorialMapping.cs" />
     <Compile Include="Mapping\Accounting\ValidCombMapping.cs" />
     <Compile Include="Mapping\Finance\CashBankMapping.cs" />
     <Compile Include="Mapping\Finance\CashMutationMapping.cs" />
@@ -119,6 +121,8 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repository\Accounting\AccountRepository.cs" />
     <Compile Include="Repository\Accounting\ClosingRepository.cs" />
+    <Compile Include="Repository\Accounting\MemorialDetailRepository.cs" />
+    <Compile Include="Repository\Accounting\MemorialRepository.cs" />
     <Compile Include="Repository\Accounting\ValidCombRepository.cs" />
     <Compile Include="Repository\Accounting\GeneralLedgerJournalRepository.cs" />
     <Compile Include="Repository\Finance\CashBankRepository.cs" />

@@ -129,6 +129,80 @@ namespace WebView.Controllers
             }, JsonRequestBehavior.AllowGet);
         }
 
+         public dynamic GetLeaves(string _search, long nd, int rows, int? page, string sidx, string sord, string filters = "")
+         {
+             // Construct where statement
+             string strWhere = GeneralFunction.ConstructWhere(filters);
+             string filter = null;
+             GeneralFunction.ConstructWhereInLinq(strWhere, out filter);
+             if (filter == "") filter = "true";
+             // Get Data
+             var leaves = _accountService.GetQueryable().Where(x => !x.IsDeleted && x.IsLeaf);
+             var parent = _accountService.GetQueryable().Where(x => x.Level < 5 && !x.IsDeleted);
+
+             var query = (from model in leaves
+                          join parentmodel in parent on model.ParentId equals parentmodel.Id into joinedmodel
+                          from newaccount in joinedmodel.DefaultIfEmpty()
+                          select new
+                          {
+                              model.Id,
+                              model.Code,
+                              model.Name,
+                              model.Group,
+                              model.Level,
+                              model.ParentId,
+                              ParentCode = newaccount.Code,
+                              Parent = newaccount.Name,
+                              IsLegacy = model.IsLegacy,
+                              IsCashBankAccount = model.IsCashBankAccount,
+                              LegacyCode = model.LegacyCode
+                          }).Where(filter).OrderBy(sidx + " " + sord); //.ToList();
+
+
+             var list = query.AsEnumerable();
+
+             var pageIndex = Convert.ToInt32(page) - 1;
+             var pageSize = rows;
+             var totalRecords = query.Count();
+             var totalPages = (int)Math.Ceiling((float)totalRecords / (float)pageSize);
+             // default last page
+             if (totalPages > 0)
+             {
+                 if (!page.HasValue)
+                 {
+                     pageIndex = totalPages - 1;
+                     page = totalPages;
+                 }
+             }
+
+             list = list.Skip(pageIndex * pageSize).Take(pageSize);
+
+             return Json(new
+             {
+                 total = totalPages,
+                 page = page,
+                 records = totalRecords,
+                 rows = (
+                     from model in list
+                     select new
+                     {
+                         id = model.Id,
+                         cell = new object[] {
+                             model.Id,
+                             model.Code,
+                             model.Name,
+                             model.Group,
+                             model.Level,
+                             model.ParentCode,
+                             model.Parent,
+                             model.IsLegacy,
+                             model.IsCashBankAccount,
+                             model.LegacyCode,
+                      }
+                     }).ToArray()
+             }, JsonRequestBehavior.AllowGet);
+         }
+
         public dynamic Lookup(string _search, long nd, int rows, int? page, string sidx, string sord, int Level, int Group, string filters = "")
         {
              // Construct where statement

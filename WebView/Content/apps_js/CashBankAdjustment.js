@@ -43,7 +43,7 @@
                   { name: 'confirmationdate', index: 'confirmationdate', hidden: true, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
                   { name: 'adjustmentdate', index: 'adjustmentdate', width: 120, align: "center", formatter: 'date', search: false, formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y', dataInit: datePick, attr: { title: 'Select Date' } } },
                   { name: 'createdat', index: 'createdat', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
-				  { name: 'updateat', index: 'updateat', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
+				  { name: 'updatedat', index: 'updatedat', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
         ],
         page: '1',
         pager: $('#pager'),

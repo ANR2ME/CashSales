@@ -67,6 +67,61 @@ namespace Service.Service
             return _repository.DeleteObject(Id);
         }
 
+        public IList<GeneralLedgerJournal> CreateConfirmationJournalForMemorial(Memorial memorial, IMemorialDetailService _memorialDetailService, IAccountService _accountService)
+        {
+            // User Input Memorial
+            #region User Input Memorial
+
+            IList<MemorialDetail> details = _memorialDetailService.GetObjectsByMemorialId(memorial.Id);
+            IList<GeneralLedgerJournal> journals = new List<GeneralLedgerJournal>();
+
+            foreach (var memorialDetail in details)
+            {
+                GeneralLedgerJournal journal = new GeneralLedgerJournal()
+                {
+                    AccountId = memorialDetail.AccountId,
+                    SourceDocument = Constant.GeneralLedgerSource.Memorial,
+                    SourceDocumentId = memorial.Id,
+                    TransactionDate = (DateTime)memorial.ConfirmationDate,
+                    Status = memorialDetail.Status,
+                    Amount = memorialDetail.Amount
+                };
+                journal = CreateObject(journal, _accountService);
+                journals.Add(journal);
+            }
+
+            return journals;
+            #endregion
+        }
+
+        public IList<GeneralLedgerJournal> CreateUnconfirmationJournalForMemorial(Memorial memorial, IMemorialDetailService _memorialDetailService, IAccountService _accountService)
+        {
+            // Use Input Memorial
+            #region User Input Memorial
+
+            DateTime UnconfirmationDate = DateTime.Now;
+            IList<MemorialDetail> details = _memorialDetailService.GetObjectsByMemorialId(memorial.Id);
+            IList<GeneralLedgerJournal> journals = new List<GeneralLedgerJournal>();
+
+            foreach (var memorialDetail in details)
+            {
+                GeneralLedgerJournal journal = new GeneralLedgerJournal()
+                {
+                    AccountId = memorialDetail.AccountId,
+                    SourceDocument = Constant.GeneralLedgerSource.Memorial,
+                    SourceDocumentId = memorial.Id,
+                    TransactionDate = UnconfirmationDate,
+                    Status = (memorialDetail.Status == Constant.GeneralLedgerStatus.Debit) ? Constant.GeneralLedgerStatus.Credit : Constant.GeneralLedgerStatus.Debit,
+                    Amount = memorialDetail.Amount
+                };
+                journal = CreateObject(journal, _accountService);
+                journals.Add(journal);
+            }
+
+            return journals;
+            #endregion
+        }
+
         public IList<GeneralLedgerJournal> CreateConfirmationJournalForPaymentVoucher(PaymentVoucher paymentVoucher, CashBank cashBank, IAccountService _accountService)
         {
             IList<GeneralLedgerJournal> journals = new List<GeneralLedgerJournal>();
@@ -400,7 +455,7 @@ namespace Service.Service
                 SourceDocumentId = cashSalesInvoice.Id,
                 TransactionDate = (DateTime)cashSalesInvoice.ConfirmationDate,
                 Status = Constant.GeneralLedgerStatus.Debit,
-                Amount = cashSalesInvoice.AmountPaid.GetValueOrDefault() //CoGS
+                Amount = cashSalesInvoice.CoGS //Total
             };
             debitcogs = CreateObject(debitcogs, _accountService);
 
@@ -411,7 +466,7 @@ namespace Service.Service
                 SourceDocumentId = cashSalesInvoice.Id,
                 TransactionDate = (DateTime)cashSalesInvoice.ConfirmationDate,
                 Status = Constant.GeneralLedgerStatus.Credit,
-                Amount = cashSalesInvoice.AmountPaid.GetValueOrDefault() //CoGS
+                Amount = cashSalesInvoice.CoGS, //Total
             };
             creditinventory = CreateObject(creditinventory, _accountService);
 
@@ -433,7 +488,7 @@ namespace Service.Service
                 SourceDocumentId = cashSalesInvoice.Id,
                 TransactionDate = UnconfirmationDate,
                 Status = Constant.GeneralLedgerStatus.Credit,
-                Amount = cashSalesInvoice.AmountPaid.GetValueOrDefault() //CoGS
+                Amount = cashSalesInvoice.CoGS //Total
             };
             creditcogs = CreateObject(creditcogs, _accountService);
 
@@ -444,7 +499,7 @@ namespace Service.Service
                 SourceDocumentId = cashSalesInvoice.Id,
                 TransactionDate = UnconfirmationDate,
                 Status = Constant.GeneralLedgerStatus.Debit,
-                Amount = cashSalesInvoice.AmountPaid.GetValueOrDefault() //CoGS
+                Amount = cashSalesInvoice.CoGS, //Total
             };
             debitinventory = CreateObject(debitinventory, _accountService);
 
@@ -465,7 +520,7 @@ namespace Service.Service
                 SourceDocumentId = cashSalesInvoice.Id,
                 TransactionDate = (DateTime)cashSalesInvoice.ConfirmationDate,
                 Status = Constant.GeneralLedgerStatus.Debit,
-                Amount = cashSalesInvoice.AmountPaid.GetValueOrDefault()
+                Amount = cashSalesInvoice.Total,
             };
             debittotal = CreateObject(debittotal, _accountService);
 
@@ -476,7 +531,7 @@ namespace Service.Service
                 SourceDocumentId = cashSalesInvoice.Id,
                 TransactionDate = (DateTime)cashSalesInvoice.ConfirmationDate,
                 Status = Constant.GeneralLedgerStatus.Credit,
-                Amount = cashSalesInvoice.AmountPaid.GetValueOrDefault()
+                Amount = cashSalesInvoice.Total, // AmountPaid.GetValueOrDefault()
             };
             creditrevenue = CreateObject(creditrevenue, _accountService);
 
@@ -498,7 +553,7 @@ namespace Service.Service
                 SourceDocumentId = cashSalesInvoice.Id,
                 TransactionDate = UnconfirmationDate,
                 Status = Constant.GeneralLedgerStatus.Credit,
-                Amount = cashSalesInvoice.AmountPaid.GetValueOrDefault()
+                Amount = cashSalesInvoice.Total,
             };
             credittotal = CreateObject(credittotal, _accountService);
 
@@ -509,7 +564,7 @@ namespace Service.Service
                 SourceDocumentId = cashSalesInvoice.Id,
                 TransactionDate = UnconfirmationDate,
                 Status = Constant.GeneralLedgerStatus.Debit,
-                Amount = cashSalesInvoice.AmountPaid.GetValueOrDefault()
+                Amount = cashSalesInvoice.Total, // AmountPaid.GetValueOrDefault()
             };
             debitrevenue = CreateObject(debitrevenue, _accountService);
 
@@ -655,7 +710,7 @@ namespace Service.Service
                 SourceDocumentId = customPurchaseInvoice.Id,
                 TransactionDate = (DateTime)customPurchaseInvoice.ConfirmationDate,
                 Status = Constant.GeneralLedgerStatus.Debit,
-                Amount = customPurchaseInvoice.AmountPaid.GetValueOrDefault() //CoGS
+                Amount = customPurchaseInvoice.Total, //CoGS
             };
             debitinventory = CreateObject(debitinventory, _accountService);
 
@@ -666,7 +721,7 @@ namespace Service.Service
                 SourceDocumentId = customPurchaseInvoice.Id,
                 TransactionDate = (DateTime)customPurchaseInvoice.ConfirmationDate,
                 Status = Constant.GeneralLedgerStatus.Credit,
-                Amount = customPurchaseInvoice.AmountPaid.GetValueOrDefault() //CoGS
+                Amount = customPurchaseInvoice.Total, //CoGS
             };
             creditgoodsPendingclearance = CreateObject(creditgoodsPendingclearance, _accountService);
 
@@ -688,7 +743,7 @@ namespace Service.Service
                 SourceDocumentId = customPurchaseInvoice.Id,
                 TransactionDate = UnconfirmationDate,
                 Status = Constant.GeneralLedgerStatus.Credit,
-                Amount = customPurchaseInvoice.AmountPaid.GetValueOrDefault() //CoGS
+                Amount = customPurchaseInvoice.Total, //CoGS
             };
             creditinventory = CreateObject(creditinventory, _accountService);
 
@@ -699,7 +754,7 @@ namespace Service.Service
                 SourceDocumentId = customPurchaseInvoice.Id,
                 TransactionDate = UnconfirmationDate,
                 Status = Constant.GeneralLedgerStatus.Debit,
-                Amount = customPurchaseInvoice.AmountPaid.GetValueOrDefault() //CoGS
+                Amount = customPurchaseInvoice.Total, //CoGS
             };
             debitgoodsPendingclearance = CreateObject(debitgoodsPendingclearance, _accountService);
 
@@ -720,7 +775,7 @@ namespace Service.Service
                 SourceDocumentId = customPurchaseInvoice.Id,
                 TransactionDate = (DateTime)customPurchaseInvoice.ConfirmationDate, // PaymentDate.GetValueOrDefault() ??
                 Status = Constant.GeneralLedgerStatus.Debit,
-                Amount = customPurchaseInvoice.AmountPaid.GetValueOrDefault()
+                Amount = customPurchaseInvoice.Total, // AmountPaid.GetValueOrDefault()
             };
             debitGoodsPendingClearance = CreateObject(debitGoodsPendingClearance, _accountService);
 
@@ -731,7 +786,7 @@ namespace Service.Service
                 SourceDocumentId = customPurchaseInvoice.Id,
                 TransactionDate = (DateTime)customPurchaseInvoice.ConfirmationDate, // PaymentDate.GetValueOrDefault() ??
                 Status = Constant.GeneralLedgerStatus.Credit,
-                Amount = customPurchaseInvoice.AmountPaid.GetValueOrDefault()
+                Amount = customPurchaseInvoice.Total, // AmountPaid.GetValueOrDefault()
             };
             creditaccountpayable = CreateObject(creditaccountpayable, _accountService);
 
@@ -753,7 +808,7 @@ namespace Service.Service
                 SourceDocumentId = customPurchaseInvoice.Id,
                 TransactionDate = UnconfirmationDate,
                 Status = Constant.GeneralLedgerStatus.Credit,
-                Amount = customPurchaseInvoice.AmountPaid.GetValueOrDefault()
+                Amount = customPurchaseInvoice.Total, // AmountPaid.GetValueOrDefault()
             };
             creditGoodsPendingClearance = CreateObject(creditGoodsPendingClearance, _accountService);
 
@@ -764,7 +819,7 @@ namespace Service.Service
                 SourceDocumentId = customPurchaseInvoice.Id,
                 TransactionDate = UnconfirmationDate,
                 Status = Constant.GeneralLedgerStatus.Debit,
-                Amount = customPurchaseInvoice.AmountPaid.GetValueOrDefault()
+                Amount = customPurchaseInvoice.Total, // AmountPaid.GetValueOrDefault()
             };
             debitaccountpayable = CreateObject(debitaccountpayable, _accountService);
 

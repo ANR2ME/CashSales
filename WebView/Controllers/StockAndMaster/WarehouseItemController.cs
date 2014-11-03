@@ -133,6 +133,7 @@ namespace WebView.Controllers
                              warehousecode = model.Warehouse.Code,
                              warehouse = model.Warehouse.Name,
                              warehousedesc = model.Warehouse.Description,
+                             model.Quantity,
                          }).Where(filter).OrderBy(sidx + " " + sord); //.ToList();
 
             var list = query.AsEnumerable();
@@ -168,6 +169,7 @@ namespace WebView.Controllers
                            model.warehousecode,
                            model.warehouse,
                            model.warehousedesc,
+                           model.Quantity
                       }
                     }).ToArray()
             }, JsonRequestBehavior.AllowGet);

@@ -47,6 +47,8 @@
     <Compile Include="DomainModel\Accounting\Account.cs" />
     <Compile Include="DomainModel\Accounting\Closing.cs" />
     <Compile Include="DomainModel\Accounting\GeneralLedgerJournal.cs" />
+    <Compile Include="DomainModel\Accounting\Memorial.cs" />
+    <Compile Include="DomainModel\Accounting\MemorialDetail.cs" />
     <Compile Include="DomainModel\Accounting\ValidComb.cs" />
     <Compile Include="DomainModel\Finance\CashBank.cs" />
     <Compile Include="DomainModel\Finance\CashBankAdjustment.cs" />
@@ -114,6 +116,8 @@
     <Compile Include="DomainModel\UserRole\UserAccess.cs" />
     <Compile Include="DomainModel\UserRole\UserMenu.cs" />
     <Compile Include="DomainModel\UserRole\UserAccount.cs" />
+    <Compile Include="Interface\Repository\Accounting\IMemorialDetailRepository.cs" />
+    <Compile Include="Interface\Repository\Accounting\IMemorialRepository.cs" />
     <Compile Include="Interface\Repository\Accounting\IAccountRepository.cs" />
     <Compile Include="Interface\Repository\Accounting\IClosingRepository.cs" />
     <Compile Include="Interface\Repository\Accounting\IValidCombRepository.cs" />
@@ -187,6 +191,8 @@
     <Compile Include="Interface\Repository\UserRole\IUserAccountRepository.cs" />
     <Compile Include="Interface\Service\Accounting\IAccountService.cs" />
     <Compile Include="Interface\Service\Accounting\IClosingService.cs" />
+    <Compile Include="Interface\Service\Accounting\IMemorialDetailService.cs" />
+    <Compile Include="Interface\Service\Accounting\IMemorialService.cs" />
     <Compile Include="Interface\Service\Accounting\IValidCombService.cs" />
     <Compile Include="Interface\Service\Accounting\IGeneralLedgerJournalService.cs" />
     <Compile Include="Interface\Service\Finance\ICashMutationService.cs" />
@@ -257,6 +263,8 @@
     <Compile Include="Interface\Service\UserRole\IUserAccountService.cs" />
     <Compile Include="Interface\Validation\Accounting\IAccountValidator.cs" />
     <Compile Include="Interface\Validation\Accounting\IClosingValidator.cs" />
+    <Compile Include="Interface\Validation\Accounting\IMemorialDetailValidator.cs" />
+    <Compile Include="Interface\Validation\Accounting\IMemorialValidator.cs" />
     <Compile Include="Interface\Validation\Accounting\IValidCombValidator.cs" />
     <Compile Include="Interface\Validation\Accounting\IGeneralLedgerJournalValidator.cs" />
     <Compile Include="Interface\Validation\Finance\ICashBankValidator.cs" />

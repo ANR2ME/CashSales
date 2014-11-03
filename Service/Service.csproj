@@ -42,6 +42,8 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Service\Accounting\AccountService.cs" />
     <Compile Include="Service\Accounting\ClosingService.cs" />
+    <Compile Include="Service\Accounting\MemorialDetailService.cs" />
+    <Compile Include="Service\Accounting\MemorialService.cs" />
     <Compile Include="Service\Accounting\ValidCombService.cs" />
     <Compile Include="Service\Accounting\GeneralLedgerJournalService.cs" />
     <Compile Include="Service\Finance\CashBankService.cs" />

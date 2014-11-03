@@ -26,7 +26,7 @@ namespace Data.Context
             IList<String> userroleNames = new List<String>() 
                                         { "UserMenu", "UserAccount", "UserAccess" };
 
-            IList<String> accountingNames = new List<String>() { "GeneralLedgerJournal", "ValidComb", "Closing", "Account" };
+            IList<String> accountingNames = new List<String>() { "MemorialDetail", "Memorial", "GeneralLedgerJournal", "ValidComb", "Closing", "Account" };
 
             IList<String> financeNames = new List<String>()
                                         { "CashMutation", "CashBankAdjustment", "CashBankMutation", "CashBank"};
@@ -132,6 +132,8 @@ namespace Data.Context
             modelBuilder.Configurations.Add(new CustomPurchaseInvoiceMapping());
             modelBuilder.Configurations.Add(new CustomPurchaseInvoiceDetailMapping());
             modelBuilder.Configurations.Add(new PaymentRequestMapping());
+            modelBuilder.Configurations.Add(new MemorialMapping());
+            modelBuilder.Configurations.Add(new MemorialDetailMapping());
             modelBuilder.Configurations.Add(new AccountMapping());
             modelBuilder.Configurations.Add(new ValidCombMapping());
             modelBuilder.Configurations.Add(new ClosingMapping());
@@ -205,6 +207,8 @@ namespace Data.Context
         public DbSet<CustomPurchaseInvoice> CustomPurchaseInvoices { get; set; }
         public DbSet<CustomPurchaseInvoiceDetail> CustomPurchaseInvoiceDetails { get; set; }
         public DbSet<PaymentRequest> PaymentRequests { get; set; }
+        public DbSet<Memorial> Memorials { get; set; }
+        public DbSet<MemorialDetail> MemorialDetails { get; set; }
         public DbSet<Account> Accounts { get; set; }
         public DbSet<ValidComb> ValidCombs { get; set; }
         public DbSet<Closing> Closings { get; set; }

@@ -42,6 +42,8 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Validation\Accounting\AccountValidator.cs" />
     <Compile Include="Validation\Accounting\GeneralLedgerJournalValidator.cs" />
+    <Compile Include="Validation\Accounting\MemorialDetailValidator.cs" />
+    <Compile Include="Validation\Accounting\MemorialValidator.cs" />
     <Compile Include="Validation\Accounting\ValidCombValidator.cs" />
     <Compile Include="Validation\Accounting\ClosingValidator.cs" />
     <Compile Include="Validation\Finance\CashBankValidator.cs" />

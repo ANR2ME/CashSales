@@ -250,6 +250,7 @@ namespace Service.Service
         public decimal CalculateAndUpdateAvgPrice(Item item, int addedQuantity, decimal addedAvgCost)
         {
             item.AvgPrice = CalculateAvgPrice(item, addedQuantity, addedAvgCost);
+            //item.Quantity += addedQuantity;
             _repository.Update(item);
             return item.AvgPrice;
         }

@@ -190,6 +190,7 @@ namespace WebView.Controllers
                              item = model.CashSalesInvoiceDetail.Item.Name,
                              model.Quantity,
                              model.TotalPrice,
+                             model.CoGS,
                          }).Where(filter).OrderBy(sidx + " " + sord); //.ToList();
 
             var list = query.AsEnumerable();
@@ -229,6 +230,7 @@ namespace WebView.Controllers
                             model.item,
                             model.Quantity,
                             model.TotalPrice,
+                            model.CoGS,
                       }
                     }).ToArray()
             }, JsonRequestBehavior.AllowGet);
@@ -483,7 +485,7 @@ namespace WebView.Controllers
                 model = _cashSalesReturnService.ConfirmObject(data, model.ConfirmationDate.Value, model.Allowance, _cashSalesReturnDetailService, 
                                                     _contactService, _cashSalesInvoiceService, _cashSalesInvoiceDetailService, _priceMutationService, _payableService, 
                                                     _cashSalesReturnService, _warehouseItemService, _warehouseService, _itemService, _barringService, _stockMutationService,
-                                                    _closingService);
+                                                    _generalLedgerJournalService, _accountService, _closingService);
             }
             catch (Exception ex)
             {
@@ -522,7 +524,8 @@ namespace WebView.Controllers
                 var data = _cashSalesReturnService.GetObjectById(model.Id);
                 model = _cashSalesReturnService.UnconfirmObject(data, _cashSalesReturnDetailService, _cashSalesInvoiceDetailService, _payableService, 
                                                                 _paymentVoucherDetailService,_warehouseItemService, _warehouseService, _itemService,
-                                                                _barringService, _stockMutationService,_closingService);
+                                                                _barringService, _stockMutationService,
+                                                                _generalLedgerJournalService, _accountService, _closingService);
             }
             catch (Exception ex)
             {

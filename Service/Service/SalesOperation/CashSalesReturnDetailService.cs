@@ -64,8 +64,9 @@ namespace Service.Service
                 CashSalesReturn cashSalesReturn = _cashSalesReturnService.GetObjectById(cashSalesReturnDetail.CashSalesReturnId);
                 CashSalesInvoiceDetail cashSalesInvoiceDetail = _cashSalesInvoiceDetailService.GetObjectById(cashSalesReturnDetail.CashSalesInvoiceDetailId);
                 cashSalesReturnDetail.TotalPrice = (cashSalesInvoiceDetail.Amount / cashSalesInvoiceDetail.Quantity) * cashSalesReturnDetail.Quantity;
+                cashSalesReturnDetail.CoGS = (cashSalesInvoiceDetail.CoGS / cashSalesInvoiceDetail.Quantity) * cashSalesReturnDetail.Quantity;
                 cashSalesReturnDetail = _repository.CreateObject(cashSalesReturnDetail);
-                cashSalesReturn.Total = CalculateTotal(cashSalesReturn.Id);
+                cashSalesReturn = CalculateTotal(cashSalesReturn);
                 _cashSalesReturnService.GetRepository().Update(cashSalesReturn);
             }
             return cashSalesReturnDetail;
@@ -79,8 +80,9 @@ namespace Service.Service
                 CashSalesReturn cashSalesReturn = _cashSalesReturnService.GetObjectById(cashSalesReturnDetail.CashSalesReturnId);
                 CashSalesInvoiceDetail cashSalesInvoiceDetail = _cashSalesInvoiceDetailService.GetObjectById(cashSalesReturnDetail.CashSalesInvoiceDetailId);
                 cashSalesReturnDetail.TotalPrice = (cashSalesInvoiceDetail.Amount / cashSalesInvoiceDetail.Quantity) * cashSalesReturnDetail.Quantity;
+                cashSalesReturnDetail.CoGS = (cashSalesInvoiceDetail.CoGS / cashSalesInvoiceDetail.Quantity) * cashSalesReturnDetail.Quantity;
                 cashSalesReturnDetail = _repository.UpdateObject(cashSalesReturnDetail);
-                cashSalesReturn.Total = CalculateTotal(cashSalesReturn.Id);
+                cashSalesReturn = CalculateTotal(cashSalesReturn);
                 _cashSalesReturnService.GetRepository().Update(cashSalesReturn);
             }
             return cashSalesReturnDetail;
@@ -150,7 +152,7 @@ namespace Service.Service
             {
                 CashSalesReturn cashSalesReturn = _cashSalesReturnService.GetObjectById(cashSalesReturnDetail.CashSalesReturnId);
                 _repository.SoftDeleteObject(cashSalesReturnDetail);
-                cashSalesReturn.Total = CalculateTotal(cashSalesReturn.Id);
+                cashSalesReturn = CalculateTotal(cashSalesReturn);
                 _cashSalesReturnService.GetRepository().Update(cashSalesReturn);
             }
             return cashSalesReturnDetail;
@@ -161,15 +163,32 @@ namespace Service.Service
             return _repository.DeleteObject(Id);
         }
 
-        public decimal CalculateTotal(int CashSalesReturnId)
+        //public decimal CalculateTotal(int CashSalesReturnId)
+        //{
+        //    IList<CashSalesReturnDetail> cashSalesReturnDetails = GetObjectsByCashSalesReturnId(CashSalesReturnId);
+        //    decimal Total = 0;
+        //    decimal CoGS = 0;
+        //    foreach (var cashSalesReturnDetail in cashSalesReturnDetails)
+        //    {
+        //        Total += cashSalesReturnDetail.TotalPrice;
+        //        CoGS += cashSalesReturnDetail.CoGS;
+        //    }
+        //    return Total;
+        //}
+
+        public CashSalesReturn CalculateTotal(CashSalesReturn cashSalesReturn)
         {
-            IList<CashSalesReturnDetail> cashSalesReturnDetails = GetObjectsByCashSalesReturnId(CashSalesReturnId);
+            IList<CashSalesReturnDetail> cashSalesReturnDetails = GetObjectsByCashSalesReturnId(cashSalesReturn.Id);
             decimal Total = 0;
+            decimal CoGS = 0;
             foreach (var cashSalesReturnDetail in cashSalesReturnDetails)
             {
                 Total += cashSalesReturnDetail.TotalPrice;
+                CoGS += cashSalesReturnDetail.CoGS;
             }
-            return Total;
+            cashSalesReturn.Total = Total;
+            cashSalesReturn.CoGS = CoGS;
+            return cashSalesReturn;
         }
 
         public int GetTotalQuantityByCashSalesInvoiceDetailId(int Id)

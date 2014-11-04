@@ -629,6 +629,136 @@ namespace Service.Service
             return journals;
         }
 
+        public IList<GeneralLedgerJournal> CreateConfirmationJournalForCashSalesReturn(CashSalesReturn cashSalesReturn, IAccountService _accountService)
+        {
+            IList<GeneralLedgerJournal> journals = new List<GeneralLedgerJournal>();
+
+            GeneralLedgerJournal creditcogs = new GeneralLedgerJournal()
+            {
+                AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.COGS).Id,
+                SourceDocument = Constant.GeneralLedgerSource.CashSalesReturn,
+                SourceDocumentId = cashSalesReturn.Id,
+                TransactionDate = (DateTime)cashSalesReturn.ConfirmationDate,
+                Status = Constant.GeneralLedgerStatus.Credit,
+                Amount = cashSalesReturn.CoGS //Total
+            };
+            creditcogs = CreateObject(creditcogs, _accountService);
+
+            GeneralLedgerJournal debitinventory = new GeneralLedgerJournal()
+            {
+                AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.Inventory).Id,
+                SourceDocument = Constant.GeneralLedgerSource.CashSalesReturn,
+                SourceDocumentId = cashSalesReturn.Id,
+                TransactionDate = (DateTime)cashSalesReturn.ConfirmationDate,
+                Status = Constant.GeneralLedgerStatus.Debit,
+                Amount = cashSalesReturn.CoGS, //Total
+            };
+            debitinventory = CreateObject(debitinventory, _accountService);
+
+            journals.Add(creditcogs);
+            journals.Add(debitinventory);
+
+            return journals;
+        }
+
+        public IList<GeneralLedgerJournal> CreateUnconfirmationJournalForCashSalesReturn(CashSalesReturn cashSalesReturn, IAccountService _accountService)
+        {
+            IList<GeneralLedgerJournal> journals = new List<GeneralLedgerJournal>();
+            DateTime UnconfirmationDate = DateTime.Now;
+
+            GeneralLedgerJournal debitcogs = new GeneralLedgerJournal()
+            {
+                AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.COGS).Id,
+                SourceDocument = Constant.GeneralLedgerSource.CashSalesReturn,
+                SourceDocumentId = cashSalesReturn.Id,
+                TransactionDate = UnconfirmationDate,
+                Status = Constant.GeneralLedgerStatus.Debit,
+                Amount = cashSalesReturn.CoGS //Total
+            };
+            debitcogs = CreateObject(debitcogs, _accountService);
+
+            GeneralLedgerJournal creditinventory = new GeneralLedgerJournal()
+            {
+                AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.Inventory).Id,
+                SourceDocument = Constant.GeneralLedgerSource.CashSalesReturn,
+                SourceDocumentId = cashSalesReturn.Id,
+                TransactionDate = UnconfirmationDate,
+                Status = Constant.GeneralLedgerStatus.Credit,
+                Amount = cashSalesReturn.CoGS, //Total
+            };
+            creditinventory = CreateObject(creditinventory, _accountService);
+
+            journals.Add(debitcogs);
+            journals.Add(creditinventory);
+
+            return journals;
+        }
+
+        public IList<GeneralLedgerJournal> CreatePaidJournalForCashSalesReturn(CashSalesReturn cashSalesReturn, IAccountService _accountService)
+        {
+            IList<GeneralLedgerJournal> journals = new List<GeneralLedgerJournal>();
+
+            GeneralLedgerJournal credittotal = new GeneralLedgerJournal()
+            {
+                AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.AccountPayable).Id,
+                SourceDocument = Constant.GeneralLedgerSource.CashSalesReturn,
+                SourceDocumentId = cashSalesReturn.Id,
+                TransactionDate = (DateTime)cashSalesReturn.ConfirmationDate,
+                Status = Constant.GeneralLedgerStatus.Credit,
+                Amount = cashSalesReturn.Total,
+            };
+            credittotal = CreateObject(credittotal, _accountService);
+
+            GeneralLedgerJournal debitrevenue = new GeneralLedgerJournal()
+            {
+                AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.Revenue).Id,
+                SourceDocument = Constant.GeneralLedgerSource.CashSalesReturn,
+                SourceDocumentId = cashSalesReturn.Id,
+                TransactionDate = (DateTime)cashSalesReturn.ConfirmationDate,
+                Status = Constant.GeneralLedgerStatus.Debit,
+                Amount = cashSalesReturn.Total, // AmountPaid.GetValueOrDefault()
+            };
+            debitrevenue = CreateObject(debitrevenue, _accountService);
+
+            journals.Add(credittotal);
+            journals.Add(debitrevenue);
+
+            return journals;
+        }
+
+        public IList<GeneralLedgerJournal> CreateUnpaidJournalForCashSalesReturn(CashSalesReturn cashSalesReturn, IAccountService _accountService)
+        {
+            IList<GeneralLedgerJournal> journals = new List<GeneralLedgerJournal>();
+            DateTime UnconfirmationDate = DateTime.Now;
+
+            GeneralLedgerJournal debittotal = new GeneralLedgerJournal()
+            {
+                AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.AccountPayable).Id,
+                SourceDocument = Constant.GeneralLedgerSource.CashSalesReturn,
+                SourceDocumentId = cashSalesReturn.Id,
+                TransactionDate = UnconfirmationDate,
+                Status = Constant.GeneralLedgerStatus.Debit,
+                Amount = cashSalesReturn.Total,
+            };
+            debittotal = CreateObject(debittotal, _accountService);
+
+            GeneralLedgerJournal creditrevenue = new GeneralLedgerJournal()
+            {
+                AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.Revenue).Id,
+                SourceDocument = Constant.GeneralLedgerSource.CashSalesReturn,
+                SourceDocumentId = cashSalesReturn.Id,
+                TransactionDate = UnconfirmationDate,
+                Status = Constant.GeneralLedgerStatus.Credit,
+                Amount = cashSalesReturn.Total, // AmountPaid.GetValueOrDefault()
+            };
+            creditrevenue = CreateObject(creditrevenue, _accountService);
+
+            journals.Add(debittotal);
+            journals.Add(creditrevenue);
+
+            return journals;
+        }
+
         public IList<GeneralLedgerJournal> CreateConfirmationJournalForStockAdjustment(StockAdjustment stockAdjustment, IAccountService _accountService)
         {
             IList<GeneralLedgerJournal> journals = new List<GeneralLedgerJournal>();

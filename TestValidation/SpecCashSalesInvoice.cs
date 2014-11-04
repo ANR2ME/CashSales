@@ -254,7 +254,7 @@ namespace TestValidation
                         {
                             b._cashSalesReturnService.UnconfirmObject(b.csr1, b._cashSalesReturnDetailService, b._cashSalesInvoiceDetailService, b._payableService,
                                                                       b._paymentVoucherDetailService, b._warehouseItemService, b._warehouseService, b._itemService,
-                                                                      b._barringService, b._stockMutationService, b._closingService);
+                                                                      b._barringService, b._stockMutationService, b._generalLedgerJournalService, b._accountService, b._closingService);
 
                             b.csr1.Errors.Count().should_be(0);
 

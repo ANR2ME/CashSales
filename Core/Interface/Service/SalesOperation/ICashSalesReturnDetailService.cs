@@ -29,7 +29,8 @@ namespace Core.Interface.Service
                                               IWarehouseItemService _warehouseItemService, IWarehouseService _warehouseService,
                                               IItemService _itemService, IBarringService _barringService, IStockMutationService _stockMutationService);
         bool DeleteObject(int Id);
-        decimal CalculateTotal(int CashSalesReturnId);
+        //decimal CalculateTotal(int CashSalesReturnId);
+        CashSalesReturn CalculateTotal(CashSalesReturn cashSalesReturn);
         int GetTotalQuantityByCashSalesInvoiceDetailId(int Id);
     }
 }

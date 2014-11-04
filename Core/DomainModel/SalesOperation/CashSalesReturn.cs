@@ -18,6 +18,7 @@ namespace Core.DomainModel
         public Nullable<int> CashBankId { get; set; }
         public decimal Allowance { get; set; }
         public decimal Total { get; set; }
+        public decimal CoGS { get; set; }
         public bool IsPaid { get; set; }
 
         public DateTime CreatedAt { get; set; }

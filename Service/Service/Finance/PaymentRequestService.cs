@@ -66,6 +66,20 @@ namespace Service.Service
             return paymentRequest;
         }
 
+        public PaymentRequest CreateObject(int ContactId, string Description, decimal Amount, DateTime RequestDate, DateTime DueDate, IContactService _contactService, IPaymentRequestDetailService _paymentRequestDetailService,
+                                           IAccountService _accountService, IGeneralLedgerJournalService _generalLedgerJournalService, IClosingService _closingService)
+        {
+            PaymentRequest paymentRequest = new PaymentRequest
+            {
+                ContactId = ContactId,
+                Description = Description,
+                Amount = Amount,
+                RequestedDate = RequestDate,
+                DueDate = DueDate,
+            };
+            paymentRequest = CreateObject(paymentRequest, _contactService, _paymentRequestDetailService, _accountService, _generalLedgerJournalService, _closingService);
+            return paymentRequest;
+        }
         public PaymentRequest UpdateObject(PaymentRequest paymentRequest, IContactService _contactService, IPaymentRequestDetailService _paymentRequestDetailService,
                                            IAccountService _accountService, IGeneralLedgerJournalService _generalLedgerJournalService, IClosingService _closingService)
         {

@@ -67,22 +67,28 @@ namespace Service.Service
                                                 IPriceMutationService _priceMutationService, IPayableService _payableService, 
                                                 ICashSalesReturnService _cashSalesReturnService, IWarehouseItemService _warehouseItemService,
                                                 IWarehouseService _warehouseService, IItemService _itemService, IBarringService _barringService,
-                                                IStockMutationService _stockMutationService, IClosingService _closingService)
+                                                IStockMutationService _stockMutationService,
+                                                IGeneralLedgerJournalService _generalLedgerJournalService, IAccountService _accountService, IClosingService _closingService)
         {
             cashSalesReturn.ConfirmationDate = ConfirmationDate;
             cashSalesReturn.Allowance = Allowance;
             if (_validator.ValidConfirmObject(cashSalesReturn, _cashSalesReturnDetailService, _cashSalesReturnService, _cashSalesInvoiceService, _cashSalesInvoiceDetailService))
             {
                 IList<CashSalesReturnDetail> cashSalesReturnDetails = _cashSalesReturnDetailService.GetObjectsByCashSalesReturnId(cashSalesReturn.Id);
+                cashSalesReturn.Total = 0;
+                cashSalesReturn.CoGS = 0;
                 foreach (var cashSalesReturnDetail in cashSalesReturnDetails)
                 {
                     cashSalesReturnDetail.Errors = new Dictionary<string, string>();
                     _cashSalesReturnDetailService.ConfirmObject(cashSalesReturnDetail, _cashSalesReturnService, _cashSalesInvoiceService, _cashSalesInvoiceDetailService,
                                                                 _warehouseItemService, _warehouseService, _itemService, _barringService, _stockMutationService, _cashSalesReturnDetailService);
+                    cashSalesReturn.Total += cashSalesReturnDetail.TotalPrice;
+                    cashSalesReturn.CoGS += cashSalesReturnDetail.CoGS;
                 }
                 // DueDate untuk Payable dari mana ?
                 Contact contact = _contactService.GetObjectByName(Core.Constants.Constant.BaseContact);
                 Payable payable = _payableService.CreateObject(contact.Id, Core.Constants.Constant.PayableSource.CashSalesReturn, cashSalesReturn.Id, cashSalesReturn.Code, cashSalesReturn.Total, ConfirmationDate.Add(Core.Constants.Constant.PaymentDueDateTimeSpan));
+                _generalLedgerJournalService.CreateConfirmationJournalForCashSalesReturn(cashSalesReturn, _accountService);
                 cashSalesReturn = _repository.ConfirmObject(cashSalesReturn);
             }
             else
@@ -97,11 +103,11 @@ namespace Service.Service
                                                   ICashSalesInvoiceDetailService _cashSalesInvoiceDetailService,
                                                   IPayableService _payableService, IPaymentVoucherDetailService _paymentVoucherDetailService,
                                                   IWarehouseItemService _warehouseItemService, IWarehouseService _warehouseService, IItemService _itemService, 
-                                                  IBarringService _barringService, IStockMutationService _stockMutationService, IClosingService _closingService)
+                                                  IBarringService _barringService, IStockMutationService _stockMutationService,
+                                                  IGeneralLedgerJournalService _generalLedgerJournalService, IAccountService _accountService, IClosingService _closingService)
         {
             if (_validator.ValidUnconfirmObject(cashSalesReturn, _cashSalesReturnDetailService, _payableService, _paymentVoucherDetailService))
             {
-                cashSalesReturn = _repository.UnconfirmObject(cashSalesReturn);
                 IList<CashSalesReturnDetail> cashSalesReturnDetails = _cashSalesReturnDetailService.GetObjectsByCashSalesReturnId(cashSalesReturn.Id);
                 foreach (var cashSalesReturnDetail in cashSalesReturnDetails)
                 {
@@ -109,10 +115,13 @@ namespace Service.Service
                     _cashSalesReturnDetailService.UnconfirmObject(cashSalesReturnDetail, _cashSalesInvoiceDetailService, _warehouseItemService,
                                                                   _warehouseService, _itemService, _barringService, _stockMutationService);
                 }
+                _generalLedgerJournalService.CreateUnconfirmationJournalForCashSalesReturn(cashSalesReturn, _accountService);
                 Payable payable = _payableService.GetObjectBySource(Core.Constants.Constant.PayableSource.CashSalesReturn, cashSalesReturn.Id);
                 _payableService.SoftDeleteObject(payable);
                 cashSalesReturn.Total = 0;
+                cashSalesReturn.CoGS = 0;
                 cashSalesReturn.Allowance = 0;
+                cashSalesReturn = _repository.UnconfirmObject(cashSalesReturn);
             }
             return cashSalesReturn;
         }
@@ -130,14 +139,30 @@ namespace Service.Service
                 payable.AllowanceAmount = cashSalesReturn.Allowance;
                 payable.RemainingAmount = payable.Amount - payable.AllowanceAmount;
                 _payableService.UpdateObject(payable);
-                PaymentVoucher paymentVoucher = _paymentVoucherService.CreateObject((int)cashSalesReturn.CashBankId.GetValueOrDefault(), payable.ContactId,
-                                                                                    DateTime.Now, payable.RemainingAmount, false, payable.DueDate, cashBank.IsBank,
-                                                                                    _paymentVoucherDetailService, _payableService, _contactService, _cashBankService);
-                PaymentVoucherDetail paymentVoucherDetail = _paymentVoucherDetailService.CreateObject(paymentVoucher.Id, payable.Id, payable.RemainingAmount,
-                                                                                "Automatic Payment", _paymentVoucherService, _cashBankService, _payableService);
-                _paymentVoucherService.ConfirmObject(paymentVoucher, (DateTime)cashSalesReturn.ConfirmationDate.GetValueOrDefault(), _paymentVoucherDetailService,
-                                                     _cashBankService, _payableService, _cashMutationService, _generalLedgerJournalService, _accountService, _closingService);
-                cashSalesReturn = _repository.PaidObject(cashSalesReturn);
+                PaymentVoucher paymentVoucher = null;
+                if (payable.RemainingAmount > 0)
+                {
+                    paymentVoucher = _paymentVoucherService.CreateObject((int)cashSalesReturn.CashBankId.GetValueOrDefault(), payable.ContactId,
+                                                                                        DateTime.Now, payable.RemainingAmount, false, payable.DueDate, cashBank.IsBank,
+                                                                                        _paymentVoucherDetailService, _payableService, _contactService, _cashBankService);
+                    PaymentVoucherDetail paymentVoucherDetail = _paymentVoucherDetailService.CreateObject(paymentVoucher.Id, payable.Id, payable.RemainingAmount,
+                                                                                    "Automatic Payment", _paymentVoucherService, _cashBankService, _payableService);
+                    _paymentVoucherService.ConfirmObject(paymentVoucher, (DateTime)cashSalesReturn.ConfirmationDate.GetValueOrDefault(), _paymentVoucherDetailService,
+                                                         _cashBankService, _payableService, _cashMutationService, _generalLedgerJournalService, _accountService, _closingService);
+                }
+                if (paymentVoucher == null || !paymentVoucher.Errors.Any())
+                {
+                    cashSalesReturn = _repository.PaidObject(cashSalesReturn);
+                    _generalLedgerJournalService.CreatePaidJournalForCashSalesReturn(cashSalesReturn, _accountService);
+                }
+                else
+                {
+                    cashSalesReturn.Errors.Clear();
+                    foreach (var error in paymentVoucher.Errors)
+                    {
+                        cashSalesReturn.Errors.Add(error.Key, error.Value);
+                    }
+                }
             }
             return cashSalesReturn;
         }
@@ -167,6 +192,7 @@ namespace Service.Service
                         _paymentVoucherService.SoftDeleteObject(paymentVoucher, _paymentVoucherDetailService);
                     }
                 }
+                _generalLedgerJournalService.CreateUnpaidJournalForCashSalesReturn(cashSalesReturn, _accountService);
                 payable.AllowanceAmount = 0;
                 _payableService.UpdateObject(payable);
                 cashSalesReturn.Allowance = 0;

@@ -15,6 +15,7 @@ namespace Core.DomainModel
         public int Quantity { get; set; }
         
         public decimal TotalPrice { get; set; }
+        public decimal CoGS { get; set; }
         public bool IsDeleted { get; set; }
         public DateTime CreatedAt { get; set; }
         public Nullable<DateTime> DeletedAt { get; set; }

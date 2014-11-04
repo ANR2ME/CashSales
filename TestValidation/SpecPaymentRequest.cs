@@ -47,14 +47,14 @@ namespace TestValidation
                     DueDate = DateTime.Today.AddDays(14),
                     Amount = 200000,
                 };
-                nocontact = d._paymentRequestService.CreateObject(nocontact, d._contactService);
+                nocontact = d._paymentRequestService.CreateObject(nocontact, d._contactService, d._paymentRequestDetailService, d._accountService, d._generalLedgerJournalService, d._closingService);
                 nocontact.Errors.Count().should_not_be(0);
             };
 
             it["update_without_contact"] = () =>
             {
                 d.paymentRequest1.ContactId = 0;
-                d.paymentRequest1 = d._paymentRequestService.UpdateObject(d.paymentRequest1, d._contactService);
+                d.paymentRequest1 = d._paymentRequestService.UpdateObject(d.paymentRequest1, d._contactService, d._paymentRequestDetailService, d._accountService, d._generalLedgerJournalService, d._closingService);
                 d.paymentRequest1.Errors.Count().should_not_be(0);
             };
 
@@ -62,7 +62,7 @@ namespace TestValidation
             {
                 before = () =>
                 {
-                    d._paymentRequestService.ConfirmObject(d.paymentRequest1, DateTime.Now, d._payableService);
+                    d._paymentRequestService.ConfirmObject(d.paymentRequest1, DateTime.Now, d._payableService, d._paymentRequestDetailService, d._accountService, d._generalLedgerJournalService, d._closingService);
                     d.paymentRequest1.Errors.Count().should_be(0);
                 };
 
@@ -74,7 +74,7 @@ namespace TestValidation
                 it["update_after_confirmed"] = () =>
                 {
                     d.paymentRequest1.Amount = 300000;
-                    d.paymentRequest1 = d._paymentRequestService.UpdateObject(d.paymentRequest1, d._contactService);
+                    d.paymentRequest1 = d._paymentRequestService.UpdateObject(d.paymentRequest1, d._contactService, d._paymentRequestDetailService, d._accountService, d._generalLedgerJournalService, d._closingService);
                     d.paymentRequest1.Errors.Count().should_not_be(0);
                 };
 
@@ -86,7 +86,7 @@ namespace TestValidation
 
                 it["unconfirm_paymentrequest"] = () =>
                 {
-                    d.paymentRequest1 = d._paymentRequestService.UnconfirmObject(d.paymentRequest1, d._paymentVoucherDetailService, d._payableService);
+                    d.paymentRequest1 = d._paymentRequestService.UnconfirmObject(d.paymentRequest1, d._paymentRequestDetailService, d._payableService, d._accountService, d._generalLedgerJournalService, d._closingService);
                     d.paymentRequest1.Errors.Count().should_be(0);
                 };
 
@@ -97,7 +97,7 @@ namespace TestValidation
                     Payable payable = d._payableService.GetObjectBySource(Core.Constants.Constant.PayableSource.PaymentRequest, d.paymentRequest1.Id);
                     PaymentVoucherDetail paymentVoucherDetail = d._paymentVoucherDetailService.CreateObject(paymentVoucher.Id, payable.Id, payable.Amount, "Pembayaran Listrik",
                                                                                                 d._paymentVoucherService, d._cashBankService, d._payableService);
-                    d.paymentRequest1 = d._paymentRequestService.UnconfirmObject(d.paymentRequest1, d._paymentVoucherDetailService, d._payableService);
+                    d.paymentRequest1 = d._paymentRequestService.UnconfirmObject(d.paymentRequest1, d._paymentRequestDetailService, d._payableService, d._accountService, d._generalLedgerJournalService, d._closingService);
                     d.paymentRequest1.Errors.Count().should_not_be(0);
                 };
             };

@@ -25,12 +25,14 @@ namespace Core.Interface.Service
                                       IPriceMutationService _priceMutationService, IPayableService _payableService,
                                       ICashSalesReturnService _cashSalesReturnService, IWarehouseItemService _warehouseItemService,
                                       IWarehouseService _warehouseService, IItemService _itemService, IBarringService _barringService,
-                                      IStockMutationService _stockMutationService, IClosingService _closingService);
+                                      IStockMutationService _stockMutationService,
+                                      IGeneralLedgerJournalService _generalLedgerJournalService, IAccountService _accountService, IClosingService _closingService);
         CashSalesReturn UnconfirmObject(CashSalesReturn cashSalesReturn, ICashSalesReturnDetailService _cashSalesReturnDetailService,
                                         ICashSalesInvoiceDetailService _cashSalesInvoiceDetailService,
                                         IPayableService _payableService, IPaymentVoucherDetailService _paymentVoucherDetailService,
                                         IWarehouseItemService _warehouseItemService, IWarehouseService _warehouseService, IItemService _itemService,
-                                        IBarringService _barringService, IStockMutationService _stockMutationService, IClosingService _closingService);
+                                        IBarringService _barringService, IStockMutationService _stockMutationService,
+                                        IGeneralLedgerJournalService _generalLedgerJournalService, IAccountService _accountService, IClosingService _closingService);
         CashSalesReturn PaidObject(CashSalesReturn cashSalesReturn, /*decimal Allowance,*/ ICashBankService _cashBankService, IPayableService _payableService,
                                    IPaymentVoucherService _paymentVoucherService, IPaymentVoucherDetailService _paymentVoucherDetailService,
                                    IContactService _contactService, ICashMutationService _cashMutationService,

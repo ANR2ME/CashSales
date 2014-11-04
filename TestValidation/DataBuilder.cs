@@ -80,6 +80,7 @@ namespace TestValidation
         public IContactGroupService _contactGroupService;
         public IGroupItemPriceService _groupItemPriceService;
         public IPaymentRequestService _paymentRequestService;
+        public IPaymentRequestDetailService _paymentRequestDetailService;
 
         public IUserAccountService _userAccountService;
         public IUserMenuService _userMenuService;
@@ -229,6 +230,7 @@ namespace TestValidation
             _contactGroupService = new ContactGroupService(new ContactGroupRepository(), new ContactGroupValidator());
             _groupItemPriceService = new GroupItemPriceService(new GroupItemPriceRepository(), new GroupItemPriceValidator());
             _paymentRequestService = new PaymentRequestService(new PaymentRequestRepository(), new PaymentRequestValidator());
+            _paymentRequestDetailService = new PaymentRequestDetailService(new PaymentRequestDetailRepository(), new PaymentRequestDetailValidator());
 
             _userAccountService = new UserAccountService(new UserAccountRepository(), new UserAccountValidator());
             _userMenuService = new UserMenuService(new UserMenuRepository(), new UserMenuValidator());
@@ -568,7 +570,7 @@ namespace TestValidation
             };
             _cashBankService.CreateObject(cashBank2, _accountService);
 
-            paymentRequest1 = _paymentRequestService.CreateObject(contact.Id, "Pembayaran Listrik", 500000, DateTime.Now, DateTime.Today.AddDays(14), _contactService) ;
+            paymentRequest1 = _paymentRequestService.CreateObject(contact.Id, "Pembayaran Listrik", 500000, DateTime.Now, DateTime.Today.AddDays(14), _contactService, _paymentRequestDetailService, _accountService, _generalLedgerJournalService, _closingService) ;
         }
 
         public void PopulateCashBank()

@@ -550,7 +550,8 @@ namespace TestValidation
             _cashSalesReturnService.ConfirmObject(csr1, DateTime.Now, 50000, _cashSalesReturnDetailService, _contactService, _cashSalesInvoiceService,
                                                   _cashSalesInvoiceDetailService, _priceMutationService, _payableService,
                                                   _cashSalesReturnService, _warehouseItemService, _warehouseService,
-                                                  _itemService, _barringService, _stockMutationService, _closingService);
+                                                  _itemService, _barringService, _stockMutationService, 
+                                                  _generalLedgerJournalService, _accountService, _closingService);
 
             _cashSalesReturnService.PaidObject(csr1, /*50000,*/ _cashBankService, _payableService, _paymentVoucherService,
                                                _paymentVoucherDetailService, _contactService, _cashMutationService, _generalLedgerJournalService,

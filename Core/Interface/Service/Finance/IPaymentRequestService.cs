@@ -14,6 +14,8 @@ namespace Core.Interface.Service
         IList<PaymentRequest> GetAll();
         PaymentRequest GetObjectById(int Id);
         IList<PaymentRequest> GetObjectsByContactId(int contactId);
+        PaymentRequest CreateObject(int ContactId, string Description, decimal Amount, DateTime RequestDate, DateTime DueDate, IContactService _contactService, IPaymentRequestDetailService _paymentRequestDetailService,
+                                           IAccountService _accountService, IGeneralLedgerJournalService _generalLedgerJournalService, IClosingService _closingService);
         PaymentRequest CreateObject(PaymentRequest paymentRequest, IContactService _contactService, IPaymentRequestDetailService _paymentRequestDetailService,
                                     IAccountService _accountService, IGeneralLedgerJournalService _generalLedgerJournalService, IClosingService _closingService);
         PaymentRequest UpdateObject(PaymentRequest paymentRequest, IContactService _contactService, IPaymentRequestDetailService _paymentRequestDetailService,

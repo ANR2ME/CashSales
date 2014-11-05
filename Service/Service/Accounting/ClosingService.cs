@@ -160,7 +160,7 @@ namespace Service.Service
         public bool IsDateClosed(DateTime DateToCheck)
         {
             DateTime dateEnd = DateToCheck.AddDays(1);
-            var ClosedDates = _repository.FindAll(x => x.BeginningPeriod <= DateToCheck && x.EndDatePeriod > dateEnd).ToList();
+            var ClosedDates = _repository.FindAll(x => x.BeginningPeriod <= DateToCheck && x.EndDatePeriod > dateEnd && x.IsClosed).ToList();
             if (ClosedDates.Any())
             {
                 return true;

@@ -13,10 +13,10 @@ namespace Core.Interface.Validation
         Receivable VReceivableSource(Receivable receivable);
         Receivable VCreateObject(Receivable receivable, IReceivableService _receivableService);
         Receivable VUpdateObject(Receivable receivable, IReceivableService _receivableService);
-        Receivable VDeleteObject(Receivable receivable);
+        Receivable VDeleteObject(Receivable receivable, IReceiptVoucherDetailService _receiptVoucherDetailService);
         bool ValidCreateObject(Receivable receivable, IReceivableService _receivableService);
         bool ValidUpdateObject(Receivable receivable, IReceivableService _receivableService);
-        bool ValidDeleteObject(Receivable receivable);
+        bool ValidDeleteObject(Receivable receivable, IReceiptVoucherDetailService _receiptVoucherDetailService);
         bool isValid(Receivable receivable);
         string PrintError(Receivable receivable);
     }

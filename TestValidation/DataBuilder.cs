@@ -92,6 +92,7 @@ namespace TestValidation
         public ContactGroup baseGroup, contactGroup1;
         public GroupItemPrice groupItemPrice1;
         public PaymentRequest paymentRequest1;
+        public PaymentRequestDetail paymentRequestDetail1;
         public CashBank cashBank1, cashBank2;
         public ItemType typeAccessory, typeBar, typeBarring, typeBearing, typeBlanket, typeCore, typeCompound, typeChemical,
                         typeConsumable, typeGlue, typeUnderpacking, typeRoller;
@@ -584,6 +585,24 @@ namespace TestValidation
             _cashBankService.CreateObject(cashBank2, _accountService);
 
             paymentRequest1 = _paymentRequestService.CreateObject(contact.Id, "Pembayaran Listrik", 500000, DateTime.Now, DateTime.Today.AddDays(14), _contactService, _paymentRequestDetailService, _accountService, _generalLedgerJournalService, _closingService) ;
+
+            paymentRequestDetail1 = new PaymentRequestDetail()
+            {
+                PaymentRequestId = paymentRequest1.Id,
+                AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.CashBankAdjustmentExpense).Id,
+                Amount = paymentRequest1.Amount,
+                Status = Constant.GeneralLedgerStatus.Debit
+            };
+            _paymentRequestDetailService.CreateObject(paymentRequestDetail1, _paymentRequestService, _accountService);
+            
+            //_paymentRequestService.ConfirmObject(paymentRequest1, DateTime.Now, _payableService, _paymentRequestDetailService, _accountService, _generalLedgerJournalService, _closingService);
+
+            //PaymentVoucher paymentVoucher = _paymentVoucherService.CreateObject(cashBank1.Id, contact.Id, DateTime.Now, paymentRequest1.Amount, false, paymentRequest1.DueDate, cashBank1.IsBank, "",
+            //                                                                    _paymentVoucherDetailService, _payableService, _contactService, _cashBankService);
+            //Payable payable = _payableService.GetObjectBySource(Core.Constants.Constant.PayableSource.PaymentRequest, paymentRequest1.Id);
+            //PaymentVoucherDetail paymentVoucherDetail = _paymentVoucherDetailService.CreateObject(paymentVoucher.Id, payable.Id, payable.Amount, "Pembayaran Listrik", "",
+            //                                                                            _paymentVoucherService, _cashBankService, _payableService);
+            //paymentRequest1 = _paymentRequestService.UnconfirmObject(paymentRequest1, _paymentRequestDetailService, _payableService, _paymentVoucherDetailService, _accountService, _generalLedgerJournalService, _closingService);
         }
 
         public void PopulateCashBank()
@@ -2160,7 +2179,7 @@ namespace TestValidation
             };
             _closingService.CreateObject(thisMonthClosing, _accountService, _validCombService);
 
-            _closingService.CloseObject(thisMonthClosing, _accountService, _generalLedgerJournalService, _validCombService);
+            //_closingService.CloseObject(thisMonthClosing, _accountService, _generalLedgerJournalService, _validCombService);
         }
     }
 }

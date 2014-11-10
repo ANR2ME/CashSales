@@ -218,7 +218,9 @@ namespace WebView.Controllers
         public ActionResult ReportSales(DateTime startDate, DateTime endDate)
         {
             var company = _companyService.GetQueryable().FirstOrDefault();
-            var q = _cashSalesInvoiceService.GetQueryable().Include("CashBank").Include("Warehouse").Where(x => x.IsConfirmed && x.SalesDate >= startDate && x.SalesDate <= endDate);
+            var q = _cashSalesInvoiceService.GetQueryable().Include("CashBank").Include("Warehouse").Where(x => x.IsConfirmed && x.SalesDate >= startDate && x.SalesDate <= endDate)
+                                                .OrderBy(x => x.SalesDate)
+                                                .ThenBy(x => x.Id);
 
             var query = (from model in q
                          select new
@@ -249,6 +251,66 @@ namespace WebView.Controllers
 
             //Loading Report
             rd.Load(Server.MapPath("~/") + "Reports/General/Sales.rpt");
+
+            // Setting report data source
+            rd.SetDataSource(query);
+
+            var stream = rd.ExportToStream(CrystalDecisions.Shared.ExportFormatType.PortableDocFormat);
+            return File(stream, "application/pdf");
+        }
+
+        public ActionResult SalesDetail()
+        {
+            if (!AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.Sales, Core.Constants.Constant.MenuGroupName.Report))
+            {
+                return Content(Core.Constants.Constant.ErrorPage.PageViewNotAllowed);
+            }
+
+            return View();
+        }
+
+        public ActionResult ReportSalesDetail(DateTime startDate, DateTime endDate)
+        {
+            var company = _companyService.GetQueryable().FirstOrDefault();
+            var q = _cashSalesInvoiceDetailService.GetQueryable().Include("Item").Include("UoM").Include("PriceMutation").Include("CashInvoiceSales").Include("CashBank").Include("Warehouse").Where(x => x.CashSalesInvoice.IsConfirmed && x.CashSalesInvoice.SalesDate >= startDate && x.CashSalesInvoice.SalesDate <= endDate)
+                                                    .OrderBy(x => x.CashSalesInvoice.SalesDate)
+                                                    .ThenBy(x => x.CashSalesInvoiceId);
+
+            var query = (from model in q
+                         select new
+                         {
+                             StartDate = startDate,
+                             EndDate = endDate,
+                             model.CashSalesInvoice.Code,
+                             model.CashSalesInvoice.Description,
+                             model.CashSalesInvoice.SalesDate,
+                             ConfirmationDate = model.CashSalesInvoice.ConfirmationDate.Value,
+                             DueDate = model.CashSalesInvoice.DueDate.Value,
+                             model.CashSalesInvoice.Discount,
+                             model.CashSalesInvoice.Tax,
+                             model.CashSalesInvoice.Allowance,
+                             model.CashSalesInvoice.CoGS,
+                             AmountPaid = model.CashSalesInvoice.AmountPaid.Value,
+                             model.CashSalesInvoice.Total,
+                             CashBank = model.CashSalesInvoice.CashBank.Name,
+                             Warehouse = model.CashSalesInvoice.Warehouse.Name,
+                             CompanyName = company.Name,
+                             CompanyAddress = company.Address,
+                             CompanyContactNo = company.ContactNo,
+                             SKU = model.Item.Sku,
+                             ItemName = model.Item.Name,
+                             Quantity = model.Quantity,
+                             UoM = model.Item.UoM.Name,
+                             ItemDisc = model.Discount,
+                             ItemPrice = (model.IsManualPriceAssignment? model.AssignedPrice : model.PriceMutation.Amount),
+                         }).ToList();
+
+            if (!query.Any()) return Content(Core.Constants.Constant.ErrorPage.RecordNotFound);
+
+            var rd = new ReportDocument();
+
+            //Loading Report
+            rd.Load(Server.MapPath("~/") + "Reports/General/SalesDetail.rpt");
 
             // Setting report data source
             rd.SetDataSource(query);

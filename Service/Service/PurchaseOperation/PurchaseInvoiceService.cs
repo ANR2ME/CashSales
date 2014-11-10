@@ -124,7 +124,7 @@ namespace Service.Service
                 PurchaseReceival purchaseReceival = _purchaseReceivalService.GetObjectById(purchaseInvoice.PurchaseReceivalId);
                 _purchaseReceivalService.UnsetInvoiceComplete(purchaseReceival);
                 Payable payable = _payableService.GetObjectBySource(Constant.PayableSource.PurchaseInvoice, purchaseInvoice.Id);
-                _payableService.SoftDeleteObject(payable);
+                _payableService.SoftDeleteObject(payable, _paymentVoucherDetailService);
             }
             return purchaseInvoice;
         }

@@ -85,7 +85,7 @@ namespace WebView.Controllers
             return View();
         }
 
-        public dynamic GetList(string _search, long nd, int rows, int? page, string sidx, string sord, string filters = "")
+        public dynamic GetList(string _search, long nd, int rows, int? page, string sidx, string sord, string filters = "", string findSKU = null)
         {
             // Construct where statement
             string strWhere = GeneralFunction.ConstructWhere(filters);
@@ -94,7 +94,7 @@ namespace WebView.Controllers
             if (filter == "") filter = "true";
 
             // Get Data
-            var q = _customPurchaseInvoiceService.GetQueryable().Include("Contact").Include("CashBank").Include("Warehouse");
+            var q = _customPurchaseInvoiceService.GetQueryable().Include("Contact").Include("CashBank").Include("Warehouse").Include("CustomPurchaseInvoiceDetails").Where(x => x.CustomPurchaseInvoiceDetails.Where(y => findSKU == null || y.Item.Sku.Contains(findSKU)).FirstOrDefault() != null);
 
             var query = (from model in q
                          select new
@@ -214,6 +214,7 @@ namespace WebView.Controllers
                              model.CustomPurchaseInvoiceId,
                              custompurchaseinvoice = model.CustomPurchaseInvoice.Code,
                              model.ItemId,
+                             itemSku = model.Item.Sku,
                              item = model.Item.Name,
                              model.Quantity,
                              model.Discount,
@@ -255,6 +256,7 @@ namespace WebView.Controllers
                             model.CustomPurchaseInvoiceId,
                             model.custompurchaseinvoice,
                             model.ItemId,
+                            model.itemSku,
                             model.item,
                             model.Quantity,
                             model.Discount,

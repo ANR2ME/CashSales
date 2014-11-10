@@ -23,6 +23,16 @@ namespace Validation.Validation
             return payable;
         }
 
+        public Payable VDontHavePaymentVoucherDetails(Payable payable, IPaymentVoucherDetailService _paymentVoucherDetailService)
+        {
+            IList<PaymentVoucherDetail> objs = _paymentVoucherDetailService.GetQueryableObjectsByPayableId(payable.Id).ToList();
+            if (objs.Any())
+            {
+                payable.Errors.Add("Generic", "Payable Tidak boleh terasosiasi dengan PaymentVoucherDetail");
+            }
+            return payable;
+        }
+
         public Payable VCreateObject(Payable payable, IPayableService _payableService)
         {
             return payable;
@@ -33,8 +43,9 @@ namespace Validation.Validation
             return payable;
         }
 
-        public Payable VDeleteObject(Payable payable)
+        public Payable VDeleteObject(Payable payable, IPaymentVoucherDetailService _paymentVoucherDetailService)
         {
+            VDontHavePaymentVoucherDetails(payable, _paymentVoucherDetailService); 
             return payable;
         }
 
@@ -51,10 +62,10 @@ namespace Validation.Validation
             return isValid(payable);
         }
 
-        public bool ValidDeleteObject(Payable payable)
+        public bool ValidDeleteObject(Payable payable, IPaymentVoucherDetailService _paymentVoucherDetailService)
         {
             payable.Errors.Clear();
-            VDeleteObject(payable);
+            VDeleteObject(payable, _paymentVoucherDetailService);
             return isValid(payable);
         }
 

@@ -529,13 +529,14 @@
 	$("#listdetail").jqGrid({
 		url: base_url,
 		datatype: "json",
-		colNames: ['Code', 'CashSalesReturn Id', 'CashSalesReturn Code', 'CashSalesInvoiceDetail Id', 'CashSalesInvoiceDetail Code', 'Item Name', 'Quantity', 'TotalPrice', 'CoGS'],
+		colNames: ['Code', 'CashSalesReturn Id', 'CashSalesReturn Code', 'CashSalesInvoiceDetail Id', 'CashSalesInvoiceDetail Code', 'Item SKU', 'Item Name', 'Quantity', 'TotalPrice', 'CoGS'],
 		colModel: [
 				  { name: 'code', index: 'code', width: 100, hidden:true },
 				  { name: 'cashsalesreturnid', index: 'cashsalesreturnid', hidden:true, width: 130 },
 				  { name: 'cashsalesreturn', index: 'cashsalesreturn', hidden:true, width: 140 },
 				  { name: 'cashsalesinvoicedetailid', index: 'cashsalesinvoicedetailid', hidden:true,width: 160 },
 				  { name: 'cashsalesinvoicedetail', index: 'cashsalesinvoicedetail', width: 185 },
+                  { name: 'itemsku', index: 'itemsku', width: 80 },
                   { name: 'item', index: 'item', width: 100 },
 				  { name: 'quantity', index: 'quantity', width: 100, formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' } },
 				  { name: 'totalprice', index: 'totalprice', width: 100, formatter: 'currency', formatoptions: { decimalSeparator: ".", thousandsSeparator: ",", decimalPlaces: 0, prefix: "", suffix: "", defaultValue: '0' } },

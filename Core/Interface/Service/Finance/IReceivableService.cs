@@ -20,7 +20,7 @@ namespace Core.Interface.Service
         Receivable CreateObject(Receivable receivable);
         Receivable CreateObject(int contactId, string receivableSource, int receivableSourceId, string receivableSourceCode, decimal amount, DateTime dueDate, string Code);
         Receivable UpdateObject(Receivable receivable);
-        Receivable SoftDeleteObject(Receivable receivable);
+        Receivable SoftDeleteObject(Receivable receivable, IReceiptVoucherDetailService _receiptVoucherDetailService);
         bool DeleteObject(int Id);
         decimal GetTotalRemainingAmountByDueDate(DateTime fromDueDate, DateTime toDueDate);
     }

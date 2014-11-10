@@ -107,7 +107,7 @@ namespace Service.Service
                     _retailPurchaseInvoiceDetailService.UnconfirmObject(retailPurchaseInvoiceDetail, _warehouseItemService, _warehouseService, _itemService, _barringService, _stockMutationService);
                 }
                 Payable payable = _payableService.GetObjectBySource(Core.Constants.Constant.PayableSource.RetailPurchaseInvoice, retailPurchaseInvoice.Id);
-                _payableService.SoftDeleteObject(payable);
+                _payableService.SoftDeleteObject(payable, _paymentVoucherDetailService);
             }
             return retailPurchaseInvoice;
         }

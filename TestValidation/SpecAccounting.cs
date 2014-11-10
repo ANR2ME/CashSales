@@ -67,6 +67,7 @@ namespace TestValidation
                 before = () =>
                 {
                     d.PopulateValidComb(); // 7. Closing
+                    d._closingService.CloseObject(d.thisMonthClosing, d._accountService, d._generalLedgerJournalService, d._validCombService);
                 };
 
                 it["validates_validcomb_amount"] = () =>

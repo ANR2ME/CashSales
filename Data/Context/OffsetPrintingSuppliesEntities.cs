@@ -26,8 +26,6 @@ namespace Data.Context
             IList<String> userroleNames = new List<String>() 
                                         { "UserMenu", "UserAccount", "UserAccess" };
 
-            IList<String> accountingNames = new List<String>() { "MemorialDetail", "Memorial", "GeneralLedgerJournal", "ValidComb", "Closing", "Account" };
-
             IList<String> financeNames = new List<String>()
                                         {   "PaymentVoucherDetail", "PaymentVoucher", "Payable",
                                             "ReceiptVoucherDetail", "ReceiptVoucher", "Receivable",
@@ -52,13 +50,15 @@ namespace Data.Context
                                           "Warehouse", "Barring", "CoreBuilder", "Item", "ItemType", "UoM", "Contact",
                                           "RollerType", "Machine", "ContactGroup", "Company"};
 
+            IList<String> accountingNames = new List<String>() { "MemorialDetail", "Memorial", "GeneralLedgerJournal", "ValidComb", "Closing", "Account" };
+
             userroleNames.ToList().ForEach(x => tableNames.Add(x));
-            accountingNames.ToList().ForEach(x => tableNames.Add(x));
             financeNames.ToList().ForEach(x => tableNames.Add(x));
             manufacturingNames.ToList().ForEach(x => tableNames.Add(x));
             purchaseOperationNames.ToList().ForEach(x => tableNames.Add(x));
             salesOperationNames.ToList().ForEach(x => tableNames.Add(x));
             stockAndMasterNames.ToList().ForEach(x => tableNames.Add(x));
+            accountingNames.ToList().ForEach(x => tableNames.Add(x));
 
             foreach (var tableName in tableNames)
             {

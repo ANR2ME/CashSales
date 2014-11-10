@@ -30,7 +30,7 @@ namespace TestValidation
             }
         }
 
-        void retailsalesinvoice_validation()
+        void custompurchaseinvoice_validation()
         {
             it["validates_all_variables"] = () =>
             {

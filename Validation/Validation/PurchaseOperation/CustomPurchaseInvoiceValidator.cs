@@ -123,7 +123,7 @@ namespace Validation.Validation
                 IList<PaymentVoucherDetail> paymentVoucherDetails = _paymentVoucherDetailService.GetObjectsByPayableId(payable.Id);
                 if (paymentVoucherDetails.Any())
                 {
-                    customPurchaseInvoice.Errors.Add("Generic", "Tidak boleh terasosiasi dengan PaymentVoucherDetails");
+                    customPurchaseInvoice.Errors.Add("Generic", "Payable Tidak boleh terasosiasi dengan PaymentVoucherDetails");
                 }
             }
             return customPurchaseInvoice;

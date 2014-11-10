@@ -129,15 +129,26 @@ namespace Service.Service
             return paymentRequest;
         }
 
-        public PaymentRequest UnconfirmObject(PaymentRequest paymentRequest, IPaymentRequestDetailService _paymentRequestDetailService, IPayableService _payableService,
+        public PaymentRequest UnconfirmObject(PaymentRequest paymentRequest, IPaymentRequestDetailService _paymentRequestDetailService, IPayableService _payableService, IPaymentVoucherDetailService _paymentVoucherDetailService,
                                               IAccountService _accountService, IGeneralLedgerJournalService _generalLedgerJournalService, IClosingService _closingService)
         {
             if (_validator.ValidUnconfirmObject(paymentRequest, _paymentRequestDetailService, _closingService))
             {
-                _repository.UnconfirmObject(paymentRequest);
                 Payable payable = _payableService.GetObjectBySource(Constant.PayableSource.PaymentRequest, paymentRequest.Id);
-                _payableService.DeleteObject(payable.Id);
-                _generalLedgerJournalService.CreateUnconfirmationJournalForPaymentRequest(paymentRequest, _paymentRequestDetailService, _accountService);
+                _payableService.SoftDeleteObject(payable, _paymentVoucherDetailService); // DeleteObject(payable.Id);
+                if (!payable.Errors.Any())
+                {
+                    _repository.UnconfirmObject(paymentRequest);
+                    _generalLedgerJournalService.CreateUnconfirmationJournalForPaymentRequest(paymentRequest, _paymentRequestDetailService, _accountService);
+                }
+                else
+                {
+                    paymentRequest.Errors.Clear();
+                    foreach (var err in payable.Errors)
+                    {
+                        paymentRequest.Errors.Add(err.Key, err.Value);
+                    }
+                }
             }
             return paymentRequest;
         }

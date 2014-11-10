@@ -153,7 +153,7 @@ namespace Service.Service
                 }
                 _generalLedgerJournalService.CreateUnconfirmationJournalForCashSalesReturn(cashSalesReturn, _accountService);
                 Payable payable = _payableService.GetObjectBySource(Core.Constants.Constant.PayableSource.CashSalesReturn, cashSalesReturn.Id);
-                _payableService.SoftDeleteObject(payable);
+                _payableService.SoftDeleteObject(payable, _paymentVoucherDetailService);
                 cashSalesReturn.Total = 0;
                 cashSalesReturn.CoGS = 0;
                 cashSalesReturn.Allowance = 0;

@@ -579,13 +579,13 @@ namespace Service
                     ReceiptVoucher obj = _receiptVoucherService.GetObjectById(rec.Id);
                     if (obj != null)
                     {
-                        if (rec.IsConfirmed)
+                        if (rec.IsConfirmed && !obj.IsConfirmed)
                         {
                             _receiptVoucherService.ConfirmObject(obj, rec.ConfirmationDate.GetValueOrDefault(), _receiptVoucherDetailService, _cashBankService, _receivableService, _cashMutationService,
                                                         _generalLedgerJournalService, _accountService, _closingService);
                             Log(obj.Errors, obj.GetType().Name, obj.Code, rec.Id, obj.Id);
                         }
-                        if (rec.IsReconciled)
+                        if (rec.IsReconciled && !obj.IsReconciled)
                         {
                             _receiptVoucherService.ReconcileObject(obj, rec.ReconciliationDate.GetValueOrDefault(), _receiptVoucherDetailService, _cashMutationService, _cashBankService, _receivableService, _generalLedgerJournalService, _accountService, _closingService);
                             Log(obj.Errors, obj.GetType().Name, obj.Code, rec.Id, obj.Id);
@@ -739,13 +739,13 @@ namespace Service
                     PaymentVoucher obj = _paymentVoucherService.GetObjectById(rec.Id);
                     if (obj != null)
                     {
-                        if (rec.IsConfirmed)
+                        if (rec.IsConfirmed && !obj.IsConfirmed)
                         {
                             _paymentVoucherService.ConfirmObject(obj, rec.ConfirmationDate.GetValueOrDefault(), _paymentVoucherDetailService, _cashBankService, _payableService, _cashMutationService,
                                                         _generalLedgerJournalService, _accountService, _closingService);
                             Log(obj.Errors, obj.GetType().Name, obj.Code, rec.Id, obj.Id);
                         }
-                        if (rec.IsReconciled)
+                        if (rec.IsReconciled && !obj.IsReconciled)
                         {
                             _paymentVoucherService.ReconcileObject(obj, rec.ReconciliationDate.GetValueOrDefault(), _paymentVoucherDetailService, _cashMutationService, _cashBankService, _payableService, _generalLedgerJournalService, _accountService, _closingService);
                             Log(obj.Errors, obj.GetType().Name, obj.Code, rec.Id, obj.Id);
@@ -823,8 +823,6 @@ namespace Service
 
                 IList<String> userroleNames = new List<String>() { "UserMenu", "UserAccount", "UserAccess" };
 
-                IList<String> accountingNames = new List<String>() { "MemorialDetail", "Memorial", "GeneralLedgerJournal", "ValidComb", "Closing", "Account" };
-
                 IList<String> financeNames = new List<String>()
                                         {   "PaymentVoucherDetail", "PaymentVoucher", "Payable",
                                             "ReceiptVoucherDetail", "ReceiptVoucher", "Receivable",
@@ -849,13 +847,15 @@ namespace Service
                                           "Warehouse", "CoreBuilder", "Item", "ItemType", "UoM", "Contact",
                                           "RollerType", "Machine", "ContactGroup", "Company"};
 
+                IList<String> accountingNames = new List<String>() { "MemorialDetail", "Memorial", "GeneralLedgerJournal", "ValidComb", "Closing", "Account" };
+
                 userroleNames.ToList().ForEach(x => tableNames.Add(x));
-                accountingNames.ToList().ForEach(x => tableNames.Add(x));
                 financeNames.ToList().ForEach(x => tableNames.Add(x));
                 manufacturingNames.ToList().ForEach(x => tableNames.Add(x));
                 purchaseOperationNames.ToList().ForEach(x => tableNames.Add(x));
                 salesOperationNames.ToList().ForEach(x => tableNames.Add(x));
                 stockAndMasterNames.ToList().ForEach(x => tableNames.Add(x));
+                accountingNames.ToList().ForEach(x => tableNames.Add(x));
 
                 foreach (var tableName in tableNames)
                 {

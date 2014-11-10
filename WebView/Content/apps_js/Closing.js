@@ -33,7 +33,7 @@
 				  { name: 'year', index: 'yearperiod', width: 60 },
                   { name: 'beginning', index: 'beginningperiod', width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: "Y-m-d", newformat: "M d, Y" } },
                   { name: 'enddate', index: 'enddateperiod', width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: "Y-m-d", newformat: "M d, Y" } },
-                  { name: 'isclosed', index: 'isclosed', width: 80 },
+                  { name: 'isclosed', index: 'isclosed', width: 80, stype: 'select', editoptions: { value: ':;true:Closed;false:Opened' } },
                   { name: 'closing', index: 'closing', width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: "Y-m-d", newformat: "M d, Y" } }
         ],
         page: '1',
@@ -52,13 +52,13 @@
 		      var ids = $(this).jqGrid('getDataIDs');
 		      for (var i = 0; i < ids.length; i++) {
 		          var cl = ids[i];
-		          rowIsBank = $(this).getRowData(cl).isbank;
-		          if (rowIsBank == 'true') {
-		              rowIsBank = "YES";
+		          rowIsClosed = $(this).getRowData(cl).isclosed;
+		          if (rowIsClosed == 'true') {
+		              rowIsClosed = "Closed";
 		          } else {
-		              rowIsBank = "NO";
+		              rowIsClosed = "Opened";
 		          }
-		          $(this).jqGrid('setRowData', ids[i], { isbank: rowIsBank });
+		          $(this).jqGrid('setRowData', ids[i], { isclosed: rowIsClosed });
 
 		      }
 		      //var ids = $(this).jqGrid('getDataIDs');

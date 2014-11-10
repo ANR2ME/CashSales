@@ -12,6 +12,15 @@
 		$("#list").setGridParam({ url: base_url + 'CustomPurchaseInvoice/GetList', postData: { filters: null }, page: 1 }).trigger("reloadGrid");
 	}
 
+	function ReloadGridBySKU() {
+	    // Clear Search string jqGrid
+	    //$('input[id*="gs_"]').val("");
+
+	    var findSKU = $('#findSKU').val();
+
+	    $("#list").setGridParam({ url: base_url + 'CustomPurchaseInvoice/GetList', postData: { filters: null, findSKU: findSKU }, page: '1' }).trigger("reloadGrid");
+	}
+
 	function ReloadGridDetail() {
 		$("#listdetail").setGridParam({ url: base_url + 'CustomPurchaseInvoice/GetListDetail?Id=' + $("#id").val(), postData: { filters: null } }).trigger("reloadGrid");
 	}
@@ -184,6 +193,10 @@
 	});//END GRID
 	$("#list").jqGrid('navGrid', '#toolbar_cont', { del: false, add: false, edit: false, search: false })
 		   .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: true });
+
+	$('#btn_find').click(function () {
+	    ReloadGridBySKU();
+	});
 
     //TOOL BAR BUTTON
 	$('#btn_reload').click(function () {
@@ -705,13 +718,14 @@
 	$("#listdetail").jqGrid({
 		url: base_url,
 		datatype: "json",
-		colNames: ['Code', 'CustomPurchaseInvoice Id', 'CustomPurchaseInvoice Code', 'Item Id', 'Item Name', 'Quantity', 'Discount', 'Listed Unit Price', 'Amount', 'CoGS'],
+		colNames: ['Code', 'CustomPurchaseInvoice Id', 'CustomPurchaseInvoice Code', 'Item Id', 'Item SKU', 'Item Name', 'Quantity', 'Discount', 'Listed Unit Price', 'Amount', 'CoGS'],
 		colModel: [
-				  { name: 'code', index: 'code', hidden:true, width: 100, sortable: false },
+				  { name: 'code', index: 'code', hidden:true, width: 100 },
 				  { name: 'cashsalesinvoiceid', index: 'cashsalesinvoiceid', hidden:true, width: 130, sortable: false },
-				  { name: 'cashsalesinvoice', index: 'cashsalesinvoice', hidden:true, width: 130, sortable: false },
-				  { name: 'itemid', index: 'itemid', width: 80, sortable: false, hidden:true },
-				  { name: 'item', index: 'item', width: 80, sortable: false },
+				  { name: 'cashsalesinvoice', index: 'cashsalesinvoice', hidden:true, width: 130 },
+				  { name: 'itemid', index: 'itemid', width: 80, sortable: false, hidden: true },
+                  { name: 'itemsku', index: 'itemsku', width: 80 },
+				  { name: 'item', index: 'item', width: 80 },
 				  { name: 'quantity', index: 'quantity', width: 80, formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: false },
                   { name: 'discount', index: 'discount', width: 80, formatter: 'currency', formatoptions: { decimalSeparator: ".", thousandsSeparator: ",", decimalPlaces: 2, prefix: "", suffix: "", defaultValue: '0' }, sortable: false },
                   { name: 'listedunitprice', index: 'listedunitprice', width: 100, formatter: 'currency', formatoptions: { decimalSeparator: ".", thousandsSeparator: ",", decimalPlaces: 0, prefix: "", suffix: "", defaultValue: '0' }, sortable: false },

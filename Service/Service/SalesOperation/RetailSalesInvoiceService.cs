@@ -106,7 +106,7 @@ namespace Service.Service
                     _retailSalesInvoiceDetailService.UnconfirmObject(retailSalesInvoiceDetail, _warehouseItemService, _warehouseService, _itemService, _barringService, _stockMutationService);
                 }
                 Receivable receivable = _receivableService.GetObjectBySource(Core.Constants.Constant.ReceivableSource.RetailSalesInvoice, retailSalesInvoice.Id);
-                _receivableService.SoftDeleteObject(receivable);
+                _receivableService.SoftDeleteObject(receivable, _receiptVoucherDetailService);
             }
             return retailSalesInvoice;
         }

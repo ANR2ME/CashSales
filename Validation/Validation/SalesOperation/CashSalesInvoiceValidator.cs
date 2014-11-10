@@ -119,7 +119,7 @@ namespace Validation.Validation
                 IList<ReceiptVoucherDetail> receiptVoucherDetails = _receiptVoucherDetailService.GetObjectsByReceivableId(receivable.Id);
                 if (receiptVoucherDetails.Any())
                 {
-                    cashSalesInvoice.Errors.Add("Generic", "Tidak boleh terasosiasi dengan ReceiptVoucherDetails");
+                    cashSalesInvoice.Errors.Add("Generic", "Receivable Tidak boleh terasosiasi dengan ReceiptVoucherDetails");
                 }
             }
             return cashSalesInvoice;

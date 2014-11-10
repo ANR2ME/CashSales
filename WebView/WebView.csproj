@@ -265,6 +265,7 @@
     <Content Include="Content\apps_js\CashSalesReturn.js" />
     <Content Include="Content\apps_js\Company.js" />
     <Content Include="Content\apps_js\BalanceSheet.js" />
+    <Content Include="Content\apps_js\ReportSalesDetail.js" />
     <Content Include="Content\apps_js\Memorial.js" />
     <Content Include="Content\apps_js\ReportTopSales.js" />
     <Content Include="Content\apps_js\ReportSales.js" />
@@ -1246,6 +1247,7 @@
     <Content Include="Views\ValidComb\Index.cshtml" />
     <Content Include="Views\Closing\Index.cshtml" />
     <Content Include="Views\Memorial\Index.cshtml" />
+    <Content Include="Views\Report\SalesDetail.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

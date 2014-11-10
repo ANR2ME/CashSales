@@ -83,7 +83,7 @@ namespace WebView.Controllers
             return View();
         }
 
-        public dynamic GetList(string _search, long nd, int rows, int? page, string sidx, string sord, string filters = "")
+        public dynamic GetList(string _search, long nd, int rows, int? page, string sidx, string sord, string filters = "", string findSKU = null)
         {
             // Construct where statement
             string strWhere = GeneralFunction.ConstructWhere(filters);
@@ -92,7 +92,7 @@ namespace WebView.Controllers
             if (filter == "") filter = "true";
 
             // Get Data
-            var q = _cashSalesInvoiceService.GetQueryable().Include("CashBank").Include("Warehouse");
+            var q = _cashSalesInvoiceService.GetQueryable().Include("CashBank").Include("Warehouse").Include("CashSalesDetails").Where(x => x.CashSalesInvoiceDetails.Where(y => findSKU == null || y.Item.Sku.Contains(findSKU)).FirstOrDefault() != null);
 
             var query = (from model in q
                          select new
@@ -306,6 +306,7 @@ namespace WebView.Controllers
                              model.CashSalesInvoiceId,
                              cashsalesinvoice = model.CashSalesInvoice.Code,
                              model.ItemId,
+                             itemSku = model.Item.Sku,
                              item = model.Item.Name,
                              model.Quantity,
                              model.Amount,
@@ -349,6 +350,7 @@ namespace WebView.Controllers
                              model.CashSalesInvoiceId,
                              model.cashsalesinvoice,
                              model.ItemId,
+                             model.itemSku,
                              model.item,
                              model.Quantity,
                              model.Amount,

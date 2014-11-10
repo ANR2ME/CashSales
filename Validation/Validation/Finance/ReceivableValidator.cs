@@ -21,6 +21,16 @@ namespace Validation.Validation
             return receivable;
         }
 
+        public Receivable VDontHaveReceiptVoucherDetails(Receivable receivable, IReceiptVoucherDetailService _receiptVoucherDetailService)
+        {
+            IList<ReceiptVoucherDetail> objs = _receiptVoucherDetailService.GetQueryableObjectsByReceivableId(receivable.Id).ToList();
+            if (objs.Any())
+            {
+                receivable.Errors.Add("Generic", "Receivable Tidak boleh terasosiasi dengan ReceiptVoucherDetail");
+            }
+            return receivable;
+        }
+
         public Receivable VCreateObject(Receivable receivable, IReceivableService _receivableService)
         {
             return receivable;
@@ -31,8 +41,9 @@ namespace Validation.Validation
             return receivable;
         }
 
-        public Receivable VDeleteObject(Receivable receivable)
+        public Receivable VDeleteObject(Receivable receivable, IReceiptVoucherDetailService _receiptVoucherDetailService)
         {
+            VDontHaveReceiptVoucherDetails(receivable, _receiptVoucherDetailService);
             return receivable;
         }
 
@@ -49,10 +60,10 @@ namespace Validation.Validation
             return isValid(receivable);
         }
 
-        public bool ValidDeleteObject(Receivable receivable)
+        public bool ValidDeleteObject(Receivable receivable, IReceiptVoucherDetailService _receiptVoucherDetailService)
         {
             receivable.Errors.Clear();
-            VDeleteObject(receivable);
+            VDeleteObject(receivable, _receiptVoucherDetailService);
             return isValid(receivable);
         }
 

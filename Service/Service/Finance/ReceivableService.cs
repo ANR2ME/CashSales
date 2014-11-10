@@ -88,9 +88,9 @@ namespace Service.Service
             return (_validator.ValidUpdateObject(receivable, this) ? _repository.UpdateObject(receivable) : receivable);
         }
 
-        public Receivable SoftDeleteObject(Receivable receivable)
+        public Receivable SoftDeleteObject(Receivable receivable, IReceiptVoucherDetailService _receiptVoucherDetailService)
         {
-            return (_validator.ValidDeleteObject(receivable) ? _repository.SoftDeleteObject(receivable) : receivable);
+            return (_validator.ValidDeleteObject(receivable, _receiptVoucherDetailService) ? _repository.SoftDeleteObject(receivable) : receivable);
         }
 
         public bool DeleteObject(int Id)

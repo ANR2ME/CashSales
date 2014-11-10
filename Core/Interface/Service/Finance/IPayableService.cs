@@ -20,7 +20,7 @@ namespace Core.Interface.Service
         Payable CreateObject(Payable payable);
         Payable CreateObject(int contactId, string payableSource, int payableSourceId, string payableSourceCode, decimal amount, DateTime dueDate, string Code);
         Payable UpdateObject(Payable payable);
-        Payable SoftDeleteObject(Payable payable);
+        Payable SoftDeleteObject(Payable payable, IPaymentVoucherDetailService _paymentVoucherDetailService);
         bool DeleteObject(int Id);
         decimal GetTotalRemainingAmountByDueDate(DateTime fromDueDate, DateTime toDueDate);
     }

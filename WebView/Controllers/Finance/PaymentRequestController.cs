@@ -20,6 +20,7 @@ namespace WebView.Controllers
         private IPurchaseOrderDetailService _purchaseOrderDetailService;
         private IPaymentRequestService _paymentRequestService;
         private IPaymentRequestDetailService _paymentRequestDetailService;
+        private IPaymentVoucherDetailService _paymentVoucherDetailService;
         private IContactService _contactService;
         private IPurchaseReceivalService _purchaseReceivalService;
         private IPurchaseReceivalDetailService _purchaseReceivalDetailService;
@@ -35,6 +36,7 @@ namespace WebView.Controllers
             _purchaseOrderDetailService = new PurchaseOrderDetailService(new PurchaseOrderDetailRepository(), new PurchaseOrderDetailValidator());
             _paymentRequestService = new PaymentRequestService(new PaymentRequestRepository(), new PaymentRequestValidator());
             _paymentRequestDetailService = new PaymentRequestDetailService(new PaymentRequestDetailRepository(), new PaymentRequestDetailValidator());
+            _paymentVoucherDetailService = new PaymentVoucherDetailService(new PaymentVoucherDetailRepository(), new PaymentVoucherDetailValidator());
             _contactService = new ContactService(new ContactRepository(), new ContactValidator());
             _purchaseReceivalService = new PurchaseReceivalService(new PurchaseReceivalRepository(), new PurchaseReceivalValidator());
             _purchaseReceivalDetailService = new PurchaseReceivalDetailService(new PurchaseReceivalDetailRepository(), new PurchaseReceivalDetailValidator());
@@ -487,7 +489,7 @@ namespace WebView.Controllers
                 }
 
                 var data = _paymentRequestService.GetObjectById(model.Id);
-                model = _paymentRequestService.UnconfirmObject(data, _paymentRequestDetailService, _payableService, _accountService, _generalLedgerJournalService, _closingService);
+                model = _paymentRequestService.UnconfirmObject(data, _paymentRequestDetailService, _payableService, _paymentVoucherDetailService, _accountService, _generalLedgerJournalService, _closingService);
             }
             catch (Exception ex)
             {

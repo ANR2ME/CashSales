@@ -30,7 +30,8 @@ namespace OffsetPrintingSupplies
                 //CashSalesBuilder csb = new CashSalesBuilder();
                 //CustomPurchaseBuilder cpb = new CustomPurchaseBuilder();
 
-                DataFunction(d);
+                AccountingFunction(d);
+                //DataFunction(d);
                 //PurchaseFunction(p);
                 //SalesFunction(s);
                 //RetailPurchaseFunction(rpb);
@@ -97,6 +98,27 @@ namespace OffsetPrintingSupplies
             // End of Test
             Console.WriteLine("Press any key to stop...");
             Console.ReadKey();
+        }
+
+        public static void AccountingFunction(DataBuilder d)
+        {
+            // Penghitungan Valid Comb untuk periode January 2015
+            // 1. Stock Adjustment
+            // 2. Cash Bank Adjustment
+            // 3. Cash Bank Mutation
+            // 4. Cash Bank Adjustment (Negative)
+            // 5. 3x Sales Invoice
+            // 6. 3x Purchase Invoice
+            // 7. Closing
+            // 8. Check value in ValidComb
+
+            d.PopulateUserRole();
+            d.PopulateWarehouse();
+            d.PopulateItem(); // 1. Stock Adjustment
+            d.PopulateSingles();
+            d.PopulateCashBank(); // 2. CashBankAdjustment, 3. CashBankMutation, 4. CashBankAdjustment (Negative)
+
+            d.PopulateSales(); // 5. 3x Cash Invoice
         }
     }
 }

@@ -147,7 +147,7 @@ namespace Service.Service
                 }
                 _generalLedgerJournalService.CreateUnconfirmationJournalForCustomPurchaseInvoice(customPurchaseInvoice, _accountService);
                 Payable payable = _payableService.GetObjectBySource(Core.Constants.Constant.PayableSource.CustomPurchaseInvoice, customPurchaseInvoice.Id);
-                _payableService.SoftDeleteObject(payable);
+                _payableService.SoftDeleteObject(payable, _paymentVoucherDetailService);
                 customPurchaseInvoice.Total = 0;
                 customPurchaseInvoice.CoGS = 0;
                 customPurchaseInvoice.Discount = 0;

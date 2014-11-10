@@ -43,6 +43,6 @@ namespace Core.DomainModel
         public virtual Contact Contact { get; set; }
         public virtual CashBank CashBank { get; set; }
         public virtual Warehouse Warehouse { get; set; }
-        public virtual ICollection<RetailPurchaseInvoiceDetail> RetailPurchaseinvoiceDetails { get; set; }
+        public virtual ICollection<RetailPurchaseInvoiceDetail> RetailPurchaseInvoiceDetails { get; set; }
     }
 }

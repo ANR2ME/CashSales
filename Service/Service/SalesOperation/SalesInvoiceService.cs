@@ -124,7 +124,7 @@ namespace Service.Service
                 DeliveryOrder deliveryOrder = _deliveryOrderService.GetObjectById(salesInvoice.DeliveryOrderId);
                 _deliveryOrderService.UnsetInvoiceComplete(deliveryOrder);
                 Receivable receivable = _receivableService.GetObjectBySource(Constant.ReceivableSource.SalesInvoice, salesInvoice.Id);
-                _receivableService.SoftDeleteObject(receivable);
+                _receivableService.SoftDeleteObject(receivable, _receiptVoucherDetailService);
             }
             return salesInvoice;
         }

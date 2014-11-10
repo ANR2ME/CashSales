@@ -156,7 +156,7 @@ namespace Service.Service
                 }
                 _generalLedgerJournalService.CreateUnconfirmationJournalForCashSalesInvoice(cashSalesInvoice, _accountService);
                 Receivable receivable = _receivableService.GetObjectBySource(Core.Constants.Constant.ReceivableSource.CashSalesInvoice, cashSalesInvoice.Id);
-                _receivableService.SoftDeleteObject(receivable);
+                _receivableService.SoftDeleteObject(receivable, _receiptVoucherDetailService);
                 cashSalesInvoice.CoGS = 0;
                 cashSalesInvoice.Total = 0;
                 cashSalesInvoice.Discount = 0;

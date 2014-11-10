@@ -12,7 +12,7 @@ namespace Data.Mapping
         public RetailPurchaseInvoiceMapping()
         {
             HasKey(psi => psi.Id);
-            HasMany(psi => psi.RetailPurchaseinvoiceDetails)
+            HasMany(psi => psi.RetailPurchaseInvoiceDetails)
                 .WithRequired(psid => psid.RetailPurchaseInvoice)
                 .HasForeignKey(psid => psid.RetailPurchaseInvoiceId);
             HasRequired(psi => psi.CashBank)

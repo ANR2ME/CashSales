@@ -48,7 +48,7 @@ namespace Repair
             Console.SetOut(oldOut);
             writer.Close();
             ostrm.Close();
-            Console.ReadLine();
+            //Console.ReadLine();
         }
     }
 }

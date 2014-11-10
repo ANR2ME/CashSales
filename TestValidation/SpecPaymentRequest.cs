@@ -68,6 +68,7 @@ namespace TestValidation
 
                 it["validates_confirmed_paymentrequest"] = () =>
                 {
+                    foreach (var err in d.paymentRequest1.Errors) Console.WriteLine("PR : " + err.Key + " " + err.Value);
                     d.paymentRequest1.IsConfirmed.should_be_true();
                 };
 
@@ -86,7 +87,7 @@ namespace TestValidation
 
                 it["unconfirm_paymentrequest"] = () =>
                 {
-                    d.paymentRequest1 = d._paymentRequestService.UnconfirmObject(d.paymentRequest1, d._paymentRequestDetailService, d._payableService, d._accountService, d._generalLedgerJournalService, d._closingService);
+                    d.paymentRequest1 = d._paymentRequestService.UnconfirmObject(d.paymentRequest1, d._paymentRequestDetailService, d._payableService, d._paymentVoucherDetailService, d._accountService, d._generalLedgerJournalService, d._closingService);
                     d.paymentRequest1.Errors.Count().should_be(0);
                 };
 
@@ -97,7 +98,7 @@ namespace TestValidation
                     Payable payable = d._payableService.GetObjectBySource(Core.Constants.Constant.PayableSource.PaymentRequest, d.paymentRequest1.Id);
                     PaymentVoucherDetail paymentVoucherDetail = d._paymentVoucherDetailService.CreateObject(paymentVoucher.Id, payable.Id, payable.Amount, "Pembayaran Listrik", "",
                                                                                                 d._paymentVoucherService, d._cashBankService, d._payableService);
-                    d.paymentRequest1 = d._paymentRequestService.UnconfirmObject(d.paymentRequest1, d._paymentRequestDetailService, d._payableService, d._accountService, d._generalLedgerJournalService, d._closingService);
+                    d.paymentRequest1 = d._paymentRequestService.UnconfirmObject(d.paymentRequest1, d._paymentRequestDetailService, d._payableService, d._paymentVoucherDetailService, d._accountService, d._generalLedgerJournalService, d._closingService);
                     d.paymentRequest1.Errors.Count().should_not_be(0);
                 };
             };

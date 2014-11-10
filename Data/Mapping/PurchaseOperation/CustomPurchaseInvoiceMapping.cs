@@ -12,7 +12,7 @@ namespace Data.Mapping
         public CustomPurchaseInvoiceMapping()
         {
             HasKey(cpi => cpi.Id);
-            HasMany(cpi => cpi.RetailPurchaseinvoiceDetails)
+            HasMany(cpi => cpi.CustomPurchaseInvoiceDetails)
                 .WithRequired(cpid => cpid.CustomPurchaseInvoice)
                 .HasForeignKey(cpid => cpid.CustomPurchaseInvoiceId);
             HasRequired(cpi => cpi.CashBank)

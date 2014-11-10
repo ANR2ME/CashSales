@@ -12,6 +12,15 @@
 		$("#list").setGridParam({ url: base_url + 'CashSalesInvoice/GetList', postData: { filters: null }, page: 1 }).trigger("reloadGrid");
 	}
 
+	function ReloadGridBySKU() {
+	    // Clear Search string jqGrid
+	    //$('input[id*="gs_"]').val("");
+
+	    var findSKU = $('#findSKU').val();
+
+	    $("#list").setGridParam({ url: base_url + 'CashSalesInvoice/GetList', postData: { filters: null, findSKU: findSKU }, page: '1' }).trigger("reloadGrid");
+	}
+
 	function ReloadGridDetail() {
 		$("#listdetail").setGridParam({ url: base_url + 'CashSalesInvoice/GetListDetail?Id=' + $("#id").val(), postData: { filters: null } }).trigger("reloadGrid");
 	}
@@ -169,6 +178,10 @@
 	});//END GRID
 	$("#list").jqGrid('navGrid', '#toolbar_cont', { del: false, add: false, edit: false, search: false })
 		   .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: true });
+
+    $('#btn_find').click(function () {
+        ReloadGridBySKU();
+    });
 
 	//TOOL BAR BUTTON
 	$('#btn_reload').click(function () {
@@ -638,13 +651,14 @@
 	$("#listdetail").jqGrid({
 		url: base_url,
 		datatype: "json",
-		colNames: ['Code', 'CashSalesInvoice Id', 'CashSalesInvoice Code', 'Item Id', 'Item Name', 'Quantity', 'Amount', 'CoGS', 'PriceMutation Id', 'Manual Discount', 'Is Manual Price Assignment', 'Assigned Price'],
+		colNames: ['Code', 'CashSalesInvoice Id', 'CashSalesInvoice Code', 'Item Id', 'Item SKU', 'Item Name', 'Quantity', 'Amount', 'CoGS', 'PriceMutation Id', 'Manual Discount', 'Is Manual Price Assignment', 'Assigned Price'],
 		colModel: [
-				  { name: 'code', index: 'code', width: 100, sortable: false },
+				  { name: 'code', index: 'code', width: 100, hidden:true },
 				  { name: 'cashsalesinvoiceid', index: 'cashsalesinvoiceid', hidden:true, width: 130, sortable: false },
-				  { name: 'cashsalesinvoice', index: 'cashsalesinvoice', hidden:true, width: 150, sortable: false },
-				  { name: 'itemid', index: 'itemid', width: 80, hidden:true, sortable: false },
-				  { name: 'item', index: 'item', width: 80, sortable: false },
+				  { name: 'cashsalesinvoice', index: 'cashsalesinvoice', hidden:true, width: 150 },
+				  { name: 'itemid', index: 'itemid', width: 80, hidden: true, sortable: false },
+                  { name: 'itemsku', index: 'itemsku', width: 80 },
+				  { name: 'item', index: 'item', width: 80 },
 				  { name: 'quantity', index: 'quantity', width: 100, formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: false },
 				  { name: 'amount', index: 'amount', width: 100, formatter: 'currency', formatoptions: { decimalSeparator: ".", thousandsSeparator: ",", decimalPlaces: 0, prefix: "", suffix: "", defaultValue: '0' }, sortable: false },
 				  { name: 'cogs', index: 'cogs', width: 100, formatter: 'currency', formatoptions: { decimalSeparator: ".", thousandsSeparator: ",", decimalPlaces: 0, prefix: "", suffix: "", defaultValue: '0' }, sortable: false },
@@ -662,7 +676,7 @@
 		scrollrows: true,
 		shrinkToFit: false,
 		sortorder: "DESC",
-		width: $(window).width() - 850,
+		width: $(window).width() - 835,
 		height: $(window).height() - 500,
 		gridComplete:
 		  function () {

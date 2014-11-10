@@ -88,9 +88,9 @@ namespace Service.Service
             return (_validator.ValidUpdateObject(payable, this) ? _repository.UpdateObject(payable) : payable);
         }
 
-        public Payable SoftDeleteObject(Payable payable)
+        public Payable SoftDeleteObject(Payable payable, IPaymentVoucherDetailService _paymentVoucherDetailService)
         {
-            return (_validator.ValidDeleteObject(payable) ? _repository.SoftDeleteObject(payable) : payable);
+            return (_validator.ValidDeleteObject(payable, _paymentVoucherDetailService) ? _repository.SoftDeleteObject(payable) : payable);
         }
 
         public bool DeleteObject(int Id)

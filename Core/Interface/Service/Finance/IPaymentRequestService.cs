@@ -25,7 +25,7 @@ namespace Core.Interface.Service
         PaymentRequest ConfirmObject(PaymentRequest paymentRequest, DateTime ConfirmationDate, IPayableService _payableService,
                                      IPaymentRequestDetailService _paymentRequestDetailService, IAccountService _accountService,
                                      IGeneralLedgerJournalService _generalLedgerJournalService, IClosingService _closingService);
-        PaymentRequest UnconfirmObject(PaymentRequest paymentRequest, IPaymentRequestDetailService _paymentRequestDetailService, IPayableService _payableService,
+        PaymentRequest UnconfirmObject(PaymentRequest paymentRequest, IPaymentRequestDetailService _paymentRequestDetailService, IPayableService _payableService, IPaymentVoucherDetailService _paymentVoucherDetailService,
                                        IAccountService _accountService, IGeneralLedgerJournalService _generalLedgerJournalService, IClosingService _closingService);
     }
 }

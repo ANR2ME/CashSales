@@ -59,6 +59,8 @@ namespace Data.Repository
         public Item CreateObject(Item item)
         {
             item.Quantity = 0;
+            item.PendingDelivery = 0;
+            item.PendingReceival = 0;
             item.IsDeleted = false;
             item.CreatedAt = DateTime.Now;
             return Create(item);

@@ -40,6 +40,7 @@ namespace Data.Repository
 
         public Memorial CreateObject(Memorial memorial)
         {
+            if (memorial.Code == null || memorial.Code.Trim() == "")
             memorial.Code = SetObjectCode();
             memorial.IsDeleted = false;
             memorial.IsConfirmed = false;

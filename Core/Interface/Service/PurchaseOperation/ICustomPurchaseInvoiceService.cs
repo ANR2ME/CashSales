@@ -19,6 +19,12 @@ namespace Core.Interface.Service
         CustomPurchaseInvoice UpdateObject(CustomPurchaseInvoice customPurchaseInvoice, ICustomPurchaseInvoiceDetailService _customPurchaseInvoiceDetailService,
                                            IWarehouseService _warehouseService, IContactService _contactService, ICashBankService _cashBankService);
         CustomPurchaseInvoice SoftDeleteObject(CustomPurchaseInvoice customPurchaseInvoice, ICustomPurchaseInvoiceDetailService _customPurchaseInvoiceDetailService);
+        CustomPurchaseInvoice ConfirmObjectForRepair(CustomPurchaseInvoice customPurchaseInvoice, DateTime ConfirmationDate, string PayableCode,
+                                         ICustomPurchaseInvoiceDetailService _customPurchaseInvoiceDetailService, IContactService _contactService,
+                                         IPriceMutationService _priceMutationService, IPayableService _payableService,
+                                         ICustomPurchaseInvoiceService _customPurchaseInvoiceService, IWarehouseItemService _warehouseItemService,
+                                         IWarehouseService _warehouseService, IItemService _itemService, IBarringService _barringService, IStockMutationService _stockMutationService,
+                                         IGeneralLedgerJournalService _generalLedgerJournalService, IAccountService _accountService, IClosingService _closingService);
         CustomPurchaseInvoice ConfirmObject(CustomPurchaseInvoice customPurchaseInvoice, DateTime ConfirmationDate,
                                          ICustomPurchaseInvoiceDetailService _customPurchaseInvoiceDetailService, IContactService _contactService,
                                          IPriceMutationService _priceMutationService, IPayableService _payableService,
@@ -29,6 +35,11 @@ namespace Core.Interface.Service
                                            IPayableService _payableService, IPaymentVoucherDetailService _paymentVoucherDetailService,
                                            IWarehouseItemService _warehouseItemService, IWarehouseService _warehouseService, IItemService _itemService,
                                            IBarringService _barringService, IStockMutationService _stockMutationService, IPriceMutationService _priceMutationService,
+                                           IGeneralLedgerJournalService _generalLedgerJournalService, IAccountService _accountService, IClosingService _closingService);
+        CustomPurchaseInvoice PaidObjectForRepair(CustomPurchaseInvoice customPurchaseInvoice, decimal AmountPaid, string VoucherCode, string VoucherDetailCode,
+                                           ICashBankService _cashBankService, IPayableService _payableService,
+                                           IPaymentVoucherService _paymentVoucherService, IPaymentVoucherDetailService _paymentVoucherDetailService,
+                                           IContactService _contactService, ICashMutationService _cashMutationService,
                                            IGeneralLedgerJournalService _generalLedgerJournalService, IAccountService _accountService, IClosingService _closingService);
         CustomPurchaseInvoice PaidObject(CustomPurchaseInvoice customPurchaseInvoice, decimal AmountPaid, ICashBankService _cashBankService, IPayableService _payableService,
                                            IPaymentVoucherService _paymentVoucherService, IPaymentVoucherDetailService _paymentVoucherDetailService,

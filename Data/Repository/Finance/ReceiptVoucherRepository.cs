@@ -50,6 +50,7 @@ namespace Data.Repository
 
         public ReceiptVoucher CreateObject(ReceiptVoucher receiptVoucher)
         {
+            if (receiptVoucher.Code == null || receiptVoucher.Code.Trim() == "")
             receiptVoucher.Code = SetObjectCode();
             receiptVoucher.IsDeleted = false;
             receiptVoucher.IsConfirmed = false;

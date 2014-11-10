@@ -46,6 +46,11 @@ namespace Service.Service
             return _repository.GetObjectById(Id);
         }
 
+        public ReceiptVoucher GetObjectByCode(string Code)
+        {
+            return GetQueryable().Where(x => x.Code == Code && !x.IsDeleted).FirstOrDefault();
+        }
+
         public IList<ReceiptVoucher> GetObjectsByContactId(int contactId)
         {
             return _repository.GetObjectsByContactId(contactId);
@@ -59,7 +64,7 @@ namespace Service.Service
                     _repository.CreateObject(receiptVoucher) : receiptVoucher);
         }
 
-        public ReceiptVoucher CreateObject(int cashBankId, int contactId, DateTime receiptDate, decimal totalAmount, bool IsGBCH, DateTime DueDate, bool IsBank,
+        public ReceiptVoucher CreateObject(int cashBankId, int contactId, DateTime receiptDate, decimal totalAmount, bool IsGBCH, DateTime DueDate, bool IsBank, string Code,
                                     IReceiptVoucherDetailService _receiptVoucherDetailService, IReceivableService _receivableService,
                                     IContactService _contactService, ICashBankService _cashBankService)
         {
@@ -71,6 +76,7 @@ namespace Service.Service
                 TotalAmount = totalAmount,
                 IsGBCH = IsGBCH,
                 DueDate = DueDate,
+                Code = Code,
                 //IsBank = IsBank
             };
             return this.CreateObject(receiptVoucher, _receiptVoucherDetailService, _receivableService, _contactService, _cashBankService);
@@ -116,7 +122,7 @@ namespace Service.Service
                     CashBank cashBank = _cashBankService.GetObjectById(receiptVoucher.CashBankId);
                     CashMutation cashMutation = _cashMutationService.CreateCashMutationForReceiptVoucher(receiptVoucher, cashBank);
                     _cashMutationService.CashMutateObject(cashMutation, _cashBankService);
-                    _generalLedgerJournalService.CreateConfirmationJournalForReceiptVoucher(receiptVoucher, cashBank, _accountService);
+                    _generalLedgerJournalService.CreateConfirmationJournalForReceiptVoucherTrading(receiptVoucher, cashBank, _accountService);
                 }
             }
             return receiptVoucher;
@@ -144,7 +150,7 @@ namespace Service.Service
                     {
                         _cashMutationService.ReverseCashMutateObject(cashMutation, _cashBankService);
                     }
-                    _generalLedgerJournalService.CreateUnconfirmationJournalForReceiptVoucher(receiptVoucher, cashBank, _accountService);
+                    _generalLedgerJournalService.CreateUnconfirmationJournalForReceiptVoucherTrading(receiptVoucher, cashBank, _accountService);
                 }
             }
             return receiptVoucher;
@@ -157,10 +163,13 @@ namespace Service.Service
             receiptVoucher.ReconciliationDate = ReconciliationDate;
             if (_validator.ValidReconcileObject(receiptVoucher, _closingService))
             {
-                _repository.ReconcileObject(receiptVoucher);
-
                 CashBank cashBank = _cashBankService.GetObjectById(receiptVoucher.CashBankId);
                 CashMutation cashMutation = _cashMutationService.CreateCashMutationForReceiptVoucher(receiptVoucher, cashBank);
+
+                _generalLedgerJournalService.CreateConfirmationJournalForReceiptVoucherTrading(receiptVoucher, cashBank, _accountService);
+
+                _repository.ReconcileObject(receiptVoucher);
+
                 _cashMutationService.CashMutateObject(cashMutation, _cashBankService);
 
                 IList<ReceiptVoucherDetail> receiptVoucherDetails = _receiptVoucherDetailService.GetObjectsByReceiptVoucherId(receiptVoucher.Id);
@@ -185,10 +194,11 @@ namespace Service.Service
         {
             if (_validator.ValidUnreconcileObject(receiptVoucher, _receiptVoucherDetailService, _cashBankService, _closingService))
             {
+                CashBank cashBank = _cashBankService.GetObjectById(receiptVoucher.CashBankId);
+                _generalLedgerJournalService.CreateUnconfirmationJournalForReceiptVoucherTrading(receiptVoucher, cashBank, _accountService);
+
                 _repository.UnreconcileObject(receiptVoucher);
 
-
-                CashBank cashBank = _cashBankService.GetObjectById(receiptVoucher.CashBankId);
                 IList<CashMutation> cashMutations = _cashMutationService.SoftDeleteCashMutationForReceiptVoucher(receiptVoucher, cashBank);
                 foreach (var cashMutation in cashMutations)
                 {

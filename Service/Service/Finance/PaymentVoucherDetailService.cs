@@ -69,7 +69,7 @@ namespace Service.Service
                     _repository.CreateObject(paymentVoucherDetail) : paymentVoucherDetail);
         }
 
-        public PaymentVoucherDetail CreateObject(int paymentVoucherId, int payableId, decimal amount, string description, 
+        public PaymentVoucherDetail CreateObject(int paymentVoucherId, int payableId, decimal amount, string description, string Code, 
                                          IPaymentVoucherService _paymentVoucherService, ICashBankService _cashBankService,
                                          IPayableService _payableService)
         {
@@ -79,6 +79,7 @@ namespace Service.Service
                 PayableId = payableId,
                 Amount = amount,
                 Description = description,
+                Code = Code,
             };
             return this.CreateObject(paymentVoucherDetail, _paymentVoucherService, _cashBankService, _payableService);
         }

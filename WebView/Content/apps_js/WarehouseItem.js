@@ -118,7 +118,7 @@
             ],
             colModel: [
                       { name: 'itemid', index: 'itemid', width: 80, align: "center", frozen: true, hidden: true },
-                      { name: 'sku', index: 'sku', width: 80 },
+                      { name: 'sku', index: 'sku', width: 80, frozen: true },
                       { name: 'item', index: 'item', width: 200, frozen: true },
                       { name: 'itemtypeid', index: 'itemtypeid', width: 80, align: "center", hidden: true },
                       { name: 'itemtype', index: 'itemtype', width: 200 },

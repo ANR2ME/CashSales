@@ -62,6 +62,7 @@ namespace Data.Repository
                               where obj.Id == cashSalesReturnDetail.CashSalesReturnId
                               select obj.Code).FirstOrDefault();
             }
+            if (cashSalesReturnDetail.Code == null || cashSalesReturnDetail.Code.Trim() == "")
             cashSalesReturnDetail.Code = SetObjectCode(ParentCode);
             cashSalesReturnDetail.IsDeleted = false;
             cashSalesReturnDetail.CreatedAt = DateTime.Now;

@@ -57,6 +57,7 @@ namespace Data.Repository
                               where obj.Id == customPurchaseInvoiceDetail.CustomPurchaseInvoiceId
                               select obj.Code).FirstOrDefault();
             }
+            if (customPurchaseInvoiceDetail.Code == null || customPurchaseInvoiceDetail.Code.Trim() == "")
             customPurchaseInvoiceDetail.Code = SetObjectCode(ParentCode);
             customPurchaseInvoiceDetail.IsDeleted = false;
             customPurchaseInvoiceDetail.CreatedAt = DateTime.Now;

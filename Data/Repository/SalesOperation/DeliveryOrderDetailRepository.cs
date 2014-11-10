@@ -65,6 +65,7 @@ namespace Data.Repository
                               where obj.Id == deliveryOrderDetail.DeliveryOrderId
                               select obj.Code).FirstOrDefault();
             }
+            if (deliveryOrderDetail.Code == null || deliveryOrderDetail.Code.Trim() == "")
             deliveryOrderDetail.Code = SetObjectCode(ParentCode);
             deliveryOrderDetail.IsConfirmed = false;
             deliveryOrderDetail.IsDeleted = false;

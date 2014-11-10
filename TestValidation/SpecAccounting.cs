@@ -103,8 +103,8 @@ namespace TestValidation
                     Account Expense, CashBankAdjustmentExpense, COGS, Discount, SalesAllowance, StockAdjustmentExpense;
 
                     StockAdjustmentExpense = d._accountService.GetObjectByLegacyCode(Core.Constants.Constant.AccountLegacyCode.StockAdjustmentExpense);
-                    SalesAllowance = d._accountService.GetObjectByLegacyCode(Core.Constants.Constant.AccountLegacyCode.SalesAllowance);
-                    Discount = d._accountService.GetObjectByLegacyCode(Core.Constants.Constant.AccountLegacyCode.Discount);
+                    SalesAllowance = d._accountService.GetObjectByLegacyCode(Core.Constants.Constant.AccountLegacyCode.SalesAllowanceExpense);
+                    Discount = d._accountService.GetObjectByLegacyCode(Core.Constants.Constant.AccountLegacyCode.SalesDiscountExpense);
                     COGS = d._accountService.GetObjectByLegacyCode(Core.Constants.Constant.AccountLegacyCode.COGS);
                     CashBankAdjustmentExpense = d._accountService.GetObjectByLegacyCode(Core.Constants.Constant.AccountLegacyCode.CashBankAdjustmentExpense);
                     Expense = d._accountService.GetObjectByLegacyCode(Core.Constants.Constant.AccountLegacyCode.Expense);

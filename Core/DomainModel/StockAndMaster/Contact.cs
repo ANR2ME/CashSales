@@ -17,13 +17,14 @@ namespace Core.DomainModel
         public string Email { get; set; }
 
         public int ContactGroupId { get; set; }
-        public virtual ContactGroup ContactGroup { get; set; }
         
         public bool IsDeleted { get; set; }
         public DateTime CreatedAt { get; set; }
         public Nullable<DateTime> UpdatedAt { get; set; }
         public Nullable<DateTime> DeletedAt { get; set; }
+
         public Dictionary<string, string> Errors { get; set; }
+        public virtual ContactGroup ContactGroup { get; set; }
         public ICollection<Barring> Barrings { get; set; }
         public ICollection<CoreIdentification> CoreIdentifications { get; set; }
         public ICollection<BarringOrder> BarringOrders { get; set; }

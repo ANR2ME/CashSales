@@ -18,6 +18,13 @@ namespace Core.Interface.Service
         CashSalesInvoice CreateObject(CashSalesInvoice cashSalesInvoice, IWarehouseService _warehouseService, ICashBankService _cashBankService);
         CashSalesInvoice UpdateObject(CashSalesInvoice cashSalesInvoice, IWarehouseService _warehouseService, ICashBankService _cashBankService);
         CashSalesInvoice SoftDeleteObject(CashSalesInvoice cashSalesInvoice, ICashSalesInvoiceDetailService _cashSalesInvoiceDetailService);
+        CashSalesInvoice ConfirmObjectForRepair(CashSalesInvoice cashSalesInvoice, DateTime ConfirmationDate, decimal Discount, decimal Tax, string ReceivableCode,
+                                       ICashSalesInvoiceDetailService _cashSalesInvoiceDetailService, IContactService _contactService,
+                                       IPriceMutationService _priceMutationService, IReceivableService _receivableService,
+                                       ICashSalesInvoiceService _cashSalesInvoiceService, IWarehouseItemService _warehouseItemService,
+                                       IWarehouseService _warehouseService, IItemService _itemService, IBarringService _barringService,
+                                       IStockMutationService _stockMutationService, ICashBankService _cashBankService,
+                                       IGeneralLedgerJournalService _generalLedgerJournalService, IAccountService _accountService, IClosingService _closingService);
         CashSalesInvoice ConfirmObject(CashSalesInvoice cashSalesInvoice, DateTime ConfirmationDate, decimal Discount, decimal Tax,
                                        ICashSalesInvoiceDetailService _cashSalesInvoiceDetailService, IContactService _contactService,
                                        IPriceMutationService _priceMutationService, IReceivableService _receivableService,
@@ -30,6 +37,10 @@ namespace Core.Interface.Service
                                          IWarehouseItemService _warehouseItemService, IWarehouseService _warehouseService, IItemService _itemService,
                                          IBarringService _barringService, IStockMutationService _stockMutationService,
                                          IGeneralLedgerJournalService _generalLedgerJournalService, IAccountService _accountService, IClosingService _closingService);
+        CashSalesInvoice PaidObjectForRepair(CashSalesInvoice cashSalesInvoice, decimal AmountPaid, decimal Allowance, string VoucherCode, string VoucherDetailCode, 
+                                    ICashBankService _cashBankService, IReceivableService _receivableService, IReceiptVoucherService _receiptVoucherService, IReceiptVoucherDetailService _receiptVoucherDetailService,
+                                    IContactService _contactService, ICashMutationService _cashMutationService, ICashSalesReturnService _cashSalesReturnService,
+                                    IGeneralLedgerJournalService _generalLedgerJournalService, IAccountService _accountService, IClosingService _closingService);
         CashSalesInvoice PaidObject(CashSalesInvoice cashSalesInvoice, decimal AmountPaid, decimal Allowance, ICashBankService _cashBankService, IReceivableService _receivableService, IReceiptVoucherService _receiptVoucherService, IReceiptVoucherDetailService _receiptVoucherDetailService,
                                     IContactService _contactService, ICashMutationService _cashMutationService, ICashSalesReturnService _cashSalesReturnService,
                                     IGeneralLedgerJournalService _generalLedgerJournalService, IAccountService _accountService, IClosingService _closingService);

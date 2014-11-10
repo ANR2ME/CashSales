@@ -222,7 +222,7 @@ namespace WebView.Controllers
                 }
 
                 var data = _cashBankService.GetObjectById(model.Id);
-                model = _cashBankService.SoftDeleteObject(data,_cashMutationService);
+                model = _cashBankService.SoftDeleteObject(data,_cashMutationService, _accountService);
             }
             catch (Exception ex)
             {

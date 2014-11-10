@@ -68,6 +68,7 @@ namespace Data.Repository
 
         public WarehouseMutationOrder CreateObject(WarehouseMutationOrder warehouseMutationOrder)
         {
+            if (warehouseMutationOrder.Code == null || warehouseMutationOrder.Code.Trim() == "")
             warehouseMutationOrder.Code = SetObjectCode();
             warehouseMutationOrder.IsConfirmed = false;
             warehouseMutationOrder.IsDeleted = false;

@@ -52,6 +52,7 @@ namespace Data.Repository
                               where obj.Id == memorialDetail.MemorialId
                               select obj.Code).FirstOrDefault();
             }
+            if (memorialDetail.Code == null || memorialDetail.Code.Trim() == "")
             memorialDetail.Code = SetObjectCode(ParentCode);
             memorialDetail.IsConfirmed = false;
             memorialDetail.IsDeleted = false;

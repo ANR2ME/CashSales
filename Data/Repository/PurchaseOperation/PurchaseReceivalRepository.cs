@@ -55,6 +55,7 @@ namespace Data.Repository
 
         public PurchaseReceival CreateObject(PurchaseReceival purchaseReceival)
         {
+            if (purchaseReceival.Code == null || purchaseReceival.Code.Trim() == "")
             purchaseReceival.Code = SetObjectCode();
             purchaseReceival.IsDeleted = false;
             purchaseReceival.IsConfirmed = false;

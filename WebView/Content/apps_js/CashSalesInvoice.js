@@ -80,6 +80,7 @@
 		colNames: ['ID', 'Code', 'Description', 
 				   'Discount', 'Tax', 'Delivery Cost', 'Allowance', 'Amount Paid', 'Total', 'CoGS', 'Profit/Loss', 'Is Confirmed', 'Confirmation Date',
 				   'CashBank ID', 'CashBank Name', 'Is Bank', 'Is Paid', 'Is Full Payment',
+                   'Name', 'Phone Number',
 				   'Warehouse ID', 'Warehouse Name',
 				   'Sales Date', 'Due Date', 'Created At', 'Updated At'],
 		colModel: [
@@ -101,7 +102,9 @@
 				  { name: 'isbank', index: 'isbank', width: 80, boolean: { defaultValue: 'false' } },
 				  { name: 'ispaid', index: 'ispaid', width: 80, boolean: { defaultValue: 'false' } },
 				  { name: 'isfullpayment', index: 'isfullpayment', width: 100, boolean: { defaultValue: 'false' } },
-				  { name: 'warehouseid', index: 'warehouseid', width: 85, hidden:true },
+                  { name: 'contactname', index: 'contactname', width: 100 },
+                  { name: 'contactphone', index: 'contactphone', width: 100 },
+                  { name: 'warehouseid', index: 'warehouseid', width: 85, hidden: true },
 				  { name: 'warehouse', index: 'warehouse', width: 100 },
                   { name: 'salesdate', index: 'salesdate', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
 				  { name: 'duedate', index: 'duedate', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
@@ -432,6 +435,8 @@
 	        $('#AmountPaid').numberbox('setValue', ret.amountpaid);
 	        $('#paidTotal').numberbox('setValue', ret.total);
 	        $('#paidCode').val(ret.code);
+	        $('#ContactName').val(ret.contactname);
+	        $('#ContactPhone').val(ret.contactphone);
 	        $('#idpaid').val(ret.id);
 	        $("#paid_div").dialog("open");
 	    } else {
@@ -486,6 +491,7 @@
 	        data: JSON.stringify({
 	            Id: $('#idpaid').val(), AmountPaid: $('#AmountPaid').numberbox('getValue'),
 	            Allowance: $('#paidAllowance').numberbox('getValue'),
+	            ContactName: $('#ContactName').val(), ContactPhone: $('#ContactPhone').val(),
 	        }),
 	        success: function (result) {
 	            if (JSON.stringify(result.Errors) != '{}') {

@@ -60,6 +60,7 @@ namespace Data.Repository
 
         public DeliveryOrder CreateObject(DeliveryOrder deliveryOrder)
         {
+            if (deliveryOrder.Code == null || deliveryOrder.Code.Trim() == "")
             deliveryOrder.Code = SetObjectCode();
             deliveryOrder.IsDeleted = false;
             deliveryOrder.IsConfirmed = false;

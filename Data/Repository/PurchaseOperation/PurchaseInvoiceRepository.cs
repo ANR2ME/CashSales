@@ -45,6 +45,7 @@ namespace Data.Repository
 
         public PurchaseInvoice CreateObject(PurchaseInvoice purchaseInvoice)
         {
+            if (purchaseInvoice.Code == null || purchaseInvoice.Code.Trim() == "")
             purchaseInvoice.Code = SetObjectCode();
             purchaseInvoice.AmountPayable = 0;
             purchaseInvoice.IsDeleted = false;

@@ -59,6 +59,7 @@ namespace Data.Repository
                               where obj.Id == rollerWarehouseMutationDetail.RollerWarehouseMutationId
                               select obj.Code).FirstOrDefault();
             }
+            if (rollerWarehouseMutationDetail.Code == null || rollerWarehouseMutationDetail.Code.Trim() == "")
             rollerWarehouseMutationDetail.Code = SetObjectCode(ParentCode);
             rollerWarehouseMutationDetail.IsConfirmed = false;
             rollerWarehouseMutationDetail.IsDeleted = false;

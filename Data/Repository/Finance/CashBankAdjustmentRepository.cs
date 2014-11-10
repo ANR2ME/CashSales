@@ -46,6 +46,7 @@ namespace Data.Repository
 
         public CashBankAdjustment CreateObject(CashBankAdjustment cashBankAdjustment)
         {
+            if (cashBankAdjustment.Code == null || cashBankAdjustment.Code.Trim() == "")
             cashBankAdjustment.Code = SetObjectCode();
             cashBankAdjustment.IsDeleted = false;
             cashBankAdjustment.IsConfirmed = false;

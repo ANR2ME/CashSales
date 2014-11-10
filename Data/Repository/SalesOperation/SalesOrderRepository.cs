@@ -55,6 +55,7 @@ namespace Data.Repository
 
         public SalesOrder CreateObject(SalesOrder salesOrder)
         {
+            if (salesOrder.Code == null || salesOrder.Code.Trim() == "")
             salesOrder.Code = SetObjectCode();
             salesOrder.IsDeleted = false;
             salesOrder.IsConfirmed = false;

@@ -29,6 +29,9 @@ namespace Core.DomainModel
         public decimal Total { get; set; }
         public decimal CoGS { get; set; }
 
+        public string ContactName { get; set; }
+        public string ContactPhone { get; set; }
+
         public DateTime CreatedAt { get; set; }
         public Nullable<DateTime> DeletedAt { get; set; }
         public bool IsDeleted { get; set; }

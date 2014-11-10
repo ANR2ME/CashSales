@@ -45,6 +45,7 @@ namespace Data.Repository
 
         public PaymentRequest CreateObject(PaymentRequest paymentRequest)
         {
+            if (paymentRequest.Code == null || paymentRequest.Code.Trim() == "")
             paymentRequest.Code = SetObjectCode();
             paymentRequest.IsDeleted = false;
             paymentRequest.IsConfirmed = false;

@@ -13,11 +13,12 @@ namespace Core.Interface.Service
         IPaymentVoucherValidator GetValidator();
         IList<PaymentVoucher> GetAll();
         PaymentVoucher GetObjectById(int Id);
+        PaymentVoucher GetObjectByCode(string Code);
         IList<PaymentVoucher> GetObjectsByCashBankId(int cashBankId);
         IList<PaymentVoucher> GetObjectsByContactId(int contactId);
         PaymentVoucher CreateObject(PaymentVoucher paymentVoucher, IPaymentVoucherDetailService _paymentVoucherDetailService, IPayableService _payableService,
                                     IContactService _contactService, ICashBankService _cashBankService);
-        PaymentVoucher CreateObject(int cashBankId, int contactId, DateTime paymentDate, decimal totalAmount, bool IsGBCH, DateTime DueDate, bool IsBank,
+        PaymentVoucher CreateObject(int cashBankId, int contactId, DateTime paymentDate, decimal totalAmount, bool IsGBCH, DateTime DueDate, bool IsBank, string Code,
                                     IPaymentVoucherDetailService _paymentVoucherDetailService, IPayableService _payableService,
                                     IContactService _contactService, ICashBankService _cashBankService);
         PaymentVoucher UpdateAmount(PaymentVoucher paymentVoucher);

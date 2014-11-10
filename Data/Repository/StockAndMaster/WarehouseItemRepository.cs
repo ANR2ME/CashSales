@@ -74,6 +74,8 @@ namespace Data.Repository
         public WarehouseItem CreateObject(WarehouseItem warehouseItem)
         {
             warehouseItem.Quantity = 0;
+            warehouseItem.PendingDelivery = 0;
+            warehouseItem.PendingReceival = 0;
             warehouseItem.IsDeleted = false;
             warehouseItem.CreatedAt = DateTime.Now;
             return Create(warehouseItem);

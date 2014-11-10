@@ -69,7 +69,7 @@ namespace Service.Service
                     _repository.CreateObject(receiptVoucherDetail) : receiptVoucherDetail);
         }
 
-        public ReceiptVoucherDetail CreateObject(int receiptVoucherId, int receivableId, decimal amount, string description, 
+        public ReceiptVoucherDetail CreateObject(int receiptVoucherId, int receivableId, decimal amount, string description, string Code, 
                                          IReceiptVoucherService _receiptVoucherService, ICashBankService _cashBankService,
                                          IReceivableService _receivableService)
         {
@@ -79,6 +79,7 @@ namespace Service.Service
                 ReceivableId = receivableId,
                 Amount = amount,
                 Description = description,
+                Code = Code,
             };
             return this.CreateObject(receiptVoucherDetail, _receiptVoucherService, _cashBankService, _receivableService);
         }

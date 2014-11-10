@@ -59,6 +59,7 @@ namespace Data.Repository
                               where obj.Id == warehouseMutationOrderDetail.WarehouseMutationOrderId
                               select obj.Code).FirstOrDefault();
             }
+            if (warehouseMutationOrderDetail.Code == null || warehouseMutationOrderDetail.Code.Trim() == "")
             warehouseMutationOrderDetail.Code = SetObjectCode(ParentCode);
             warehouseMutationOrderDetail.IsConfirmed = false;
             warehouseMutationOrderDetail.IsDeleted = false;

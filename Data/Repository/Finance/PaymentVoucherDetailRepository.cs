@@ -67,6 +67,7 @@ namespace Data.Repository
                               where obj.Id == paymentVoucherDetail.PaymentVoucherId
                               select obj.Code).FirstOrDefault();
             }
+            if (paymentVoucherDetail.Code == null || paymentVoucherDetail.Code.Trim() == "")
             paymentVoucherDetail.Code = SetObjectCode(ParentCode);
             paymentVoucherDetail.IsConfirmed = false;
             paymentVoucherDetail.IsDeleted = false;

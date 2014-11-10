@@ -62,6 +62,7 @@ namespace Data.Repository
                               where obj.Id == salesOrderDetail.SalesOrderId
                               select obj.Code).FirstOrDefault();
             }
+            if (salesOrderDetail.Code == null || salesOrderDetail.Code.Trim() == "")
             salesOrderDetail.Code = SetObjectCode(ParentCode);
             salesOrderDetail.IsConfirmed = false;
             salesOrderDetail.IsDeleted = false;

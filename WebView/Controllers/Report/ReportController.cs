@@ -167,7 +167,7 @@ namespace WebView.Controllers
                 totalPaymentRequestPayable += (payable.Amount - payable.AllowanceAmount);
             }
 
-            var cashSalesInvoices = _cashSalesInvoiceService.GetQueryable().Where(x => x.IsPaid &&
+            var cashSalesInvoices = _cashSalesInvoiceService.GetQueryable().Where(x => x.IsConfirmed &&
                             x.ConfirmationDate.Value >= startDate && x.ConfirmationDate.Value <= endDate).ToList();
             decimal totalCashSales = 0;
             decimal totalCoGS = 0;
@@ -218,7 +218,7 @@ namespace WebView.Controllers
         public ActionResult ReportSales(DateTime startDate, DateTime endDate)
         {
             var company = _companyService.GetQueryable().FirstOrDefault();
-            var q = _cashSalesInvoiceService.GetQueryable().Include("CashBank").Include("Warehouse").Where(x => x.IsPaid && x.SalesDate >= startDate && x.SalesDate <= endDate);
+            var q = _cashSalesInvoiceService.GetQueryable().Include("CashBank").Include("Warehouse").Where(x => x.IsConfirmed && x.SalesDate >= startDate && x.SalesDate <= endDate);
 
             var query = (from model in q
                          select new
@@ -234,6 +234,7 @@ namespace WebView.Controllers
                              model.Tax,
                              model.Allowance,
                              model.CoGS,
+                             AmountPaid = model.AmountPaid.Value,
                              model.Total,
                              CashBank = model.CashBank.Name,
                              Warehouse = model.Warehouse.Name,
@@ -269,7 +270,7 @@ namespace WebView.Controllers
         public ActionResult ReportTopSales(DateTime startDate, DateTime endDate, int maxItem)
         {
             var company = _companyService.GetQueryable().FirstOrDefault();
-            var q = _cashSalesInvoiceDetailService.GetQueryable().Include("CashSalesInvoice").Include("Item").Include("UoM").Where(x => x.CashSalesInvoice.IsPaid && x.CashSalesInvoice.SalesDate >= startDate && x.CashSalesInvoice.SalesDate <= endDate);
+            var q = _cashSalesInvoiceDetailService.GetQueryable().Include("CashSalesInvoice").Include("Item").Include("UoM").Where(x => x.CashSalesInvoice.IsConfirmed && x.CashSalesInvoice.SalesDate >= startDate && x.CashSalesInvoice.SalesDate <= endDate);
 
             if (maxItem <= 0 || !q.Any()) return Content(Core.Constants.Constant.ErrorPage.RecordNotFound);
 
@@ -402,10 +403,11 @@ namespace WebView.Controllers
                              model.Discount,
                              GlobalDiscount = model.CustomPurchaseInvoice.Discount,
                              Tax = model.CustomPurchaseInvoice.Tax,
+                             ShippingFee = model.CustomPurchaseInvoice.ShippingFee,
                              Allowance = model.CustomPurchaseInvoice.Allowance,
                              Code = model.CustomPurchaseInvoice.Code,
                              Date = model.CustomPurchaseInvoice.ConfirmationDate.Value,
-                             contact = "",
+                             contact = "", // model.CustomPurchaseInvoice.Contact.Name,
                              CompanyName = company.Name,
                              CompanyAddress = company.Address,
                              CompanyContactNo = company.ContactNo,
@@ -571,11 +573,13 @@ namespace WebView.Controllers
                              Price = model.IsManualPriceAssignment? model.AssignedPrice : model.Item.SellingPrice,
                              model.Discount,
                              GlobalDiscount = model.CashSalesInvoice.Discount,
+                             ShippingFee = model.CashSalesInvoice.ShippingFee,
                              Tax = model.CashSalesInvoice.Tax,
                              Allowance = model.CashSalesInvoice.Allowance,
                              Code = model.CashSalesInvoice.Code,
                              Date = (model.CashSalesInvoice.ConfirmationDate != null) ? model.CashSalesInvoice.ConfirmationDate.Value : DateTime.Today,
-                             contact = "",
+                             contact = model.CashSalesInvoice.ContactName,
+                             contactPhone = model.CashSalesInvoice.ContactPhone,
                              CompanyName = company.Name,
                              CompanyAddress = company.Address,
                              CompanyContactNo = company.ContactNo,
@@ -634,10 +638,12 @@ namespace WebView.Controllers
                              Discount = model.Discount,
                              GlobalDiscount = model.CashSalesInvoice.Discount,
                              Tax = model.CashSalesInvoice.Tax,
+                             ShippingFee = model.CashSalesInvoice.ShippingFee,
                              Allowance = 0, //model.CashSalesInvoice.Allowance,
                              Code = model.CashSalesInvoice.Code,
                              Date = (model.CashSalesInvoice.ConfirmationDate != null) ? model.CashSalesInvoice.ConfirmationDate.Value : DateTime.Today,
-                             contact = "",
+                             contact = model.CashSalesInvoice.ContactName,
+                             contactPhone = model.CashSalesInvoice.ContactPhone,
                              CompanyName = company.Name,
                              CompanyAddress = company.Address,
                              CompanyContactNo = company.ContactNo,

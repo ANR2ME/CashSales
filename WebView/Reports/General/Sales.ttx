@@ -10,6 +10,7 @@ Tax	Number
 Allowance	Currency		
 CoGS	Currency		
 Total	Currency		
+AmountPaid	Currency	
 CashBank	String	80	
 Warehouse	String	80	
 CompanyName	String	80

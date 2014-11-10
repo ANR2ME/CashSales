@@ -220,5 +220,44 @@ namespace Data.Context
         public DbSet<UserMenu> UserMenus { get; set; }
         public DbSet<UserAccess> UserAccesses { get; set; }
         public DbSet<Company> Companies { get; set; }
+
+        public DbSet<TempAccount> TempAccounts { get; set; }
+        public DbSet<TempCashBank> TempCashBanks { get; set; }
+        public DbSet<TempCashBankAdjustment> TempCashBankAdjustments { get; set; }
+        public DbSet<TempCashBankMutation> TempCashBankMutations { get; set; }
+        public DbSet<TempItem> TempItems { get; set; }
+        public DbSet<TempStockAdjustmentDetail> TempStockAdjustmentDetails { get; set; }
+        public DbSet<TempStockAdjustment> TempStockAdjustments { get; set; }
+        public DbSet<TempWarehouseItem> TempWarehouseItems { get; set; }
+        public DbSet<TempWarehouseMutationOrder> TempWarehouseMutationOrders { get; set; }
+        public DbSet<TempWarehouseMutationOrderDetail> TempWarehouseMutationOrderDetails { get; set; }
+        public DbSet<TempCustomPurchaseInvoice> TempCustomPurchaseInvoices { get; set; }
+        public DbSet<TempCustomPurchaseInvoiceDetail> TempCustomPurchaseInvoiceDetails { get; set; }
+        public DbSet<TempCashSalesInvoice> TempCashSalesInvoices { get; set; }
+        public DbSet<TempCashSalesInvoiceDetail> TempCashSalesInvoiceDetails { get; set; }
+        public DbSet<TempCashSalesReturn> TempCashSalesReturns { get; set; }
+        public DbSet<TempCashSalesReturnDetail> TempCashSalesReturnDetails { get; set; }
+        public DbSet<TempReceiptVoucherDetail> TempReceiptVoucherDetails { get; set; }
+        public DbSet<TempReceiptVoucher> TempReceiptVouchers { get; set; }
+        public DbSet<TempPaymentRequest> TempPaymentRequests { get; set; }
+        public DbSet<TempPaymentRequestDetail> TempPaymentRequestDetails { get; set; }
+        public DbSet<TempPaymentVoucherDetail> TempPaymentVoucherDetails { get; set; }
+        public DbSet<TempPaymentVoucher> TempPaymentVouchers { get; set; }
+        public DbSet<TempMemorialDetail> TempMemorialDetails { get; set; }
+        public DbSet<TempMemorial> TempMemorials { get; set; }
+        public DbSet<TempReceivable> TempReceivables { get; set; }
+        public DbSet<TempPayable> TempPayables { get; set; }
+
+        public DbSet<TempUserMenu> TempUserMenus { get; set; }
+        public DbSet<TempUserAccount> TempUserAccounts { get; set; }
+        public DbSet<TempUserAccess> TempUserAccesses { get; set; }
+        public DbSet<TempGroupItemPrice> TempGroupItemPrices { get; set; }
+        public DbSet<TempQuantityPricing> TempQuantityPricings { get; set; }
+        public DbSet<TempWarehouse> TempWarehouses { get; set; }
+        public DbSet<TempItemType> TempItemTypes { get; set; }
+        public DbSet<TempUoM> TempUoMs { get; set; }
+        public DbSet<TempContact> TempContacts { get; set; }
+        public DbSet<TempContactGroup> TempContactGroups { get; set; }
+        public DbSet<TempCompany> TempCompanys { get; set; }
     }
 }

@@ -56,13 +56,18 @@ namespace Service.Service
             return _repository.GetObjectById(Id);
         }
 
+        public Payable GetObjectByCode(string Code)
+        {
+            return GetQueryable().Where(x => x.Code == Code && !x.IsDeleted).FirstOrDefault();
+        }
+
         public Payable CreateObject(Payable payable)
         {
             payable.Errors = new Dictionary<String, String>();
             return (_validator.ValidCreateObject(payable, this) ? _repository.CreateObject(payable) : payable);
         }
 
-        public Payable CreateObject(int contactId, string payableSource, int payableSourceId, string payableSourceCode, decimal amount, DateTime dueDate)
+        public Payable CreateObject(int contactId, string payableSource, int payableSourceId, string payableSourceCode, decimal amount, DateTime dueDate, string Code)
         {
             Payable payable = new Payable
             {
@@ -72,7 +77,8 @@ namespace Service.Service
                 PayableSourceCode = payableSourceCode,
                 Amount = amount,
                 RemainingAmount = amount,
-                DueDate = dueDate
+                DueDate = dueDate,
+                Code = Code,
             };
             return this.CreateObject(payable);
         }

@@ -51,22 +51,28 @@ namespace Service.Service
             cashBank.Errors = new Dictionary<string, string>();
             if (_validator.ValidCreateObject(cashBank, this))
             {
-                // Create Leaf Cash Bank Account
-                string Code = GenerateAccountCode(_accountService);
-                Account account = new Account()
-                {
-                    Name = cashBank.Name,
-                    Level = 3,
-                    Group = Constant.AccountGroup.Asset,
-                    Code = Code,
-                    IsCashBankAccount = true,
-                    IsLeaf = true,
-                    ParentId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.CashBank).Id
-                };
-                _accountService.CreateCashBankAccount(account, _accountService);
                 _repository.CreateObject(cashBank);
-                account.LegacyCode = Constant.AccountLegacyCode.CashBank + cashBank.Id;
-                _accountService.UpdateObject(account, _accountService);
+                Account account = _accountService.GetObjectByNameAndParentLegacyCode(Constant.AccountLegacyCode.CashBank, cashBank.Name);
+                if (account == null)
+                {
+                    // Create Leaf Cash Bank Account
+                    string Code = GenerateAccountCode(_accountService);
+                    account = new Account()
+                    {
+                        Name = cashBank.Name,
+                        Level = 3,
+                        Group = Constant.AccountGroup.Asset,
+                        Code = Code,
+                        IsCashBankAccount = true,
+                        IsLeaf = true,
+                        ParentId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.CashBank).Id,
+                        LegacyCode = Constant.AccountLegacyCode.CashBank + cashBank.Id,
+                    };
+                    _accountService.CreateCashBankAccount(account, _accountService);
+
+                    //account.LegacyCode = Constant.AccountLegacyCode.CashBank + cashBank.Id;
+                    //_accountService.UpdateObject(account, _accountService);
+                }
             }
             return cashBank;
         }
@@ -76,9 +82,18 @@ namespace Service.Service
             return (cashBank = _validator.ValidUpdateObject(cashBank, this) ? _repository.UpdateObject(cashBank) : cashBank);
         }
 
-        public CashBank SoftDeleteObject(CashBank cashBank, ICashMutationService _cashMutationService)
+        public CashBank SoftDeleteObject(CashBank cashBank, ICashMutationService _cashMutationService, IAccountService _accountService)
         {
-            return (cashBank = _validator.ValidDeleteObject(cashBank, _cashMutationService) ? _repository.SoftDeleteObject(cashBank) : cashBank);
+            if(_validator.ValidDeleteObject(cashBank, _cashMutationService))
+            {
+                _repository.SoftDeleteObject(cashBank);
+                Account account = _accountService.GetObjectByNameAndLegacyCode(Constant.AccountLegacyCode.CashBank + cashBank.Id, cashBank.Name);
+                if (account != null)
+                {
+                    _accountService.SoftDeleteObject(account);
+                }
+            }
+            return cashBank;
         }
 
         public bool DeleteObject(int Id)

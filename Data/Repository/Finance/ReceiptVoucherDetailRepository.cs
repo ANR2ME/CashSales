@@ -67,6 +67,7 @@ namespace Data.Repository
                               where obj.Id == receiptVoucherDetail.ReceiptVoucherId
                               select obj.Code).FirstOrDefault();
             }
+            if (receiptVoucherDetail.Code == null || receiptVoucherDetail.Code.Trim() == "")
             receiptVoucherDetail.Code = SetObjectCode(ParentCode);
             receiptVoucherDetail.IsConfirmed = false;
             receiptVoucherDetail.IsDeleted = false;

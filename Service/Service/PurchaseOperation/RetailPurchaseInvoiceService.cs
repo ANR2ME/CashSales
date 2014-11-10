@@ -81,7 +81,7 @@ namespace Service.Service
                 }
                 // Tax dihitung setelah discount
                 retailPurchaseInvoice.Total = (retailPurchaseInvoice.Total * (100 - retailPurchaseInvoice.Discount) / 100) * (100 - retailPurchaseInvoice.Tax) / 100;
-                Payable payable = _payableService.CreateObject(retailPurchaseInvoice.ContactId, Core.Constants.Constant.PayableSource.RetailPurchaseInvoice, retailPurchaseInvoice.Id, retailPurchaseInvoice.Code, retailPurchaseInvoice.Total, (DateTime)retailPurchaseInvoice.DueDate.GetValueOrDefault());
+                Payable payable = _payableService.CreateObject(retailPurchaseInvoice.ContactId, Core.Constants.Constant.PayableSource.RetailPurchaseInvoice, retailPurchaseInvoice.Id, retailPurchaseInvoice.Code, retailPurchaseInvoice.Total, (DateTime)retailPurchaseInvoice.DueDate.GetValueOrDefault(),"");
                 retailPurchaseInvoice = _repository.ConfirmObject(retailPurchaseInvoice);
             }
             else
@@ -134,10 +134,10 @@ namespace Service.Service
                 }
                 Payable payable = _payableService.GetObjectBySource(Core.Constants.Constant.PayableSource.RetailPurchaseInvoice, retailPurchaseInvoice.Id);
                 PaymentVoucher paymentVoucher = _paymentVoucherService.CreateObject((int)retailPurchaseInvoice.CashBankId.GetValueOrDefault(), retailPurchaseInvoice.ContactId, DateTime.Now, retailPurchaseInvoice.Total,
-                                                                            retailPurchaseInvoice.IsGBCH, (DateTime)retailPurchaseInvoice.DueDate.GetValueOrDefault(), retailPurchaseInvoice.IsBank, _paymentVoucherDetailService,
+                                                                            retailPurchaseInvoice.IsGBCH, (DateTime)retailPurchaseInvoice.DueDate.GetValueOrDefault(), retailPurchaseInvoice.IsBank, "", _paymentVoucherDetailService,
                                                                             _payableService, _contactService, _cashBankService);
                 PaymentVoucherDetail paymentVoucherDetail = _paymentVoucherDetailService.CreateObject(paymentVoucher.Id, payable.Id, (decimal)retailPurchaseInvoice.AmountPaid.GetValueOrDefault(),
-                                                                            "Automatic Payment", _paymentVoucherService, _cashBankService, _payableService);
+                                                                            "Automatic Payment", "", _paymentVoucherService, _cashBankService, _payableService);
                 retailPurchaseInvoice = _repository.PaidObject(retailPurchaseInvoice);
                 _paymentVoucherService.ConfirmObject(paymentVoucher, (DateTime)retailPurchaseInvoice.ConfirmationDate.GetValueOrDefault(), _paymentVoucherDetailService,
                                                      _cashBankService, _payableService, _cashMutationService, _generalLedgerJournalService, _accountService, _closingService);

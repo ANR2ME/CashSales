@@ -57,6 +57,7 @@ namespace Data.Repository
                               where obj.Id == cashSalesInvoiceDetail.CashSalesInvoiceId
                               select obj.Code).FirstOrDefault();
             }
+            if (cashSalesInvoiceDetail.Code == null || cashSalesInvoiceDetail.Code.Trim() == "")
             cashSalesInvoiceDetail.Code = SetObjectCode(ParentCode);
             cashSalesInvoiceDetail.IsDeleted = false;
             cashSalesInvoiceDetail.CreatedAt = DateTime.Now;

@@ -67,6 +67,7 @@ namespace Data.Repository
                               where obj.Id == salesInvoiceDetail.SalesInvoiceId
                               select obj.Code).FirstOrDefault();
             }
+            if (salesInvoiceDetail.Code == null || salesInvoiceDetail.Code.Trim() == "")
             salesInvoiceDetail.Code = SetObjectCode(ParentCode);
             salesInvoiceDetail.IsConfirmed = false;
             salesInvoiceDetail.IsDeleted = false;

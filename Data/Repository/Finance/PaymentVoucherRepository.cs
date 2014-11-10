@@ -50,6 +50,7 @@ namespace Data.Repository
 
         public PaymentVoucher CreateObject(PaymentVoucher paymentVoucher)
         {
+            if (paymentVoucher.Code == null || paymentVoucher.Code.Trim() == "")
             paymentVoucher.Code = SetObjectCode();
             paymentVoucher.IsDeleted = false;
             paymentVoucher.IsConfirmed = false;

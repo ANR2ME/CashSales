@@ -16,8 +16,9 @@ namespace Core.Interface.Service
         IList<Payable> GetObjectsByDueDate(DateTime fromDueDate, DateTime toDueDate);
         Payable GetObjectBySource(string PayableSource, int PayableSourceId); 
         Payable GetObjectById(int Id);
+        Payable GetObjectByCode(string Code);
         Payable CreateObject(Payable payable);
-        Payable CreateObject(int contactId, string payableSource, int payableSourceId, string payableSourceCode, decimal amount, DateTime dueDate);
+        Payable CreateObject(int contactId, string payableSource, int payableSourceId, string payableSourceCode, decimal amount, DateTime dueDate, string Code);
         Payable UpdateObject(Payable payable);
         Payable SoftDeleteObject(Payable payable);
         bool DeleteObject(int Id);

@@ -32,7 +32,7 @@
                   { name: 'group', index: 'group', width: 90 },
                   { name: 'level', index: 'level', width: 50 },
                   { name: 'parentcode', index: 'parentid', width: 80, classes: "grid-col" },
-                  { name: 'parent', index: 'parent', width: 80 },
+                  { name: 'parent', index: 'parent', width: 150 },
                   { name: 'islegacy', index: 'islegacy', width: 40, stype: 'select', editoptions: { value: ':;true:Y;false:N' } },
                   { name: 'iscashbank', index: 'iscashbank', width: 60, stype: 'select', editoptions: { value: ':;true:Y;false:N' } },
                   { name: 'legacycode', index: 'legacycode', width: 80, hidden: true },

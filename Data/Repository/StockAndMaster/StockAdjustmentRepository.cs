@@ -41,6 +41,7 @@ namespace Data.Repository
 
         public StockAdjustment CreateObject(StockAdjustment stockAdjustment)
         {
+            if (stockAdjustment.Code == null || stockAdjustment.Code.Trim() == "")
             stockAdjustment.Code = SetObjectCode();
             stockAdjustment.IsDeleted = false;
             stockAdjustment.IsConfirmed = false;

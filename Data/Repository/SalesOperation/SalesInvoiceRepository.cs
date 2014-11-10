@@ -45,6 +45,7 @@ namespace Data.Repository
 
         public SalesInvoice CreateObject(SalesInvoice salesInvoice)
         {
+            if (salesInvoice.Code == null || salesInvoice.Code.Trim() == "")
             salesInvoice.Code = SetObjectCode();
             salesInvoice.AmountReceivable = 0;
             salesInvoice.IsDeleted = false;

@@ -63,6 +63,7 @@ namespace Data.Repository
                               where obj.Id == stockAdjustmentDetail.StockAdjustmentId
                               select obj.Code).FirstOrDefault();
             }
+            if (stockAdjustmentDetail.Code == null || stockAdjustmentDetail.Code.Trim() == "")
             stockAdjustmentDetail.Code = SetObjectCode(ParentCode);
             stockAdjustmentDetail.IsConfirmed = false;
             stockAdjustmentDetail.IsDeleted = false;

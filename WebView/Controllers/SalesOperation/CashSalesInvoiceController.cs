@@ -115,6 +115,8 @@ namespace WebView.Controllers
                             model.IsBank,
                             model.IsPaid,
                             model.IsFullPayment,
+                            model.ContactName,
+                            model.ContactPhone,
                             model.WarehouseId,
                             warehouse = model.Warehouse.Name,
                             model.SalesDate,
@@ -170,6 +172,8 @@ namespace WebView.Controllers
                             model.IsBank,
                             model.IsPaid,
                             model.IsFullPayment,
+                            model.ContactName,
+                            model.ContactPhone,
                             model.WarehouseId,
                             model.warehouse,
                             model.SalesDate,
@@ -213,6 +217,8 @@ namespace WebView.Controllers
                              model.IsBank,
                              model.IsPaid,
                              model.IsFullPayment,
+                             model.ContactName,
+                             model.ContactPhone,
                              model.WarehouseId,
                              warehouse = model.Warehouse.Name,
                              model.SalesDate,
@@ -268,6 +274,8 @@ namespace WebView.Controllers
                             model.IsBank,
                             model.IsPaid,
                             model.IsFullPayment,
+                            model.ContactName,
+                            model.ContactPhone,
                             model.WarehouseId,
                             model.warehouse,
                             model.SalesDate,
@@ -808,6 +816,8 @@ namespace WebView.Controllers
 
                 var data = _cashSalesInvoiceService.GetObjectById(model.Id);
                 data.Allowance = model.Allowance;
+                data.ContactName = model.ContactName;
+                data.ContactPhone = model.ContactPhone;
                 model = _cashSalesInvoiceService.PaidObject(data, model.AmountPaid.Value, model.Allowance, _cashBankService, _receivableService, _receiptVoucherService, _receiptVoucherDetailService, 
                                                            _contactService, _cashMutationService, _cashSalesReturnService,
                                                            _generalLedgerJournalService,_accountService,_closingService);

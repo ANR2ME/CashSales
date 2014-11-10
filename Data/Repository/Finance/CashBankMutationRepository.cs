@@ -66,6 +66,7 @@ namespace Data.Repository
 
         public CashBankMutation CreateObject(CashBankMutation cashBankMutation)
         {
+            if (cashBankMutation.Code == null || cashBankMutation.Code.Trim() == "")
             cashBankMutation.Code = SetObjectCode();
             cashBankMutation.IsConfirmed = false;
             cashBankMutation.IsDeleted = false;

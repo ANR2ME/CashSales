@@ -40,6 +40,7 @@ namespace Data.Repository
 
         public RetailPurchaseInvoice CreateObject(RetailPurchaseInvoice retailPurchaseInvoice)
         {
+            if (retailPurchaseInvoice.Code == null || retailPurchaseInvoice.Code.Trim() == "")
             retailPurchaseInvoice.Code = SetObjectCode();
             retailPurchaseInvoice.IsDeleted = false;
             retailPurchaseInvoice.CreatedAt = DateTime.Now;

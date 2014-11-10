@@ -55,6 +55,7 @@ namespace Data.Repository
 
         public PurchaseOrder CreateObject(PurchaseOrder purchaseOrder)
         {
+            if (purchaseOrder.Code == null || purchaseOrder.Code.Trim() == "")
             purchaseOrder.Code = SetObjectCode();
             purchaseOrder.IsDeleted = false;
             purchaseOrder.IsConfirmed = false;

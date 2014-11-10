@@ -58,6 +58,7 @@ namespace Data.Repository
 
         public Payable CreateObject(Payable payable)
         {
+            if (payable.Code == null || payable.Code.Trim() == "")
             payable.Code = SetObjectCode();
             payable.PendingClearanceAmount = 0;
             payable.IsCompleted = false;

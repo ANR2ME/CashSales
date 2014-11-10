@@ -56,13 +56,18 @@ namespace Service.Service
             return _repository.GetObjectById(Id);
         }
 
+        public Receivable GetObjectByCode(string Code)
+        {
+            return GetQueryable().Where(x => x.Code == Code && !x.IsDeleted).FirstOrDefault();
+        }
+
         public Receivable CreateObject(Receivable receivable)
         {
             receivable.Errors = new Dictionary<String, String>();
             return (_validator.ValidCreateObject(receivable, this) ? _repository.CreateObject(receivable) : receivable);
         }
 
-        public Receivable CreateObject(int contactId, string receivableSource, int receivableSourceId, string receivableSourceCode, decimal amount, DateTime dueDate)
+        public Receivable CreateObject(int contactId, string receivableSource, int receivableSourceId, string receivableSourceCode, decimal amount, DateTime dueDate, string Code)
         {
             Receivable receivable = new Receivable
             {
@@ -72,7 +77,8 @@ namespace Service.Service
                 ReceivableSourceCode = receivableSourceCode,
                 Amount = amount,
                 RemainingAmount = amount,
-                DueDate = dueDate
+                DueDate = dueDate,
+                Code = Code,
             };
             return this.CreateObject(receivable);
         }

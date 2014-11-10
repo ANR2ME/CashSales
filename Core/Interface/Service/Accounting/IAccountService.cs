@@ -16,6 +16,8 @@ namespace Core.Interface.Service
         IList<Account> GetLegacyObjects();
         Account GetObjectById(int Id);
         Account GetObjectByLegacyCode(string LegacyCode);
+        Account GetObjectByNameAndLegacyCode(string LegacyCode, string Name);
+        Account GetObjectByNameAndParentLegacyCode(string ParentLegacyCode, string Name);
         Account GetObjectByIsLegacy(bool IsLegacy);
         Account CreateObject(Account account, IAccountService _accountService);
         Account CreateLegacyObject(Account account, IAccountService _accountService);

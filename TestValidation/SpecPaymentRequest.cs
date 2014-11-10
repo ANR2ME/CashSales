@@ -92,10 +92,10 @@ namespace TestValidation
 
                 it["unconfirm_after_payable_have_paymentvoucherdetail"] = () =>
                 {
-                    PaymentVoucher paymentVoucher = d._paymentVoucherService.CreateObject(d.cashBank1.Id, d.contact.Id, DateTime.Now, d.paymentRequest1.Amount, false, d.paymentRequest1.DueDate, d.cashBank1.IsBank,
+                    PaymentVoucher paymentVoucher = d._paymentVoucherService.CreateObject(d.cashBank1.Id, d.contact.Id, DateTime.Now, d.paymentRequest1.Amount, false, d.paymentRequest1.DueDate, d.cashBank1.IsBank, "",
                                                                                 d._paymentVoucherDetailService, d._payableService, d._contactService, d._cashBankService);
                     Payable payable = d._payableService.GetObjectBySource(Core.Constants.Constant.PayableSource.PaymentRequest, d.paymentRequest1.Id);
-                    PaymentVoucherDetail paymentVoucherDetail = d._paymentVoucherDetailService.CreateObject(paymentVoucher.Id, payable.Id, payable.Amount, "Pembayaran Listrik",
+                    PaymentVoucherDetail paymentVoucherDetail = d._paymentVoucherDetailService.CreateObject(paymentVoucher.Id, payable.Id, payable.Amount, "Pembayaran Listrik", "",
                                                                                                 d._paymentVoucherService, d._cashBankService, d._payableService);
                     d.paymentRequest1 = d._paymentRequestService.UnconfirmObject(d.paymentRequest1, d._paymentRequestDetailService, d._payableService, d._accountService, d._generalLedgerJournalService, d._closingService);
                     d.paymentRequest1.Errors.Count().should_not_be(0);

@@ -13,11 +13,12 @@ namespace Core.Interface.Service
         IReceiptVoucherValidator GetValidator();
         IList<ReceiptVoucher> GetAll();
         ReceiptVoucher GetObjectById(int Id);
+        ReceiptVoucher GetObjectByCode(string Code);
         IList<ReceiptVoucher> GetObjectsByCashBankId(int cashBankId);
         IList<ReceiptVoucher> GetObjectsByContactId(int contactId);
         ReceiptVoucher CreateObject(ReceiptVoucher receiptVoucher, IReceiptVoucherDetailService _receiptVoucherDetailService, IReceivableService _receivableService,
                                     IContactService _contactService, ICashBankService _cashBankService);
-        ReceiptVoucher CreateObject(int cashBankId, int contactId, DateTime receiptDate, decimal totalAmount, bool IsGBCH, DateTime DueDate, bool IsBank,
+        ReceiptVoucher CreateObject(int cashBankId, int contactId, DateTime receiptDate, decimal totalAmount, bool IsGBCH, DateTime DueDate, bool IsBank, string Code,
                                     IReceiptVoucherDetailService _receiptVoucherDetailService, IReceivableService _receivableService,
                                     IContactService _contactService, ICashBankService _cashBankService);
         ReceiptVoucher UpdateAmount(ReceiptVoucher receiptVoucher);

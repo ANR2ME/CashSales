@@ -59,7 +59,7 @@
                   { name: 'code', index: 'code', width: 100 },
 				  { name: 'contactid', index: 'contactid', width: 100, hidden:true },
                   { name: 'contact', index: 'contact', width: 100 },
-                  { name: 'totalamount', index: 'totalamount', width: 100, formatter: 'currency', formatoptions: { decimalSeparator: ".", thousandsSeparator: ",", decimalPlaces: 0, prefix: "", suffix: "", defaultValue: '0.00' }, sortable: false },
+                  { name: 'totalamount', index: 'totalamount', width: 100, formatter: 'currency', formatoptions: { decimalSeparator: ".", thousandsSeparator: ",", decimalPlaces: 0, prefix: "", suffix: "", defaultValue: '0.00' } },
                   { name: 'cashbankid', index: 'cashbankid', width: 100, hidden:true },
                   { name: 'cashbank', index: 'cashbank', width: 100 },
                   { name: 'isbank', index: 'isbank', width: 100, stype: 'select', editoptions: { value: ':All;true:Yes;false:No' } },

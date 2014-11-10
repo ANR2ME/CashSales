@@ -19,7 +19,7 @@ namespace Core.Interface.Service
         PaymentVoucherDetail GetObjectById(int Id);        
         PaymentVoucherDetail CreateObject(PaymentVoucherDetail paymentVoucherDetail, IPaymentVoucherService _paymentVoucherService,
                                           ICashBankService _cashBankService, IPayableService _payableService);
-        PaymentVoucherDetail CreateObject(int paymentVoucherId, int payableId, decimal amount, string description,
+        PaymentVoucherDetail CreateObject(int paymentVoucherId, int payableId, decimal amount, string description, string Code,
                                           IPaymentVoucherService _paymentVoucherService, ICashBankService _cashBankService, IPayableService _payableService);
         PaymentVoucherDetail UpdateObject(PaymentVoucherDetail paymentVoucherDetail, IPaymentVoucherService _paymentVoucherService,
                                           ICashBankService _cashBankService, IPayableService _payableService);

@@ -52,6 +52,7 @@ namespace Data.Repository
 
         public CashSalesReturn CreateObject(CashSalesReturn cashSalesReturn)
         {
+            if (cashSalesReturn.Code == null || cashSalesReturn.Code.Trim() == "")
             cashSalesReturn.Code = SetObjectCode();
             cashSalesReturn.IsDeleted = false;
             cashSalesReturn.CreatedAt = DateTime.Now;

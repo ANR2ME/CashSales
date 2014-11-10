@@ -2,6 +2,7 @@ CompanyName	String	80
 CompanyAddress	String	255	
 CompanyContactNo	String	100	
 Contact	String	80	
+ContactPhone	String	80	
 Code	String	80	
 Date	Date		
 SKU	String	80	

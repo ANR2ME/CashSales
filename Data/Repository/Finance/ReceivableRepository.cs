@@ -58,6 +58,7 @@ namespace Data.Repository
 
         public Receivable CreateObject(Receivable receivable)
         {
+            if (receivable.Code == null || receivable.Code.Trim() == "")
             receivable.Code = SetObjectCode();
             receivable.PendingClearanceAmount = 0;
             receivable.IsCompleted = false;

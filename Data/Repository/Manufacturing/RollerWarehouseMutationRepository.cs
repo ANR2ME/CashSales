@@ -73,6 +73,7 @@ namespace Data.Repository
 
         public RollerWarehouseMutation CreateObject(RollerWarehouseMutation rollerWarehouseMutation)
         {
+            if (rollerWarehouseMutation.Code == null || rollerWarehouseMutation.Code.Trim() == "")
             rollerWarehouseMutation.Code = SetObjectCode();
             rollerWarehouseMutation.IsConfirmed = false;
             rollerWarehouseMutation.IsCompleted = false;

@@ -16,7 +16,7 @@ namespace Core.Interface.Service
         CashBank GetObjectByName(string Name);
         CashBank CreateObject(CashBank cashBank, IAccountService _accountService);
         CashBank UpdateObject(CashBank cashBank);
-        CashBank SoftDeleteObject(CashBank cashBank, ICashMutationService _cashMutationService);
+        CashBank SoftDeleteObject(CashBank cashBank, ICashMutationService _cashMutationService, IAccountService _accountService);
         bool DeleteObject(int Id);
         bool IsNameDuplicated(CashBank cashBank);
         decimal GetTotalCashBank();

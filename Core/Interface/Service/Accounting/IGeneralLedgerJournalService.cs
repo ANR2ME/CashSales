@@ -22,10 +22,12 @@ namespace Core.Interface.Service
         IList<GeneralLedgerJournal> CreateUnconfirmationJournalForMemorial(Memorial memorial, IMemorialDetailService _memorialDetailService, IAccountService _accountService);
         IList<GeneralLedgerJournal> CreateConfirmationJournalForPaymentRequest(PaymentRequest paymentRequest, IPaymentRequestDetailService _paymentRequestDetailService, IAccountService _accountService);
         IList<GeneralLedgerJournal> CreateUnconfirmationJournalForPaymentRequest(PaymentRequest paymentRequest, IPaymentRequestDetailService _paymentRequestDetailService, IAccountService _accountService);
-        IList<GeneralLedgerJournal> CreateConfirmationJournalForPaymentVoucher(PaymentVoucher paymentVoucher, CashBank cashBank, IAccountService _accountService);
-        IList<GeneralLedgerJournal> CreateUnconfirmationJournalForPaymentVoucher(PaymentVoucher paymentVoucher, CashBank cashBank, IAccountService _accountService);
-        IList<GeneralLedgerJournal> CreateConfirmationJournalForReceiptVoucher(ReceiptVoucher receiptVoucher, CashBank cashBank, IAccountService _accountService);
-        IList<GeneralLedgerJournal> CreateUnconfirmationJournalForReceiptVoucher(ReceiptVoucher receiptVoucher, CashBank cashBank, IAccountService _accountService);
+        IList<GeneralLedgerJournal> CreateConfirmationJournalForPaymentVoucherTrading(PaymentVoucher paymentVoucher, CashBank cashBank, IAccountService _accountService);
+        IList<GeneralLedgerJournal> CreateUnconfirmationJournalForPaymentVoucherTrading(PaymentVoucher paymentVoucher, CashBank cashBank, IAccountService _accountService);
+        IList<GeneralLedgerJournal> CreateConfirmationJournalForPaymentVoucherNonTrading(PaymentVoucher paymentVoucher, CashBank cashBank, IAccountService _accountService);
+        IList<GeneralLedgerJournal> CreateUnconfirmationJournalForPaymentVoucherNonTrading(PaymentVoucher paymentVoucher, CashBank cashBank, IAccountService _accountService);
+        IList<GeneralLedgerJournal> CreateConfirmationJournalForReceiptVoucherTrading(ReceiptVoucher receiptVoucher, CashBank cashBank, IAccountService _accountService);
+        IList<GeneralLedgerJournal> CreateUnconfirmationJournalForReceiptVoucherTrading(ReceiptVoucher receiptVoucher, CashBank cashBank, IAccountService _accountService);
         IList<GeneralLedgerJournal> CreateConfirmationJournalForCashBankAdjustment(CashBankAdjustment cashBankAdjustment, CashBank cashBank, IAccountService _accountService);
         IList<GeneralLedgerJournal> CreateUnconfirmationJournalForCashBankAdjustment(CashBankAdjustment cashBankAdjustment, CashBank cashBank, IAccountService _accountService);
         IList<GeneralLedgerJournal> CreateConfirmationJournalForCashBankMutation(CashBankMutation cashBankMutation, CashBank sourceCashBank, CashBank targetCashBank, IAccountService _accountService);

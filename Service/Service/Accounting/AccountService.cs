@@ -43,7 +43,7 @@ namespace Service.Service
 
         public IList<Account> GetLegacyObjects()
         {
-            return _repository.FindAll(x => x.IsLegacy == true).ToList();
+            return _repository.FindAll(x => x.IsLegacy == true && !x.IsDeleted).ToList();
         }
 
         public Account GetObjectById(int Id)
@@ -53,7 +53,26 @@ namespace Service.Service
 
         public Account GetObjectByLegacyCode(string LegacyCode)
         {
-            return _repository.Find(x => x.LegacyCode == LegacyCode);
+            Account account = _repository.FindAll(x => x.LegacyCode == LegacyCode && !x.IsDeleted).FirstOrDefault();
+            if (account != null) account.Errors = new Dictionary<string, string>();
+            return account;
+        }
+
+        public Account GetObjectByNameAndLegacyCode(string LegacyCode, string Name)
+        {
+            Account account = _repository.FindAll(x => x.LegacyCode == LegacyCode && x.Name == Name && !x.IsDeleted).FirstOrDefault();
+            if (account != null) account.Errors = new Dictionary<string, string>();
+            return account;
+        }
+
+        public Account GetObjectByNameAndParentLegacyCode(string ParentLegacyCode, string Name)
+        {
+            Account Parent = GetObjectByLegacyCode(ParentLegacyCode);
+            Nullable<int> ParentId = null;
+            if (Parent != null) ParentId = Parent.Id;
+            Account account = _repository.FindAll(x => x.ParentId == ParentId && x.Name == Name && !x.IsDeleted).FirstOrDefault();
+            if (account != null) account.Errors = new Dictionary<string, string>();
+            return account;
         }
 
         public Account GetObjectByIsLegacy(bool IsLegacy)

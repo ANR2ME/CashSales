@@ -449,7 +449,7 @@ namespace Service
                             }
                             db.Database.ExecuteSqlCommand(string.Format("DBCC CHECKIDENT (PaymentVoucher, RESEED, {0});", voucher.Id - 1));
                             db.Database.ExecuteSqlCommand(string.Format("DBCC CHECKIDENT (PaymentVoucherDetail, RESEED, {0});", voucherDetail.Id - 1));
-                            _customPurchaseInvoiceService.PaidObjectForRepair(obj, rec.AmountPaid.GetValueOrDefault(), voucher.Code, voucherDetail.Code,
+                            _customPurchaseInvoiceService.PaidObjectForRepair(obj, rec.AmountPaid.GetValueOrDefault(), rec.PaymentDate, voucher.Code, voucherDetail.Code,
                                                                 _cashBankService, _payableService, _paymentVoucherService, _paymentVoucherDetailService, _contactService, _cashMutationService,
                                                                 _generalLedgerJournalService, _accountService, _closingService);
                             Log(obj.Errors, obj.GetType().Name, obj.Code, rec.Id, obj.Id);

@@ -661,7 +661,7 @@ namespace WebView.Controllers
                 data.IsGBCH = model.IsGBCH;
                 data.GBCH_No = model.GBCH_No;
                 data.GBCH_DueDate = model.GBCH_DueDate;
-                model = _customPurchaseInvoiceService.PaidObject(data, model.AmountPaid.Value, _cashBankService, _payableService, _paymentVoucherService, _paymentVoucherDetailService, 
+                model = _customPurchaseInvoiceService.PaidObject(data, model.AmountPaid.Value, model.PaymentDate, _cashBankService, _payableService, _paymentVoucherService, _paymentVoucherDetailService, 
                                                     _contactService, _cashMutationService, _generalLedgerJournalService, _accountService,_closingService);
             }
             catch (Exception ex)

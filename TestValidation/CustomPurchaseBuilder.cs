@@ -494,9 +494,9 @@ namespace TestValidation
                                                         _warehouseService, _itemService, _barringService, _stockMutationService, _generalLedgerJournalService, _accountService, _closingService);
             _customPurchaseInvoiceService.ConfirmObject(cpi3, cpi3.PurchaseDate, _customPurchaseInvoiceDetailService, _contactService, _priceMutationService, _payableService, _customPurchaseInvoiceService, _warehouseItemService,
                                                         _warehouseService, _itemService, _barringService, _stockMutationService, _generalLedgerJournalService, _accountService, _closingService);
-            _customPurchaseInvoiceService.PaidObject(cpi1, 200000, _cashBankService, _payableService, _paymentVoucherService, _paymentVoucherDetailService, _contactService, _cashMutationService, _generalLedgerJournalService, _accountService, _closingService);
-            _customPurchaseInvoiceService.PaidObject(cpi2, cpi2.Total, _cashBankService, _payableService, _paymentVoucherService, _paymentVoucherDetailService, _contactService, _cashMutationService, _generalLedgerJournalService, _accountService, _closingService);
-            _customPurchaseInvoiceService.PaidObject(cpi3, cpi3.Total, _cashBankService, _payableService, _paymentVoucherService, _paymentVoucherDetailService, _contactService, _cashMutationService, _generalLedgerJournalService, _accountService, _closingService);
+            _customPurchaseInvoiceService.PaidObject(cpi1, 200000, DateTime.Now, _cashBankService, _payableService, _paymentVoucherService, _paymentVoucherDetailService, _contactService, _cashMutationService, _generalLedgerJournalService, _accountService, _closingService);
+            _customPurchaseInvoiceService.PaidObject(cpi2, cpi2.Total, DateTime.Now, _cashBankService, _payableService, _paymentVoucherService, _paymentVoucherDetailService, _contactService, _cashMutationService, _generalLedgerJournalService, _accountService, _closingService);
+            _customPurchaseInvoiceService.PaidObject(cpi3, cpi3.Total, DateTime.Now, _cashBankService, _payableService, _paymentVoucherService, _paymentVoucherDetailService, _contactService, _cashMutationService, _generalLedgerJournalService, _accountService, _closingService);
         }
 
         

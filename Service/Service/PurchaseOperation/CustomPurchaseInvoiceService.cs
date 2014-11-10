@@ -158,12 +158,13 @@ namespace Service.Service
             return customPurchaseInvoice;
         }
 
-        public CustomPurchaseInvoice PaidObjectForRepair(CustomPurchaseInvoice customPurchaseInvoice, decimal AmountPaid, string VoucherCode, string VoucherDetailCode,
+        public CustomPurchaseInvoice PaidObjectForRepair(CustomPurchaseInvoice customPurchaseInvoice, decimal AmountPaid, Nullable<DateTime> PaymentDate, string VoucherCode, string VoucherDetailCode,
                                                 ICashBankService _cashBankService, IPayableService _payableService,
                                                 IPaymentVoucherService _paymentVoucherService, IPaymentVoucherDetailService _paymentVoucherDetailService, IContactService _contactService,
                                                 ICashMutationService _cashMutationService, IGeneralLedgerJournalService _generalLedgerJournalService, IAccountService _accountService, IClosingService _closingService)
         {
             customPurchaseInvoice.AmountPaid = AmountPaid;
+            customPurchaseInvoice.PaymentDate = PaymentDate;
             if (_validator.ValidPaidObject(customPurchaseInvoice, _cashBankService, _paymentVoucherService, _closingService))
             {
                 CashBank cashBank = _cashBankService.GetObjectById((int)customPurchaseInvoice.CashBankId.GetValueOrDefault());
@@ -214,11 +215,12 @@ namespace Service.Service
             return customPurchaseInvoice;
         }
 
-        public CustomPurchaseInvoice PaidObject(CustomPurchaseInvoice customPurchaseInvoice, decimal AmountPaid, ICashBankService _cashBankService, IPayableService _payableService, 
+        public CustomPurchaseInvoice PaidObject(CustomPurchaseInvoice customPurchaseInvoice, decimal AmountPaid, Nullable<DateTime> PaymentDate, ICashBankService _cashBankService, IPayableService _payableService, 
                                                 IPaymentVoucherService _paymentVoucherService, IPaymentVoucherDetailService _paymentVoucherDetailService, IContactService _contactService,
                                                 ICashMutationService _cashMutationService, IGeneralLedgerJournalService _generalLedgerJournalService, IAccountService _accountService, IClosingService _closingService)
         {
             customPurchaseInvoice.AmountPaid = AmountPaid;
+            customPurchaseInvoice.PaymentDate = PaymentDate;
             if (_validator.ValidPaidObject(customPurchaseInvoice, _cashBankService, _paymentVoucherService, _closingService))
             {
                 CashBank cashBank = _cashBankService.GetObjectById((int)customPurchaseInvoice.CashBankId.GetValueOrDefault());

@@ -35,7 +35,7 @@ namespace Validation.Validation
         {
             if (paymentVoucherDetail.IsConfirmed)
             {
-                paymentVoucherDetail.Errors.Add("Generic", "Sudah dikonfirmasi");
+                paymentVoucherDetail.Errors.Add("Generic", "Sudah diKonfirmasi");
             }
             return paymentVoucherDetail;
         }
@@ -44,7 +44,7 @@ namespace Validation.Validation
         {
             if (!paymentVoucherDetail.IsConfirmed)
             {
-                paymentVoucherDetail.Errors.Add("Generic", "Belum dikonfirmasi");
+                paymentVoucherDetail.Errors.Add("Generic", "Belum diKonfirmasi");
             }
             return paymentVoucherDetail;
         }
@@ -63,7 +63,7 @@ namespace Validation.Validation
         {
             if (paymentVoucherDetail.IsDeleted)
             {
-                paymentVoucherDetail.Errors.Add("Generic", "Sudah didelete");
+                paymentVoucherDetail.Errors.Add("Generic", "Sudah diDelete");
             }
             return paymentVoucherDetail;
         }
@@ -73,7 +73,7 @@ namespace Validation.Validation
             Payable payable = _payableService.GetObjectById(paymentVoucherDetail.PayableId);
             if (payable.IsCompleted)
             {
-                paymentVoucherDetail.Errors.Add("Generic", "Payable sudah complete");
+                paymentVoucherDetail.Errors.Add("Generic", "Payable sudah Complete");
             }
             return paymentVoucherDetail;
         }
@@ -87,23 +87,37 @@ namespace Validation.Validation
             return paymentVoucherDetail;
         }
 
-        public PaymentVoucherDetail VAmountLessOrEqualPayable(PaymentVoucherDetail paymentVoucherDetail, IPayableService _payableService)
+        public PaymentVoucherDetail VAmountLessOrEqualPayable(PaymentVoucherDetail paymentVoucherDetail, IPayableService _payableService, IPaymentVoucherDetailService _paymentVoucherDetailService)
         {
             Payable payable = _payableService.GetObjectById(paymentVoucherDetail.PayableId);
-            if (paymentVoucherDetail.Amount > payable.Amount)
+            //decimal totalamount = _paymentVoucherDetailService.CalcTotalAmountByPayable(paymentVoucherDetail.PayableId);
+            decimal totalamount = _paymentVoucherDetailService.GetQueryableObjectsByPayableId(paymentVoucherDetail.PayableId).Where(x => !x.IsDeleted && x.Id != paymentVoucherDetail.Id).Sum(x => (decimal?)x.Amount) ?? 0;
+            if (totalamount + paymentVoucherDetail.Amount > payable.Amount - payable.AllowanceAmount)
             {
-                paymentVoucherDetail.Errors.Add("Amount", "Tidak boleh lebih dari payable");
+                paymentVoucherDetail.Errors.Add("Generic", "Total Amount seluruh PaymentVoucherDetails Tidak boleh melebihi Payable Amount (minus Allowance)");
             }
             return paymentVoucherDetail;
         }
 
-        public PaymentVoucherDetail VTotalAmountLessOrEqualPaymentVoucher(PaymentVoucherDetail paymentVoucherDetail, IPaymentVoucherService _paymentVoucherService, IPaymentVoucherDetailService _paymentVoucherDetailService)
+        public PaymentVoucherDetail VTotalAmountLessOrEqualPayable(PaymentVoucherDetail paymentVoucherDetail, IPayableService _payableService, IPaymentVoucherDetailService _paymentVoucherDetailService)
+        {
+            Payable payable = _payableService.GetObjectById(paymentVoucherDetail.PayableId);
+            decimal totalamount = _paymentVoucherDetailService.CalcTotalAmountByPayable(paymentVoucherDetail.PayableId);
+            if (totalamount > payable.Amount - payable.AllowanceAmount)
+            {
+                paymentVoucherDetail.Errors.Add("Generic", "Total Amount seluruh PaymentVoucherDetails Tidak boleh melebihi Payable Amount (minus Allowance)");
+            }
+            return paymentVoucherDetail;
+        }
+
+        public PaymentVoucherDetail VAmountLessOrEqualPaymentVoucher(PaymentVoucherDetail paymentVoucherDetail, IPaymentVoucherService _paymentVoucherService, IPaymentVoucherDetailService _paymentVoucherDetailService)
         {
             PaymentVoucher paymentVoucher = _paymentVoucherService.GetObjectById(paymentVoucherDetail.PaymentVoucherId);
-            decimal totalamount = _paymentVoucherDetailService.CalcTotalAmount(paymentVoucherDetail.PaymentVoucherId);
+            //decimal totalamount = _paymentVoucherDetailService.CalcTotalAmountByPaymentVoucher(paymentVoucherDetail.PaymentVoucherId);
+            decimal totalamount = _paymentVoucherDetailService.GetQueryableObjectsByPaymentVoucherId(paymentVoucherDetail.PaymentVoucherId).Where(x => !x.IsDeleted && x.Id != paymentVoucherDetail.Id).Sum(x => (decimal?)x.Amount) ?? 0;
             if (totalamount + paymentVoucherDetail.Amount > paymentVoucher.TotalAmount)
             {
-                paymentVoucherDetail.Errors.Add("Generic", "Total detail Amount Tidak boleh lebih dari TotalAmount PaymentVoucher");
+                paymentVoucherDetail.Errors.Add("Generic", "Total PaymentVoucherDetails Amount Tidak boleh melebihi TotalAmount PaymentVoucher");
             }
             return paymentVoucherDetail;
         }
@@ -139,9 +153,11 @@ namespace Validation.Validation
             if (!isValid(paymentVoucherDetail)) { return paymentVoucherDetail; }
             VParentHasNotBeenConfirmed(paymentVoucherDetail, _paymentVoucherService);
             if (!isValid(paymentVoucherDetail)) { return paymentVoucherDetail; }
-            VTotalAmountLessOrEqualPaymentVoucher(paymentVoucherDetail, _paymentVoucherService, _paymentVoucherDetailService);
+            VNonNegativeAmount(paymentVoucherDetail);
+            //if (!isValid(paymentVoucherDetail)) { return paymentVoucherDetail; }
+            //VAmountLessOrEqualPaymentVoucher(paymentVoucherDetail, _paymentVoucherService, _paymentVoucherDetailService);
             if (!isValid(paymentVoucherDetail)) { return paymentVoucherDetail; }
-            VAmountLessOrEqualPayable(paymentVoucherDetail, _payableService);
+            VAmountLessOrEqualPayable(paymentVoucherDetail, _payableService, _paymentVoucherDetailService);
             if (!isValid(paymentVoucherDetail)) { return paymentVoucherDetail; }
             VUniquePayableId(paymentVoucherDetail, _paymentVoucherDetailService, _payableService);
             return paymentVoucherDetail;
@@ -173,13 +189,13 @@ namespace Validation.Validation
             return obj;
         }
 
-        public PaymentVoucherDetail VConfirmObject(PaymentVoucherDetail paymentVoucherDetail, IPayableService _payableService)
+        public PaymentVoucherDetail VConfirmObject(PaymentVoucherDetail paymentVoucherDetail, IPayableService _payableService, IPaymentVoucherDetailService _paymentVoucherDetailService)
         {
             VHasNotBeenConfirmed(paymentVoucherDetail);
             if (!isValid(paymentVoucherDetail)) { return paymentVoucherDetail; }
             VHasConfirmationDate(paymentVoucherDetail);
             if (!isValid(paymentVoucherDetail)) { return paymentVoucherDetail; }
-            VAmountLessOrEqualPayable(paymentVoucherDetail, _payableService);
+            VTotalAmountLessOrEqualPayable(paymentVoucherDetail, _payableService, _paymentVoucherDetailService);
             return paymentVoucherDetail;
         }
 
@@ -207,9 +223,9 @@ namespace Validation.Validation
             return isValid(paymentVoucherDetail);
         }
 
-        public bool ValidConfirmObject(PaymentVoucherDetail paymentVoucherDetail, IPayableService _payableService)
+        public bool ValidConfirmObject(PaymentVoucherDetail paymentVoucherDetail, IPayableService _payableService, IPaymentVoucherDetailService _paymentVoucherDetailService)
         {
-            VConfirmObject(paymentVoucherDetail, _payableService);
+            VConfirmObject(paymentVoucherDetail, _payableService, _paymentVoucherDetailService);
             return isValid(paymentVoucherDetail);
         }
 

@@ -16,7 +16,7 @@ namespace Core.Interface.Validation
         //CashSalesReturnDetail VIsValidTotalPrice(CashSalesReturnDetail cashSalesReturnDetail, ICashSalesInvoiceDetailService _cashSalesInvoiceDetailService);
 
         CashSalesReturnDetail VConfirmObject(CashSalesReturnDetail cashSalesReturnDetail, ICashSalesInvoiceDetailService _cashSalesInvoiceDetailService, ICashSalesReturnDetailService _cashSalesReturnDetailService);
-        CashSalesReturnDetail VUnconfirmObject(CashSalesReturnDetail cashSalesReturnDetail);
+        CashSalesReturnDetail VUnconfirmObject(CashSalesReturnDetail cashSalesReturnDetail, IWarehouseItemService _warehouseItemService, ICashSalesInvoiceDetailService _cashSalesInvoiceDetailService);
 
         CashSalesReturnDetail VCreateObject(CashSalesReturnDetail cashSalesReturnDetail, ICashSalesReturnService _cashSalesReturnService,
                                                ICashSalesReturnDetailService _cashSalesReturnDetailService, ICashSalesInvoiceDetailService _cashSalesInvoiceDetailService);
@@ -25,7 +25,7 @@ namespace Core.Interface.Validation
         CashSalesReturnDetail VDeleteObject(CashSalesReturnDetail cashSalesReturnDetail, ICashSalesReturnService _cashSalesReturnService);
 
         bool ValidConfirmObject(CashSalesReturnDetail cashSalesReturnDetail, ICashSalesInvoiceDetailService _cashSalesInvoiceDetailService, ICashSalesReturnDetailService _cashSalesReturnDetailService);
-        bool ValidUnconfirmObject(CashSalesReturnDetail cashSalesReturnDetail);
+        bool ValidUnconfirmObject(CashSalesReturnDetail cashSalesReturnDetail, IWarehouseItemService _warehouseItemService, ICashSalesInvoiceDetailService _cashSalesInvoiceDetailService);
 
         bool ValidCreateObject(CashSalesReturnDetail cashSalesReturnDetail, ICashSalesReturnService _cashSalesReturnService,
                                ICashSalesReturnDetailService _cashSalesReturnDetailService, ICashSalesInvoiceDetailService _cashSalesInvoiceDetailService);

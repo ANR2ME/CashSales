@@ -33,13 +33,24 @@ namespace Validation.Validation
             return payable;
         }
 
+        public Payable VHasValidAmount(Payable payable)
+        {
+            if (payable.Amount < 0)
+            {
+                payable.Errors.Add("Generic", "Payable Amount Harus lebih besar atau sama dengan 0");
+            }
+            return payable;
+        }
+
         public Payable VCreateObject(Payable payable, IPayableService _payableService)
         {
+            //VHasValidAmount(payable);
             return payable;
         }
 
         public Payable VUpdateObject(Payable payable, IPayableService _payableService)
         {
+            VCreateObject(payable, _payableService);
             return payable;
         }
 

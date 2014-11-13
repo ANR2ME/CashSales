@@ -5,6 +5,8 @@ using System.Text;
 using Core.DomainModel;
 using Core.Interface.Repository;
 using Data.Context;
+using System.Linq.Dynamic;
+using System.Data.Entity;
 
 namespace Data.Repository
 {
@@ -33,12 +35,17 @@ namespace Data.Repository
 
         public IQueryable<CashSalesReturnDetail> GetQueryableObjectsByCashSalesReturnId(int CashSalesReturnId)
         {
-            return FindAll(x => x.CashSalesReturnId == CashSalesReturnId && !x.IsDeleted);
+            return FindAll(x => x.CashSalesReturnId == CashSalesReturnId && !x.IsDeleted).Include("CashSalesReturn").Include("CashSalesInvoiceDetail");
+        }
+
+        public IQueryable<CashSalesReturnDetail> GetQueryableObjectsByCashSalesInvoiceDetailId(int CashSalesInvoiceDetailId)
+        {
+            return FindAll(x => x.CashSalesInvoiceDetailId == CashSalesInvoiceDetailId && !x.IsDeleted).Include("CashSalesReturn").Include("CashSalesInvoiceDetail");
         }
 
         public IList<CashSalesReturnDetail> GetObjectsByCashSalesReturnId(int CashSalesReturnId)
         {
-            return FindAll(x => x.CashSalesReturnId == CashSalesReturnId && !x.IsDeleted).ToList();
+            return FindAll(x => x.CashSalesReturnId == CashSalesReturnId && !x.IsDeleted).Include("CashSalesReturn").Include("CashSalesInvoiceDetail").ToList();
         }
 
         public CashSalesReturnDetail GetObjectById(int Id)
@@ -50,7 +57,7 @@ namespace Data.Repository
 
         public IList<CashSalesReturnDetail> GetObjectsByCashSalesInvoiceDetailId(int CashSalesInvoiceDetailId)
         {
-            return FindAll(x => x.CashSalesInvoiceDetailId == CashSalesInvoiceDetailId && !x.IsDeleted).ToList();
+            return FindAll(x => x.CashSalesInvoiceDetailId == CashSalesInvoiceDetailId && !x.IsDeleted).Include("CashSalesReturn").Include("CashSalesInvoiceDetail").ToList();
         }
 
         public CashSalesReturnDetail CreateObject(CashSalesReturnDetail cashSalesReturnDetail)

@@ -85,7 +85,7 @@ namespace WebView.Controllers
             return View();
         }
 
-        public dynamic GetList(string _search, long nd, int rows, int? page, string sidx, string sord, string filters = "")
+        public dynamic GetList(string _search, long nd, int rows, int? page, string sidx, string sord, string filters = "", string findSKU = "")
         {
             // Construct where statement
             string strWhere = GeneralFunction.ConstructWhere(filters);
@@ -94,7 +94,7 @@ namespace WebView.Controllers
             if (filter == "") filter = "true";
 
             // Get Data
-            var q = _cashSalesReturnService.GetQueryable().Include("CashBank").Include("CashSalesInvoice");
+            var q = _cashSalesReturnService.GetQueryable().Include("CashBank").Include("CashSalesInvoice").Include("CashSalesReturnDetails").Include("CashSalesInvoiceDetail").Where(x => findSKU == "" || x.CashSalesReturnDetails.Where(y => y.CashSalesInvoiceDetail.Item.Sku.Contains(findSKU)).FirstOrDefault() != null);
 
             var query = (from model in q
                          select new

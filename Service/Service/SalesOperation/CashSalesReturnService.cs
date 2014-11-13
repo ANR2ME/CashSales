@@ -142,7 +142,7 @@ namespace Service.Service
                                                   IBarringService _barringService, IStockMutationService _stockMutationService,
                                                   IGeneralLedgerJournalService _generalLedgerJournalService, IAccountService _accountService, IClosingService _closingService)
         {
-            if (_validator.ValidUnconfirmObject(cashSalesReturn, _cashSalesReturnDetailService, _payableService, _paymentVoucherDetailService))
+            if (_validator.ValidUnconfirmObject(cashSalesReturn, _cashSalesReturnDetailService, _payableService, _paymentVoucherDetailService, _warehouseItemService, _cashSalesInvoiceDetailService))
             {
                 IList<CashSalesReturnDetail> cashSalesReturnDetails = _cashSalesReturnDetailService.GetObjectsByCashSalesReturnId(cashSalesReturn.Id);
                 foreach (var cashSalesReturnDetail in cashSalesReturnDetails)
@@ -264,7 +264,7 @@ namespace Service.Service
                         foreach (var paymentVoucherDetail in paymentVoucherDetails)
                         {
                             paymentVoucherDetail.Errors = new Dictionary<string, string>();
-                            _paymentVoucherDetailService.SoftDeleteObject(paymentVoucherDetail);
+                            _paymentVoucherDetailService.SoftDeleteObject(paymentVoucherDetail, _paymentVoucherService);
                         }
                         _paymentVoucherService.SoftDeleteObject(paymentVoucher, _paymentVoucherDetailService);
                     }

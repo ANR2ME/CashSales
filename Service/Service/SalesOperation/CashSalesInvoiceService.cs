@@ -290,7 +290,7 @@ namespace Service.Service
                         foreach (var receiptVoucherDetail in receiptVoucherDetails)
                         {
                             receiptVoucherDetail.Errors = new Dictionary<string, string>();
-                            _receiptVoucherDetailService.SoftDeleteObject(receiptVoucherDetail);
+                            _receiptVoucherDetailService.SoftDeleteObject(receiptVoucherDetail, _receiptVoucherService);
                         }
                         _receiptVoucherService.SoftDeleteObject(receiptVoucher, _receiptVoucherDetailService);
                     }

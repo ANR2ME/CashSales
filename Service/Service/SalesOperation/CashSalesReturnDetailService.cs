@@ -40,6 +40,11 @@ namespace Service.Service
             return _repository.GetQueryableObjectsByCashSalesReturnId(CashSalesReturnId);
         }
 
+        public IQueryable<CashSalesReturnDetail> GetQueryableObjectsByCashSalesInvoiceDetailId(int CashSalesInvoiceDetailId)
+        {
+            return _repository.GetQueryableObjectsByCashSalesInvoiceDetailId(CashSalesInvoiceDetailId);
+        }
+
         public IList<CashSalesReturnDetail> GetObjectsByCashSalesReturnId(int CashSalesReturnId)
         {
             return _repository.GetObjectsByCashSalesReturnId(CashSalesReturnId);
@@ -129,7 +134,7 @@ namespace Service.Service
                                                      IWarehouseItemService _warehouseItemService, IWarehouseService _warehouseService, 
                                                      IItemService _itemService, IBarringService _barringService, IStockMutationService _stockMutationService)
         {
-            if (_validator.ValidUnconfirmObject(cashSalesReturnDetail))
+            if (_validator.ValidUnconfirmObject(cashSalesReturnDetail, _warehouseItemService, _cashSalesInvoiceDetailService))
             {
                 CashSalesInvoiceDetail cashSalesInvoiceDetail = _cashSalesInvoiceDetailService.GetObjectById(cashSalesReturnDetail.CashSalesInvoiceDetailId);
                 Item item = _itemService.GetObjectById(cashSalesInvoiceDetail.ItemId);
@@ -191,13 +196,26 @@ namespace Service.Service
             return cashSalesReturn;
         }
 
-        public int GetTotalQuantityByCashSalesInvoiceDetailId(int Id)
+        public int GetTotalQuantityByCashSalesInvoiceDetailId(CashSalesReturnDetail cashSalesReturnDetail)
         {
-            IList<CashSalesReturnDetail> cashSalesReturnDetails = GetObjectsByCashSalesInvoiceDetailId(Id);
+            //IList<CashSalesReturnDetail> Details = GetObjectsByCashSalesInvoiceDetailId(Id);
+            IList<CashSalesReturnDetail> Details = GetQueryable().Where(x => !x.IsDeleted && x.CashSalesInvoiceDetailId == cashSalesReturnDetail.CashSalesInvoiceDetailId && x.Id != cashSalesReturnDetail.Id).ToList();
             int Quantity = 0;
-            foreach (var cashSalesReturnDetail in cashSalesReturnDetails)
+            foreach (var Detail in Details)
             {
-                Quantity += cashSalesReturnDetail.Quantity;
+                Quantity += Detail.Quantity;
+            }
+            return Quantity;
+        }
+
+        public int GetTotalQuantityByCashSalesReturnId(int CashSalesReturnId, int ItemId)
+        {
+            //IList<CashSalesReturnDetail> Details = GetObjectsByCashSalesInvoiceDetailId(Id);
+            IList<CashSalesReturnDetail> Details = GetQueryableObjectsByCashSalesReturnId(CashSalesReturnId).Where(x => !x.IsDeleted && x.CashSalesInvoiceDetail.ItemId == ItemId).ToList();
+            int Quantity = 0;
+            foreach (var Detail in Details)
+            {
+                Quantity += Detail.Quantity;
             }
             return Quantity;
         }

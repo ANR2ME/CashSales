@@ -80,7 +80,7 @@ namespace Service.Service
                     retailPurchaseInvoice.CoGS += retailPurchaseInvoiceDetail.CoGS;
                 }
                 // Tax dihitung setelah discount
-                retailPurchaseInvoice.Total = (retailPurchaseInvoice.Total * (100 - retailPurchaseInvoice.Discount) / 100) * (100 - retailPurchaseInvoice.Tax) / 100;
+                retailPurchaseInvoice.Total = (retailPurchaseInvoice.Total * (100 - retailPurchaseInvoice.Discount) / 100) * (100 + retailPurchaseInvoice.Tax) / 100;
                 Payable payable = _payableService.CreateObject(retailPurchaseInvoice.ContactId, Core.Constants.Constant.PayableSource.RetailPurchaseInvoice, retailPurchaseInvoice.Id, retailPurchaseInvoice.Code, retailPurchaseInvoice.Total, (DateTime)retailPurchaseInvoice.DueDate.GetValueOrDefault(),"");
                 retailPurchaseInvoice = _repository.ConfirmObject(retailPurchaseInvoice);
             }
@@ -166,7 +166,7 @@ namespace Service.Service
                         IList<PaymentVoucherDetail> paymentVoucherDetails = _paymentVoucherDetailService.GetObjectsByPaymentVoucherId(paymentVoucher.Id);
                         foreach (var paymentVoucherDetail in paymentVoucherDetails)
                         {
-                            _paymentVoucherDetailService.SoftDeleteObject(paymentVoucherDetail);
+                            _paymentVoucherDetailService.SoftDeleteObject(paymentVoucherDetail, _paymentVoucherService);
                         }
                         _paymentVoucherService.SoftDeleteObject(paymentVoucher, _paymentVoucherDetailService);
                     }

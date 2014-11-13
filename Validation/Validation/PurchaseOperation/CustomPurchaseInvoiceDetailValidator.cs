@@ -78,7 +78,7 @@ namespace Validation.Validation
             return customPurchaseInvoiceDetail;
         }
 
-        /*public CustomPurchaseInvoiceDetail VIsValidQuantityOrdered(CustomPurchaseInvoiceDetail customPurchaseInvoiceDetail, ICustomPurchaseInvoiceService _customPurchaseInvoiceService, IWarehouseItemService _warehouseItemService)
+        public CustomPurchaseInvoiceDetail VIsValidQuantityOrdered(CustomPurchaseInvoiceDetail customPurchaseInvoiceDetail, ICustomPurchaseInvoiceService _customPurchaseInvoiceService, IWarehouseItemService _warehouseItemService)
         {
             CustomPurchaseInvoice customPurchaseInvoice = _customPurchaseInvoiceService.GetObjectById(customPurchaseInvoiceDetail.CustomPurchaseInvoiceId);
             WarehouseItem warehouseItem = _warehouseItemService.FindOrCreateObject(customPurchaseInvoice.WarehouseId, customPurchaseInvoiceDetail.ItemId);
@@ -88,7 +88,7 @@ namespace Validation.Validation
                 return customPurchaseInvoiceDetail;
             }
             return customPurchaseInvoiceDetail;
-        }*/
+        }
 
         public CustomPurchaseInvoiceDetail VIsValidQuantity(CustomPurchaseInvoiceDetail customPurchaseInvoiceDetail)
         {
@@ -101,13 +101,13 @@ namespace Validation.Validation
 
         public CustomPurchaseInvoiceDetail VConfirmObject(CustomPurchaseInvoiceDetail customPurchaseInvoiceDetail, ICustomPurchaseInvoiceService _customPurchaseInvoiceService, IWarehouseItemService _warehouseItemService)
         {
-            //VIsValidQuantityOrdered(customPurchaseInvoiceDetail, _customPurchaseInvoiceService, _warehouseItemService);
+            
             return customPurchaseInvoiceDetail;
         }
 
-        public CustomPurchaseInvoiceDetail VUnconfirmObject(CustomPurchaseInvoiceDetail customPurchaseInvoiceDetail)
+        public CustomPurchaseInvoiceDetail VUnconfirmObject(CustomPurchaseInvoiceDetail customPurchaseInvoiceDetail, ICustomPurchaseInvoiceService _customPurchaseInvoiceService, IWarehouseItemService _warehouseItemService)
         {
-            
+            VIsValidQuantityOrdered(customPurchaseInvoiceDetail, _customPurchaseInvoiceService, _warehouseItemService);
             return customPurchaseInvoiceDetail;
         }
 
@@ -158,10 +158,10 @@ namespace Validation.Validation
             return isValid(customPurchaseInvoiceDetail);
         }
 
-        public bool ValidUnconfirmObject(CustomPurchaseInvoiceDetail customPurchaseInvoiceDetail)
+        public bool ValidUnconfirmObject(CustomPurchaseInvoiceDetail customPurchaseInvoiceDetail, ICustomPurchaseInvoiceService _customPurchaseInvoiceService, IWarehouseItemService _warehouseItemService)
         {
             customPurchaseInvoiceDetail.Errors.Clear();
-            VUnconfirmObject(customPurchaseInvoiceDetail);
+            VUnconfirmObject(customPurchaseInvoiceDetail, _customPurchaseInvoiceService, _warehouseItemService);
             return isValid(customPurchaseInvoiceDetail);
         }
 

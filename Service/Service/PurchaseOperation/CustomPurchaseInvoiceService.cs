@@ -79,7 +79,7 @@ namespace Service.Service
                     customPurchaseInvoice.CoGS += customPurchaseInvoiceDetail.CoGS;
                 }
                 // Tax dihitung setelah discount
-                //customPurchaseInvoice.Total = (customPurchaseInvoice.Total * (100 - customPurchaseInvoice.Discount) / 100) * (100 - customPurchaseInvoice.Tax) / 100;
+                //customPurchaseInvoice.Total = (customPurchaseInvoice.Total * (100 - customPurchaseInvoice.Discount) / 100) * (100 + customPurchaseInvoice.Tax) / 100;
                 customPurchaseInvoice.Total = CalculateTotalAmountAfterDiscountAndTax(customPurchaseInvoice);
                 // Tambahkan ongkos kirim
                 //customPurchaseInvoice.Total += customPurchaseInvoice.ShippingFee; // sudah ditambahkan saat CalculateTotalAmountAfterDiscountAndTax
@@ -115,7 +115,7 @@ namespace Service.Service
                     customPurchaseInvoice.CoGS += customPurchaseInvoiceDetail.CoGS;
                 }
                 // Tax dihitung setelah discount
-                //customPurchaseInvoice.Total = (customPurchaseInvoice.Total * (100 - customPurchaseInvoice.Discount) / 100) * (100 - customPurchaseInvoice.Tax) / 100;
+                //customPurchaseInvoice.Total = (customPurchaseInvoice.Total * (100 - customPurchaseInvoice.Discount) / 100) * (100 + customPurchaseInvoice.Tax) / 100;
                 customPurchaseInvoice.Total = CalculateTotalAmountAfterDiscountAndTax(customPurchaseInvoice);
                 // Tambahkan ongkos kirim
                 //customPurchaseInvoice.Total += customPurchaseInvoice.ShippingFee; // sudah ditambahkan saat CalculateTotalAmountAfterDiscountAndTax
@@ -136,14 +136,14 @@ namespace Service.Service
                                                   IBarringService _barringService, IStockMutationService _stockMutationService, IPriceMutationService _priceMutationService,
                                                   IGeneralLedgerJournalService _generalLedgerJournalService, IAccountService _accountService, IClosingService _closingService)
         {
-            if (_validator.ValidUnconfirmObject(customPurchaseInvoice, _customPurchaseInvoiceDetailService, _payableService, _paymentVoucherDetailService, _closingService))
+            if (_validator.ValidUnconfirmObject(customPurchaseInvoice, _customPurchaseInvoiceDetailService, _warehouseItemService, this, _payableService, _paymentVoucherDetailService, _closingService))
             {
                 
                 IList<CustomPurchaseInvoiceDetail> customPurchaseInvoiceDetails = _customPurchaseInvoiceDetailService.GetObjectsByCustomPurchaseInvoiceId(customPurchaseInvoice.Id);
                 foreach (var customPurchaseInvoiceDetail in customPurchaseInvoiceDetails)
                 {
                     customPurchaseInvoiceDetail.Errors = new Dictionary<string, string>();
-                    _customPurchaseInvoiceDetailService.UnconfirmObject(customPurchaseInvoiceDetail, _warehouseItemService, _warehouseService, _itemService, _barringService, _stockMutationService, _priceMutationService);
+                    _customPurchaseInvoiceDetailService.UnconfirmObject(customPurchaseInvoiceDetail, _warehouseItemService, this, _warehouseService, _itemService, _barringService, _stockMutationService, _priceMutationService);
                 }
                 _generalLedgerJournalService.CreateUnconfirmationJournalForCustomPurchaseInvoice(customPurchaseInvoice, _accountService);
                 Payable payable = _payableService.GetObjectBySource(Core.Constants.Constant.PayableSource.CustomPurchaseInvoice, customPurchaseInvoice.Id);
@@ -292,7 +292,7 @@ namespace Service.Service
                         foreach (var paymentVoucherDetail in paymentVoucherDetails)
                         {
                             paymentVoucherDetail.Errors = new Dictionary<string, string>();
-                            _paymentVoucherDetailService.SoftDeleteObject(paymentVoucherDetail);
+                            _paymentVoucherDetailService.SoftDeleteObject(paymentVoucherDetail, _paymentVoucherService);
                         }
                         _paymentVoucherService.SoftDeleteObject(paymentVoucher, _paymentVoucherDetailService);
                     }
@@ -319,7 +319,7 @@ namespace Service.Service
 
         public decimal CalculateTotalAmountAfterDiscountAndTax(CustomPurchaseInvoice customPurchaseInvoice)
         {
-            decimal total = ((customPurchaseInvoice.Total * (100 - customPurchaseInvoice.Discount) / 100) * (100 - customPurchaseInvoice.Tax) / 100);
+            decimal total = ((customPurchaseInvoice.Total * (100 - customPurchaseInvoice.Discount) / 100) * (100 + customPurchaseInvoice.Tax) / 100);
             total += customPurchaseInvoice.ShippingFee;
             return total;
         }

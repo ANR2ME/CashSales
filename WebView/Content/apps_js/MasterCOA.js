@@ -5,11 +5,12 @@
     }
 
     function ReloadGrid() {
-        $("#list_mstcoa").setGridParam({ url: base_url + 'ChartOfAccount/GetList', postData: { filters: null }, page: 'first' }).trigger("reloadGrid");
+        $("#list_mstcoa").setGridParam({ url: base_url + 'ChartOfAccount/GetList', postData: { filters: null }, page: '1' }).trigger("reloadGrid");
     }
 
     function ClearData() {
         $('#Name').val('').text('').removeClass('errormessage');
+        $('#Code').val('').text('').removeClass('errormessage');
         $('#mstcoa_form_btn_save').data('kode', '');
 
         ClearErrorMessage();
@@ -34,7 +35,7 @@
                   { name: 'parentcode', index: 'parentid', width: 80, classes: "grid-col" },
                   { name: 'parent', index: 'parent', width: 150 },
                   { name: 'islegacy', index: 'islegacy', width: 40, stype: 'select', editoptions: { value: ':;true:Y;false:N' } },
-                  { name: 'iscashbank', index: 'iscashbank', width: 60, stype: 'select', editoptions: { value: ':;true:Y;false:N' } },
+                  { name: 'iscashbankaccount', index: 'iscashbankaccount', width: 60, stype: 'select', editoptions: { value: ':;true:Y;false:N' } },
                   { name: 'legacycode', index: 'legacycode', width: 80, hidden: true },
                   { name: 'isleaf', index: 'isleaf', width: 40, stype: 'select', editoptions: { value: ':;true:Y;false:N' } },
         ],
@@ -62,13 +63,13 @@
             }
             $(this).jqGrid('setRowData', ids[i], { islegacy: rowIsLegacy });
 
-            rowIsCashBankAccount = $(this).getRowData(cl).iscashbank;
+            rowIsCashBankAccount = $(this).getRowData(cl).iscashbankaccount;
             if (rowIsCashBankAccount == 'true') {
                 rowIsCashBankAccount = "Y";
             } else {
                 rowIsCashBankAccount = "N";
             }
-            $(this).jqGrid('setRowData', ids[i], { iscashbank: rowIsCashBankAccount });
+            $(this).jqGrid('setRowData', ids[i], { iscashbankaccount: rowIsCashBankAccount });
 
             rowIsLeaf = $(this).getRowData(cl).isleaf;
             if (rowIsLeaf == 'true') {
@@ -97,17 +98,18 @@
       
 });
     $("#list_mstcoa").jqGrid('navGrid', '#toolbar_coa', { del: false, add: false, edit: false, search: false })
-           .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: false });
+           .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: true });
 
     //GRID LOOKUP +++++++++++++++
     $("#lookup_table_coa").jqGrid({
         url: base_url + 'index.html',
         datatype: "json",
-        colNames: ['Id', 'Account Code', 'Account Name'],
+        colNames: ['Id', 'Account Code', 'Account Name', 'Account Group'],
         colModel: [
                   { name: 'Id', index: 'Id', width: 40, hidden: true },
 				  { name: 'Code', index: 'Code', width: 80 },
 				  { name: 'Name', index: 'Name', width: 150 },
+                  { name: 'Group', index: 'Group', width: 100 },
             ],
         page: '1',
         pager: $('#lookup_pager_coa'),
@@ -117,10 +119,55 @@
         viewrecords: true,
         sortorder: "ASC",
         width: $("#lookup_div_coa").width() - 10,
-        height: $("#lookup_div_coa").height() - 115
+        height: $("#lookup_div_coa").height() - 115,
+        gridComplete:
+         function () {
+             var ids = $(this).jqGrid('getDataIDs');
+             for (var i = 0; i < ids.length; i++) {
+                 var cl = ids[i];
+                 rowIsLegacy = $(this).getRowData(cl).islegacy;
+                 if (rowIsLegacy == 'true') {
+                     rowIsLegacy = "Y";
+                 } else {
+                     rowIsLegacy = "N";
+                 }
+                 $(this).jqGrid('setRowData', ids[i], { islegacy: rowIsLegacy });
+
+                 rowIsCashBankAccount = $(this).getRowData(cl).iscashbankaccount;
+                 if (rowIsCashBankAccount == 'true') {
+                     rowIsCashBankAccount = "Y";
+                 } else {
+                     rowIsCashBankAccount = "N";
+                 }
+                 $(this).jqGrid('setRowData', ids[i], { iscashbankaccount: rowIsCashBankAccount });
+
+                 rowIsLeaf = $(this).getRowData(cl).isleaf;
+                 if (rowIsLeaf == 'true') {
+                     rowIsLeaf = "Y";
+                 } else {
+                     rowIsLeaf = "N";
+                 }
+                 $(this).jqGrid('setRowData', ids[i], { isleaf: rowIsLeaf });
+
+                 rowGroup = $(this).getRowData(cl).Group;
+                 if (rowGroup == 1) {
+                     rowGroup = "Asset";
+                 } else if (rowGroup == 2) {
+                     rowGroup = "Expense";
+                 } else if (rowGroup == 3) {
+                     rowGroup = "Equity";
+                 } else if (rowGroup == 4) {
+                     rowGroup = "Revenue";
+                 } else if (rowGroup == 5) {
+                     rowGroup = "Liability";
+                 }
+                 $(this).jqGrid('setRowData', ids[i], { Group: rowGroup });
+
+             }
+         }
     });
     $("#lookup_table_coa").jqGrid('navGrid', '#lookup_toolbar_coa', { del: false, add: false, edit: false, search: false })
-           .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: false });
+           .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: true });
 
     //END GRID
 
@@ -142,6 +189,7 @@
     });
 
     $('#mstcoa_btn_add_new').click(function () {
+        ClearData();
         clearForm('#frm');
         $('#mstcoa_form_div').dialog('open');
     });
@@ -341,6 +389,7 @@
             $('#ParentId').val(ret.Id);
             $('#ParentCode').val(ret.Code).data('kode', id);
             $('#ParentName').val(ret.Name);
+            $('#Code').val(ret.Code);
 
             $("#lookup_div_coa").dialog('close');
         } else {

@@ -120,7 +120,7 @@ namespace WebView.Controllers
                              model.IsFullPayment,
                              model.Total,
                              model.CoGS,
-                             profitloss = (model.IsConfirmed ? (Nullable<decimal>)((model.Total * (100 - model.Tax)/100) - model.CoGS) : null),
+                             profitloss = (model.IsConfirmed ? (Nullable<decimal>)((model.Total * 100 / (100 + model.Tax)) - model.CoGS) : null),
                              model.WarehouseId,
                              warehouse = model.Warehouse.Name,
                              model.CreatedAt,

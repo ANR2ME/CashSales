@@ -26,6 +26,11 @@ namespace Service.Service
             return _validator;
         }
 
+        public IPaymentVoucherRepository GetRepository()
+        {
+            return _repository;
+        }
+
         public IQueryable<PaymentVoucher> GetQueryable()
         {
             return _repository.GetQueryable();
@@ -113,7 +118,7 @@ namespace Service.Service
                 foreach (var detail in details)
                 {
                     detail.Errors = new Dictionary<string, string>();
-                    _paymentVoucherDetailService.ConfirmObject(detail, ConfirmationDate, this, _payableService);
+                    _paymentVoucherDetailService.ConfirmObject(detail, ConfirmationDate, this, _payableService, _paymentVoucherDetailService);
                 }
                 
                 _repository.ConfirmObject(paymentVoucher);

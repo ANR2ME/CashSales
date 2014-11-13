@@ -43,9 +43,9 @@ namespace Validation.Validation
 
         public StockAdjustmentDetail VNonZeroQuantity(StockAdjustmentDetail stockAdjustmentDetail)
         {
-            if (stockAdjustmentDetail.Quantity == 0)
+            if (stockAdjustmentDetail.Quantity <= 0)
             {
-                stockAdjustmentDetail.Errors.Add("Quantity", "Tidak boleh 0");
+                stockAdjustmentDetail.Errors.Add("Quantity", "Harus lebih besar dari 0");
             }
             return stockAdjustmentDetail;
         }

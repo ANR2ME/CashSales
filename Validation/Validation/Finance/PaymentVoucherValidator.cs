@@ -100,6 +100,21 @@ namespace Validation.Validation
             return paymentVoucher;
         }
 
+        public PaymentVoucher VTotalDetailsAmountIsEqualTotalAmount(PaymentVoucher paymentVoucher, IPaymentVoucherDetailService _paymentVoucherDetailService)
+        {
+            decimal totalamount = 0;
+            IList<PaymentVoucherDetail> details = _paymentVoucherDetailService.GetObjectsByPaymentVoucherId(paymentVoucher.Id);
+            foreach (var detail in details)
+            {
+                totalamount += detail.Amount;
+            }
+            if (totalamount != paymentVoucher.TotalAmount)
+            {
+                paymentVoucher.Errors.Add("Generic", "Total Details Amount harus sama dengan Total Amount");
+            }
+            return paymentVoucher;
+        }
+
         public PaymentVoucher VHasNotBeenDeleted(PaymentVoucher paymentVoucher)
         {
             if (paymentVoucher.IsDeleted)
@@ -137,11 +152,11 @@ namespace Validation.Validation
                 detail.Errors = new Dictionary<string, string>();
                 detail.ConfirmationDate = paymentVoucher.ConfirmationDate;
                 detail.Errors = new Dictionary<string, string>();
-                if (!_paymentVoucherDetailService.GetValidator().ValidConfirmObject(detail, _payableService))
+                if (!_paymentVoucherDetailService.GetValidator().ValidConfirmObject(detail, _payableService, _paymentVoucherDetailService))
                 {
                     foreach (var error in detail.Errors)
                     {
-                        paymentVoucher.Errors.Add(error.Key, error.Value);
+                        paymentVoucher.Errors.Add("Generic", error.Key + " " + error.Value);
                     }
                     if (paymentVoucher.Errors.Any()) { return paymentVoucher; }
                 }
@@ -294,15 +309,17 @@ namespace Validation.Validation
                                              IPaymentVoucherDetailService _paymentVoucherDetailService, ICashBankService _cashBankService,
                                              IPayableService _payableService, IClosingService _closingService)
         {
+            VHasNotBeenDeleted(paymentVoucher);
+            if (!isValid(paymentVoucher)) { return paymentVoucher; }
+            VHasNotBeenConfirmed(paymentVoucher);
+            if (!isValid(paymentVoucher)) { return paymentVoucher; }
             VHasConfirmationDate(paymentVoucher);
             if (!isValid(paymentVoucher)) { return paymentVoucher; }
             VHasPaymentVoucherDetails(paymentVoucher, _paymentVoucherDetailService);
             if (!isValid(paymentVoucher)) { return paymentVoucher; }
             VTotalAmountIsNotZero(paymentVoucher, _paymentVoucherDetailService);
             if (!isValid(paymentVoucher)) { return paymentVoucher; }
-            VHasNotBeenConfirmed(paymentVoucher);
-            if (!isValid(paymentVoucher)) { return paymentVoucher; }
-            VHasNotBeenDeleted(paymentVoucher);
+            VTotalDetailsAmountIsEqualTotalAmount(paymentVoucher, _paymentVoucherDetailService);
             if (!isValid(paymentVoucher)) { return paymentVoucher; }
             VAllPaymentVoucherDetailsAreConfirmable(paymentVoucher, _paymentVoucherService, _paymentVoucherDetailService, _cashBankService, _payableService);
             if (!isValid(paymentVoucher)) { return paymentVoucher; }

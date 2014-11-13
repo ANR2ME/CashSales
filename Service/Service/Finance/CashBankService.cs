@@ -26,6 +26,11 @@ namespace Service.Service
             return _validator;
         }
 
+        public ICashBankRepository GetRepository()
+        {
+            return _repository;
+        }
+
         public IQueryable<CashBank> GetQueryable()
         {
             return _repository.GetQueryable();
@@ -57,29 +62,41 @@ namespace Service.Service
                 {
                     // Create Leaf Cash Bank Account
                     string Code = GenerateAccountCode(_accountService);
+                    Account parent = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.CashBank);
                     account = new Account()
                     {
                         Name = cashBank.Name,
-                        Level = 3,
+                        //Level = 3,
                         Group = Constant.AccountGroup.Asset,
                         Code = Code,
                         IsCashBankAccount = true,
                         IsLeaf = true,
-                        ParentId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.CashBank).Id,
-                        LegacyCode = Constant.AccountLegacyCode.CashBank + cashBank.Id,
+                        ParentId = parent.Id,
+                        Level = parent.Level + 1,
+                        LegacyCode = Constant.AccountLegacyCode.CashBank + cashBank.Id.ToString("D3"),
                     };
-                    _accountService.CreateCashBankAccount(account, _accountService);
+                    _accountService.CreateCashBankAccount(account);
 
-                    //account.LegacyCode = Constant.AccountLegacyCode.CashBank + cashBank.Id;
+                    //account.LegacyCode = Constant.AccountLegacyCode.CashBank + cashBank.Id.ToString("D3");
                     //_accountService.UpdateObject(account, _accountService);
                 }
             }
             return cashBank;
         }
 
-        public CashBank UpdateObject(CashBank cashBank)
+        public CashBank UpdateObject(CashBank cashBank, string OldName, IAccountService _accountService)
         {
-            return (cashBank = _validator.ValidUpdateObject(cashBank, this) ? _repository.UpdateObject(cashBank) : cashBank);
+            if(_validator.ValidUpdateObject(cashBank, this))
+            {
+                _repository.UpdateObject(cashBank);
+                Account account = _accountService.GetObjectByNameAndLegacyCode(Constant.AccountLegacyCode.CashBank + cashBank.Id.ToString("D3"), OldName);
+                if (account != null && cashBank.Name != account.Name)
+                {
+                    account.Name = cashBank.Name;
+                    _accountService.UpdateObjectForCashBank(account, account.ParentId);
+                }
+            };
+            return cashBank;
         }
 
         public CashBank SoftDeleteObject(CashBank cashBank, ICashMutationService _cashMutationService, IAccountService _accountService)
@@ -87,10 +104,10 @@ namespace Service.Service
             if(_validator.ValidDeleteObject(cashBank, _cashMutationService))
             {
                 _repository.SoftDeleteObject(cashBank);
-                Account account = _accountService.GetObjectByNameAndLegacyCode(Constant.AccountLegacyCode.CashBank + cashBank.Id, cashBank.Name);
+                Account account = _accountService.GetObjectByNameAndLegacyCode(Constant.AccountLegacyCode.CashBank + cashBank.Id.ToString("D3"), cashBank.Name);
                 if (account != null)
                 {
-                    _accountService.SoftDeleteObject(account);
+                    _accountService.SoftDeleteObjectForCashBank(account);
                 }
             }
             return cashBank;
@@ -125,7 +142,7 @@ namespace Service.Service
             int newId = _accountService.GetQueryable().Where(x => x.ParentId == ParentId && !x.IsDeleted).Count() + 1;
             while (true)
             {
-                if (_accountService.GetObjectByLegacyCode(parentCode + newId.ToString()) == null)
+                if (_accountService.GetObjectByLegacyCode(parentCode + newId.ToString("D3")) == null)
                 {
                     return parentCode + newId.ToString();
                 }

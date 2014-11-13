@@ -13,18 +13,24 @@ namespace Core.Interface.Service
         IAccountValidator GetValidator();
         IList<Account> GetAll();
         IList<Account> GetLeafObjects();
+        IList<Account> GetLeafObjectsById(int? Id);
         IList<Account> GetLegacyObjects();
         Account GetObjectById(int Id);
         Account GetObjectByLegacyCode(string LegacyCode);
         Account GetObjectByNameAndLegacyCode(string LegacyCode, string Name);
         Account GetObjectByNameAndParentLegacyCode(string ParentLegacyCode, string Name);
         Account GetObjectByIsLegacy(bool IsLegacy);
-        Account CreateObject(Account account, IAccountService _accountService);
-        Account CreateLegacyObject(Account account, IAccountService _accountService);
-        Account FindOrCreateLegacyObject(Account account, IAccountService _accountService);
-        Account CreateCashBankAccount(Account account, IAccountService _accountService);
-        Account UpdateObject(Account account, IAccountService _accountService);
+        Account CreateObject(Account account);
+        Account CreateLegacyObject(Account account);
+        Account FindOrCreateLegacyObject(Account account);
+        Account CreateCashBankAccount(Account account);
+        Account UpdateObject(Account account, int? OldParentId);
+        Account UpdateObjectForCashBank(Account account, int? OldParentId);
+        Account UpdateObjectForLegacy(Account account, int? OldParentId);
         Account SoftDeleteObject(Account account);
+        Account SoftDeleteObjectForCashBank(Account account);
+        Account SoftDeleteObjectForLegacy(Account account);
         bool DeleteObject(int Id);
+        bool IsCodeDuplicated(Account account);
     }
 }

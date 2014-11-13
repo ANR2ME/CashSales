@@ -41,84 +41,100 @@ namespace Core.Constants
         public class AccountCode
         {
             public static string Asset = "1";
-            public static string CashBank = "11";
-            public static string AccountReceivable = "12";
-            public static string AccountReceivablePPNmasukan = "121";
-            public static string AccountReceivableTrading = "122";
-            public static string GBCHReceivable = "13";
-            public static string Inventory = "14";
-            //public static string FinishedGoods = "141"; // Raw
+            public static string CashBank = "101";
+            public static string AccountReceivable = "102";
+            public static string AccountReceivablePPNmasukan = "102001";
+            public static string AccountReceivableTrading = "102002";
+            public static string GBCHReceivable = "103";
+            public static string Inventory = "104";
+            //public static string FinishedGoods = "104001"; // Raw
 
             public static string Expense = "2";
-            public static string COGS = "21";
-            public static string CashBankAdjustmentExpense = "22";
-            public static string SalesDiscountExpense = "23";
-            public static string SalesAllowanceExpense = "24";
-            public static string StockAdjustmentExpense = "25";
-            public static string FreightIn = "26";
-            public static string SalesReturnExpense = "27";
-            //public static string TaxExpense = "28";
+            public static string COGS = "201";
+            public static string OperationalExpenses = "202";
+            public static string CashBankAdjustmentExpense = "202001";
+            public static string SalesDiscountExpense = "202002";
+            public static string SalesAllowanceExpense = "202003";
+            public static string StockAdjustmentExpense = "202004";
+            public static string SalesReturnExpense = "202005";
+            public static string FreightIn = "202006";
+            public static string NonOperationalExpenses = "203"; // Memorials
+            public static string Tax = "203001"; // Memorials
+            public static string Divident = "203002"; // Memorials
+            public static string InterestEarning = "203003"; // Memorials
+            public static string Depreciation = "203004"; // Memorials
+            public static string Amortization = "203005"; // Memorials
+            //public static string COS = "204";
 
             public static string Liability = "3";
-            public static string AccountPayable = "31";
-            public static string AccountPayableTrading = "311";
-            public static string AccountPayableNonTrading = "312";
-            public static string AccountPayablePPNkeluaran = "313";
-            public static string GBCHPayable = "32";
-            public static string GoodsPendingClearance = "33";
-            public static string PurchaseDiscount = "34"; // contra account
-            public static string PurchaseAllowance = "35"; // contra account
-            public static string SalesReturnAllowance = "36"; // contra account
-            //public static string DeliveryExpense = "37";
+            public static string AccountPayable = "301";
+            public static string AccountPayableTrading = "301001";
+            public static string AccountPayableNonTrading = "301002";
+            public static string AccountPayablePPNkeluaran = "301003";
+            public static string GBCHPayable = "302";
+            public static string GoodsPendingClearance = "303";
+            public static string PurchaseDiscount = "304"; // contra account
+            public static string PurchaseAllowance = "305"; // contra account
+            public static string SalesReturnAllowance = "306"; // contra account
+            //public static string DeliveryExpense = "307";
 
             public static string Equity = "4";
-            public static string OwnersEquity = "41";
-            public static string EquityAdjustment = "411";
+            public static string OwnersEquity = "401";
+            public static string EquityAdjustment = "401001";
+            public static string RetainedEarnings = "402";
 
             public static string Revenue = "5";
-            public static string FreightOut = "51";
-            public static string SalesRevenue = "52";
+            public static string FreightOut = "501";
+            public static string SalesRevenue = "502";
         }
 
         public class AccountLegacyCode
         {
             public static string Asset = "A1";
-            public static string CashBank = "A11";
-            public static string AccountReceivable = "A12";
-            public static string AccountReceivablePPNmasukan = "A121";
-            public static string AccountReceivableTrading = "A122";
-            public static string GBCHReceivable = "A13";
-            public static string Inventory = "A14";
+            public static string CashBank = "A101";
+            public static string AccountReceivable = "A102";
+            public static string AccountReceivablePPNmasukan = "A102001";
+            public static string AccountReceivableTrading = "A102002";
+            public static string GBCHReceivable = "A103";
+            public static string Inventory = "A104";
 
-            public static string Expense = "X1";
-            public static string COGS = "X11";
-            public static string CashBankAdjustmentExpense = "X12";
-            public static string SalesDiscountExpense = "X13";
-            public static string SalesAllowanceExpense = "X14";
-            public static string StockAdjustmentExpense = "X15";
-            public static string FreightIn = "X16";
-            public static string SalesReturnExpense = "X17";
-            //public static string TaxExpense = "X18";
+            public static string Expense = "X2";
+            public static string COGS = "X201";
+            public static string OperationalExpenses = "X202";
+            public static string CashBankAdjustmentExpense = "X202001";
+            public static string SalesDiscountExpense = "X202002";
+            public static string SalesAllowanceExpense = "X202003";
+            public static string StockAdjustmentExpense = "X202004";
+            public static string SalesReturnExpense = "X202005";
+            public static string FreightIn = "X202006";
+            public static string NonOperationalExpenses = "X203"; // Memorials
+            public static string Tax = "X203001"; // Memorials
+            public static string Divident = "X203002"; // Memorials
+            public static string InterestEarning = "X203003"; // Memorials
+            public static string Depreciation = "X203004"; // Memorials
+            public static string Amortization = "X203005"; // Memorials
+            //public static string COS = "X204";
 
-            public static string Liability = "L1";
-            public static string AccountPayable = "L11";
-            public static string AccountPayableTrading = "L111";
-            public static string AccountPayableNonTrading = "L112";
-            public static string AccountPayablePPNkeluaran = "L113";
-            public static string GBCHPayable = "L12";
-            public static string GoodsPendingClearance = "L13";
-            public static string PurchaseDiscount = "L14"; // contra account
-            public static string PurchaseAllowance = "L15"; // contra account
-            public static string SalesReturnAllowance = "L16"; // contra account
-            //public static string DeliveryExpense = "L17";
+            public static string Liability = "L3";
+            public static string AccountPayable = "L301";
+            public static string AccountPayableTrading = "L301001";
+            public static string AccountPayableNonTrading = "L301002";
+            public static string AccountPayablePPNkeluaran = "L301003";
+            public static string GBCHPayable = "L302";
+            public static string GoodsPendingClearance = "L303";
+            public static string PurchaseDiscount = "L304"; // contra account
+            public static string PurchaseAllowance = "L305"; // contra account
+            public static string SalesReturnAllowance = "L306"; // contra account
+            //public static string DeliveryExpense = "L307";
 
-            public static string Equity = "E1";
-            public static string OwnersEquity = "E11";
-            public static string EquityAdjustment = "E111";
+            public static string Equity = "E4";
+            public static string OwnersEquity = "E401";
+            public static string EquityAdjustment = "E401001";
+            public static string RetainedEarnings = "E402";
 
-            public static string Revenue = "R1";
-            public static string FreightOut = "R11";
-            public static string SalesRevenue = "R12";
+            public static string Revenue = "R5";
+            public static string FreightOut = "R501";
+            public static string SalesRevenue = "R502";
 
             public static string Unknown = "U1";
         }

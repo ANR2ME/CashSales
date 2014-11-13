@@ -137,6 +137,17 @@ namespace WebView.Controllers
              try
              {
                  model = _companyService.GetQueryable().FirstOrDefault();
+
+                 return Json(new
+                 {
+                     model.Id,
+                     model.Name,
+                     model.Address,
+                     model.ContactNo,
+                     model.Logo,
+                     model.Email,
+                     model.Errors
+                 }, JsonRequestBehavior.AllowGet);
              }
              catch (Exception ex)
              {

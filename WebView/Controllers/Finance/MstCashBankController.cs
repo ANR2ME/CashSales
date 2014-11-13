@@ -182,10 +182,11 @@ namespace WebView.Controllers
                 }
 
                 var data = _cashBankService.GetObjectById(model.Id);
+                string oldname = data.Name;
                 data.Name = model.Name;
                 data.Description = model.Description;
                 data.IsBank = model.IsBank;
-                model = _cashBankService.UpdateObject(data);
+                model = _cashBankService.UpdateObject(data, oldname, _accountService);
             }
             catch (Exception ex)
             {

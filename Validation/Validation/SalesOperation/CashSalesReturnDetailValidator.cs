@@ -32,7 +32,7 @@ namespace Validation.Validation
             CashSalesReturn cashSalesReturn = _cashSalesReturnService.GetObjectById(cashSalesReturnDetail.CashSalesReturnId);
             if (cashSalesReturn == null)
             {
-                cashSalesReturnDetail.Errors.Add("CashSalesReturnId", "Tidak valid");
+                cashSalesReturnDetail.Errors.Add("Generic", "CashSalesReturn Tidak valid");
             }
             return cashSalesReturnDetail;
         }
@@ -43,15 +43,15 @@ namespace Validation.Validation
             CashSalesReturn cashSalesReturn = _cashSalesReturnService.GetObjectById(cashSalesReturnDetail.CashSalesReturnId);
             if (cashSalesInvoiceDetail == null)
             {
-                cashSalesReturnDetail.Errors.Add("CashSalesInvoiceDetailId", "Tidak valid");
+                cashSalesReturnDetail.Errors.Add("CashSalesInvoiceDetail", "Tidak valid");
             }
             else if (cashSalesReturn == null)
             {
-                cashSalesReturnDetail.Errors.Add("CashSalesReturnId", "Tidak valid");
+                cashSalesReturnDetail.Errors.Add("Generic", "CashSalesReturn Tidak valid");
             }
             else if (cashSalesInvoiceDetail.CashSalesInvoiceId != cashSalesReturn.CashSalesInvoiceId)
             {
-                cashSalesReturnDetail.Errors.Add("CashSalesInvoiceId", "Tidak sama");
+                cashSalesReturnDetail.Errors.Add("Generic", "CashSalesInvoice Tidak sama");
             }
             return cashSalesReturnDetail;
         }
@@ -60,9 +60,32 @@ namespace Validation.Validation
         {
             CashSalesInvoiceDetail cashSalesInvoiceDetail = _cashSalesInvoiceDetailService.GetObjectById(cashSalesReturnDetail.CashSalesInvoiceDetailId);
 
-            if (cashSalesReturnDetail.Quantity <= 0 || _cashSalesReturnDetailService.GetTotalQuantityByCashSalesInvoiceDetailId(cashSalesReturnDetail.CashSalesInvoiceDetailId) > cashSalesInvoiceDetail.Quantity)
+            if (cashSalesReturnDetail.Quantity <= 0 || _cashSalesReturnDetailService.GetTotalQuantityByCashSalesInvoiceDetailId(cashSalesReturnDetail) + cashSalesReturnDetail.Quantity > cashSalesInvoiceDetail.Quantity)
             {
                 cashSalesReturnDetail.Errors.Add("Quantity", "Quantity harus lebih besar dari 0 dan lebih kecil atau sama dengan CashSalesInvoiceDetail Quantity");
+                return cashSalesReturnDetail;
+            }
+            return cashSalesReturnDetail;
+        }
+
+        public CashSalesReturnDetail VHasEnoughQuantity(CashSalesReturnDetail cashSalesReturnDetail, IWarehouseItemService _warehouseItemService, ICashSalesInvoiceDetailService _cashSalesInvoiceDetailService)
+        {
+            CashSalesInvoiceDetail cashSalesInvoiceDetail = _cashSalesInvoiceDetailService.GetObjectById(cashSalesReturnDetail.CashSalesInvoiceDetailId);
+            WarehouseItem warehouseItem = _warehouseItemService.FindOrCreateObject(cashSalesInvoiceDetail.CashSalesInvoice.WarehouseId, cashSalesInvoiceDetail.ItemId);
+            //int totalquantity = _cashSalesReturnDetailService.GetTotalQuantityByCashSalesReturnId(cashSalesReturnDetail.CashSalesReturnId, cashSalesInvoiceDetail.ItemId);
+            if (cashSalesReturnDetail.Quantity > warehouseItem.Quantity)
+            {
+                cashSalesReturnDetail.Errors.Add("Generic", "Quantity harus lebih kecil atau sama dengan WarehouseItem Quantity (SKU : " + cashSalesInvoiceDetail.Item.Sku + ")");
+                return cashSalesReturnDetail;
+            }
+            return cashSalesReturnDetail;
+        }
+
+        public CashSalesReturnDetail VHasUniqueCashSalesInvoiceDetail(CashSalesReturnDetail cashSalesReturnDetail, ICashSalesReturnDetailService _cashSalesReturnDetailService)
+        {
+            if(_cashSalesReturnDetailService.GetQueryableObjectsByCashSalesInvoiceDetailId(cashSalesReturnDetail.CashSalesInvoiceDetailId).Where(x => x.Id != cashSalesReturnDetail.Id).Any())
+            {
+                cashSalesReturnDetail.Errors.Add("CashSalesInvoiceDetail", "CashSalesInvoiceDetail Harus Unik di dalam satu CashSalesReturn");
                 return cashSalesReturnDetail;
             }
             return cashSalesReturnDetail;
@@ -86,9 +109,9 @@ namespace Validation.Validation
             return cashSalesReturnDetail;
         }
 
-        public CashSalesReturnDetail VUnconfirmObject(CashSalesReturnDetail cashSalesReturnDetail)
+        public CashSalesReturnDetail VUnconfirmObject(CashSalesReturnDetail cashSalesReturnDetail, IWarehouseItemService _warehouseItemService, ICashSalesInvoiceDetailService _cashSalesInvoiceDetailService)
         {
-            
+            VHasEnoughQuantity(cashSalesReturnDetail, _warehouseItemService, _cashSalesInvoiceDetailService);
             return cashSalesReturnDetail;
         }
 
@@ -100,6 +123,8 @@ namespace Validation.Validation
             VHasCashSalesReturn(cashSalesReturnDetail, _cashSalesReturnService);
             if (!isValid(cashSalesReturnDetail)) { return cashSalesReturnDetail; }
             VIsValidCashSalesInvoiceDetail(cashSalesReturnDetail, _cashSalesInvoiceDetailService, _cashSalesReturnService);
+            if (!isValid(cashSalesReturnDetail)) { return cashSalesReturnDetail; }
+            VHasUniqueCashSalesInvoiceDetail(cashSalesReturnDetail, _cashSalesReturnDetailService);
             if (!isValid(cashSalesReturnDetail)) { return cashSalesReturnDetail; }
             VIsValidQuantity(cashSalesReturnDetail, _cashSalesInvoiceDetailService, _cashSalesReturnDetailService);
             if (!isValid(cashSalesReturnDetail)) { return cashSalesReturnDetail; }
@@ -138,10 +163,10 @@ namespace Validation.Validation
             return isValid(cashSalesReturnDetail);
         }
 
-        public bool ValidUnconfirmObject(CashSalesReturnDetail cashSalesReturnDetail)
+        public bool ValidUnconfirmObject(CashSalesReturnDetail cashSalesReturnDetail, IWarehouseItemService _warehouseItemService, ICashSalesInvoiceDetailService _cashSalesInvoiceDetailService)
         {
             cashSalesReturnDetail.Errors.Clear();
-            VUnconfirmObject(cashSalesReturnDetail);
+            VUnconfirmObject(cashSalesReturnDetail, _warehouseItemService, _cashSalesInvoiceDetailService);
             return isValid(cashSalesReturnDetail);
         }
 

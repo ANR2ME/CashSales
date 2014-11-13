@@ -151,7 +151,12 @@ namespace Validation.Validation
                     cashSalesInvoiceDetail.Errors = new Dictionary<string, string>();
                     if (!validator.ValidConfirmObject(cashSalesInvoiceDetail, _cashSalesInvoiceService,_warehouseItemService))
                     {
-                        cashSalesInvoice.Errors.Add("Generic", "CashSalesInvoiceDetails harus confirmable semua");
+                        //cashSalesInvoice.Errors.Add("Generic", "CashSalesInvoiceDetails harus confirmable semua");
+                        cashSalesInvoice.Errors.Clear();
+                        foreach (var err in cashSalesInvoiceDetail.Errors)
+                        {
+                            cashSalesInvoice.Errors.Add("Generic", err.Key + " " + err.Value);
+                        }
                         return cashSalesInvoice;
                     }
                 }
@@ -174,7 +179,12 @@ namespace Validation.Validation
                     cashSalesInvoiceDetail.Errors = new Dictionary<string, string>();
                     if (!validator.ValidUnconfirmObject(cashSalesInvoiceDetail))
                     {
-                        cashSalesInvoice.Errors.Add("Generic", "CashSalesInvoiceDetails harus unconfirmable semua");
+                        //cashSalesInvoice.Errors.Add("Generic", "CashSalesInvoiceDetails harus Unconfirmable semua");
+                        cashSalesInvoice.Errors.Clear();
+                        foreach (var err in cashSalesInvoiceDetail.Errors)
+                        {
+                            cashSalesInvoice.Errors.Add("Generic", err.Key + " " + err.Value);
+                        }
                         return cashSalesInvoice;
                     }
                 }
@@ -229,9 +239,9 @@ namespace Validation.Validation
 
         public CashSalesInvoice VIsValidAmountPaid(CashSalesInvoice cashSalesInvoice)
         {
-            if (cashSalesInvoice.AmountPaid > cashSalesInvoice.Total)
+            if (cashSalesInvoice.AmountPaid > cashSalesInvoice.Total - cashSalesInvoice.Allowance)
             {
-                cashSalesInvoice.Errors.Add("AmountPaid", "Harus lebih kecil atau sama dengan Total Payable");
+                cashSalesInvoice.Errors.Add("AmountPaid", "Harus lebih kecil atau sama dengan Total (minus Allowance)");
             }
             else if(cashSalesInvoice.AmountPaid < 0)
             {
@@ -240,23 +250,23 @@ namespace Validation.Validation
             return cashSalesInvoice;
         }
 
-        public CashSalesInvoice VIsValidFullPayment(CashSalesInvoice cashSalesInvoice)
-        {
-            if (cashSalesInvoice.AmountPaid + cashSalesInvoice.Allowance != cashSalesInvoice.Total)
-            {
-                cashSalesInvoice.Errors.Add("Generic", "Amount Paid + Allowance harus dengan Total Payable");
-            }
-            return cashSalesInvoice;
-        }
+        //public CashSalesInvoice VIsValidFullPayment(CashSalesInvoice cashSalesInvoice)
+        //{
+        //    if (cashSalesInvoice.AmountPaid + cashSalesInvoice.Allowance != cashSalesInvoice.Total)
+        //    {
+        //        cashSalesInvoice.Errors.Add("Generic", "Amount Paid + Allowance harus sama dengan Total");
+        //    }
+        //    return cashSalesInvoice;
+        //}
 
-        public CashSalesInvoice VTotalPaymentIsEqualOrLessThanTotalPayable(CashSalesInvoice cashSalesInvoice)
-        {
-            if (cashSalesInvoice.AmountPaid + cashSalesInvoice.Allowance > cashSalesInvoice.Total)
-            {
-                cashSalesInvoice.Errors.Add("Generic", "Amount Paid + Allowance lebih dari Total Payable");
-            }
-            return cashSalesInvoice;
-        }
+        //public CashSalesInvoice VTotalPaymentIsEqualOrLessThanTotal(CashSalesInvoice cashSalesInvoice)
+        //{
+        //    if (cashSalesInvoice.AmountPaid + cashSalesInvoice.Allowance > cashSalesInvoice.Total)
+        //    {
+        //        cashSalesInvoice.Errors.Add("Generic", "Amount Paid + Allowance lebih dari Total");
+        //    }
+        //    return cashSalesInvoice;
+        //}
 
         public CashSalesInvoice VHasCashBank(CashSalesInvoice cashSalesInvoice, ICashBankService _cashBankService)
         {
@@ -363,15 +373,15 @@ namespace Validation.Validation
             VIsValidAllowance(cashSalesInvoice);
             if (!isValid(cashSalesInvoice)) { return cashSalesInvoice; }
             VIsValidAmountPaid(cashSalesInvoice);
-            if (!isValid(cashSalesInvoice)) { return cashSalesInvoice; }
-            VTotalPaymentIsEqualOrLessThanTotalPayable(cashSalesInvoice);
+            //if (!isValid(cashSalesInvoice)) { return cashSalesInvoice; }
+            //VTotalPaymentIsEqualOrLessThanTotal(cashSalesInvoice);
             if (!isValid(cashSalesInvoice)) { return cashSalesInvoice; }
             VHasNoCashSalesReturns(cashSalesInvoice, _cashSalesReturnService);
-            if (cashSalesInvoice.IsFullPayment)
-            {
-                if (!isValid(cashSalesInvoice)) { return cashSalesInvoice; }
-                VIsValidFullPayment(cashSalesInvoice);
-            }
+            //if (cashSalesInvoice.IsFullPayment)
+            //{
+            //    if (!isValid(cashSalesInvoice)) { return cashSalesInvoice; }
+            //    VIsValidFullPayment(cashSalesInvoice);
+            //}
             if (!isValid(cashSalesInvoice)) { return cashSalesInvoice; }
             VGeneralLedgerPostingHasNotBeenClosed(cashSalesInvoice, _closingService, 1);
             return cashSalesInvoice;

@@ -31,13 +31,24 @@ namespace Validation.Validation
             return receivable;
         }
 
+        public Receivable VHasValidAmount(Receivable receivable)
+        {
+            if (receivable.Amount < 0)
+            {
+                receivable.Errors.Add("Generic", "Receivable Amount Harus lebih besar atau sama dengan 0");
+            }
+            return receivable;
+        }
+
         public Receivable VCreateObject(Receivable receivable, IReceivableService _receivableService)
         {
+            //VHasValidAmount(receivable);
             return receivable;
         }
 
         public Receivable VUpdateObject(Receivable receivable, IReceivableService _receivableService)
         {
+            VCreateObject(receivable, _receivableService);
             return receivable;
         }
 

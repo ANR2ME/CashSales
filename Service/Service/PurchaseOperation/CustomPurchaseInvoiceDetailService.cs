@@ -132,10 +132,10 @@ namespace Service.Service
             return customPurchaseInvoiceDetail;
         }
 
-        public CustomPurchaseInvoiceDetail UnconfirmObject(CustomPurchaseInvoiceDetail customPurchaseInvoiceDetail, IWarehouseItemService _warehouseItemService,
+        public CustomPurchaseInvoiceDetail UnconfirmObject(CustomPurchaseInvoiceDetail customPurchaseInvoiceDetail, IWarehouseItemService _warehouseItemService, ICustomPurchaseInvoiceService _customPurchaseInvoiceService,
                                                       IWarehouseService _warehouseService, IItemService _itemService, IBarringService _barringService, IStockMutationService _stockMutationService, IPriceMutationService _priceMutationService)
         {
-            if (_validator.ValidUnconfirmObject(customPurchaseInvoiceDetail))
+            if (_validator.ValidUnconfirmObject(customPurchaseInvoiceDetail, _customPurchaseInvoiceService, _warehouseItemService))
             {
                 Item item = _itemService.GetObjectById(customPurchaseInvoiceDetail.ItemId);
                 //CustomPurchaseInvoiceDetail hiCustomPurchaseInvoiceDetail = GetAll().Where(x => x.ItemId == item.Id).OrderByDescending(x => x.Price).FirstOrDefault();

@@ -35,7 +35,7 @@ namespace Validation.Validation
         {
             if (receiptVoucherDetail.IsConfirmed)
             {
-                receiptVoucherDetail.Errors.Add("Generic", "Sudah dikonfirmasi");
+                receiptVoucherDetail.Errors.Add("Generic", "Sudah diKonfirmasi");
             }
             return receiptVoucherDetail;
         }
@@ -44,7 +44,7 @@ namespace Validation.Validation
         {
             if (!receiptVoucherDetail.IsConfirmed)
             {
-                receiptVoucherDetail.Errors.Add("Generic", "Belum dikonfirmasi");
+                receiptVoucherDetail.Errors.Add("Generic", "Belum diKonfirmasi");
             }
             return receiptVoucherDetail;
         }
@@ -53,7 +53,7 @@ namespace Validation.Validation
         {
             if (receiptVoucherDetail.IsDeleted)
             {
-                receiptVoucherDetail.Errors.Add("Generic", "Sudah didelete");
+                receiptVoucherDetail.Errors.Add("Generic", "Sudah diDelete");
             }
             return receiptVoucherDetail;
         }
@@ -73,7 +73,7 @@ namespace Validation.Validation
             Receivable receivable = _receivableService.GetObjectById(receiptVoucherDetail.ReceivableId);
             if (receivable.IsCompleted)
             {
-                receiptVoucherDetail.Errors.Add("Generic", "Receivable sudah complete");
+                receiptVoucherDetail.Errors.Add("Generic", "Receivable sudah Complete");
             }
             return receiptVoucherDetail;
         }
@@ -90,21 +90,34 @@ namespace Validation.Validation
         public ReceiptVoucherDetail VAmountLessOrEqualReceivable(ReceiptVoucherDetail receiptVoucherDetail, IReceivableService _receivableService, IReceiptVoucherDetailService _receiptVoucherDetailService)
         {
             Receivable receivable = _receivableService.GetObjectById(receiptVoucherDetail.ReceivableId);
-            decimal totalamount = _receiptVoucherDetailService.CalcTotalAmount(receiptVoucherDetail.ReceiptVoucherId);
-            if (totalamount > receivable.Amount)
+            //decimal totalamount = _receiptVoucherDetailService.CalcTotalAmountByReceivable(receiptVoucherDetail.ReceivableId);
+            decimal totalamount = _receiptVoucherDetailService.GetQueryableObjectsByReceivableId(receiptVoucherDetail.ReceivableId).Where(x => !x.IsDeleted && x.Id != receiptVoucherDetail.Id).Sum(x => (decimal?)x.Amount) ?? 0;
+            if (totalamount + receiptVoucherDetail.Amount > receivable.Amount - receivable.AllowanceAmount)
             {
-                receiptVoucherDetail.Errors.Add("Generic", "Total Amount seluruh details Tidak boleh lebih dari receivable");
+                receiptVoucherDetail.Errors.Add("Generic", "Total Amount seluruh ReceiptVoucherDetails Tidak boleh melebihi Receivable Amount (minus Allowance)");
             }
             return receiptVoucherDetail;
         }
 
-        public ReceiptVoucherDetail VTotalAmountLessOrEqualPaymentVoucher(ReceiptVoucherDetail receiptVoucherDetail, IReceiptVoucherService _receiptVoucherService, IReceiptVoucherDetailService _receiptVoucherDetailService)
+        public ReceiptVoucherDetail VTotalAmountLessOrEqualReceivable(ReceiptVoucherDetail receiptVoucherDetail, IReceivableService _receivableService, IReceiptVoucherDetailService _receiptVoucherDetailService)
+        {
+            Receivable receivable = _receivableService.GetObjectById(receiptVoucherDetail.ReceivableId);
+            decimal totalamount = _receiptVoucherDetailService.CalcTotalAmountByReceivable(receiptVoucherDetail.ReceivableId);
+            if (totalamount > receivable.Amount - receivable.AllowanceAmount)
+            {
+                receiptVoucherDetail.Errors.Add("Generic", "Total Amount seluruh ReceiptVoucherDetails Tidak boleh melebihi Receivable Amount (minus Allowance)");
+            }
+            return receiptVoucherDetail;
+        }
+
+        public ReceiptVoucherDetail VAmountLessOrEqualReceiptVoucher(ReceiptVoucherDetail receiptVoucherDetail, IReceiptVoucherService _receiptVoucherService, IReceiptVoucherDetailService _receiptVoucherDetailService)
         {
             ReceiptVoucher receiptVoucher = _receiptVoucherService.GetObjectById(receiptVoucherDetail.ReceiptVoucherId);
-            decimal totalamount = _receiptVoucherDetailService.CalcTotalAmount(receiptVoucherDetail.ReceiptVoucherId);
+            //decimal totalamount = _receiptVoucherDetailService.CalcTotalAmountByReceiptVoucher(receiptVoucherDetail.ReceiptVoucherId);
+            decimal totalamount = _receiptVoucherDetailService.GetQueryableObjectsByReceiptVoucherId(receiptVoucherDetail.ReceiptVoucherId).Where(x => !x.IsDeleted && x.Id != receiptVoucherDetail.Id).Sum(x => (decimal?)x.Amount) ?? 0;
             if (totalamount + receiptVoucherDetail.Amount > receiptVoucher.TotalAmount)
             {
-                receiptVoucherDetail.Errors.Add("Generic", "Total detail Amount Tidak boleh lebih dari TotalAmount ReceiptVoucher");
+                receiptVoucherDetail.Errors.Add("Generic", "Total ReceiptVoucherDetails Amount Tidak boleh lebih dari TotalAmount ReceiptVoucher");
             }
             return receiptVoucherDetail;
         }
@@ -140,7 +153,9 @@ namespace Validation.Validation
             if (!isValid(receiptVoucherDetail)) { return receiptVoucherDetail; }
             VParentHasNotBeenConfirmed(receiptVoucherDetail, _receiptVoucherService);
             if (!isValid(receiptVoucherDetail)) { return receiptVoucherDetail; }
-            VTotalAmountLessOrEqualPaymentVoucher(receiptVoucherDetail, _receiptVoucherService, _receiptVoucherDetailService);
+            VNonNegativeAmount(receiptVoucherDetail);
+            //if (!isValid(receiptVoucherDetail)) { return receiptVoucherDetail; }
+            //VAmountLessOrEqualReceiptVoucher(receiptVoucherDetail, _receiptVoucherService, _receiptVoucherDetailService);
             if (!isValid(receiptVoucherDetail)) { return receiptVoucherDetail; }
             VAmountLessOrEqualReceivable(receiptVoucherDetail, _receivableService, _receiptVoucherDetailService);
             if (!isValid(receiptVoucherDetail)) { return receiptVoucherDetail; }
@@ -180,7 +195,7 @@ namespace Validation.Validation
             if (!isValid(receiptVoucherDetail)) { return receiptVoucherDetail; }
             VHasConfirmationDate(receiptVoucherDetail);
             if (!isValid(receiptVoucherDetail)) { return receiptVoucherDetail; }
-            VAmountLessOrEqualReceivable(receiptVoucherDetail, _receivableService, _receiptVoucherDetailService);
+            VTotalAmountLessOrEqualReceivable(receiptVoucherDetail, _receivableService, _receiptVoucherDetailService);
             return receiptVoucherDetail;
         }
 

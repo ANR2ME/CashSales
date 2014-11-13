@@ -1,0 +1,24 @@
+StartDate	Date		
+EndDate	Date
+Code	String	50	
+Description	String	150	
+PurchaseDate	Date		
+ConfirmationDate	Date		
+DueDate	Date		
+Discount	Number		
+Tax	Number		
+Allowance	Currency		
+CoGS	Currency		
+Total	Currency		
+AmountPaid	Currency	
+CashBank	String	80	
+Warehouse	String	80	
+CompanyName	String	80
+CompanyAddress	String	255
+CompanyContactNo	String	100
+SKU	String	80
+ItemName	String	80
+Quantity	Number	
+UoM	String	80
+ItemDisc	Number	
+ItemPrice	Currency

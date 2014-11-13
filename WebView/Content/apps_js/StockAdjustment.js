@@ -12,6 +12,15 @@
         $("#list").setGridParam({ url: base_url + 'StockAdjustment/GetList', postData: { filters: null }, page: 1 }).trigger("reloadGrid");
     }
 
+    function ReloadGridBySKU() {
+        // Clear Search string jqGrid
+        //$('input[id*="gs_"]').val("");
+
+        var findSKU = $('#findSKU').val();
+
+        $("#list").setGridParam({ url: base_url + 'StockAdjustment/GetList', postData: { filters: null, findSKU: findSKU }, page: '1' }).trigger("reloadGrid");
+    }
+
     function ReloadGridDetail() {
         $("#listdetail").setGridParam({ url: base_url + 'StockAdjustment/GetListDetail?Id=' + $("#id").val(), postData: { filters: null } }).trigger("reloadGrid");
     }
@@ -75,7 +84,7 @@
         shrinkToFit: false,
         sortorder: "DESC",
         width: $("#toolbar").width(),
-        height: $(window).height() - 200,
+        height: $(window).height() - 220,
         gridComplete:
 		  function () {
 		      var ids = $(this).jqGrid('getDataIDs');
@@ -95,7 +104,9 @@
     $("#list").jqGrid('navGrid', '#toolbar_cont', { del: false, add: false, edit: false, search: true })
            .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: true });
 
-   
+    $('#btn_find').click(function () {
+        ReloadGridBySKU();
+    });
 
     //TOOL BAR BUTTON
     $('#btn_reload').click(function () {
@@ -414,15 +425,15 @@
         url: base_url,
         datatype: "json",
         //colNames: ['Code', 'Item Id', 'Item SKU', 'Item Name', 'Item Type', 'UoM', 'Quantity', 'Price'],
-        colNames: ['Code', 'Item Id', 'Item Name', 'Quantity', 'Price'],
+        colNames: ['Code', 'Item Id', 'Item SKU', 'Item Name', 'Quantity', 'UoM', 'Price'],
         colModel: [
-                  { name: 'code', index: 'code', width: 100, sortable: true },
+                  { name: 'code', index: 'code', width: 80, sortable: true },
 				  { name: 'itemid', index: 'itemid', width: 100, hidden: true, sortable: true },
-                  //{ name: 'sku', index: 'sku', width: 100, sortable: true },
+                  { name: 'itemsku', index: 'itemsku', width: 80, sortable: true },
                   { name: 'item', index: 'item', width: 100, sortable: true },
                   //{ name: 'itemtype', index: 'itemtype', width: 100, sortable: true },
-                  //{ name: 'uom', index: 'uom', width: 100, sortable: true },
                   { name: 'quantity', index: 'quantity', width: 100, formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: true },
+                  { name: 'uom', index: 'uom', width: 80, sortable: true },
                   { name: 'price', index: 'price', width: 100, formatter: 'currency', sortable: true, formatoptions: { decimalSeparator: ".", thousandsSeparator: ",", decimalPlaces: 0, prefix: "", suffix: "", defaultValue: '0.00' } },
         ],
         page: '1',

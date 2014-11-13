@@ -5,6 +5,8 @@ using System.Text;
 using Core.DomainModel;
 using Core.Interface.Repository;
 using Data.Context;
+using System.Linq.Dynamic;
+using System.Data.Entity;
 
 namespace Data.Repository
 {
@@ -43,7 +45,7 @@ namespace Data.Repository
 
         public CashSalesInvoiceDetail GetObjectById(int Id)
         {
-            CashSalesInvoiceDetail cashSalesInvoiceDetail = Find(x => x.Id == Id && !x.IsDeleted);
+            CashSalesInvoiceDetail cashSalesInvoiceDetail = FindAll(x => x.Id == Id && !x.IsDeleted).Include("Item").Include("CashSalesInvoice").FirstOrDefault();
             if (cashSalesInvoiceDetail != null) { cashSalesInvoiceDetail.Errors = new Dictionary<string, string>(); }
             return cashSalesInvoiceDetail;
         }

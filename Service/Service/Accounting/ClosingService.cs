@@ -78,10 +78,10 @@ namespace Service.Service
                 IList<Account> leafAccounts = _accountService.GetLeafObjects();
                 foreach(var leaf in leafAccounts)
                 {
-                    DateTime EndDate = closing.EndDatePeriod.AddDays(1);
+                    DateTime EndDate = closing.EndDatePeriod.Date.AddDays(1);
                     IList<GeneralLedgerJournal> ledgers = _generalLedgerJournalService.GetQueryable()
                                                           .Where(x => x.AccountId == leaf.Id && 
-                                                                 x.TransactionDate >= closing.BeginningPeriod && 
+                                                                 x.TransactionDate >= closing.BeginningPeriod.Date && 
                                                                  x.TransactionDate < EndDate)
                                                           .ToList();
                     decimal totalAmountInLedgers = 0;
@@ -114,6 +114,27 @@ namespace Service.Service
                 {
                     FillValidComb(groupNode, closing, _accountService, _validCombService);
                 }
+
+                // Clearance
+                Account Revenue = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.Revenue);
+                Account Expense = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.Expense);
+                Account RetainedEarnings = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.RetainedEarnings);
+                Account Equity = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.Equity);
+
+                ValidComb VCRevenue = _validCombService.FindOrCreateObjectByAccountAndClosing(Revenue.Id, closing.Id);
+                ValidComb VCExpense = _validCombService.FindOrCreateObjectByAccountAndClosing(Expense.Id, closing.Id);
+                ValidComb VCRetainedEarnings = _validCombService.FindOrCreateObjectByAccountAndClosing(RetainedEarnings.Id, closing.Id);
+                ValidComb VCEquity = _validCombService.FindOrCreateObjectByAccountAndClosing(Equity.Id, closing.Id);
+
+                VCRetainedEarnings.Amount += (VCRevenue.Amount - VCExpense.Amount);
+                _validCombService.UpdateObject(VCRetainedEarnings, _accountService, this);
+                VCEquity.Amount += VCRetainedEarnings.Amount;
+                _validCombService.UpdateObject(VCEquity, _accountService, this);
+                //VCRevenue.Amount = 0;
+                //_validCombService.UpdateObject(VCRevenue, _accountService, this);
+                //VCExpense.Amount = 0;
+                //_validCombService.UpdateObject(VCExpense, _accountService, this);
+                // End of Clearance
 
                 _repository.CloseObject(closing);
             }

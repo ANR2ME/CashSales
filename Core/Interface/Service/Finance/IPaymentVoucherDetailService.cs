@@ -23,10 +23,12 @@ namespace Core.Interface.Service
                                           IPaymentVoucherService _paymentVoucherService, ICashBankService _cashBankService, IPayableService _payableService);
         PaymentVoucherDetail UpdateObject(PaymentVoucherDetail paymentVoucherDetail, IPaymentVoucherService _paymentVoucherService,
                                           ICashBankService _cashBankService, IPayableService _payableService);
-        PaymentVoucherDetail SoftDeleteObject(PaymentVoucherDetail paymentVoucherDetail);
+        PaymentVoucherDetail SoftDeleteObject(PaymentVoucherDetail paymentVoucherDetail, IPaymentVoucherService _paymentVoucherService);
         bool DeleteObject(int Id);
-        PaymentVoucherDetail ConfirmObject(PaymentVoucherDetail paymentVoucherDetail, DateTime ConfirmationDate, IPaymentVoucherService _paymentVoucherService, IPayableService _payableService);
+        PaymentVoucherDetail ConfirmObject(PaymentVoucherDetail paymentVoucherDetail, DateTime ConfirmationDate, IPaymentVoucherService _paymentVoucherService, IPayableService _payableService, IPaymentVoucherDetailService _paymentVoucherDetailService);
         PaymentVoucherDetail UnconfirmObject(PaymentVoucherDetail paymentVoucherDetail, IPaymentVoucherService _paymentVoucherService, IPayableService _payableService);
-        decimal CalcTotalAmount(int PaymentVoucherId);
+        decimal CalcTotalAmountByPaymentVoucher(int PaymentVoucherId);
+        decimal CalcTotalAmountByPayable(int PayableId);
+        decimal CalcAndUpdateTotalAmount(int PaymentVoucherId, IPaymentVoucherService _paymentVoucherService);
     }
 }

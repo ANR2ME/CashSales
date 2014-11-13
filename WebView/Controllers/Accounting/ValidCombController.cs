@@ -11,6 +11,7 @@ using Validation.Validation;
 using System.Linq.Dynamic;
 using System.Data.Entity;
 using System.Data.Objects;
+using Core.Constants;
 
 namespace WebView.Controllers
 {
@@ -33,9 +34,9 @@ namespace WebView.Controllers
 
         public ActionResult Index()
         {
-            if (!AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.ValidComb, Core.Constants.Constant.MenuGroupName.Report))
+            if (!AuthenticationModel.IsAllowed("View", Constant.MenuName.ValidComb, Constant.MenuGroupName.Report))
             {
-                return Content("You are not allowed to View this Page.");
+                return Content(Constant.ErrorPage.PageViewNotAllowed);
             }
 
             return View();

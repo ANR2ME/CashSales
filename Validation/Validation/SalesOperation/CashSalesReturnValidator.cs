@@ -34,7 +34,7 @@ namespace Validation.Validation
 
         public CashSalesReturn VIsValidTotal(CashSalesReturn cashSalesReturn)
         {
-            if (cashSalesReturn.Allowance < 0)
+            if (cashSalesReturn.Total < 0)
             {
                 cashSalesReturn.Errors.Add("Total", "Harus lebih besar atau sama dengan 0");
             }
@@ -100,7 +100,12 @@ namespace Validation.Validation
                     cashSalesReturnDetail.Errors = new Dictionary<string, string>();
                     if (!validator.ValidConfirmObject(cashSalesReturnDetail, _cashSalesInvoiceDetailService, _cashSalesReturnDetailService))
                     {
-                        cashSalesReturn.Errors.Add("Generic", "CashSalesReturnDetails harus confirmable semua");
+                        //cashSalesReturn.Errors.Add("Generic", "CashSalesReturnDetails harus confirmable semua");
+                        cashSalesReturn.Errors.Clear();
+                        foreach (var err in cashSalesReturnDetail.Errors)
+                        {
+                            cashSalesReturn.Errors.Add("Generic", err.Key + " " + err.Value);
+                        }
                         return cashSalesReturn;
                     }
                 }
@@ -108,7 +113,8 @@ namespace Validation.Validation
             return cashSalesReturn;
         }
 
-        public CashSalesReturn VIsUnconfirmableCashSalesReturnDetails(CashSalesReturn cashSalesReturn, ICashSalesReturnDetailService _cashSalesReturnDetailService)
+        public CashSalesReturn VIsUnconfirmableCashSalesReturnDetails(CashSalesReturn cashSalesReturn, ICashSalesReturnDetailService _cashSalesReturnDetailService, 
+                                            IWarehouseItemService _warehouseItemService, ICashSalesInvoiceDetailService _cashSalesInvoiceDetailService)
         {
             IList<CashSalesReturnDetail> cashSalesReturnDetails = _cashSalesReturnDetailService.GetObjectsByCashSalesReturnId(cashSalesReturn.Id);
             if (!cashSalesReturnDetails.Any())
@@ -121,9 +127,14 @@ namespace Validation.Validation
                 foreach (var cashSalesReturnDetail in cashSalesReturnDetails)
                 {
                     cashSalesReturnDetail.Errors = new Dictionary<string, string>();
-                    if (!validator.ValidUnconfirmObject(cashSalesReturnDetail))
+                    if (!validator.ValidUnconfirmObject(cashSalesReturnDetail, _warehouseItemService, _cashSalesInvoiceDetailService))
                     {
-                        cashSalesReturn.Errors.Add("Generic", "CashSalesReturnDetails harus unconfirmable semua");
+                        //cashSalesReturn.Errors.Add("Generic", "CashSalesReturnDetails harus Unconfirmable semua");
+                        cashSalesReturn.Errors.Clear();
+                        foreach (var err in cashSalesReturnDetail.Errors)
+                        {
+                            cashSalesReturn.Errors.Add("Generic", err.Key + " " + err.Value);
+                        }
                         return cashSalesReturn;
                     }
                 }
@@ -183,6 +194,10 @@ namespace Validation.Validation
             {
                 cashSalesReturn.Errors.Add("CashBankId", "Tidak valid");
             }
+            else if (cashBank.Amount < cashSalesReturn.Total - cashSalesReturn.Allowance)
+            {
+                cashSalesReturn.Errors.Add("Generic", "Total (minus Allowance) lebih besar dari CashBank Amount");
+            }
             return cashSalesReturn;
         }
 
@@ -238,7 +253,8 @@ namespace Validation.Validation
         }
 
         public CashSalesReturn VUnconfirmObject(CashSalesReturn cashSalesReturn, ICashSalesReturnDetailService _cashSalesReturnDetailService, 
-                                                   IPayableService _payableService, IPaymentVoucherDetailService _paymentVoucherDetailService)
+                                                   IPayableService _payableService, IPaymentVoucherDetailService _paymentVoucherDetailService,
+                                                   IWarehouseItemService _warehouseItemService, ICashSalesInvoiceDetailService _cashSalesInvoiceDetailService)
         {
             VIsNotDeleted(cashSalesReturn);
             if (!isValid(cashSalesReturn)) { return cashSalesReturn; }
@@ -248,7 +264,7 @@ namespace Validation.Validation
             if (!isValid(cashSalesReturn)) { return cashSalesReturn; }
             VHasNoPaymentVoucherDetails(cashSalesReturn, _payableService, _paymentVoucherDetailService);
             if (!isValid(cashSalesReturn)) { return cashSalesReturn; }
-            VIsUnconfirmableCashSalesReturnDetails(cashSalesReturn, _cashSalesReturnDetailService);
+            VIsUnconfirmableCashSalesReturnDetails(cashSalesReturn, _cashSalesReturnDetailService, _warehouseItemService, _cashSalesInvoiceDetailService);
             return cashSalesReturn;
         }
 
@@ -319,10 +335,11 @@ namespace Validation.Validation
         }
 
         public bool ValidUnconfirmObject(CashSalesReturn cashSalesReturn, ICashSalesReturnDetailService _cashSalesReturnDetailService,
-                                         IPayableService _payableService, IPaymentVoucherDetailService _paymentVoucherDetailService)
+                                         IPayableService _payableService, IPaymentVoucherDetailService _paymentVoucherDetailService,
+                                         IWarehouseItemService _warehouseItemService, ICashSalesInvoiceDetailService _cashSalesInvoiceDetailService)
         {
             cashSalesReturn.Errors.Clear();
-            VUnconfirmObject(cashSalesReturn, _cashSalesReturnDetailService, _payableService, _paymentVoucherDetailService);
+            VUnconfirmObject(cashSalesReturn, _cashSalesReturnDetailService, _payableService, _paymentVoucherDetailService, _warehouseItemService, _cashSalesInvoiceDetailService);
             return isValid(cashSalesReturn);
         }
 

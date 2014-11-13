@@ -25,10 +25,23 @@
         <a id="btn_print" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-print'">Print Data</a>
     </div>
 
+    <table>
+        <tr>
+            <td>
+                SKU 
+            </td>
+            <td >
+                <input id="findSKU" name ="findSKU" type="text" size="20" />
+            </td>
+            <td>
+                <a id="btn_find" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-search'">Find</a>
+            </td>
+        </tr>
     <div id="table_div">
         <table id="list"></table>
         <div id="pager" class="scroll" style="text-align: center;"></div>
     </div>
+    </table>
 
 <!-- Dialog Box -->
     <div id="form_div" class="easyui-dialog" style="text-align: left; padding:0px 0px 10px; top:100px" data-options="modal:true"  

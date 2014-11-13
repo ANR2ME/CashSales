@@ -174,6 +174,7 @@ namespace WebView.Controllers
                              model.Amount,
                              model.RemainingAmount,
                              model.PendingClearanceAmount,
+                             model.AllowanceAmount,
                              model.DueDate,
                              model.CreatedAt,
                              model.UpdatedAt,
@@ -217,6 +218,7 @@ namespace WebView.Controllers
                             model.Amount,
                             model.RemainingAmount,
                             model.PendingClearanceAmount,
+                            model.AllowanceAmount,
                             model.DueDate,
                             model.CreatedAt,
                             model.UpdatedAt,
@@ -394,6 +396,7 @@ namespace WebView.Controllers
         [HttpPost]
         public dynamic InsertDetail(PaymentVoucherDetail model)
         {
+            decimal total = 0;
             try
             {
                 if (!AuthenticationModel.IsAllowed("Edit", Core.Constants.Constant.MenuName.PaymentVoucher, Core.Constants.Constant.MenuGroupName.Transaction))
@@ -407,8 +410,8 @@ namespace WebView.Controllers
                     }, JsonRequestBehavior.AllowGet);
                 }
 
-                model = _paymentVoucherDetailService.CreateObject(model,_paymentVoucherService,_cashBankService,_payableService
-                   );
+                model = _paymentVoucherDetailService.CreateObject(model,_paymentVoucherService,_cashBankService,_payableService);
+                total = _paymentVoucherService.GetObjectById(model.PaymentVoucherId).TotalAmount;
             }
             catch (Exception ex)
             {
@@ -426,6 +429,7 @@ namespace WebView.Controllers
             return Json(new
             {
                 model.Errors,
+                TotalAmount = total
             });
         }
 
@@ -514,6 +518,7 @@ namespace WebView.Controllers
         [HttpPost]
         public dynamic DeleteDetail(PaymentVoucherDetail model)
         {
+            decimal total = 0;
             try
             {
                 if (!AuthenticationModel.IsAllowed("Edit", Core.Constants.Constant.MenuName.PaymentVoucher, Core.Constants.Constant.MenuGroupName.Transaction))
@@ -528,7 +533,8 @@ namespace WebView.Controllers
                 }
 
                 var data = _paymentVoucherDetailService.GetObjectById(model.Id);
-                model = _paymentVoucherDetailService.SoftDeleteObject(data);
+                model = _paymentVoucherDetailService.SoftDeleteObject(data, _paymentVoucherService);
+                total = _paymentVoucherService.GetObjectById(model.PaymentVoucherId).TotalAmount;
             }
             catch (Exception ex)
             {
@@ -545,12 +551,14 @@ namespace WebView.Controllers
             return Json(new
             {
                 model.Errors,
+                TotalAmount = total
             });
         }
 
         [HttpPost]
         public dynamic UpdateDetail(PaymentVoucherDetail model)
         {
+            decimal total = 0;
             try
             {
                 if (!AuthenticationModel.IsAllowed("Edit", Core.Constants.Constant.MenuName.PaymentVoucher, Core.Constants.Constant.MenuGroupName.Transaction))
@@ -569,6 +577,7 @@ namespace WebView.Controllers
                 data.Amount = model.Amount;
                 data.Description = model.Description;
                 model = _paymentVoucherDetailService.UpdateObject(data,_paymentVoucherService,_cashBankService,_payableService);
+                total = _paymentVoucherService.GetObjectById(model.PaymentVoucherId).TotalAmount;
             }
             catch (Exception ex)
             {
@@ -585,6 +594,7 @@ namespace WebView.Controllers
             return Json(new
             {
                 model.Errors,
+                TotalAmount = total
             });
         }
 

@@ -18,7 +18,8 @@ namespace Core.Interface.Validation
         CashSalesReturn VHasCashSalesReturnDetails(CashSalesReturn cashSalesReturn, ICashSalesReturnDetailService _cashSalesReturnDetailService);
         CashSalesReturn VIsConfirmableCashSalesReturnDetails(CashSalesReturn cashSalesReturn, ICashSalesReturnDetailService _cashSalesReturnDetailService,
                                                              ICashSalesInvoiceDetailService _cashSalesInvoiceDetailService);
-        CashSalesReturn VIsUnconfirmableCashSalesReturnDetails(CashSalesReturn cashSalesReturn, ICashSalesReturnDetailService _cashSalesReturnDetailService);
+        CashSalesReturn VIsUnconfirmableCashSalesReturnDetails(CashSalesReturn cashSalesReturn, ICashSalesReturnDetailService _cashSalesReturnDetailService,
+                                                    IWarehouseItemService _warehouseItemService, ICashSalesInvoiceDetailService _cashSalesInvoiceDetailService);
         CashSalesReturn VIsNotDeleted(CashSalesReturn cashSalesReturn);
         CashSalesReturn VIsNotPaid(CashSalesReturn cashSalesReturn);
         CashSalesReturn VIsPaid(CashSalesReturn cashSalesReturn);
@@ -32,7 +33,8 @@ namespace Core.Interface.Validation
         CashSalesReturn VConfirmObject(CashSalesReturn cashSalesReturn, ICashSalesReturnDetailService _cashSalesReturnDetailService, ICashSalesReturnService _cashSalesReturnService,
                                               ICashSalesInvoiceService _cashSalesInvoiceService, ICashSalesInvoiceDetailService _cashSalesInvoiceDetailService);
         CashSalesReturn VUnconfirmObject(CashSalesReturn cashSalesReturn, ICashSalesReturnDetailService _cashSalesReturnDetailService,
-                                                   IPayableService _payableService, IPaymentVoucherDetailService _paymentVoucherDetailService);
+                                                   IPayableService _payableService, IPaymentVoucherDetailService _paymentVoucherDetailService,
+                                                   IWarehouseItemService _warehouseItemService, ICashSalesInvoiceDetailService _cashSalesInvoiceDetailService);
         CashSalesReturn VPaidObject(CashSalesReturn cashSalesReturn, ICashBankService _cashBankService);
         CashSalesReturn VUnpaidObject(CashSalesReturn cashSalesReturn);
 
@@ -43,7 +45,8 @@ namespace Core.Interface.Validation
         bool ValidConfirmObject(CashSalesReturn cashSalesReturn, ICashSalesReturnDetailService _cashSalesReturnDetailService, ICashSalesReturnService _cashSalesReturnService,
                                 ICashSalesInvoiceService _cashSalesInvoiceService, ICashSalesInvoiceDetailService _cashSalesInvoiceDetailService);
         bool ValidUnconfirmObject(CashSalesReturn cashSalesReturn, ICashSalesReturnDetailService _cashSalesReturnDetailService,
-                                  IPayableService _payableService, IPaymentVoucherDetailService _paymentVoucherDetailService);
+                                  IPayableService _payableService, IPaymentVoucherDetailService _paymentVoucherDetailService,
+                                  IWarehouseItemService _warehouseItemService, ICashSalesInvoiceDetailService _cashSalesInvoiceDetailService);
         bool ValidPaidObject(CashSalesReturn cashSalesReturn, ICashBankService _cashBankService);
         bool ValidUnpaidObject(CashSalesReturn cashSalesReturn);
 

@@ -54,7 +54,7 @@ namespace WebView.Controllers
             return View();
         }
 
-        public dynamic GetList(string _search, long nd, int rows, int? page, string sidx, string sord, string filters = "")
+        public dynamic GetList(string _search, long nd, int rows, int? page, string sidx, string sord, string filters = "", string findSKU = "")
         {
             // Construct where statement
             string strWhere = GeneralFunction.ConstructWhere(filters);
@@ -63,7 +63,7 @@ namespace WebView.Controllers
             if (filter == "") filter = "true";
 
             // Get Data
-            var q = _stockAdjustmentService.GetQueryable().Include("Warehouse");
+            var q = _stockAdjustmentService.GetQueryable().Include("Warehouse").Include("StockAdjustmentDetails").Where(x => findSKU == "" || x.StockAdjustmentDetails.Where(y => y.Item.Sku.Contains(findSKU)).FirstOrDefault() != null);
 
             var query = (from model in q
                          select new
@@ -133,7 +133,7 @@ namespace WebView.Controllers
             if (filter == "") filter = "true";
 
             // Get Data
-            var q = _stockAdjustmentDetailService.GetQueryableObjectsByStockAdjustmentId(id).Include("Item");
+            var q = _stockAdjustmentDetailService.GetQueryableObjectsByStockAdjustmentId(id).Include("Item").Include("UoM");
 
             var query = (from model in q
                          select new
@@ -141,8 +141,10 @@ namespace WebView.Controllers
                              model.Id,
                              model.Code,
                              model.ItemId,
+                             itemSku = model.Item.Sku,
                              item = model.Item.Name,
                              model.Quantity,
+                             uom = model.Item.UoM.Name,
                              model.Price
                          }).Where(filter).OrderBy(sidx + " " + sord); //.ToList();
 
@@ -177,8 +179,10 @@ namespace WebView.Controllers
                         cell = new object[] {
                             model.Code,
                             model.ItemId,
+                            model.itemSku,
                             model.item,
                             model.Quantity,
+                            model.uom,
                             model.Price
                       }
                     }).ToArray()

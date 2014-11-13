@@ -23,10 +23,12 @@ namespace Core.Interface.Service
                                           IReceiptVoucherService _receiptVoucherService, ICashBankService _cashBankService, IReceivableService _receivableService);
         ReceiptVoucherDetail UpdateObject(ReceiptVoucherDetail receiptVoucherDetail, IReceiptVoucherService _receiptVoucherService,
                                           ICashBankService _cashBankService, IReceivableService _receivableService);
-        ReceiptVoucherDetail SoftDeleteObject(ReceiptVoucherDetail receiptVoucherDetail);
+        ReceiptVoucherDetail SoftDeleteObject(ReceiptVoucherDetail receiptVoucherDetail, IReceiptVoucherService _receiptVoucherService);
         bool DeleteObject(int Id);
         ReceiptVoucherDetail ConfirmObject(ReceiptVoucherDetail receiptVoucherDetail, DateTime ConfirmationDate, IReceiptVoucherService _receiptVoucherService, IReceivableService _receivableService, IReceiptVoucherDetailService _receiptVoucherDetailService);
         ReceiptVoucherDetail UnconfirmObject(ReceiptVoucherDetail receiptVoucherDetail, IReceiptVoucherService _receiptVoucherService, IReceivableService _receivableService);
-        decimal CalcTotalAmount(int ReceiptVoucherId);
+        decimal CalcTotalAmountByReceiptVoucher(int ReceiptVoucherId);
+        decimal CalcTotalAmountByReceivable(int ReceivableId);
+        decimal CalcAndUpdateTotalAmount(int ReceiptVoucherId, IReceiptVoucherService _receiptVoucherService);
     }
 }

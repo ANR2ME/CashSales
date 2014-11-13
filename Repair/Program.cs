@@ -19,6 +19,7 @@ namespace Repair
             TextWriter oldOut = Console.Out;
             try
             {
+                Console.WriteLine("Generating ConsoleLog.txt file....");
                 ostrm = new FileStream("./ConsoleLog.txt", FileMode.OpenOrCreate, FileAccess.Write);
                 writer = new StreamWriter(ostrm);
                 Console.SetOut(writer);

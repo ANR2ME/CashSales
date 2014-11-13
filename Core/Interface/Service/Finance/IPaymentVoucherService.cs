@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Core.Interface.Repository;
 
 namespace Core.Interface.Service
 {
@@ -11,6 +12,7 @@ namespace Core.Interface.Service
     {
         IQueryable<PaymentVoucher> GetQueryable();
         IPaymentVoucherValidator GetValidator();
+        IPaymentVoucherRepository GetRepository();
         IList<PaymentVoucher> GetAll();
         PaymentVoucher GetObjectById(int Id);
         PaymentVoucher GetObjectByCode(string Code);

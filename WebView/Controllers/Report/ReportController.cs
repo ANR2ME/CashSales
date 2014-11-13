@@ -151,8 +151,9 @@ namespace WebView.Controllers
         public ActionResult ReportProfitLoss(DateTime startDate, DateTime endDate)
         {
             var company = _companyService.GetQueryable().FirstOrDefault();
+            DateTime endDay = endDate.Date.AddDays(1);
             var cashSalesReturnPayables = _payableService.GetQueryable().Where(x => x.IsCompleted &&
-                            x.CompletionDate.Value >= startDate && x.CompletionDate.Value <= endDate && x.PayableSource == Core.Constants.Constant.PayableSource.CashSalesReturn);
+                            x.CompletionDate.Value >= startDate && x.CompletionDate.Value < endDay && x.PayableSource == Core.Constants.Constant.PayableSource.CashSalesReturn);
             decimal totalSalesReturnPayable = 0;
             foreach (var payable in cashSalesReturnPayables)
             {
@@ -160,7 +161,7 @@ namespace WebView.Controllers
             }
             
             var paymentRequestPayables = _payableService.GetQueryable().Where(x => x.IsCompleted &&
-                            x.CompletionDate.Value >= startDate && x.CompletionDate.Value <= endDate && x.PayableSource == Core.Constants.Constant.PayableSource.PaymentRequest);
+                            x.CompletionDate.Value >= startDate && x.CompletionDate.Value < endDay && x.PayableSource == Core.Constants.Constant.PayableSource.PaymentRequest);
             decimal totalPaymentRequestPayable = 0;
             foreach (var payable in cashSalesReturnPayables)
             {
@@ -168,7 +169,7 @@ namespace WebView.Controllers
             }
 
             var cashSalesInvoices = _cashSalesInvoiceService.GetQueryable().Where(x => x.IsConfirmed &&
-                            x.ConfirmationDate.Value >= startDate && x.ConfirmationDate.Value <= endDate).ToList();
+                            x.ConfirmationDate.Value >= startDate && x.ConfirmationDate.Value < endDay).ToList();
             decimal totalCashSales = 0;
             decimal totalCoGS = 0;
             foreach (var cashSales in cashSalesInvoices)
@@ -205,6 +206,122 @@ namespace WebView.Controllers
             return File(stream, "application/pdf");
         }
 
+        public ActionResult Purchase()
+        {
+            if (!AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.Purchase, Core.Constants.Constant.MenuGroupName.Report))
+            {
+                return Content(Core.Constants.Constant.ErrorPage.PageViewNotAllowed);
+            }
+
+            return View();
+        }
+
+        public ActionResult ReportPurchase(DateTime startDate, DateTime endDate)
+        {
+            var company = _companyService.GetQueryable().FirstOrDefault();
+            DateTime endDay = endDate.Date.AddDays(1);
+            var q = _customPurchaseInvoiceService.GetQueryable().Include("CashBank").Include("Warehouse").Where(x => x.IsConfirmed && x.ConfirmationDate.Value >= startDate && x.ConfirmationDate.Value < endDay)
+                                                .OrderBy(x => x.ConfirmationDate.Value)
+                                                .ThenBy(x => x.Id);
+
+            var query = (from model in q
+                         select new
+                         {
+                             StartDate = startDate,
+                             EndDate = endDate,
+                             model.Code,
+                             model.Description,
+                             model.PurchaseDate,
+                             ConfirmationDate = model.ConfirmationDate.Value,
+                             DueDate = model.DueDate.Value,
+                             model.Discount,
+                             model.Tax,
+                             model.Allowance,
+                             model.CoGS,
+                             AmountPaid = model.AmountPaid ?? 0,
+                             model.Total,
+                             CashBank = model.CashBank.Name,
+                             Warehouse = model.Warehouse.Name,
+                             CompanyName = company.Name,
+                             CompanyAddress = company.Address,
+                             CompanyContactNo = company.ContactNo
+                         }).ToList();
+
+            if (!query.Any()) return Content(Core.Constants.Constant.ErrorPage.RecordNotFound);
+
+            var rd = new ReportDocument();
+
+            //Loading Report
+            rd.Load(Server.MapPath("~/") + "Reports/General/Purchase.rpt");
+
+            // Setting report data source
+            rd.SetDataSource(query);
+
+            var stream = rd.ExportToStream(CrystalDecisions.Shared.ExportFormatType.PortableDocFormat);
+            return File(stream, "application/pdf");
+        }
+
+        public ActionResult PurchaseDetail()
+        {
+            if (!AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.Purchase, Core.Constants.Constant.MenuGroupName.Report))
+            {
+                return Content(Core.Constants.Constant.ErrorPage.PageViewNotAllowed);
+            }
+
+            return View();
+        }
+
+        public ActionResult ReportPurchaseDetail(DateTime startDate, DateTime endDate)
+        {
+            var company = _companyService.GetQueryable().FirstOrDefault();
+            DateTime endDay = endDate.Date.AddDays(1);
+            var q = _customPurchaseInvoiceDetailService.GetQueryable().Include("Item").Include("UoM").Include("PriceMutation").Include("CashInvoiceSales").Include("CashBank").Include("Warehouse").Where(x => x.CustomPurchaseInvoice.IsConfirmed && x.CustomPurchaseInvoice.ConfirmationDate.Value >= startDate && x.CustomPurchaseInvoice.ConfirmationDate.Value < endDay)
+                                                    .OrderBy(x => x.CustomPurchaseInvoice.ConfirmationDate.Value)
+                                                    .ThenBy(x => x.CustomPurchaseInvoiceId);
+
+            var query = (from model in q
+                         select new
+                         {
+                             StartDate = startDate,
+                             EndDate = endDate,
+                             model.CustomPurchaseInvoice.Code,
+                             model.CustomPurchaseInvoice.Description,
+                             model.CustomPurchaseInvoice.PurchaseDate,
+                             ConfirmationDate = model.CustomPurchaseInvoice.ConfirmationDate.Value,
+                             DueDate = model.CustomPurchaseInvoice.DueDate.Value,
+                             model.CustomPurchaseInvoice.Discount,
+                             model.CustomPurchaseInvoice.Tax,
+                             model.CustomPurchaseInvoice.Allowance,
+                             model.CustomPurchaseInvoice.CoGS,
+                             AmountPaid = model.CustomPurchaseInvoice.AmountPaid ?? 0,
+                             model.CustomPurchaseInvoice.Total,
+                             CashBank = model.CustomPurchaseInvoice.CashBank.Name,
+                             Warehouse = model.CustomPurchaseInvoice.Warehouse.Name,
+                             CompanyName = company.Name,
+                             CompanyAddress = company.Address,
+                             CompanyContactNo = company.ContactNo,
+                             SKU = model.Item.Sku,
+                             ItemName = model.Item.Name,
+                             Quantity = model.Quantity,
+                             UoM = model.Item.UoM.Name,
+                             ItemDisc = model.Discount,
+                             ItemPrice = model.ListedUnitPrice,
+                         }).ToList();
+
+            if (!query.Any()) return Content(Core.Constants.Constant.ErrorPage.RecordNotFound);
+
+            var rd = new ReportDocument();
+
+            //Loading Report
+            rd.Load(Server.MapPath("~/") + "Reports/General/PurchaseDetail.rpt");
+
+            // Setting report data source
+            rd.SetDataSource(query);
+
+            var stream = rd.ExportToStream(CrystalDecisions.Shared.ExportFormatType.PortableDocFormat);
+            return File(stream, "application/pdf");
+        }
+
         public ActionResult Sales()
         {
             if (!AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.Sales, Core.Constants.Constant.MenuGroupName.Report))
@@ -218,8 +335,9 @@ namespace WebView.Controllers
         public ActionResult ReportSales(DateTime startDate, DateTime endDate)
         {
             var company = _companyService.GetQueryable().FirstOrDefault();
-            var q = _cashSalesInvoiceService.GetQueryable().Include("CashBank").Include("Warehouse").Where(x => x.IsConfirmed && x.SalesDate >= startDate && x.SalesDate <= endDate)
-                                                .OrderBy(x => x.SalesDate)
+            DateTime endDay = endDate.Date.AddDays(1);
+            var q = _cashSalesInvoiceService.GetQueryable().Include("CashBank").Include("Warehouse").Where(x => x.IsConfirmed && x.ConfirmationDate.Value >= startDate && x.ConfirmationDate.Value < endDay)
+                                                .OrderBy(x => x.ConfirmationDate.Value)
                                                 .ThenBy(x => x.Id);
 
             var query = (from model in q
@@ -272,8 +390,9 @@ namespace WebView.Controllers
         public ActionResult ReportSalesDetail(DateTime startDate, DateTime endDate)
         {
             var company = _companyService.GetQueryable().FirstOrDefault();
-            var q = _cashSalesInvoiceDetailService.GetQueryable().Include("Item").Include("UoM").Include("PriceMutation").Include("CashInvoiceSales").Include("CashBank").Include("Warehouse").Where(x => x.CashSalesInvoice.IsConfirmed && x.CashSalesInvoice.SalesDate >= startDate && x.CashSalesInvoice.SalesDate <= endDate)
-                                                    .OrderBy(x => x.CashSalesInvoice.SalesDate)
+            DateTime endDay = endDate.Date.AddDays(1);
+            var q = _cashSalesInvoiceDetailService.GetQueryable().Include("Item").Include("UoM").Include("PriceMutation").Include("CashInvoiceSales").Include("CashBank").Include("Warehouse").Where(x => x.CashSalesInvoice.IsConfirmed && x.CashSalesInvoice.ConfirmationDate.Value >= startDate && x.CashSalesInvoice.ConfirmationDate.Value < endDay)
+                                                    .OrderBy(x => x.CashSalesInvoice.ConfirmationDate.Value)
                                                     .ThenBy(x => x.CashSalesInvoiceId);
 
             var query = (from model in q
@@ -332,7 +451,8 @@ namespace WebView.Controllers
         public ActionResult ReportTopSales(DateTime startDate, DateTime endDate, int maxItem)
         {
             var company = _companyService.GetQueryable().FirstOrDefault();
-            var q = _cashSalesInvoiceDetailService.GetQueryable().Include("CashSalesInvoice").Include("Item").Include("UoM").Where(x => x.CashSalesInvoice.IsConfirmed && x.CashSalesInvoice.SalesDate >= startDate && x.CashSalesInvoice.SalesDate <= endDate);
+            DateTime endDay = endDate.Date.AddDays(1);
+            var q = _cashSalesInvoiceDetailService.GetQueryable().Include("CashSalesInvoice").Include("Item").Include("UoM").Where(x => x.CashSalesInvoice.IsConfirmed && x.CashSalesInvoice.ConfirmationDate.Value >= startDate && x.CashSalesInvoice.ConfirmationDate.Value < endDay);
 
             if (maxItem <= 0 || !q.Any()) return Content(Core.Constants.Constant.ErrorPage.RecordNotFound);
 

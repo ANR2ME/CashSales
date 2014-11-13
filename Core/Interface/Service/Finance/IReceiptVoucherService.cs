@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Core.Interface.Repository;
 
 namespace Core.Interface.Service
 {
@@ -11,6 +12,7 @@ namespace Core.Interface.Service
     {
         IQueryable<ReceiptVoucher> GetQueryable();
         IReceiptVoucherValidator GetValidator();
+        IReceiptVoucherRepository GetRepository();
         IList<ReceiptVoucher> GetAll();
         ReceiptVoucher GetObjectById(int Id);
         ReceiptVoucher GetObjectByCode(string Code);

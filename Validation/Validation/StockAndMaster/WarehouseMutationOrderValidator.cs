@@ -93,11 +93,22 @@ namespace Validation.Validation
             IList<WarehouseMutationOrderDetail> details = _warehouseMutationOrderDetailService.GetObjectsByWarehouseMutationOrderId(warehouseMutationOrder.Id);
             foreach (var detail in details)
             {
+                detail.Errors = new Dictionary<string, string>();
                 WarehouseItem warehouseItemFrom = _warehouseItemService.FindOrCreateObject(warehouseMutationOrder.WarehouseFromId, detail.ItemId);
                 if (warehouseItemFrom.Quantity < detail.Quantity)
                 {
                     warehouseMutationOrder.Errors.Add("Generic", "Stock barang tidak boleh kurang dari stock yang akan dimutasikan");
                     return warehouseMutationOrder;
+                }
+                _warehouseMutationOrderDetailService.GetValidator().ValidConfirmObject(detail, _warehouseMutationOrderService, _itemService, _barringService, _warehouseItemService);
+                if (detail.Errors.Any())
+                {
+                    warehouseMutationOrder.Errors.Clear();
+                    foreach (var err in detail.Errors)
+                    {
+                        warehouseMutationOrder.Errors.Add("Generic", err.Key + " " + err.Value);
+                    }
+                    break;
                 }
             }
             return warehouseMutationOrder;

@@ -11,6 +11,7 @@ using Validation.Validation;
 using System.Linq.Dynamic;
 using System.Data.Entity;
 using System.Data.Objects;
+using Core.Constants;
 
 namespace WebView.Controllers
 {
@@ -33,9 +34,9 @@ namespace WebView.Controllers
 
         public ActionResult Index()
         {
-            if (!AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.Closing, Core.Constants.Constant.MenuGroupName.Report))
+            if (!AuthenticationModel.IsAllowed("View", Constant.MenuName.Closing, Constant.MenuGroupName.Report))
             {
-                return Content("You are not allowed to View this Page.");
+                return Content(Constant.ErrorPage.PageViewNotAllowed);
             }
 
             return View();
@@ -170,10 +171,10 @@ namespace WebView.Controllers
         {
             try
             {
-                if (!AuthenticationModel.IsAllowed("Create", Core.Constants.Constant.MenuName.Closing, Core.Constants.Constant.MenuGroupName.Report))
+                if (!AuthenticationModel.IsAllowed("Create", Constant.MenuName.Closing, Constant.MenuGroupName.Report))
                 {
                     Dictionary<string, string> Errors = new Dictionary<string, string>();
-                    Errors.Add("Generic", "You are Not Allowed to Confirm Record");
+                    Errors.Add("Generic", "You are Not Allowed to Add Record");
 
                     return Json(new
                     {
@@ -206,10 +207,10 @@ namespace WebView.Controllers
         {
             try
             {
-                if (!AuthenticationModel.IsAllowed("Confirm", Core.Constants.Constant.MenuName.Closing, Core.Constants.Constant.MenuGroupName.Report))
+                if (!AuthenticationModel.IsAllowed("Confirm", Constant.MenuName.Closing, Constant.MenuGroupName.Report))
                 {
                     Dictionary<string, string> Errors = new Dictionary<string, string>();
-                    Errors.Add("Generic", "You are Not Allowed to Confirm Record");
+                    Errors.Add("Generic", "You are Not Allowed to Close Record");
 
                     return Json(new
                     {
@@ -244,10 +245,10 @@ namespace WebView.Controllers
         {
             try
             {
-                if (!AuthenticationModel.IsAllowed("Confirm", Core.Constants.Constant.MenuName.Closing, Core.Constants.Constant.MenuGroupName.Report))
+                if (!AuthenticationModel.IsAllowed("UnConfirm", Constant.MenuName.Closing, Constant.MenuGroupName.Report))
                 {
                     Dictionary<string, string> Errors = new Dictionary<string, string>();
-                    Errors.Add("Generic", "You are Not Allowed to Confirm Record");
+                    Errors.Add("Generic", "You are Not Allowed to Reopen Record");
 
                     return Json(new
                     {
@@ -282,9 +283,9 @@ namespace WebView.Controllers
             Dictionary<string, string> Errors = new Dictionary<string, string>();
             try
             {
-                if (!AuthenticationModel.IsAllowed("Delete", Core.Constants.Constant.MenuName.Closing, Core.Constants.Constant.MenuGroupName.Report))
+                if (!AuthenticationModel.IsAllowed("Delete", Constant.MenuName.Closing, Constant.MenuGroupName.Report))
                 {
-                    Errors.Add("Generic", "You are Not Allowed to Confirm Record");
+                    Errors.Add("Generic", "You are Not Allowed to Delete Record");
                     return Json(new
                     {
                         Errors

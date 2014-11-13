@@ -10,6 +10,7 @@ using Data.Repository;
 using Validation.Validation;
 using System.Linq.Dynamic;
 using System.Data.Entity;
+using Core.Constants;
 
 namespace WebView.Controllers
 {
@@ -25,9 +26,9 @@ namespace WebView.Controllers
 
         public ActionResult Index()
         {
-            if (!AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.Account, Core.Constants.Constant.MenuGroupName.Report))
+            if (!AuthenticationModel.IsAllowed("View", Constant.MenuName.Account, Constant.MenuGroupName.Report))
             {
-                return Content("You are not allowed to View this Page.");
+                return Content(Constant.ErrorPage.PageViewNotAllowed);
             }
 
             return View();
@@ -219,6 +220,7 @@ namespace WebView.Controllers
                               model.Id,
                               model.Code,
                               model.Name,
+                              model.Group,
                           }).Where(filter).OrderBy(sidx + " " + sord); //.ToList();
 
              // Get Data
@@ -254,6 +256,7 @@ namespace WebView.Controllers
                              model.Id,
                              model.Code,
                              model.Name,
+                             model.Group,
                       }
                      }).ToArray()
              }, JsonRequestBehavior.AllowGet);
@@ -291,6 +294,7 @@ namespace WebView.Controllers
                  model.IsLegacy,
                  model.IsCashBankAccount,
                  model.LegacyCode,
+                 model.IsLeaf,
                  model.Errors
              }, JsonRequestBehavior.AllowGet);
          }
@@ -300,7 +304,7 @@ namespace WebView.Controllers
         {
             try
             {
-                if (!AuthenticationModel.IsAllowed("Create", Core.Constants.Constant.MenuName.Account, Core.Constants.Constant.MenuGroupName.Report))
+                if (!AuthenticationModel.IsAllowed("Create", Constant.MenuName.Account, Constant.MenuGroupName.Report))
                 {
                     Dictionary<string, string> Errors = new Dictionary<string, string>();
                     Errors.Add("Generic", "You are Not Allowed to Add record");
@@ -311,7 +315,8 @@ namespace WebView.Controllers
                     }, JsonRequestBehavior.AllowGet);
                 }
 
-                model = _accountService.CreateObject(model, _accountService);
+                model.IsLeaf = true;
+                model = _accountService.CreateObject(model);
             }
             catch (Exception ex)
             {
@@ -337,15 +342,16 @@ namespace WebView.Controllers
             try
             {
                 var data = _accountService.GetObjectById(model.Id);
+                int? oldparentid = data.ParentId;
                 data.Code = model.Code;
                 data.Name = model.Name;
                 data.Group = model.Group;
                 data.Level = model.Level;
                 data.ParentId = model.ParentId;
-                data.IsLegacy = model.IsLegacy;
-                data.IsCashBankAccount = model.IsCashBankAccount;
+                //data.IsLegacy = model.IsLegacy;
+                //data.IsCashBankAccount = model.IsCashBankAccount;
                 data.LegacyCode = model.LegacyCode;
-                model = _accountService.UpdateObject(data, _accountService);
+                model = _accountService.UpdateObject(data, oldparentid);
             }
             catch (Exception ex)
             {

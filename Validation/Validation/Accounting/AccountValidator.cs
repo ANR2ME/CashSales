@@ -22,11 +22,15 @@ namespace Validation.Validation
             return account;
         }*/
 
-        public Account VHasCode(Account account)
+        public Account VHasValidCode(Account account, IAccountService _accountService)
         {
-            if (account.Code == null)
+            if (account.Code == null || account.Code.Trim() == "")
             {
                 account.Errors.Add("Code", "Tidak boleh kosong");
+            }
+            else if (_accountService.IsCodeDuplicated(account))
+            {
+                account.Errors.Add("Code", "Code ini sudah ada");
             }
             return account;
         }
@@ -36,6 +40,33 @@ namespace Validation.Validation
             if (account.Name == null || account.Name.Trim() == "")
             {
                 account.Errors.Add("Name", "Tidak boleh kosong");
+            }
+            return account;
+        }
+
+        public Account VIsLeaf(Account account)
+        {
+            if (!account.IsLeaf)
+            {
+                account.Errors.Add("Generic", "Account ini memiliki Anak/Detail/Leaf");
+            }
+            return account;
+        }
+
+        public Account VIsNotLegacy(Account account)
+        {
+            if (account.IsLegacy)
+            {
+                account.Errors.Add("Generic", "Legacy Account tidak boleh diubah/hapus");
+            }
+            return account;
+        }
+
+        public Account VIsNotCashBankAccount(Account account)
+        {
+            if (account.IsCashBankAccount)
+            {
+                account.Errors.Add("Generic", "CashBank Account tidak boleh diubah/hapus");
             }
             return account;
         }
@@ -66,9 +97,9 @@ namespace Validation.Validation
         {
             if (account.Level > 1)
             {
-                if (account.ParentId == null)
+                if (account.ParentId == null || account.ParentId.GetValueOrDefault() <= 0)
                 {
-                    account.Errors.Add("Parent", "Tidak boleh null");
+                    account.Errors.Add("Parent", "Tidak valid");
                 }
                 else
                 {
@@ -86,7 +117,7 @@ namespace Validation.Validation
         {
             //VHasCashBank(account, _cashBankService);
             //if (!isValid(account)) { return account; }
-            VHasCode(account);
+            VHasValidCode(account, _accountService);
             if (!isValid(account)) { return account; }
             VHasName(account);
             if (!isValid(account)) { return account; }
@@ -100,12 +131,53 @@ namespace Validation.Validation
 
         public Account VUpdateObject(Account account, IAccountService _accountService)
         {
+            VIsNotLegacy(account);
+            if (!isValid(account)) { return account; }
+            VIsNotCashBankAccount(account);
+            if (!isValid(account)) { return account; }
+            VCreateObject(account, _accountService);
+            return account;
+        }
+
+        public Account VUpdateObjectForCashBank(Account account, IAccountService _accountService)
+        {
+            VIsNotLegacy(account);
+            if (!isValid(account)) { return account; }
+            VCreateObject(account, _accountService);
+            return account;
+        }
+
+        public Account VUpdateObjectForLegacy(Account account, IAccountService _accountService)
+        {
+            VIsNotCashBankAccount(account);
+            if (!isValid(account)) { return account; }
             VCreateObject(account, _accountService);
             return account;
         }
 
         public Account VDeleteObject(Account account)
         {
+            VIsNotLegacy(account);
+            if (!isValid(account)) { return account; }
+            VIsNotCashBankAccount(account);
+            if (!isValid(account)) { return account; }
+            VIsLeaf(account);
+            return account;
+        }
+
+        public Account VDeleteObjectForCashBank(Account account)
+        {
+            VIsNotLegacy(account);
+            if (!isValid(account)) { return account; }
+            VIsLeaf(account);
+            return account;
+        }
+
+        public Account VDeleteObjectForLegacy(Account account)
+        {
+            VIsNotCashBankAccount(account);
+            if (!isValid(account)) { return account; }
+            VIsLeaf(account);
             return account;
         }
 
@@ -121,10 +193,36 @@ namespace Validation.Validation
             return isValid(account);
         }
 
+        public bool ValidUpdateObjectForCashBank(Account account, IAccountService _accountService)
+        {
+            VUpdateObjectForCashBank(account, _accountService);
+            return isValid(account);
+        }
+
+        public bool ValidUpdateObjectForLegacy(Account account, IAccountService _accountService)
+        {
+            VUpdateObjectForLegacy(account, _accountService);
+            return isValid(account);
+        }
+
         public bool ValidDeleteObject(Account account)
         {
             account.Errors.Clear();
             VDeleteObject(account);
+            return isValid(account);
+        }
+
+        public bool ValidDeleteObjectForCashBank(Account account)
+        {
+            account.Errors.Clear();
+            VDeleteObjectForCashBank(account);
+            return isValid(account);
+        }
+
+        public bool ValidDeleteObjectForLegacy(Account account)
+        {
+            account.Errors.Clear();
+            VDeleteObjectForLegacy(account);
             return isValid(account);
         }
 

@@ -100,6 +100,21 @@ namespace Validation.Validation
             return receiptVoucher;
         }
 
+        public ReceiptVoucher VTotalDetailsAmountIsEqualTotalAmount(ReceiptVoucher receiptVoucher, IReceiptVoucherDetailService _receiptVoucherDetailService)
+        {
+            decimal totalamount = 0;
+            IList<ReceiptVoucherDetail> details = _receiptVoucherDetailService.GetObjectsByReceiptVoucherId(receiptVoucher.Id);
+            foreach (var detail in details)
+            {
+                totalamount += detail.Amount;
+            }
+            if (totalamount != receiptVoucher.TotalAmount)
+            {
+                receiptVoucher.Errors.Add("Generic", "Total Details Amount harus sama dengan Total Amount");
+            }
+            return receiptVoucher;
+        }
+
         public ReceiptVoucher VHasNotBeenDeleted(ReceiptVoucher receiptVoucher)
         {
             if (receiptVoucher.IsDeleted)
@@ -140,7 +155,7 @@ namespace Validation.Validation
                 {
                     foreach (var error in detail.Errors)
                     {
-                        receiptVoucher.Errors.Add(error.Key, error.Value);
+                        receiptVoucher.Errors.Add("Generic", error.Key + " " + error.Value);
                     }
                     if (receiptVoucher.Errors.Any()) { return receiptVoucher; }
                 }
@@ -170,7 +185,7 @@ namespace Validation.Validation
 
         public ReceiptVoucher VDetailAmountLessOrEqualTotalAmount(ReceiptVoucher receiptVoucher, IReceiptVoucherDetailService _receiptVoucherDetailService)
         {
-            decimal totalamount = _receiptVoucherDetailService.CalcTotalAmount(receiptVoucher.Id);
+            decimal totalamount = _receiptVoucherDetailService.CalcTotalAmountByReceiptVoucher(receiptVoucher.Id);
             if (totalamount > receiptVoucher.TotalAmount)
             {
                 receiptVoucher.Errors.Add("Generic", "Total Amount seluruh details Tidak boleh lebih dari TotalAmount");
@@ -303,19 +318,21 @@ namespace Validation.Validation
                                              IReceiptVoucherDetailService _receiptVoucherDetailService, ICashBankService _cashBankService,
                                              IReceivableService _receivableService, IClosingService _closingService)
         {
+            VHasNotBeenDeleted(receiptVoucher);
+            if (!isValid(receiptVoucher)) { return receiptVoucher; }
+            VHasNotBeenConfirmed(receiptVoucher);
+            if (!isValid(receiptVoucher)) { return receiptVoucher; }
             VHasConfirmationDate(receiptVoucher);
             if (!isValid(receiptVoucher)) { return receiptVoucher; }
             VHasReceiptVoucherDetails(receiptVoucher, _receiptVoucherDetailService);
             if (!isValid(receiptVoucher)) { return receiptVoucher; }
             VTotalAmountIsNotZero(receiptVoucher, _receiptVoucherDetailService);
             if (!isValid(receiptVoucher)) { return receiptVoucher; }
-            VHasNotBeenConfirmed(receiptVoucher);
-            if (!isValid(receiptVoucher)) { return receiptVoucher; }
-            VHasNotBeenDeleted(receiptVoucher);
+            VTotalDetailsAmountIsEqualTotalAmount(receiptVoucher, _receiptVoucherDetailService);
             if (!isValid(receiptVoucher)) { return receiptVoucher; }
             VAllReceiptVoucherDetailsAreConfirmable(receiptVoucher, _receiptVoucherService, _receiptVoucherDetailService, _cashBankService, _receivableService);
-            if (!isValid(receiptVoucher)) { return receiptVoucher; }
-            VDetailAmountLessOrEqualTotalAmount(receiptVoucher, _receiptVoucherDetailService);
+            //if (!isValid(receiptVoucher)) { return receiptVoucher; }
+            //VDetailAmountLessOrEqualTotalAmount(receiptVoucher, _receiptVoucherDetailService);
             if (!isValid(receiptVoucher)) { return receiptVoucher; }
             VGeneralLedgerPostingHasNotBeenClosed(receiptVoucher, _closingService, 1);
             return receiptVoucher;

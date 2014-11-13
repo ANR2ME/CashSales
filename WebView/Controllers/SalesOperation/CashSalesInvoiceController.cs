@@ -83,7 +83,7 @@ namespace WebView.Controllers
             return View();
         }
 
-        public dynamic GetList(string _search, long nd, int rows, int? page, string sidx, string sord, string filters = "", string findSKU = null)
+        public dynamic GetList(string _search, long nd, int rows, int? page, string sidx, string sord, string filters = "", string findSKU = "")
         {
             // Construct where statement
             string strWhere = GeneralFunction.ConstructWhere(filters);
@@ -92,7 +92,7 @@ namespace WebView.Controllers
             if (filter == "") filter = "true";
 
             // Get Data
-            var q = _cashSalesInvoiceService.GetQueryable().Include("CashBank").Include("Warehouse").Include("CashSalesDetails").Where(x => x.CashSalesInvoiceDetails.Where(y => findSKU == null || y.Item.Sku.Contains(findSKU)).FirstOrDefault() != null);
+            var q = _cashSalesInvoiceService.GetQueryable().Include("CashBank").Include("Warehouse").Include("CashSalesInvoiceDetails").Where(x => findSKU == "" || x.CashSalesInvoiceDetails.Where(y => y.Item.Sku.Contains(findSKU)).FirstOrDefault() != null);
 
             var query = (from model in q
                          select new
@@ -107,7 +107,7 @@ namespace WebView.Controllers
                             model.AmountPaid,
                             model.Total,
                             model.CoGS,
-                            profitloss = (model.IsConfirmed ? (Nullable<decimal>)((model.Total * (100 - model.Tax) / 100) - model.CoGS) : null),
+                            profitloss = (model.IsConfirmed ? (Nullable<decimal>)(((model.Total - model.ShippingFee) * 100 / (100 + model.Tax)) - model.Allowance - model.CoGS) : null),
                             model.IsConfirmed,
                             model.ConfirmationDate,
                             model.CashBankId,
@@ -209,7 +209,7 @@ namespace WebView.Controllers
                              model.AmountPaid,
                              model.Total,
                              model.CoGS,
-                             profitloss = (model.IsConfirmed ? (Nullable<decimal>)((model.Total * (100 - model.Tax) / 100) - model.CoGS) : null),
+                             profitloss = (model.IsConfirmed ? (Nullable<decimal>)(((model.Total - model.ShippingFee) * 100 / (100 + model.Tax)) - model.Allowance - model.CoGS) : null),
                              model.IsConfirmed,
                              model.ConfirmationDate,
                              model.CashBankId,

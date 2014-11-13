@@ -65,8 +65,12 @@ namespace Service.Service
                                                 ICashBankService _cashBankService, IReceivableService _receivableService)
         {
             receiptVoucherDetail.Errors = new Dictionary<String, String>();
-            return (_validator.ValidCreateObject(receiptVoucherDetail, _receiptVoucherService, this, _cashBankService, _receivableService) ?
-                    _repository.CreateObject(receiptVoucherDetail) : receiptVoucherDetail);
+            if(_validator.ValidCreateObject(receiptVoucherDetail, _receiptVoucherService, this, _cashBankService, _receivableService))
+            {
+                _repository.CreateObject(receiptVoucherDetail);
+                CalcAndUpdateTotalAmount(receiptVoucherDetail.ReceiptVoucherId, _receiptVoucherService);
+            };
+            return receiptVoucherDetail;
         }
 
         public ReceiptVoucherDetail CreateObject(int receiptVoucherId, int receivableId, decimal amount, string description, string Code, 
@@ -86,13 +90,22 @@ namespace Service.Service
 
         public ReceiptVoucherDetail UpdateObject(ReceiptVoucherDetail receiptVoucherDetail, IReceiptVoucherService _receiptVoucherService, ICashBankService _cashBankService, IReceivableService _receivableService)
         {
-            return (_validator.ValidUpdateObject(receiptVoucherDetail, _receiptVoucherService, this, _cashBankService, _receivableService) ?
-                     _repository.UpdateObject(receiptVoucherDetail) : receiptVoucherDetail);
+            if(_validator.ValidUpdateObject(receiptVoucherDetail, _receiptVoucherService, this, _cashBankService, _receivableService))
+            {
+                _repository.UpdateObject(receiptVoucherDetail);
+                CalcAndUpdateTotalAmount(receiptVoucherDetail.ReceiptVoucherId, _receiptVoucherService);
+            };
+            return receiptVoucherDetail;
         }
 
-        public ReceiptVoucherDetail SoftDeleteObject(ReceiptVoucherDetail receiptVoucherDetail)
+        public ReceiptVoucherDetail SoftDeleteObject(ReceiptVoucherDetail receiptVoucherDetail, IReceiptVoucherService _receiptVoucherService)
         {
-            return (_validator.ValidDeleteObject(receiptVoucherDetail) ? _repository.SoftDeleteObject(receiptVoucherDetail) : receiptVoucherDetail);
+            if(_validator.ValidDeleteObject(receiptVoucherDetail))
+            {
+                _repository.SoftDeleteObject(receiptVoucherDetail);
+                CalcAndUpdateTotalAmount(receiptVoucherDetail.ReceiptVoucherId, _receiptVoucherService);
+            };
+            return receiptVoucherDetail;
         }
 
         public bool DeleteObject(int Id)
@@ -143,7 +156,7 @@ namespace Service.Service
             return receiptVoucherDetail;
         }
 
-        public decimal CalcTotalAmount(int ReceiptVoucherId)
+        public decimal CalcTotalAmountByReceiptVoucher(int ReceiptVoucherId)
         {
             decimal totalamount = 0;
             IList<ReceiptVoucherDetail> details = GetObjectsByReceiptVoucherId(ReceiptVoucherId);
@@ -153,5 +166,25 @@ namespace Service.Service
             }
             return totalamount;
         }
+
+        public decimal CalcTotalAmountByReceivable(int ReceivableId)
+        {
+            decimal totalamount = 0;
+            IList<ReceiptVoucherDetail> details = GetObjectsByReceivableId(ReceivableId);
+            foreach (var detail in details)
+            {
+                totalamount += detail.Amount;
+            }
+            return totalamount;
+        }
+
+        public decimal CalcAndUpdateTotalAmount(int ReceiptVoucherId, IReceiptVoucherService _receiptVoucherService)
+        {
+            ReceiptVoucher receiptVoucher = _receiptVoucherService.GetObjectById(ReceiptVoucherId);
+            receiptVoucher.TotalAmount = CalcTotalAmountByReceiptVoucher(ReceiptVoucherId);
+            _receiptVoucherService.GetRepository().UpdateObject(receiptVoucher);
+            return receiptVoucher.TotalAmount;
+        }
+
     }
 }

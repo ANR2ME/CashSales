@@ -65,8 +65,11 @@ namespace Service.Service
                                                 ICashBankService _cashBankService, IPayableService _payableService)
         {
             paymentVoucherDetail.Errors = new Dictionary<String, String>();
-            return (_validator.ValidCreateObject(paymentVoucherDetail, _paymentVoucherService, this, _cashBankService, _payableService) ?
-                    _repository.CreateObject(paymentVoucherDetail) : paymentVoucherDetail);
+            if(_validator.ValidCreateObject(paymentVoucherDetail, _paymentVoucherService, this, _cashBankService, _payableService)) {
+                _repository.CreateObject(paymentVoucherDetail);
+                CalcAndUpdateTotalAmount(paymentVoucherDetail.PaymentVoucherId, _paymentVoucherService);
+            };
+            return paymentVoucherDetail;
         }
 
         public PaymentVoucherDetail CreateObject(int paymentVoucherId, int payableId, decimal amount, string description, string Code, 
@@ -86,13 +89,22 @@ namespace Service.Service
 
         public PaymentVoucherDetail UpdateObject(PaymentVoucherDetail paymentVoucherDetail, IPaymentVoucherService _paymentVoucherService, ICashBankService _cashBankService, IPayableService _payableService)
         {
-            return (_validator.ValidUpdateObject(paymentVoucherDetail, _paymentVoucherService, this, _cashBankService, _payableService) ?
-                     _repository.UpdateObject(paymentVoucherDetail) : paymentVoucherDetail);
+            if(_validator.ValidUpdateObject(paymentVoucherDetail, _paymentVoucherService, this, _cashBankService, _payableService))
+            {
+                _repository.UpdateObject(paymentVoucherDetail);
+                CalcAndUpdateTotalAmount(paymentVoucherDetail.PaymentVoucherId, _paymentVoucherService);
+            };
+            return paymentVoucherDetail;
         }
 
-        public PaymentVoucherDetail SoftDeleteObject(PaymentVoucherDetail paymentVoucherDetail)
+        public PaymentVoucherDetail SoftDeleteObject(PaymentVoucherDetail paymentVoucherDetail, IPaymentVoucherService _paymentVoucherService)
         {
-            return (_validator.ValidDeleteObject(paymentVoucherDetail) ? _repository.SoftDeleteObject(paymentVoucherDetail) : paymentVoucherDetail);
+            if(_validator.ValidDeleteObject(paymentVoucherDetail))
+            {
+                _repository.SoftDeleteObject(paymentVoucherDetail);
+                CalcAndUpdateTotalAmount(paymentVoucherDetail.PaymentVoucherId, _paymentVoucherService);
+            };
+            return paymentVoucherDetail;
         }
 
         public bool DeleteObject(int Id)
@@ -101,10 +113,10 @@ namespace Service.Service
         }
 
         public PaymentVoucherDetail ConfirmObject(PaymentVoucherDetail paymentVoucherDetail, DateTime ConfirmationDate,
-                                                  IPaymentVoucherService _paymentVoucherService, IPayableService _payableService)
+                                                  IPaymentVoucherService _paymentVoucherService, IPayableService _payableService, IPaymentVoucherDetailService _paymentVoucherDetailService)
         {
             paymentVoucherDetail.ConfirmationDate = ConfirmationDate;
-            if (_validator.ValidConfirmObject(paymentVoucherDetail, _payableService))
+            if (_validator.ValidConfirmObject(paymentVoucherDetail, _payableService, _paymentVoucherDetailService))
             {
                 PaymentVoucher paymentVoucher = _paymentVoucherService.GetObjectById(paymentVoucherDetail.PaymentVoucherId);
                 Payable payable = _payableService.GetObjectById(paymentVoucherDetail.PayableId);
@@ -144,7 +156,7 @@ namespace Service.Service
             return paymentVoucherDetail;
         }
 
-        public decimal CalcTotalAmount(int PaymentVoucherId)
+        public decimal CalcTotalAmountByPaymentVoucher(int PaymentVoucherId)
         {
             decimal totalamount = 0;
             IList<PaymentVoucherDetail> details = GetObjectsByPaymentVoucherId(PaymentVoucherId);
@@ -154,5 +166,25 @@ namespace Service.Service
             }
             return totalamount;
         }
+
+        public decimal CalcTotalAmountByPayable(int PayableId)
+        {
+            decimal totalamount = 0;
+            IList<PaymentVoucherDetail> details = GetObjectsByPayableId(PayableId);
+            foreach (var detail in details)
+            {
+                totalamount += detail.Amount;
+            }
+            return totalamount;
+        }
+
+        public decimal CalcAndUpdateTotalAmount(int PaymentVoucherId, IPaymentVoucherService _paymentVoucherService)
+        {
+            PaymentVoucher paymentVoucher = _paymentVoucherService.GetObjectById(PaymentVoucherId);
+            paymentVoucher.TotalAmount = CalcTotalAmountByPaymentVoucher(PaymentVoucherId);
+            _paymentVoucherService.GetRepository().UpdateObject(paymentVoucher);
+            return paymentVoucher.TotalAmount;
+        }
+
     }
 }

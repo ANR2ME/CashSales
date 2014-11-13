@@ -11,6 +11,7 @@ namespace Core.Interface.Repository
         IQueryable<CashSalesReturnDetail> GetQueryable();
         IList<CashSalesReturnDetail> GetAll();
         IQueryable<CashSalesReturnDetail> GetQueryableObjectsByCashSalesReturnId(int CashSalesReturnId);
+        IQueryable<CashSalesReturnDetail> GetQueryableObjectsByCashSalesInvoiceDetailId(int CashSalesInvoiceDetailId);
         IList<CashSalesReturnDetail> GetObjectsByCashSalesReturnId(int CashSalesReturnId);
         CashSalesReturnDetail GetObjectById(int Id);
         IList<CashSalesReturnDetail> GetObjectsByCashSalesInvoiceDetailId(int CashSalesInvoiceDetailId);

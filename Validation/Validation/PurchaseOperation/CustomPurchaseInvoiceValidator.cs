@@ -155,7 +155,12 @@ namespace Validation.Validation
                     customPurchaseInvoiceDetail.Errors = new Dictionary<string, string>();
                     if (!validator.ValidConfirmObject(customPurchaseInvoiceDetail, _customPurchaseInvoiceService,_warehouseItemService))
                     {
-                        customPurchaseInvoice.Errors.Add("Generic", "Harus confirmable semua");
+                        //customPurchaseInvoice.Errors.Add("Generic", "Harus confirmable semua");
+                        customPurchaseInvoice.Errors.Clear();
+                        foreach (var err in customPurchaseInvoiceDetail.Errors)
+                        {
+                            customPurchaseInvoice.Errors.Add("Generic", err.Key + " " +err.Value);
+                        }
                         return customPurchaseInvoice;
                     }
                 }
@@ -163,7 +168,8 @@ namespace Validation.Validation
             return customPurchaseInvoice;
         }
 
-        public CustomPurchaseInvoice VIsUnconfirmableCustomPurchaseInvoiceDetails(CustomPurchaseInvoice customPurchaseInvoice, ICustomPurchaseInvoiceDetailService _customPurchaseInvoiceDetailService)
+        public CustomPurchaseInvoice VIsUnconfirmableCustomPurchaseInvoiceDetails(CustomPurchaseInvoice customPurchaseInvoice, ICustomPurchaseInvoiceDetailService _customPurchaseInvoiceDetailService,
+                                                IWarehouseItemService _warehouseItemService, ICustomPurchaseInvoiceService _customPurchaseInvoiceService)
         {
             IList<CustomPurchaseInvoiceDetail> customPurchaseInvoiceDetails = _customPurchaseInvoiceDetailService.GetObjectsByCustomPurchaseInvoiceId(customPurchaseInvoice.Id);
             if (!customPurchaseInvoiceDetails.Any())
@@ -176,9 +182,14 @@ namespace Validation.Validation
                 foreach (var customPurchaseInvoiceDetail in customPurchaseInvoiceDetails)
                 {
                     customPurchaseInvoiceDetail.Errors = new Dictionary<string, string>();
-                    if (!validator.ValidUnconfirmObject(customPurchaseInvoiceDetail))
+                    if (!validator.ValidUnconfirmObject(customPurchaseInvoiceDetail, _customPurchaseInvoiceService, _warehouseItemService))
                     {
-                        customPurchaseInvoice.Errors.Add("Generic", "Harus unconfirmable semua");
+                        //customPurchaseInvoice.Errors.Add("Generic", "Harus unconfirmable semua");
+                        customPurchaseInvoice.Errors.Clear();
+                        foreach (var err in customPurchaseInvoiceDetail.Errors)
+                        {
+                            customPurchaseInvoice.Errors.Add("Generic", err.Key + " " + err.Value);
+                        }
                         return customPurchaseInvoice;
                     }
                 }
@@ -251,9 +262,9 @@ namespace Validation.Validation
 
         public CustomPurchaseInvoice VIsValidAmountPaid(CustomPurchaseInvoice customPurchaseInvoice)
         {
-            if (customPurchaseInvoice.AmountPaid > customPurchaseInvoice.Total)
+            if (customPurchaseInvoice.AmountPaid > customPurchaseInvoice.Total - customPurchaseInvoice.Allowance)
             {
-                customPurchaseInvoice.Errors.Add("AmountPaid", "Harus lebih kecil atau sama dengan Total Payable");
+                customPurchaseInvoice.Errors.Add("AmountPaid", "Harus lebih kecil atau sama dengan Total (minus Allowance)");
             }
             else if (customPurchaseInvoice.AmountPaid < 0)
             {
@@ -262,14 +273,14 @@ namespace Validation.Validation
             return customPurchaseInvoice;
         }
 
-        public CustomPurchaseInvoice VIsValidFullPayment(CustomPurchaseInvoice customPurchaseInvoice)
-        {
-            if (customPurchaseInvoice.AmountPaid != customPurchaseInvoice.Total)
-            {
-                customPurchaseInvoice.Errors.Add("AmountPaid", "Harus sama dengan Total Payable");
-            }
-            return customPurchaseInvoice;
-        }
+        //public CustomPurchaseInvoice VIsValidFullPayment(CustomPurchaseInvoice customPurchaseInvoice)
+        //{
+        //    if (customPurchaseInvoice.AmountPaid != customPurchaseInvoice.Total)
+        //    {
+        //        customPurchaseInvoice.Errors.Add("AmountPaid", "Harus sama dengan Total");
+        //    }
+        //    return customPurchaseInvoice;
+        //}
 
         public CustomPurchaseInvoice VHasCashBank(CustomPurchaseInvoice customPurchaseInvoice, ICashBankService _cashBankService)
         {
@@ -372,6 +383,7 @@ namespace Validation.Validation
         }
 
         public CustomPurchaseInvoice VUnconfirmObject(CustomPurchaseInvoice customPurchaseInvoice, ICustomPurchaseInvoiceDetailService _customPurchaseInvoiceDetailService, 
+                                                   IWarehouseItemService _warehouseItemService, ICustomPurchaseInvoiceService _customPurchaseInvoiceService,
                                                    IPayableService _payableService, IPaymentVoucherDetailService _paymentVoucherDetailService, IClosingService _closingService)
         {
             VIsNotDeleted(customPurchaseInvoice);
@@ -380,7 +392,7 @@ namespace Validation.Validation
             if (!isValid(customPurchaseInvoice)) { return customPurchaseInvoice; }
             VIsNotPaid(customPurchaseInvoice);
             if (!isValid(customPurchaseInvoice)) { return customPurchaseInvoice; }
-            VIsUnconfirmableCustomPurchaseInvoiceDetails(customPurchaseInvoice, _customPurchaseInvoiceDetailService);
+            VIsUnconfirmableCustomPurchaseInvoiceDetails(customPurchaseInvoice, _customPurchaseInvoiceDetailService, _warehouseItemService, _customPurchaseInvoiceService);
             if (!isValid(customPurchaseInvoice)) { return customPurchaseInvoice; }
             VHasNoPaymentVoucherDetails(customPurchaseInvoice, _payableService, _paymentVoucherDetailService);
             if (!isValid(customPurchaseInvoice)) { return customPurchaseInvoice; }
@@ -409,11 +421,11 @@ namespace Validation.Validation
             VHasPaymentDate(customPurchaseInvoice);
             if (!isValid(customPurchaseInvoice)) { return customPurchaseInvoice; }
             VIsValidAmountPaid(customPurchaseInvoice);
-            if (customPurchaseInvoice.IsFullPayment)
-            {
-                if (!isValid(customPurchaseInvoice)) { return customPurchaseInvoice; }
-                VIsValidFullPayment(customPurchaseInvoice);
-            }
+            //if (customPurchaseInvoice.IsFullPayment)
+            //{
+            //    if (!isValid(customPurchaseInvoice)) { return customPurchaseInvoice; }
+            //    VIsValidFullPayment(customPurchaseInvoice);
+            //}
             if (!isValid(customPurchaseInvoice)) { return customPurchaseInvoice; }
             VHasEnoughCash(customPurchaseInvoice, _cashBankService);
             if (!isValid(customPurchaseInvoice)) { return customPurchaseInvoice; }
@@ -480,11 +492,12 @@ namespace Validation.Validation
             return isValid(customPurchaseInvoice);
         }
 
-        public bool ValidUnconfirmObject(CustomPurchaseInvoice customPurchaseInvoice, ICustomPurchaseInvoiceDetailService _customPurchaseInvoiceDetailService, 
+        public bool ValidUnconfirmObject(CustomPurchaseInvoice customPurchaseInvoice, ICustomPurchaseInvoiceDetailService _customPurchaseInvoiceDetailService,
+                                         IWarehouseItemService _warehouseItemService, ICustomPurchaseInvoiceService _customPurchaseInvoiceService,
                                          IPayableService _payableService, IPaymentVoucherDetailService _paymentVoucherDetailService, IClosingService _closingService)
         {
             customPurchaseInvoice.Errors.Clear();
-            VUnconfirmObject(customPurchaseInvoice, _customPurchaseInvoiceDetailService, _payableService, _paymentVoucherDetailService, _closingService);
+            VUnconfirmObject(customPurchaseInvoice, _customPurchaseInvoiceDetailService, _warehouseItemService, _customPurchaseInvoiceService, _payableService, _paymentVoucherDetailService, _closingService);
             return isValid(customPurchaseInvoice);
         }
 

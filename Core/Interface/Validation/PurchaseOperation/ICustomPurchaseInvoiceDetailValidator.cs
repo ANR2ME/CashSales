@@ -19,7 +19,7 @@ namespace Core.Interface.Validation
         CustomPurchaseInvoiceDetail VIsValidQuantity(CustomPurchaseInvoiceDetail customPurchaseInvoiceDetail);
 
         CustomPurchaseInvoiceDetail VConfirmObject(CustomPurchaseInvoiceDetail customPurchaseInvoiceDetail, ICustomPurchaseInvoiceService _customPurchaseInvoiceService, IWarehouseItemService _warehouseItemService);
-        CustomPurchaseInvoiceDetail VUnconfirmObject(CustomPurchaseInvoiceDetail customPurchaseInvoiceDetail);
+        CustomPurchaseInvoiceDetail VUnconfirmObject(CustomPurchaseInvoiceDetail customPurchaseInvoiceDetail, ICustomPurchaseInvoiceService _customPurchaseInvoiceService, IWarehouseItemService _warehouseItemService);
 
         CustomPurchaseInvoiceDetail VCreateObject(CustomPurchaseInvoiceDetail customPurchaseInvoiceDetail, ICustomPurchaseInvoiceService _customPurchaseInvoiceService,
                                                ICustomPurchaseInvoiceDetailService _customPurchaseInvoiceDetailService, IItemService _itemService, IWarehouseItemService _warehouseItemService);
@@ -28,7 +28,7 @@ namespace Core.Interface.Validation
         CustomPurchaseInvoiceDetail VDeleteObject(CustomPurchaseInvoiceDetail customPurchaseInvoiceDetail, ICustomPurchaseInvoiceService _customPurchaseInvoiceService);
 
         bool ValidConfirmObject(CustomPurchaseInvoiceDetail customPurchaseInvoiceDetail, ICustomPurchaseInvoiceService _customPurchaseInvoiceService, IWarehouseItemService _warehouseItemService);
-        bool ValidUnconfirmObject(CustomPurchaseInvoiceDetail customPurchaseInvoiceDetail);
+        bool ValidUnconfirmObject(CustomPurchaseInvoiceDetail customPurchaseInvoiceDetail, ICustomPurchaseInvoiceService _customPurchaseInvoiceService, IWarehouseItemService _warehouseItemService);
 
         bool ValidCreateObject(CustomPurchaseInvoiceDetail customPurchaseInvoiceDetail, ICustomPurchaseInvoiceService _customPurchaseInvoiceService,
                                ICustomPurchaseInvoiceDetailService _customPurchaseInvoiceDetailService, IItemService _itemService, IWarehouseItemService _warehouseItemService);

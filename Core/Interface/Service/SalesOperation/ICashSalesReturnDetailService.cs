@@ -13,6 +13,7 @@ namespace Core.Interface.Service
         ICashSalesReturnDetailValidator GetValidator();
         IList<CashSalesReturnDetail> GetAll();
         IQueryable<CashSalesReturnDetail> GetQueryableObjectsByCashSalesReturnId(int CashSalesReturnId);
+        IQueryable<CashSalesReturnDetail> GetQueryableObjectsByCashSalesInvoiceDetailId(int CashSalesInvoiceDetailId);
         IList<CashSalesReturnDetail> GetObjectsByCashSalesReturnId(int cashSalesReturnId);
         CashSalesReturnDetail GetObjectById(int Id);
         IList<CashSalesReturnDetail> GetObjectsByCashSalesInvoiceDetailId(int CashSalesInvoiceDetailId);
@@ -31,6 +32,7 @@ namespace Core.Interface.Service
         bool DeleteObject(int Id);
         //decimal CalculateTotal(int CashSalesReturnId);
         CashSalesReturn CalculateTotal(CashSalesReturn cashSalesReturn);
-        int GetTotalQuantityByCashSalesInvoiceDetailId(int Id);
+        int GetTotalQuantityByCashSalesInvoiceDetailId(CashSalesReturnDetail cashSalesReturnDetail);
+        int GetTotalQuantityByCashSalesReturnId(int CashSalesReturnId, int ItemId);
     }
 }

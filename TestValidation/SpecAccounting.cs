@@ -84,8 +84,8 @@ namespace TestValidation
                     Inventory = d._accountService.GetObjectByLegacyCode(Core.Constants.Constant.AccountLegacyCode.Inventory);
                     GBCHReceivable = d._accountService.GetObjectByLegacyCode(Core.Constants.Constant.AccountLegacyCode.GBCHReceivable);
                     AccountReceivable = d._accountService.GetObjectByLegacyCode(Core.Constants.Constant.AccountLegacyCode.AccountReceivable);
-                    Account kontan = d._accountService.GetObjectByLegacyCode(Core.Constants.Constant.AccountLegacyCode.CashBank + d.cashBank1.Id);
-                    Account bca = d._accountService.GetObjectByLegacyCode(Core.Constants.Constant.AccountLegacyCode.CashBank + d.cashBank2.Id);
+                    Account kontan = d._accountService.GetObjectByLegacyCode(Core.Constants.Constant.AccountLegacyCode.CashBank + d.cashBank1.Id.ToString("D3"));
+                    Account bca = d._accountService.GetObjectByLegacyCode(Core.Constants.Constant.AccountLegacyCode.CashBank + d.cashBank2.Id.ToString("D3"));
                     CashBankAccount = d._accountService.GetObjectByLegacyCode(Core.Constants.Constant.AccountLegacyCode.CashBank);
                     Asset = d._accountService.GetObjectByLegacyCode(Core.Constants.Constant.AccountLegacyCode.Asset);
 

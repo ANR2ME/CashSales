@@ -28,8 +28,8 @@ namespace Core.Interface.Validation
         CashSalesInvoice VIsNotConfirmed(CashSalesInvoice cashSalesInvoice);
         CashSalesInvoice VIsConfirmed(CashSalesInvoice cashSalesInvoice);
         CashSalesInvoice VIsValidAmountPaid(CashSalesInvoice cashSalesInvoice);
-        CashSalesInvoice VIsValidFullPayment(CashSalesInvoice cashSalesInvoice);
-        CashSalesInvoice VTotalPaymentIsEqualOrLessThanTotalPayable(CashSalesInvoice cashSalesInvoice);
+        //CashSalesInvoice VIsValidFullPayment(CashSalesInvoice cashSalesInvoice);
+        //CashSalesInvoice VTotalPaymentIsEqualOrLessThanTotal(CashSalesInvoice cashSalesInvoice);
 
         CashSalesInvoice VHasCashBank(CashSalesInvoice cashSalesInvoice, ICashBankService _cashBankService);
 

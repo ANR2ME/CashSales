@@ -17,7 +17,7 @@ namespace Validation.Validation
             {
                 cashBank.Errors.Add("Name", "Tidak boleh kosong");
             }
-            if (_cashBankService.IsNameDuplicated(cashBank))
+            else if (_cashBankService.IsNameDuplicated(cashBank))
             {
                 cashBank.Errors.Add("Name", "Tidak boleh ada duplikasi");
             }

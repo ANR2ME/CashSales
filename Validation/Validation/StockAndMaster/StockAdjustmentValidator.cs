@@ -64,6 +64,7 @@ namespace Validation.Validation
             IList<StockAdjustmentDetail> details = _stockAdjustmentDetailService.GetObjectsByStockAdjustmentId(stockAdjustment.Id);
             foreach (var stockAdjustmentDetail in details)
             {
+                stockAdjustmentDetail.Errors = new Dictionary<string,string>();
                 int stockAdjustmentDetailQuantity = stockAdjustmentDetail.Quantity;
                 decimal stockAdjustmentDetailPrice = stockAdjustmentDetail.Price;
                 Item item = _itemService.GetObjectById(stockAdjustmentDetail.ItemId);
@@ -76,12 +77,25 @@ namespace Validation.Validation
                 {
                     stockAdjustmentDetail.Errors.Add("Generic", "Stock di dalam warehouse tidak boleh kurang dari 0");
                 }
-                
+
                 else if (_itemService.CalculateAvgPrice(item, stockAdjustmentDetail.Quantity, stockAdjustmentDetailPrice) < 0)
                 {
                     stockAdjustment.Errors.Add("Generic", "AvgPrice tidak boleh kurang dari 0");
                 }
-                
+                else
+                {
+                    stockAdjustmentDetail.ConfirmationDate = stockAdjustment.ConfirmationDate;
+                    _stockAdjustmentDetailService.GetValidator().ValidConfirmObject(stockAdjustmentDetail, _stockAdjustmentService, _itemService, _barringService, _warehouseItemService);
+                    if (stockAdjustmentDetail.Errors.Any())
+                    {
+                        stockAdjustment.Errors.Clear();
+                        foreach (var err in stockAdjustmentDetail.Errors)
+                        {
+                            stockAdjustment.Errors.Add("Generic", err.Key + " " + err.Value);
+                        }
+                        break;
+                    }
+                }
             }
             return stockAdjustment;
         }

@@ -186,46 +186,55 @@ namespace Service
             }
         }
 
-        public void FixAccounts()
+        public void FixLegacyAccounts()
         {
             //if (!_accountService.GetLegacyObjects().Any())
             {
-                Account Asset = _accountService.FindOrCreateLegacyObject(new Account() { Name = "Asset", Code = Constant.AccountCode.Asset, LegacyCode = Constant.AccountLegacyCode.Asset, Level = 1, Group = Constant.AccountGroup.Asset, IsLegacy = true }, _accountService);
-                _accountService.FindOrCreateLegacyObject(new Account() { Name = "CashBank", Code = Constant.AccountCode.CashBank, LegacyCode = Constant.AccountLegacyCode.CashBank, Level = 2, Group = Constant.AccountGroup.Asset, ParentId = Asset.Id, IsLegacy = true }, _accountService);
-                Account AccountReceivable = _accountService.FindOrCreateLegacyObject(new Account() { Name = "Account Receivable", Code = Constant.AccountCode.AccountReceivable, LegacyCode = Constant.AccountLegacyCode.AccountReceivable, Level = 2, Group = Constant.AccountGroup.Asset, ParentId = Asset.Id, IsLegacy = true }, _accountService);
-                _accountService.FindOrCreateLegacyObject(new Account() { Name = "Account Receivable (PPN masuk)", IsLeaf = true, Code = Constant.AccountCode.AccountReceivablePPNmasukan, LegacyCode = Constant.AccountLegacyCode.AccountReceivablePPNmasukan, Level = 3, Group = Constant.AccountGroup.Asset, ParentId = AccountReceivable.Id, IsLegacy = true }, _accountService);
-                _accountService.FindOrCreateLegacyObject(new Account() { Name = "Account Receivable (Trading)", IsLeaf = true, Code = Constant.AccountCode.AccountReceivableTrading, LegacyCode = Constant.AccountLegacyCode.AccountReceivableTrading, Level = 3, Group = Constant.AccountGroup.Asset, ParentId = AccountReceivable.Id, IsLegacy = true }, _accountService);
-                _accountService.FindOrCreateLegacyObject(new Account() { Name = "GBCH Receivable", IsLeaf = true, Code = Constant.AccountCode.GBCHReceivable, LegacyCode = Constant.AccountLegacyCode.GBCHReceivable, Level = 2, Group = Constant.AccountGroup.Asset, ParentId = Asset.Id, IsLegacy = true }, _accountService);
-                _accountService.FindOrCreateLegacyObject(new Account() { Name = "Inventory", IsLeaf = true, Code = Constant.AccountCode.Inventory, LegacyCode = Constant.AccountLegacyCode.Inventory, Level = 2, Group = Constant.AccountGroup.Asset, ParentId = Asset.Id, IsLegacy = true }, _accountService);
+                Account Asset = _accountService.FindOrCreateLegacyObject(new Account() { Name = "Asset", Code = Constant.AccountCode.Asset, LegacyCode = Constant.AccountLegacyCode.Asset, Level = 1, Group = Constant.AccountGroup.Asset, IsLegacy = true });
+                _accountService.FindOrCreateLegacyObject(new Account() { Name = "CashBank", Code = Constant.AccountCode.CashBank, LegacyCode = Constant.AccountLegacyCode.CashBank, Level = 2, Group = Constant.AccountGroup.Asset, ParentId = Asset.Id, IsLegacy = true });
+                Account AccountReceivable = _accountService.FindOrCreateLegacyObject(new Account() { Name = "Account Receivable", Code = Constant.AccountCode.AccountReceivable, LegacyCode = Constant.AccountLegacyCode.AccountReceivable, Level = 2, Group = Constant.AccountGroup.Asset, ParentId = Asset.Id, IsLegacy = true });
+                _accountService.FindOrCreateLegacyObject(new Account() { Name = "Account Receivable (PPN masuk)", IsLeaf = true, Code = Constant.AccountCode.AccountReceivablePPNmasukan, LegacyCode = Constant.AccountLegacyCode.AccountReceivablePPNmasukan, Level = 3, Group = Constant.AccountGroup.Asset, ParentId = AccountReceivable.Id, IsLegacy = true });
+                _accountService.FindOrCreateLegacyObject(new Account() { Name = "Account Receivable (Trading)", IsLeaf = true, Code = Constant.AccountCode.AccountReceivableTrading, LegacyCode = Constant.AccountLegacyCode.AccountReceivableTrading, Level = 3, Group = Constant.AccountGroup.Asset, ParentId = AccountReceivable.Id, IsLegacy = true });
+                _accountService.FindOrCreateLegacyObject(new Account() { Name = "GBCH Receivable", IsLeaf = true, Code = Constant.AccountCode.GBCHReceivable, LegacyCode = Constant.AccountLegacyCode.GBCHReceivable, Level = 2, Group = Constant.AccountGroup.Asset, ParentId = Asset.Id, IsLegacy = true });
+                _accountService.FindOrCreateLegacyObject(new Account() { Name = "Inventory", IsLeaf = true, Code = Constant.AccountCode.Inventory, LegacyCode = Constant.AccountLegacyCode.Inventory, Level = 2, Group = Constant.AccountGroup.Asset, ParentId = Asset.Id, IsLegacy = true });
 
-                Account Expense = _accountService.FindOrCreateLegacyObject(new Account() { Name = "Expense", Code = Constant.AccountCode.Expense, LegacyCode = Constant.AccountLegacyCode.Expense, Level = 1, Group = Constant.AccountGroup.Expense, IsLegacy = true }, _accountService);
-                _accountService.FindOrCreateLegacyObject(new Account() { Name = "Cost Of Goods Sold", IsLeaf = true, Code = Constant.AccountCode.COGS, LegacyCode = Constant.AccountLegacyCode.COGS, Level = 2, Group = Constant.AccountGroup.Expense, ParentId = Expense.Id, IsLegacy = true }, _accountService);
-                _accountService.FindOrCreateLegacyObject(new Account() { Name = "CashBank Adjustment Expense", IsLeaf = true, Code = Constant.AccountCode.CashBankAdjustmentExpense, LegacyCode = Constant.AccountLegacyCode.CashBankAdjustmentExpense, Level = 2, Group = Constant.AccountGroup.Expense, ParentId = Expense.Id, IsLegacy = true }, _accountService);
-                _accountService.FindOrCreateLegacyObject(new Account() { Name = "Sales Discount", IsLeaf = true, Code = Constant.AccountCode.SalesDiscountExpense, LegacyCode = Constant.AccountLegacyCode.SalesDiscountExpense, Level = 2, Group = Constant.AccountGroup.Expense, ParentId = Expense.Id, IsLegacy = true }, _accountService);
-                _accountService.FindOrCreateLegacyObject(new Account() { Name = "Sales Allowance", IsLeaf = true, Code = Constant.AccountCode.SalesAllowanceExpense, LegacyCode = Constant.AccountLegacyCode.SalesAllowanceExpense, Level = 2, Group = Constant.AccountGroup.Expense, ParentId = Expense.Id, IsLegacy = true }, _accountService);
-                _accountService.FindOrCreateLegacyObject(new Account() { Name = "Stock Adjustment Expense", IsLeaf = true, Code = Constant.AccountCode.StockAdjustmentExpense, LegacyCode = Constant.AccountLegacyCode.StockAdjustmentExpense, Level = 2, Group = Constant.AccountGroup.Expense, ParentId = Expense.Id, IsLegacy = true }, _accountService);
-                _accountService.FindOrCreateLegacyObject(new Account() { Name = "Freight (In)", IsLeaf = true, Code = Constant.AccountCode.FreightIn, LegacyCode = Constant.AccountLegacyCode.FreightIn, Level = 2, Group = Constant.AccountGroup.Expense, ParentId = Expense.Id, IsLegacy = true }, _accountService);
-                _accountService.FindOrCreateLegacyObject(new Account() { Name = "Sales Return Expense", IsLeaf = true, Code = Constant.AccountCode.SalesReturnExpense, LegacyCode = Constant.AccountLegacyCode.SalesReturnExpense, Level = 2, Group = Constant.AccountGroup.Expense, ParentId = Expense.Id, IsLegacy = true }, _accountService);
+                Account Expense = _accountService.FindOrCreateLegacyObject(new Account() { Name = "Expense", Code = Constant.AccountCode.Expense, LegacyCode = Constant.AccountLegacyCode.Expense, Level = 1, Group = Constant.AccountGroup.Expense, IsLegacy = true });
+                _accountService.FindOrCreateLegacyObject(new Account() { Name = "Cost Of Goods Sold", IsLeaf = true, Code = Constant.AccountCode.COGS, LegacyCode = Constant.AccountLegacyCode.COGS, Level = 2, Group = Constant.AccountGroup.Expense, ParentId = Expense.Id, IsLegacy = true });
+                Account OperationalExpenses = _accountService.FindOrCreateLegacyObject(new Account() { Name = "Operational Expenses", Code = Constant.AccountCode.OperationalExpenses, LegacyCode = Constant.AccountLegacyCode.OperationalExpenses, Level = 2, Group = Constant.AccountGroup.Expense, ParentId = Expense.Id, IsLegacy = true });
+                _accountService.FindOrCreateLegacyObject(new Account() { Name = "CashBank Adjustment Expense", IsLeaf = true, Code = Constant.AccountCode.CashBankAdjustmentExpense, LegacyCode = Constant.AccountLegacyCode.CashBankAdjustmentExpense, Level = 2, Group = Constant.AccountGroup.Expense, ParentId = OperationalExpenses.Id, IsLegacy = true });
+                _accountService.FindOrCreateLegacyObject(new Account() { Name = "Sales Discount", IsLeaf = true, Code = Constant.AccountCode.SalesDiscountExpense, LegacyCode = Constant.AccountLegacyCode.SalesDiscountExpense, Level = 2, Group = Constant.AccountGroup.Expense, ParentId = OperationalExpenses.Id, IsLegacy = true });
+                _accountService.FindOrCreateLegacyObject(new Account() { Name = "Sales Allowance", IsLeaf = true, Code = Constant.AccountCode.SalesAllowanceExpense, LegacyCode = Constant.AccountLegacyCode.SalesAllowanceExpense, Level = 2, Group = Constant.AccountGroup.Expense, ParentId = OperationalExpenses.Id, IsLegacy = true });
+                _accountService.FindOrCreateLegacyObject(new Account() { Name = "Stock Adjustment Expense", IsLeaf = true, Code = Constant.AccountCode.StockAdjustmentExpense, LegacyCode = Constant.AccountLegacyCode.StockAdjustmentExpense, Level = 2, Group = Constant.AccountGroup.Expense, ParentId = OperationalExpenses.Id, IsLegacy = true });
+                _accountService.FindOrCreateLegacyObject(new Account() { Name = "Sales Return Expense", IsLeaf = true, Code = Constant.AccountCode.SalesReturnExpense, LegacyCode = Constant.AccountLegacyCode.SalesReturnExpense, Level = 2, Group = Constant.AccountGroup.Expense, ParentId = OperationalExpenses.Id, IsLegacy = true });
+                _accountService.FindOrCreateLegacyObject(new Account() { Name = "Freight In", IsLeaf = true, Code = Constant.AccountCode.FreightIn, LegacyCode = Constant.AccountLegacyCode.FreightIn, Level = 2, Group = Constant.AccountGroup.Expense, ParentId = OperationalExpenses.Id, IsLegacy = true });
+                // Memorial Expenses
+                Account NonOperationalExpenses = _accountService.FindOrCreateLegacyObject(new Account() { Name = "Non-Operational Expenses", Code = Constant.AccountCode.NonOperationalExpenses, LegacyCode = Constant.AccountLegacyCode.NonOperationalExpenses, Level = 2, Group = Constant.AccountGroup.Expense, ParentId = Expense.Id, IsLegacy = true });
+                _accountService.FindOrCreateLegacyObject(new Account() { Name = "Tax Expense", IsLeaf = true, Code = Constant.AccountCode.Tax, LegacyCode = Constant.AccountLegacyCode.Tax, Level = 2, Group = Constant.AccountGroup.Expense, ParentId = NonOperationalExpenses.Id, IsLegacy = true });
+                _accountService.FindOrCreateLegacyObject(new Account() { Name = "Divident", IsLeaf = true, Code = Constant.AccountCode.Divident, LegacyCode = Constant.AccountLegacyCode.Divident, Level = 2, Group = Constant.AccountGroup.Expense, ParentId = NonOperationalExpenses.Id, IsLegacy = true });
+                _accountService.FindOrCreateLegacyObject(new Account() { Name = "Interest Earning", IsLeaf = true, Code = Constant.AccountCode.InterestEarning, LegacyCode = Constant.AccountLegacyCode.InterestEarning, Level = 2, Group = Constant.AccountGroup.Expense, ParentId = NonOperationalExpenses.Id, IsLegacy = true });
+                _accountService.FindOrCreateLegacyObject(new Account() { Name = "Deprecation", IsLeaf = true, Code = Constant.AccountCode.Depreciation, LegacyCode = Constant.AccountLegacyCode.Depreciation, Level = 2, Group = Constant.AccountGroup.Expense, ParentId = NonOperationalExpenses.Id, IsLegacy = true });
+                _accountService.FindOrCreateLegacyObject(new Account() { Name = "Amortization", IsLeaf = true, Code = Constant.AccountCode.Amortization, LegacyCode = Constant.AccountLegacyCode.Amortization, Level = 2, Group = Constant.AccountGroup.Expense, ParentId = NonOperationalExpenses.Id, IsLegacy = true });
+                
 
-                Account Liability = _accountService.FindOrCreateLegacyObject(new Account() { Name = "Liability", Code = Constant.AccountCode.Liability, LegacyCode = Constant.AccountLegacyCode.Liability, Level = 1, Group = Constant.AccountGroup.Liability, IsLegacy = true }, _accountService);
-                Account AccountPayable = _accountService.FindOrCreateLegacyObject(new Account() { Name = "Account Payable", Code = Constant.AccountCode.AccountPayable, LegacyCode = Constant.AccountLegacyCode.AccountPayable, Level = 2, Group = Constant.AccountGroup.Liability, ParentId = Liability.Id, IsLegacy = true }, _accountService);
-                _accountService.FindOrCreateLegacyObject(new Account() { Name = "Account Payable (Trading)", IsLeaf = true, Code = Constant.AccountCode.AccountPayableTrading, LegacyCode = Constant.AccountLegacyCode.AccountPayableTrading, Level = 3, Group = Constant.AccountGroup.Liability, ParentId = AccountPayable.Id, IsLegacy = true }, _accountService);
-                _accountService.FindOrCreateLegacyObject(new Account() { Name = "Account Payable (Non Trading)", IsLeaf = true, Code = Constant.AccountCode.AccountPayableNonTrading, LegacyCode = Constant.AccountLegacyCode.AccountPayableNonTrading, Level = 3, Group = Constant.AccountGroup.Liability, ParentId = AccountPayable.Id, IsLegacy = true }, _accountService);
-                _accountService.FindOrCreateLegacyObject(new Account() { Name = "Account Payable (PPN keluaran)", IsLeaf = true, Code = Constant.AccountCode.AccountPayablePPNkeluaran, LegacyCode = Constant.AccountLegacyCode.AccountPayablePPNkeluaran, Level = 3, Group = Constant.AccountGroup.Liability, ParentId = AccountPayable.Id, IsLegacy = true }, _accountService);
-                _accountService.FindOrCreateLegacyObject(new Account() { Name = "GBCH Payable", IsLeaf = true, Code = Constant.AccountCode.GBCHPayable, LegacyCode = Constant.AccountLegacyCode.GBCHPayable, Level = 2, Group = Constant.AccountGroup.Liability, ParentId = Liability.Id, IsLegacy = true }, _accountService);
-                _accountService.FindOrCreateLegacyObject(new Account() { Name = "Goods Pending Clearance", IsLeaf = true, Code = Constant.AccountCode.GoodsPendingClearance, LegacyCode = Constant.AccountLegacyCode.GoodsPendingClearance, Level = 2, Group = Constant.AccountGroup.Liability, ParentId = Liability.Id, IsLegacy = true }, _accountService);
-                _accountService.FindOrCreateLegacyObject(new Account() { Name = "Purchase Discount", IsLeaf = true, Code = Constant.AccountCode.PurchaseDiscount, LegacyCode = Constant.AccountLegacyCode.PurchaseDiscount, Level = 2, Group = Constant.AccountGroup.Liability, ParentId = Liability.Id, IsLegacy = true }, _accountService);
-                _accountService.FindOrCreateLegacyObject(new Account() { Name = "Purchase Allowance", IsLeaf = true, Code = Constant.AccountCode.PurchaseAllowance, LegacyCode = Constant.AccountLegacyCode.PurchaseAllowance, Level = 2, Group = Constant.AccountGroup.Liability, ParentId = Liability.Id, IsLegacy = true }, _accountService);
-                _accountService.FindOrCreateLegacyObject(new Account() { Name = "Sales Return Allowance", IsLeaf = true, Code = Constant.AccountCode.SalesReturnAllowance, LegacyCode = Constant.AccountLegacyCode.SalesReturnAllowance, Level = 2, Group = Constant.AccountGroup.Liability, ParentId = Liability.Id, IsLegacy = true }, _accountService);
+                Account Liability = _accountService.FindOrCreateLegacyObject(new Account() { Name = "Liability", Code = Constant.AccountCode.Liability, LegacyCode = Constant.AccountLegacyCode.Liability, Level = 1, Group = Constant.AccountGroup.Liability, IsLegacy = true });
+                Account AccountPayable = _accountService.FindOrCreateLegacyObject(new Account() { Name = "Account Payable", Code = Constant.AccountCode.AccountPayable, LegacyCode = Constant.AccountLegacyCode.AccountPayable, Level = 2, Group = Constant.AccountGroup.Liability, ParentId = Liability.Id, IsLegacy = true });
+                _accountService.FindOrCreateLegacyObject(new Account() { Name = "Account Payable (Trading)", IsLeaf = true, Code = Constant.AccountCode.AccountPayableTrading, LegacyCode = Constant.AccountLegacyCode.AccountPayableTrading, Level = 3, Group = Constant.AccountGroup.Liability, ParentId = AccountPayable.Id, IsLegacy = true });
+                _accountService.FindOrCreateLegacyObject(new Account() { Name = "Account Payable (Non Trading)", IsLeaf = true, Code = Constant.AccountCode.AccountPayableNonTrading, LegacyCode = Constant.AccountLegacyCode.AccountPayableNonTrading, Level = 3, Group = Constant.AccountGroup.Liability, ParentId = AccountPayable.Id, IsLegacy = true });
+                _accountService.FindOrCreateLegacyObject(new Account() { Name = "Account Payable (PPN keluaran)", IsLeaf = true, Code = Constant.AccountCode.AccountPayablePPNkeluaran, LegacyCode = Constant.AccountLegacyCode.AccountPayablePPNkeluaran, Level = 3, Group = Constant.AccountGroup.Liability, ParentId = AccountPayable.Id, IsLegacy = true });
+                _accountService.FindOrCreateLegacyObject(new Account() { Name = "GBCH Payable", IsLeaf = true, Code = Constant.AccountCode.GBCHPayable, LegacyCode = Constant.AccountLegacyCode.GBCHPayable, Level = 2, Group = Constant.AccountGroup.Liability, ParentId = Liability.Id, IsLegacy = true });
+                _accountService.FindOrCreateLegacyObject(new Account() { Name = "Goods Pending Clearance", IsLeaf = true, Code = Constant.AccountCode.GoodsPendingClearance, LegacyCode = Constant.AccountLegacyCode.GoodsPendingClearance, Level = 2, Group = Constant.AccountGroup.Liability, ParentId = Liability.Id, IsLegacy = true });
+                _accountService.FindOrCreateLegacyObject(new Account() { Name = "Purchase Discount", IsLeaf = true, Code = Constant.AccountCode.PurchaseDiscount, LegacyCode = Constant.AccountLegacyCode.PurchaseDiscount, Level = 2, Group = Constant.AccountGroup.Liability, ParentId = Liability.Id, IsLegacy = true });
+                _accountService.FindOrCreateLegacyObject(new Account() { Name = "Purchase Allowance", IsLeaf = true, Code = Constant.AccountCode.PurchaseAllowance, LegacyCode = Constant.AccountLegacyCode.PurchaseAllowance, Level = 2, Group = Constant.AccountGroup.Liability, ParentId = Liability.Id, IsLegacy = true });
+                _accountService.FindOrCreateLegacyObject(new Account() { Name = "Sales Return Allowance", IsLeaf = true, Code = Constant.AccountCode.SalesReturnAllowance, LegacyCode = Constant.AccountLegacyCode.SalesReturnAllowance, Level = 2, Group = Constant.AccountGroup.Liability, ParentId = Liability.Id, IsLegacy = true });
 
+                Account Equity = _accountService.FindOrCreateLegacyObject(new Account() { Name = "Equity", Code = Constant.AccountCode.Equity, LegacyCode = Constant.AccountLegacyCode.Equity, Level = 1, Group = Constant.AccountGroup.Equity, IsLegacy = true });
+                Account OwnersEquity = _accountService.FindOrCreateLegacyObject(new Account() { Name = "Owners Equity", Code = Constant.AccountCode.OwnersEquity, LegacyCode = Constant.AccountLegacyCode.OwnersEquity, Level = 2, Group = Constant.AccountGroup.Equity, ParentId = Equity.Id, IsLegacy = true });
+                _accountService.FindOrCreateLegacyObject(new Account() { Name = "Equity Adjustment", IsLeaf = true, Code = Constant.AccountCode.EquityAdjustment, LegacyCode = Constant.AccountLegacyCode.EquityAdjustment, Level = 3, Group = Constant.AccountGroup.Equity, ParentId = OwnersEquity.Id, IsLegacy = true });
+                _accountService.FindOrCreateLegacyObject(new Account() { Name = "Retained Earnings", IsLeaf = true, Code = Constant.AccountCode.RetainedEarnings, LegacyCode = Constant.AccountLegacyCode.RetainedEarnings, Level = 2, Group = Constant.AccountGroup.Equity, ParentId = Equity.Id, IsLegacy = true });
 
-                Account Equity = _accountService.FindOrCreateLegacyObject(new Account() { Name = "Equity", Code = Constant.AccountCode.Equity, LegacyCode = Constant.AccountLegacyCode.Equity, Level = 1, Group = Constant.AccountGroup.Equity, IsLegacy = true }, _accountService);
-                Account OwnersEquity = _accountService.FindOrCreateLegacyObject(new Account() { Name = "Owners Equity", Code = Constant.AccountCode.OwnersEquity, LegacyCode = Constant.AccountLegacyCode.OwnersEquity, Level = 2, Group = Constant.AccountGroup.Equity, ParentId = Equity.Id, IsLegacy = true }, _accountService);
-                _accountService.FindOrCreateLegacyObject(new Account() { Name = "Equity Adjustment", IsLeaf = true, Code = Constant.AccountCode.EquityAdjustment, LegacyCode = Constant.AccountLegacyCode.EquityAdjustment, Level = 3, Group = Constant.AccountGroup.Equity, ParentId = OwnersEquity.Id, IsLegacy = true }, _accountService);
-
-                Account Revenue = _accountService.FindOrCreateLegacyObject(new Account() { Name = "Revenue", Code = Constant.AccountCode.Revenue, LegacyCode = Constant.AccountLegacyCode.Revenue, Level = 1, Group = Constant.AccountGroup.Revenue, IsLegacy = true }, _accountService);
-                _accountService.FindOrCreateLegacyObject(new Account() { Name = "Freight (Out)", IsLeaf = true, Code = Constant.AccountCode.FreightOut, LegacyCode = Constant.AccountLegacyCode.FreightOut, Level = 2, Group = Constant.AccountGroup.Revenue, ParentId = Revenue.Id, IsLegacy = true }, _accountService);
-                _accountService.FindOrCreateLegacyObject(new Account() { Name = "Sales", IsLeaf = true, Code = Constant.AccountCode.SalesRevenue, LegacyCode = Constant.AccountLegacyCode.SalesRevenue, Level = 2, Group = Constant.AccountGroup.Revenue, ParentId = Revenue.Id, IsLegacy = true }, _accountService);
+                Account Revenue = _accountService.FindOrCreateLegacyObject(new Account() { Name = "Revenue", Code = Constant.AccountCode.Revenue, LegacyCode = Constant.AccountLegacyCode.Revenue, Level = 1, Group = Constant.AccountGroup.Revenue, IsLegacy = true });
+                _accountService.FindOrCreateLegacyObject(new Account() { Name = "Freight Out", IsLeaf = true, Code = Constant.AccountCode.FreightOut, LegacyCode = Constant.AccountLegacyCode.FreightOut, Level = 2, Group = Constant.AccountGroup.Revenue, ParentId = Revenue.Id, IsLegacy = true });
+                _accountService.FindOrCreateLegacyObject(new Account() { Name = "Sales", IsLeaf = true, Code = Constant.AccountCode.SalesRevenue, LegacyCode = Constant.AccountLegacyCode.SalesRevenue, Level = 2, Group = Constant.AccountGroup.Revenue, ParentId = Revenue.Id, IsLegacy = true });
             }
         }
 
@@ -292,12 +301,13 @@ namespace Service
                 //var tmps = db.Database.SqlQuery(typeof(TempCashSalesInvoice), "SELECT * FROM TempCashSalesInvoice");
 
                 // Account
-                foreach (var rec in db.TempAccounts.Where(x => !x.IsDeleted).OrderBy(x => x.Id).ToList())
+                FixLegacyAccounts();
+                foreach (var rec in db.TempAccounts.Where(x => !x.IsDeleted && !x.IsLegacy && !x.IsCashBankAccount).OrderBy(x => x.Id).ToList())
                 {
                     Account obj = new Account();
                     Reflection.CopyProperties(rec, obj);
                     db.Database.ExecuteSqlCommand(string.Format("DBCC CHECKIDENT ({0}, RESEED, {1});", obj.GetType().Name, rec.Id - 1));
-                    _accountService.CreateObject(obj, _accountService);
+                    _accountService.CreateObject(obj);
                     Log(obj.Errors, obj.GetType().Name, obj.Name, rec.Id, obj.Id);
                 }
 
@@ -306,12 +316,13 @@ namespace Service
                 {
                     CashBank obj = new CashBank();
                     Reflection.CopyProperties(rec, obj);
+                    obj.Amount = 0;
                     db.Database.ExecuteSqlCommand(string.Format("DBCC CHECKIDENT ({0}, RESEED, {1});", obj.GetType().Name, rec.Id - 1));
                     _cashBankService.CreateObject(obj, _accountService);
                     Log(obj.Errors, obj.GetType().Name, obj.Name, rec.Id, obj.Id);
                 }
 
-                FixAccounts();
+                //FixAccounts();
 
                 // CashBankAdjustment
                 foreach (var rec in db.TempCashBankAdjustments.Where(x => !x.IsDeleted).OrderBy(x => x.Id).ToList())
@@ -350,9 +361,27 @@ namespace Service
                 {
                     Item obj = new Item();
                     Reflection.CopyProperties(rec, obj);
+                    obj.Quantity = 0;
+                    obj.PendingDelivery = 0;
+                    obj.PendingReceival = 0;
+                    obj.AvgPrice = 0;
                     db.Database.ExecuteSqlCommand(string.Format("DBCC CHECKIDENT ({0}, RESEED, {1});", obj.GetType().Name, rec.Id - 1));
                     _itemService.CreateObject(obj, _uomService, _itemTypeService, _warehouseItemService, _warehouseService, _priceMutationService, _contactGroupService);
                     Log(obj.Errors, obj.GetType().Name, obj.Sku, rec.Id, obj.Id);
+                }
+
+                // WarehouseItem
+                foreach (var rec in db.TempWarehouseItems.Where(x => !x.IsDeleted).OrderBy(x => x.Id).ToList())
+                {
+                    WarehouseItem obj = new WarehouseItem();
+                    Reflection.CopyProperties(rec, obj);
+                    obj.Quantity = 0;
+                    obj.PendingDelivery = 0;
+                    obj.PendingReceival = 0;
+                    db.Database.ExecuteSqlCommand(string.Format("DBCC CHECKIDENT ({0}, RESEED, {1});", obj.GetType().Name, rec.Id - 1));
+                    _warehouseItemService.CreateObject(obj, _warehouseService, _itemService);
+                    string objcode = _warehouseService.GetObjectById(obj.WarehouseId).Code;
+                    Log(obj.Errors, obj.GetType().Name, objcode, rec.Id, obj.Id);
                 }
 
                 // StockAdjustment
@@ -408,7 +437,7 @@ namespace Service
                 // CustomPurchaseInvoice
                 foreach (var rec in db.TempCustomPurchaseInvoices.Where(x => !x.IsDeleted).OrderBy(x => x.Id).ToList())
                 {
-                    try
+                    //try
                     {
                         CustomPurchaseInvoice obj = new CustomPurchaseInvoice();
                         Reflection.CopyProperties(rec, obj);
@@ -429,42 +458,44 @@ namespace Service
                         if (rec.IsConfirmed)
                         {
                             db.Database.ExecuteSqlCommand(string.Format("DBCC CHECKIDENT (Payable, RESEED, {0});", payable.Id - 1));
-                            _customPurchaseInvoiceService.ConfirmObjectForRepair(obj, rec.ConfirmationDate.GetValueOrDefault(), payable.Code,
+                            _customPurchaseInvoiceService.ConfirmObjectForRepair(obj, rec.PurchaseDate/*rec.ConfirmationDate.GetValueOrDefault()*/, payable.Code,
                                                                 _customPurchaseInvoiceDetailService, _contactService, _priceMutationService,
                                                                 _payableService, _customPurchaseInvoiceService, _warehouseItemService, _warehouseService, _itemService, _barringService, _stockMutationService,
                                                                 _generalLedgerJournalService, _accountService, _closingService);
                             Log(obj.Errors, obj.GetType().Name, obj.Code, rec.Id, obj.Id);
                         }
-                        if (rec.IsPaid)
-                        {
-                            TempPaymentVoucherDetail voucherDetail = db.TempPaymentVoucherDetails.Where(x => !x.IsDeleted && x.PayableId == payable.Id && x.Description.Contains("Automatic")).OrderByDescending(x => x.Id).FirstOrDefault();
-                            if (voucherDetail == null) 
-                            {
-                                voucherDetail = db.TempPaymentVoucherDetails.Where(x => x.PayableId == payable.Id && x.Description.Contains("Automatic")).OrderByDescending(x => x.Id).FirstOrDefault();
-                            }
-                            TempPaymentVoucher voucher = db.TempPaymentVouchers.Where(x => !x.IsDeleted && x.Id == voucherDetail.PaymentVoucherId).OrderByDescending(x => x.Id).FirstOrDefault();
-                            if (voucher == null)
-                            {
-                                voucher = db.TempPaymentVouchers.Where(x => x.Id == voucherDetail.PaymentVoucherId).OrderByDescending(x => x.Id).FirstOrDefault();
-                            }
-                            db.Database.ExecuteSqlCommand(string.Format("DBCC CHECKIDENT (PaymentVoucher, RESEED, {0});", voucher.Id - 1));
-                            db.Database.ExecuteSqlCommand(string.Format("DBCC CHECKIDENT (PaymentVoucherDetail, RESEED, {0});", voucherDetail.Id - 1));
-                            _customPurchaseInvoiceService.PaidObjectForRepair(obj, rec.AmountPaid.GetValueOrDefault(), rec.PaymentDate, voucher.Code, voucherDetail.Code,
-                                                                _cashBankService, _payableService, _paymentVoucherService, _paymentVoucherDetailService, _contactService, _cashMutationService,
-                                                                _generalLedgerJournalService, _accountService, _closingService);
-                            Log(obj.Errors, obj.GetType().Name, obj.Code, rec.Id, obj.Id);
-                        }
+                        //if (rec.IsPaid)
+                        //{
+                        //    TempPaymentVoucherDetail voucherDetail = db.TempPaymentVoucherDetails.Where(x => !x.IsDeleted && x.PayableId == payable.Id && x.Description.Contains("Automatic")).OrderByDescending(x => x.Id).FirstOrDefault();
+                        //    if (voucherDetail == null)
+                        //    {
+                        //        //continue;
+                        //        voucherDetail = db.TempPaymentVoucherDetails.Where(x => x.PayableId == payable.Id && x.Description.Contains("Automatic")).OrderByDescending(x => x.Id).FirstOrDefault();
+                        //        Console.WriteLine("WARNING : Missing Automatic PaymentVoucherDetail on CPI {0} - Payable {1}", rec.Code, payable.Code);
+                        //    }
+                        //    TempPaymentVoucher voucher = db.TempPaymentVouchers.Where(x => !x.IsDeleted && x.Id == voucherDetail.PaymentVoucherId).OrderByDescending(x => x.Id).FirstOrDefault();
+                        //    if (voucher == null)
+                        //    {
+                        //        voucher = db.TempPaymentVouchers.Where(x => x.Id == voucherDetail.PaymentVoucherId).OrderByDescending(x => x.Id).FirstOrDefault();
+                        //    }
+                        //    db.Database.ExecuteSqlCommand(string.Format("DBCC CHECKIDENT (PaymentVoucher, RESEED, {0});", voucher.Id - 1));
+                        //    db.Database.ExecuteSqlCommand(string.Format("DBCC CHECKIDENT (PaymentVoucherDetail, RESEED, {0});", voucherDetail.Id - 1));
+                        //    _customPurchaseInvoiceService.PaidObjectForRepair(obj, rec.AmountPaid.GetValueOrDefault(), rec.PaymentDate, voucher.Code, voucherDetail.Code,
+                        //                                        _cashBankService, _payableService, _paymentVoucherService, _paymentVoucherDetailService, _contactService, _cashMutationService,
+                        //                                        _generalLedgerJournalService, _accountService, _closingService);
+                        //    Log(obj.Errors, obj.GetType().Name, obj.Code, rec.Id, obj.Id);
+                        //}
                     }
-                    catch 
-                    {
-                        Console.WriteLine("ERROR at {0}:{1}", rec.GetType().Name, rec.Code);
-                    }
+                    //catch 
+                    //{
+                    //    Console.WriteLine("ERROR at {0}:{1}", rec.GetType().Name, rec.Code);
+                    //}
                 }
-
+                
                 // CashSalesInvoice
                 foreach (var rec in db.TempCashSalesInvoices.Where(x => !x.IsDeleted).OrderBy(x => x.Id).ToList())
                 {
-                    try
+                    //try
                     {
                         CashSalesInvoice obj = new CashSalesInvoice();
                         Reflection.CopyProperties(rec, obj);
@@ -480,12 +511,17 @@ namespace Service
                             db.Database.ExecuteSqlCommand(string.Format("DBCC CHECKIDENT ({0}, RESEED, {1});", detobj.GetType().Name, det.Id - 1));
                             _cashSalesInvoiceDetailService.CreateObject(detobj, _cashSalesInvoiceService, _itemService, _warehouseItemService, _quantityPricingService);
                             Log(detobj.Errors, detobj.GetType().Name, detobj.Code, det.Id, detobj.Id);
+                            if (detobj.Errors.Any())
+                            {
+                                Item item = _itemService.GetObjectById(det.ItemId);
+                                Console.WriteLine("CSID Item SKU : {0} (QTY = {1})", item.Sku, detobj.Quantity);
+                            }
                         }
                         TempReceivable receivable = db.TempReceivables.Where(x => !x.IsDeleted && x.ReceivableSourceId == rec.Id && x.ReceivableSource == Constant.ReceivableSource.CashSalesInvoice).OrderByDescending(x => x.Id).FirstOrDefault();
                         if (rec.IsConfirmed)
                         {
                             db.Database.ExecuteSqlCommand(string.Format("DBCC CHECKIDENT (Receivable, RESEED, {0});", receivable.Id - 1));
-                            _cashSalesInvoiceService.ConfirmObjectForRepair(obj, rec.ConfirmationDate.GetValueOrDefault(), rec.Discount, rec.Tax, receivable.Code,
+                            _cashSalesInvoiceService.ConfirmObjectForRepair(obj, rec.SalesDate/*rec.ConfirmationDate.GetValueOrDefault()*/, rec.Discount, rec.Tax, receivable.Code,
                                                                 _cashSalesInvoiceDetailService, _contactService, _priceMutationService,
                                                                 _receivableService, _cashSalesInvoiceService, _warehouseItemService, _warehouseService, _itemService, _barringService, _stockMutationService, _cashBankService,
                                                                 _generalLedgerJournalService, _accountService, _closingService);
@@ -496,7 +532,9 @@ namespace Service
                             TempReceiptVoucherDetail voucherDetail = db.TempReceiptVoucherDetails.Where(x => !x.IsDeleted && x.ReceivableId == receivable.Id && x.Description.Contains("Automatic")).OrderByDescending(x => x.Id).FirstOrDefault();
                             if (voucherDetail == null)
                             {
+                                //continue;
                                 voucherDetail = db.TempReceiptVoucherDetails.Where(x => x.ReceivableId == receivable.Id && x.Description.Contains("Automatic")).OrderByDescending(x => x.Id).FirstOrDefault();
+                                Console.WriteLine("WARNING : Missing Automatic ReceiptVoucherDetail on CSI {0} - Receivable {1}", rec.Code, receivable.Code);
                             }
                             TempReceiptVoucher voucher = db.TempReceiptVouchers.Where(x => !x.IsDeleted && x.Id == voucherDetail.ReceiptVoucherId).OrderByDescending(x => x.Id).FirstOrDefault();
                             if (voucher == null)
@@ -511,44 +549,12 @@ namespace Service
                             Log(obj.Errors, obj.GetType().Name, obj.Code, rec.Id, obj.Id);
                         }
                     }
-                    catch
-                    {
-                        Console.WriteLine("ERROR at {0}:{1}", rec.GetType().Name, rec.Code);
-                    }
+                    //catch
+                    //{
+                    //    Console.WriteLine("ERROR at {0}:{1}", rec.GetType().Name, rec.Code);
+                    //}
                 }
-
-                // ReceiptVoucher
-                //foreach (var rec in db.TempReceiptVouchers.Where(x => !x.IsDeleted).OrderBy(x => x.Id).ToList())
-                //{
-                //    ReceiptVoucher obj = new ReceiptVoucher();
-                //    Reflection.CopyProperties(rec, obj);
-                //    obj.IsConfirmed = false;
-                //    obj.IsReconciled = false;
-                //    db.Database.ExecuteSqlCommand(string.Format("DBCC CHECKIDENT ({0}, RESEED, {1});", obj.GetType().Name, rec.Id - 1));
-                //    _receiptVoucherService.CreateObject(obj, _receiptVoucherDetailService, _receivableService, _contactService, _cashBankService);
-                //    Log(obj.Errors, obj.GetType().Name, obj.Code, rec.Id, obj.Id);
-                //    foreach (var det in db.TempReceiptVoucherDetails.Where(x => !x.IsDeleted && x.ReceiptVoucherId == rec.Id).OrderBy(x => x.Id).ToList())
-                //    {
-                //        ReceiptVoucherDetail detobj = new ReceiptVoucherDetail();
-                //        Reflection.CopyProperties(det, detobj);
-                //        detobj.IsConfirmed = false;
-                //        db.Database.ExecuteSqlCommand(string.Format("DBCC CHECKIDENT ({0}, RESEED, {1});", detobj.GetType().Name, det.Id - 1));
-                //        _receiptVoucherDetailService.CreateObject(detobj, _receiptVoucherService, _cashBankService, _receivableService);
-                //        Log(detobj.Errors, detobj.GetType().Name, detobj.Code, det.Id, detobj.Id);
-                //    }
-                //    if (rec.IsConfirmed)
-                //    {
-                //        _receiptVoucherService.ConfirmObject(obj, rec.ConfirmationDate.GetValueOrDefault(), _receiptVoucherDetailService, _cashBankService, _receivableService, _cashMutationService, 
-                //                                    _generalLedgerJournalService, _accountService, _closingService);
-                //        Log(obj.Errors, obj.GetType().Name, obj.Code, rec.Id, obj.Id);
-                //    }
-                //    if (rec.IsReconciled)
-                //    {
-                //        _receiptVoucherService.ReconcileObject(obj, rec.ReconciliationDate.GetValueOrDefault(), _receiptVoucherDetailService, _cashMutationService, _cashBankService, _receivableService, _generalLedgerJournalService, _accountService, _closingService);
-                //        Log(obj.Errors, obj.GetType().Name, obj.Code, rec.Id, obj.Id);
-                //    }
-                //}
-
+                
                 // ReceiptVoucherDetail
                 foreach (var det in db.TempReceiptVoucherDetails.Where(x => !x.IsDeleted && !x.Description.Contains("Automatic")).OrderBy(x => x.Id).ToList())
                 {
@@ -593,10 +599,41 @@ namespace Service
                     }
                 }
 
+                // Try Paying CustomPurchaseInvoice
+                foreach (var rec in db.TempCustomPurchaseInvoices.Where(x => !x.IsDeleted).OrderBy(x => x.Id).ToList())
+                {
+                    CustomPurchaseInvoice obj = _customPurchaseInvoiceService.GetObjectById(rec.Id);
+                    if (obj != null)
+                    {
+                        if (rec.IsPaid && !obj.IsPaid)
+                        {
+                            TempPayable payable = db.TempPayables.Where(x => !x.IsDeleted && x.PayableSourceId == rec.Id && x.PayableSource == Constant.PayableSource.CustomPurchaseInvoice).OrderByDescending(x => x.Id).FirstOrDefault();
+                            TempPaymentVoucherDetail voucherDetail = db.TempPaymentVoucherDetails.Where(x => !x.IsDeleted && x.PayableId == payable.Id && x.Description.Contains("Automatic")).OrderByDescending(x => x.Id).FirstOrDefault();
+                            if (voucherDetail == null)
+                            {
+                                //continue;
+                                voucherDetail = db.TempPaymentVoucherDetails.Where(x => x.PayableId == payable.Id && x.Description.Contains("Automatic")).OrderByDescending(x => x.Id).FirstOrDefault();
+                                Console.WriteLine("WARNING : Missing Automatic PaymentVoucherDetail on CPI {0} - Payable {1}", rec.Code, payable.Code);
+                            }
+                            TempPaymentVoucher voucher = db.TempPaymentVouchers.Where(x => !x.IsDeleted && x.Id == voucherDetail.PaymentVoucherId).OrderByDescending(x => x.Id).FirstOrDefault();
+                            if (voucher == null)
+                            {
+                                voucher = db.TempPaymentVouchers.Where(x => x.Id == voucherDetail.PaymentVoucherId).OrderByDescending(x => x.Id).FirstOrDefault();
+                            }
+                            db.Database.ExecuteSqlCommand(string.Format("DBCC CHECKIDENT (PaymentVoucher, RESEED, {0});", voucher.Id - 1));
+                            db.Database.ExecuteSqlCommand(string.Format("DBCC CHECKIDENT (PaymentVoucherDetail, RESEED, {0});", voucherDetail.Id - 1));
+                            _customPurchaseInvoiceService.PaidObjectForRepair(obj, rec.AmountPaid.GetValueOrDefault(), rec.PaymentDate, voucher.Code, voucherDetail.Code,
+                                                                _cashBankService, _payableService, _paymentVoucherService, _paymentVoucherDetailService, _contactService, _cashMutationService,
+                                                                _generalLedgerJournalService, _accountService, _closingService);
+                            Log(obj.Errors, obj.GetType().Name, obj.Code, rec.Id, obj.Id);
+                        }
+                    }
+                }
+                
                 // CashSalesReturn
                 foreach (var rec in db.TempCashSalesReturns.Where(x => !x.IsDeleted).OrderBy(x => x.Id).ToList())
                 {
-                    try
+                    //try
                     {
                         CashSalesReturn obj = new CashSalesReturn();
                         Reflection.CopyProperties(rec, obj);
@@ -617,7 +654,7 @@ namespace Service
                         if (rec.IsConfirmed)
                         {
                             db.Database.ExecuteSqlCommand(string.Format("DBCC CHECKIDENT (Payable, RESEED, {0});", payable.Id - 1));
-                            _cashSalesReturnService.ConfirmObjectForRepair(obj, rec.ConfirmationDate.GetValueOrDefault(), rec.Allowance, payable.Code,
+                            _cashSalesReturnService.ConfirmObjectForRepair(obj, rec.ReturnDate.GetValueOrDefault()/*rec.ConfirmationDate.GetValueOrDefault()*/, rec.Allowance, payable.Code,
                                                                 _cashSalesReturnDetailService, _contactService, _cashSalesInvoiceService, _cashSalesInvoiceDetailService, _priceMutationService,
                                                                 _payableService, _cashSalesReturnService, _warehouseItemService, _warehouseService, _itemService, _barringService, _stockMutationService,
                                                                 _generalLedgerJournalService, _accountService, _closingService);
@@ -628,7 +665,9 @@ namespace Service
                             TempPaymentVoucherDetail voucherDetail = db.TempPaymentVoucherDetails.Where(x => !x.IsDeleted && x.PayableId == payable.Id && x.Description.Contains("Automatic")).OrderByDescending(x => x.Id).FirstOrDefault();
                             if (voucherDetail == null)
                             {
+                                //continue;
                                 voucherDetail = db.TempPaymentVoucherDetails.Where(x => x.PayableId == payable.Id && x.Description.Contains("Automatic")).OrderByDescending(x => x.Id).FirstOrDefault();
+                                Console.WriteLine("WARNING : Missing Automatic PaymentVoucherDetail on CSR {0} - Payable {1}", rec.Code, payable.Code);
                             }
                             TempPaymentVoucher voucher = db.TempPaymentVouchers.Where(x => !x.IsDeleted && x.Id == voucherDetail.PaymentVoucherId).OrderByDescending(x => x.Id).FirstOrDefault();
                             if (voucher == null)
@@ -643,10 +682,10 @@ namespace Service
                             Log(obj.Errors, obj.GetType().Name, obj.Code, rec.Id, obj.Id);
                         }
                     }
-                    catch
-                    {
-                        Console.WriteLine("ERROR at {0}:{1}", rec.GetType().Name, rec.Code);
-                    }
+                    //catch
+                    //{
+                    //    Console.WriteLine("ERROR at {0}:{1}", rec.GetType().Name, rec.Code);
+                    //}
                 }
 
                 // PaymentRequest
@@ -676,39 +715,7 @@ namespace Service
                         Log(obj.Errors, obj.GetType().Name, obj.Code, rec.Id, obj.Id);
                     }
                 }
-
-                // PaymentVoucher
-                //foreach (var rec in db.TempPaymentVouchers.Where(x => !x.IsDeleted).OrderBy(x => x.Id).ToList())
-                //{
-                //    PaymentVoucher obj = new PaymentVoucher();
-                //    Reflection.CopyProperties(rec, obj);
-                //    obj.IsConfirmed = false;
-                //    obj.IsReconciled = false;
-                //    db.Database.ExecuteSqlCommand(string.Format("DBCC CHECKIDENT ({0}, RESEED, {1});", obj.GetType().Name, rec.Id - 1));
-                //    _paymentVoucherService.CreateObject(obj, _paymentVoucherDetailService, _payableService, _contactService, _cashBankService);
-                //    Log(obj.Errors, obj.GetType().Name, obj.Code, rec.Id, obj.Id);
-                //    foreach (var det in db.TempPaymentVoucherDetails.Where(x => !x.IsDeleted && x.PaymentVoucherId == rec.Id).OrderBy(x => x.Id).ToList())
-                //    {
-                //        PaymentVoucherDetail detobj = new PaymentVoucherDetail();
-                //        Reflection.CopyProperties(det, detobj);
-                //        detobj.IsConfirmed = false;
-                //        db.Database.ExecuteSqlCommand(string.Format("DBCC CHECKIDENT ({0}, RESEED, {1});", detobj.GetType().Name, det.Id - 1));
-                //        _paymentVoucherDetailService.CreateObject(detobj, _paymentVoucherService, _cashBankService, _payableService);
-                //        Log(detobj.Errors, detobj.GetType().Name, detobj.Code, det.Id, detobj.Id);
-                //    }
-                //    if (rec.IsConfirmed)
-                //    {
-                //        _paymentVoucherService.ConfirmObject(obj, rec.ConfirmationDate.GetValueOrDefault(), _paymentVoucherDetailService, _cashBankService, _payableService, _cashMutationService,
-                //                                    _generalLedgerJournalService, _accountService, _closingService);
-                //        Log(obj.Errors, obj.GetType().Name, obj.Code, rec.Id, obj.Id);
-                //    }
-                //    if (rec.IsReconciled)
-                //    {
-                //        _paymentVoucherService.ReconcileObject(obj, rec.ReconciliationDate.GetValueOrDefault(), _paymentVoucherDetailService, _cashMutationService, _cashBankService, _payableService, _generalLedgerJournalService, _accountService, _closingService);
-                //        Log(obj.Errors, obj.GetType().Name, obj.Code, rec.Id, obj.Id);
-                //    }
-                //}
-
+                
                 // PaymentVoucherDetail
                 foreach (var det in db.TempPaymentVoucherDetails.Where(x => !x.IsDeleted && !x.Description.Contains("Automatic")).OrderBy(x => x.Id).ToList())
                 {
@@ -752,7 +759,7 @@ namespace Service
                         }
                     }
                 }
-
+                
                 // Memorial
                 foreach (var rec in db.TempMemorials.Where(x => !x.IsDeleted).OrderBy(x => x.Id).ToList())
                 {
@@ -778,9 +785,12 @@ namespace Service
                     }
                 }
 
-                // DisAllow defining the ID
+                // DisAllow defining the ID (also Set SEED to the highest Id)
                 foreach (var tableName in userDatas)
                 {
+                    int? maxid = db.Database.SqlQuery<int?>(string.Format("SELECT MAX(Id) FROM {0}", tableName)).FirstOrDefault();
+                    if (maxid == null) maxid = 0;
+                    db.Database.ExecuteSqlCommand(string.Format("DBCC CHECKIDENT ({0}, RESEED, {1});", tableName, maxid.Value));
                     db.Database.ExecuteSqlCommand(string.Format("SET IDENTITY_INSERT [dbo].[{0}] OFF;", tableName));
                 }
 

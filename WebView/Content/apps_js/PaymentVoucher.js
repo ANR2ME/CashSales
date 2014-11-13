@@ -150,9 +150,11 @@
         $('#TotalAmount').numberbox('setValue', '');
         $('#PaymentDate').datebox('setValue', $.datepicker.formatDate('mm/dd/yy', new Date()));
         $('#DueDate').datebox('setValue', $.datepicker.formatDate('mm/dd/yy', new Date()));
+        document.getElementById("IsGBCH").selectedIndex = 1;
+        document.getElementById("IsBank").selectedIndex = 1;
         $('#btnContact').removeAttr('disabled');
         $('#btnCashBank').removeAttr('disabled');
-        $('#TotalAmount').removeAttr('disabled');
+        //$('#TotalAmount').removeAttr('disabled');
         $('#IsGBCH').removeAttr('disabled');
         $('#IsBank').removeAttr('disabled');
         $('#tabledetail_div').hide();
@@ -290,7 +292,7 @@
                             //$('#form_btn_save').hide();
                             $('#btnContact').removeAttr('disabled');
                             $('#btnCashBank').removeAttr('disabled');
-                            $('#TotalAmount').removeAttr('disabled');
+                            //$('#TotalAmount').removeAttr('disabled');
                             $('#IsGBCH').removeAttr('disabled');
                             $('#IsBank').removeAttr('disabled');
                             $('#tabledetail_div').hide();
@@ -691,7 +693,9 @@
                                 }
                             }
                             else {
+                                $('#TotalAmount').val(result.TotalAmount);
                                 ReloadGridDetail();
+                                ReloadGrid();
                                 $("#delete_confirm_div").dialog('close');
                             }
                         }
@@ -748,7 +752,9 @@
                     }
                 }
                 else {
+                    $('#TotalAmount').val(result.TotalAmount);
                     ReloadGridDetail();
+                    ReloadGrid();
                     $("#item_div").dialog('close')
                 }
             }
@@ -899,19 +905,20 @@
         datatype: "json",
         mtype: 'GET',
         colNames: ['Code', 'Contact Id', 'Contact Name', 'Payable Source', 'Source Id', 'Source Code',
-                   'Amount', 'Remaining Amount', 'PendingClearanceAmount', 'Due Date',
+                   'Amount', 'Remaining Amount', 'PendingClearanceAmount', 'Allowance Amount', 'Due Date',
                   ],
         colModel: [
-                  { name: 'code', index: 'code', width: 100, sortable: false },
-                  { name: 'contactid', index: 'contactid', hidden:true, width: 100, sortable: false },
-                  { name: 'contact', index: 'contact', width: 100, sortable: false },
-                  { name: 'payablesource', index: 'payablesource', width: 100, sortable: false },
-                  { name: 'payablesourceid', index: 'payablesourceid', hidden: true, width: 100, sortable: false },
-                  { name: 'payablesourcecode', index: 'payablesourcecode', width: 100, sortable: false },
-                  { name: 'amount', index: 'amount', width: 100, formatter: 'currency', formatoptions: { decimalSeparator: ".", thousandsSeparator: ",", decimalPlaces: 0, prefix: "", suffix: "", defaultValue: '0.00' }, sortable: false },
-                  { name: 'remainingamount', index: 'remainingamount', width: 100, formatter: 'currency', formatoptions: { decimalSeparator: ".", thousandsSeparator: ",", decimalPlaces: 0, prefix: "", suffix: "", defaultValue: '0.00' }, sortable: false },
-                  { name: 'pendingclearanceamount', index: 'pendingclearanceamount', width: 100, formatter: 'currency', formatoptions: { decimalSeparator: ".", thousandsSeparator: ",", decimalPlaces: 0, prefix: "", suffix: "", defaultValue: '0.00' }, sortable: false },
-                  { name: 'duedate', index: 'duedate', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' }, sortable: false },
+                  { name: 'code', index: 'code', width: 100 },
+                  { name: 'contactid', index: 'contactid', hidden:true, width: 100 },
+                  { name: 'contact', index: 'contact', width: 100 },
+                  { name: 'payablesource', index: 'payablesource', width: 100 },
+                  { name: 'payablesourceid', index: 'payablesourceid', hidden: true, width: 100 },
+                  { name: 'payablesourcecode', index: 'payablesourcecode', width: 100 },
+                  { name: 'amount', index: 'amount', width: 100, formatter: 'currency', formatoptions: { decimalSeparator: ".", thousandsSeparator: ",", decimalPlaces: 0, prefix: "", suffix: "", defaultValue: '0.00' } },
+                  { name: 'remainingamount', index: 'remainingamount', width: 100, formatter: 'currency', formatoptions: { decimalSeparator: ".", thousandsSeparator: ",", decimalPlaces: 0, prefix: "", suffix: "", defaultValue: '0.00' } },
+                  { name: 'pendingclearanceamount', index: 'pendingclearanceamount', width: 100, formatter: 'currency', formatoptions: { decimalSeparator: ".", thousandsSeparator: ",", decimalPlaces: 0, prefix: "", suffix: "", defaultValue: '0.00' } },
+                  { name: 'allowanceamount', index: 'allowanceamount', width: 100, formatter: 'currency', formatoptions: { decimalSeparator: ".", thousandsSeparator: ",", decimalPlaces: 0, prefix: "", suffix: "", defaultValue: '0.00' } },
+                  { name: 'duedate', index: 'duedate', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
         ],
         page: '1',
         pager: $('#lookup_pager_payable'),
@@ -940,6 +947,7 @@
             var ret = jQuery("#lookup_table_payable").jqGrid('getRowData', id);
             $('#PayableId').val(id);
             $('#Payable').val(ret.code);
+            $('#Amount').numberbox('setValue', ret.remainingamount);
 
             $('#lookup_div_payable').dialog('close');
         } else {

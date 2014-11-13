@@ -162,7 +162,7 @@ namespace Service.Service
                         IList<ReceiptVoucherDetail> receiptVoucherDetails = _receiptVoucherDetailService.GetObjectsByReceiptVoucherId(receiptVoucher.Id);
                         foreach (var receiptVoucherDetail in receiptVoucherDetails)
                         {
-                            _receiptVoucherDetailService.SoftDeleteObject(receiptVoucherDetail);
+                            _receiptVoucherDetailService.SoftDeleteObject(receiptVoucherDetail, _receiptVoucherService);
                         }
                         _receiptVoucherService.SoftDeleteObject(receiptVoucher, _receiptVoucherDetailService);
                     }

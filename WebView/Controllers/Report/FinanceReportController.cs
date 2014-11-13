@@ -86,8 +86,15 @@ namespace WebView.Controllers
 
             ValidComb Revenue = _validCombService.FindOrCreateObjectByAccountAndClosing(_accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.Revenue).Id, closing.Id);
             ValidComb COGS = _validCombService.FindOrCreateObjectByAccountAndClosing(_accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.COGS).Id, closing.Id);
+            // Memorial Expenses
+            ValidComb OperationalExpenses = _validCombService.FindOrCreateObjectByAccountAndClosing(_accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.OperationalExpenses).Id, closing.Id);
+            ValidComb InterestEarning = _validCombService.FindOrCreateObjectByAccountAndClosing(_accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.InterestEarning).Id, closing.Id);
+            ValidComb Depreciation = _validCombService.FindOrCreateObjectByAccountAndClosing(_accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.Depreciation).Id, closing.Id);
+            ValidComb Amortization = _validCombService.FindOrCreateObjectByAccountAndClosing(_accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.Amortization).Id, closing.Id);
+            ValidComb Tax = _validCombService.FindOrCreateObjectByAccountAndClosing(_accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.Tax).Id, closing.Id);
+            ValidComb Divident = _validCombService.FindOrCreateObjectByAccountAndClosing(_accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.Divident).Id, closing.Id);
             // TODO
-            decimal OperationalExpensesAmount = 0, InterestEarningAmount = 0, DepreciationAmount = 0, AmortizationAmount = 0, TaxAmount = 0, DividentAmount = 0;
+            //decimal OperationalExpensesAmount = 0, InterestEarningAmount = 0, DepreciationAmount = 0, AmortizationAmount = 0, TaxAmount = 0, DividentAmount = 0;
  
             ModelIncomeStatement model = new ModelIncomeStatement()
             {
@@ -96,12 +103,12 @@ namespace WebView.Controllers
                 EndDate = closing.EndDatePeriod.Date,
                 Revenue = Revenue.Amount,
                 COGS = COGS.Amount,
-                OperationalExpenses = OperationalExpensesAmount,
-                InterestEarning = InterestEarningAmount,
-                Depreciation = DepreciationAmount,
-                Amortization = AmortizationAmount,
-                Tax = TaxAmount,
-                Divident = DividentAmount
+                OperationalExpenses = OperationalExpenses.Amount,
+                InterestEarning = InterestEarning.Amount,
+                Depreciation = Depreciation.Amount,
+                Amortization = Amortization.Amount,
+                Tax = Tax.Amount,
+                Divident = Divident.Amount
             };
 
             List<ModelIncomeStatement> list = new List<ModelIncomeStatement>();
@@ -137,15 +144,17 @@ namespace WebView.Controllers
             if (closing == null) return Content(Constant.ErrorPage.ClosingNotFound);
 
             var balanceValidComb = _validCombService.GetQueryable().Include("Account").Include("Closing")
-                                                    .Where(x => x.ClosingId == closing.Id & x.Account.Level == 2);
+                                                    .Where(x => x.ClosingId == closing.Id & x.Account.Level == 2 
+                                                    && x.Account.Group != Constant.AccountGroup.Expense && x.Account.Group != Constant.AccountGroup.Revenue
+                                                    );
 
             List<ModelBalanceSheet> query = new List<ModelBalanceSheet>();
             query = (from obj in balanceValidComb
                      select new ModelBalanceSheet()
                      {
                          CompanyName = company.Name,
-                         StartDate = closing.BeginningPeriod,
-                         EndDate = closing.EndDatePeriod,
+                         StartDate = closing.BeginningPeriod.Date,
+                         EndDate = closing.EndDatePeriod.Date,
                          DCNote = (obj.Account.Group == Constant.AccountGroup.Asset ||
                                   obj.Account.Group == Constant.AccountGroup.Expense) ? "D" : "C",
                          AccountName = obj.Account.Code.Substring(0, 1),

@@ -191,7 +191,7 @@ namespace Service.Service
             decimal Amount = (cashMutation.Status == Constant.MutationStatus.Addition) ? cashMutation.Amount : (-1) * cashMutation.Amount;
             CashBank cashBank = _cashBankService.GetObjectById(cashMutation.CashBankId);
             cashBank.Amount += Amount;
-            _cashBankService.UpdateObject(cashBank);
+            _cashBankService.GetRepository().UpdateObject(cashBank);
         }
 
         public void ReverseCashMutateObject(CashMutation cashMutation, ICashBankService _cashBankService)
@@ -199,7 +199,7 @@ namespace Service.Service
             decimal Amount = (cashMutation.Status == Constant.MutationStatus.Deduction) ? cashMutation.Amount : (-1) * cashMutation.Amount;
             CashBank cashBank = _cashBankService.GetObjectById(cashMutation.CashBankId);
             cashBank.Amount += Amount;
-            _cashBankService.UpdateObject(cashBank);
+            _cashBankService.GetRepository().UpdateObject(cashBank);
         }
     }
 }

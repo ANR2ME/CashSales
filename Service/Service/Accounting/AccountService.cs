@@ -130,37 +130,46 @@ namespace Service.Service
             return CreateObject(account);
         }
 
+        public Account UpdateObjectWithoutValidation(Account account, int? OldParentId)
+        {
+            _repository.UpdateObject(account);
+            // Fix Old Parent's IsLeaf
+            Account oldparent = GetObjectById(OldParentId.GetValueOrDefault());
+            if (oldparent != null)
+            {
+                if (!GetLeafObjectsById(OldParentId).Any())
+                {
+                    if (!oldparent.IsLeaf)
+                    {
+                        oldparent.IsLeaf = true;
+                        _repository.UpdateObject(oldparent);
+                    }
+                }
+            }
+            // Fix New Parent's IsLeaf
+            if (account.ParentId.GetValueOrDefault() > 0)
+            {
+                Account newparent = GetObjectById(account.ParentId.GetValueOrDefault());
+                if (newparent != null && newparent.IsLeaf)
+                {
+                    newparent.IsLeaf = false;
+                    _repository.UpdateObject(newparent);
+                }
+            }
+            // Move all childs to the same Group and re-adjust the Level
+            if ((oldparent == null && account.ParentId.GetValueOrDefault() > 0) || (oldparent != null && (account.Group != oldparent.Group || account.Level != oldparent.Level + 1)))
+            {
+                UpdateChildren(account);
+            }
+            return account;
+        }
+
         public Account UpdateObject(Account account, int? OldParentId)
         {
             if(_validator.ValidUpdateObject(account, this))
             {
-                _repository.UpdateObject(account);
-                // Fix Old Parent's IsLeaf
-                if (OldParentId.GetValueOrDefault() > 0)
-                {
-                    if (!GetLeafObjectsById(OldParentId).Any())
-                    {
-                        Account parent = GetObjectById(OldParentId.GetValueOrDefault());
-                        if (parent != null && !parent.IsLeaf)
-                        {
-                            parent.IsLeaf = true;
-                            _repository.UpdateObject(parent);
-                        }
-                    }
-                }
-                // Fix New Parent's IsLeaf
-                if (account.ParentId.GetValueOrDefault() > 0)
-                {
-                    Account parent = GetObjectById(account.ParentId.GetValueOrDefault());
-                    if (parent != null && parent.IsLeaf)
-                    {
-                        parent.IsLeaf = false;
-                        _repository.UpdateObject(parent);
-                    }
-                }
-                // TODO : Move all childs to the same Group and re-adjust the Level
-
-            };
+                UpdateObjectWithoutValidation(account, OldParentId);
+            }
             return account;
         }
 
@@ -168,31 +177,8 @@ namespace Service.Service
         {
             if (_validator.ValidUpdateObjectForCashBank(account, this))
             {
-                _repository.UpdateObject(account);
-                // Fix Old Parent's IsLeaf
-                if (OldParentId.GetValueOrDefault() > 0)
-                {
-                    if (!GetLeafObjectsById(OldParentId).Any())
-                    {
-                        Account parent = GetObjectById(OldParentId.GetValueOrDefault());
-                        if (parent != null && !parent.IsLeaf)
-                        {
-                            parent.IsLeaf = true;
-                            _repository.UpdateObject(parent);
-                        }
-                    }
-                }
-                // Fix New Parent's IsLeaf
-                if (account.ParentId.GetValueOrDefault() > 0)
-                {
-                    Account parent = GetObjectById(account.ParentId.GetValueOrDefault());
-                    if (parent != null && parent.IsLeaf)
-                    {
-                        parent.IsLeaf = false;
-                        _repository.UpdateObject(parent);
-                    }
-                }
-            };
+                UpdateObjectWithoutValidation(account, OldParentId);
+            }
             return account;
         }
 
@@ -200,31 +186,27 @@ namespace Service.Service
         {
             if (_validator.ValidUpdateObjectForLegacy(account, this))
             {
-                _repository.UpdateObject(account);
-                // Fix Old Parent's IsLeaf
-                if (OldParentId.GetValueOrDefault() > 0)
-                {
-                    if (!GetLeafObjectsById(OldParentId).Any())
-                    {
-                        Account parent = GetObjectById(OldParentId.GetValueOrDefault());
-                        if (parent != null && !parent.IsLeaf)
-                        {
-                            parent.IsLeaf = true;
-                            _repository.UpdateObject(parent);
-                        }
-                    }
-                }
-                // Fix New Parent's IsLeaf
-                if (account.ParentId.GetValueOrDefault() > 0)
+                UpdateObjectWithoutValidation(account, OldParentId);
+            }
+            return account;
+        }
+
+        public Account SoftDeleteObjectWithoutValidation(Account account)
+        {
+            _repository.SoftDeleteObject(account);
+            // Fix Parent's IsLeaf
+            if (account.ParentId.GetValueOrDefault() > 0)
+            {
+                if (!GetLeafObjectsById(account.ParentId).Any())
                 {
                     Account parent = GetObjectById(account.ParentId.GetValueOrDefault());
-                    if (parent != null && parent.IsLeaf)
+                    if (parent != null && !parent.IsLeaf)
                     {
-                        parent.IsLeaf = false;
+                        parent.IsLeaf = true;
                         _repository.UpdateObject(parent);
                     }
                 }
-            };
+            }
             return account;
         }
 
@@ -232,21 +214,8 @@ namespace Service.Service
         {
             if(_validator.ValidDeleteObject(account))
             {
-                _repository.SoftDeleteObject(account);
-                // Fix Parent's IsLeaf
-                if (account.ParentId.GetValueOrDefault() > 0)
-                {
-                    if (!GetLeafObjectsById(account.ParentId).Any())
-                    {
-                        Account parent = GetObjectById(account.ParentId.GetValueOrDefault());
-                        if (parent != null && !parent.IsLeaf)
-                        {
-                            parent.IsLeaf = true;
-                            _repository.UpdateObject(parent);
-                        }
-                    }
-                }
-            };
+                SoftDeleteObjectWithoutValidation(account);
+            }
             return account;
         }
 
@@ -254,21 +223,8 @@ namespace Service.Service
         {
             if (_validator.ValidDeleteObjectForCashBank(account))
             {
-                _repository.SoftDeleteObject(account);
-                // Fix Parent's IsLeaf
-                if (account.ParentId.GetValueOrDefault() > 0)
-                {
-                    if (!GetLeafObjectsById(account.ParentId).Any())
-                    {
-                        Account parent = GetObjectById(account.ParentId.GetValueOrDefault());
-                        if (parent != null && !parent.IsLeaf)
-                        {
-                            parent.IsLeaf = true;
-                            _repository.UpdateObject(parent);
-                        }
-                    }
-                }
-            };
+                SoftDeleteObjectWithoutValidation(account);
+            }
             return account;
         }
 
@@ -276,21 +232,8 @@ namespace Service.Service
         {
             if (_validator.ValidDeleteObjectForLegacy(account))
             {
-                _repository.SoftDeleteObject(account);
-                // Fix Parent's IsLeaf
-                if (account.ParentId.GetValueOrDefault() > 0)
-                {
-                    if (!GetLeafObjectsById(account.ParentId).Any())
-                    {
-                        Account parent = GetObjectById(account.ParentId.GetValueOrDefault());
-                        if (parent != null && !parent.IsLeaf)
-                        {
-                            parent.IsLeaf = true;
-                            _repository.UpdateObject(parent);
-                        }
-                    }
-                }
-            };
+                SoftDeleteObjectWithoutValidation(account);
+            }
             return account;
         }
 
@@ -304,6 +247,22 @@ namespace Service.Service
             return _repository.FindAll(x => !x.IsDeleted && x.Code == account.Code && x.Id != account.Id).Any();
         }
 
-
+        public int UpdateChildren(Account parent)
+        {
+            int count = 0;
+            foreach(var child in GetQueryable().Where(x => !x.IsDeleted && x.ParentId != null && x.ParentId.Value == parent.Id))
+            {
+                //child.Errors = new Dictionary<string,string>();
+                child.Group = parent.Group;
+                child.Level = parent.Level + 1;
+                _repository.UpdateObject(child);
+                count++;
+                if (!child.IsLeaf)
+                {
+                    count += UpdateChildren(child); //
+                }
+            }
+            return count;
+        }
     }
 }

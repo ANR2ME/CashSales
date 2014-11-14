@@ -1,0 +1,12 @@
+CompanyName	String	50
+Date	DateTime
+Title	String	255
+RangeDate	DateTime
+JenisRange	String	1
+Current	Number
+Previous	Number
+Group	String	2
+Level	String	1
+GroupLevel	String	3
+AccountCode	String	11
+Unaudited	String	9

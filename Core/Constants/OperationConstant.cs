@@ -26,8 +26,9 @@ namespace Core.Constants
         public class MenuName
         {
             //Data
+            public static string CompanyInfo = "Company Info";
             public static string Contact = "Contact";
-            public static string ItemType = "ItemType";
+            public static string ItemType = "Item Type";
             public static string UoM = "UoM";
             public static string QuantityPricing = "Quantity Pricing";
 
@@ -36,7 +37,7 @@ namespace Core.Constants
             public static string StockAdjustment = "Stock Adjustment";
             public static string StockMutation = "Stock Mutation";
             public static string Warehouse = "Warehouse";
-            public static string WarehouseItem = "WarehouseItem";
+            public static string WarehouseItem = "Warehouse Item";
             public static string WarehouseMutation = "Warehouse Mutation";
 
             // Transaction - Purchase
@@ -54,16 +55,17 @@ namespace Core.Constants
             public static string RetailSalesInvoice = "Retail Sales Invoice";
 
             // Finance
+            public static string Memorial = "Memorial";
+            public static string Account = "Chart Of Account"; // ChartOfAccount
+            public static string Closing = "Closing";
+            public static string GeneralLedger = "General Ledger Journal";
+            public static string ValidComb = "Valid Comb";
+
             public static string CashBank = "CashBank";
             public static string CashBankAdjustment = "CashBank Adjustment";
             public static string CashBankMutation = "CashBank Mutation";
             public static string CashMutation = "Cash Mutation";
             public static string PaymentRequest = "Payment Request";
-            public static string Memorial = "Memorial";
-            public static string Account = "Account";
-            public static string Closing = "Closing";
-            public static string GeneralLedger = "GeneralLedger";
-            public static string ValidComb = "ValidComb";
             
             public static string PaymentVoucher = "Payment Voucher";
             public static string Payable = "Payable";
@@ -73,15 +75,14 @@ namespace Core.Constants
             // Setting
             public static string User = "User";
             public static string UserAccessRight = "User Access Right";
-            public static string CompanyInfo = "Company Info";
 
             // Report
             public static string Purchase = "Purchase";
             public static string Sales = "Sales";
             public static string TopSales = "Top Sales";
             public static string ProfitLoss = "Profit/Loss";
-            public static string BalanceSheet = "BalanceSheet";
-            public static string IncomeStatement = "IncomeStatement";
+            public static string BalanceSheet = "Balance Sheet";
+            public static string IncomeStatement = "Income Statement";
         }
 
         public class ItemCase

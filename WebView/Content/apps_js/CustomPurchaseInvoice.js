@@ -406,7 +406,8 @@
 		var id = jQuery("#list").jqGrid('getGridParam', 'selrow');
 		if (id) {
 			var ret = jQuery("#list").jqGrid('getRowData', id);
-			$('#ConfirmationDate').datebox('setValue', $.datepicker.formatDate('mm/dd/yy', new Date()));
+		    //$('#ConfirmationDate').datebox('setValue', $.datepicker.formatDate('mm/dd/yy', new Date()));
+			$('#ConfirmationDate').datebox('setValue', ret.purchasedate);
 			$('#confirmDiscount').numberbox('setValue', ret.discount);
 			$('#confirmTax').numberbox('setValue', ret.tax);
 			$('#confirmShippingFee').numberbox('setValue', ret.shippingfee);

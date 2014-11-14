@@ -647,11 +647,11 @@
                  } else if (rowGroup == 2) {
                      rowGroup = "Expense";
                  } else if (rowGroup == 3) {
-                     rowGroup = "Equity";
-                 } else if (rowGroup == 4) {
-                     rowGroup = "Revenue";
-                 } else if (rowGroup == 5) {
                      rowGroup = "Liability";
+                 } else if (rowGroup == 4) {
+                     rowGroup = "Equity";
+                 } else if (rowGroup == 5) {
+                     rowGroup = "Revenue";
                  }
                  $(this).jqGrid('setRowData', ids[i], { group: rowGroup });
 
@@ -659,7 +659,7 @@
          }
     });
     $("#lookup_table_account").jqGrid('navGrid', '#lookup_toolbar_account', { del: false, add: false, edit: false, search: false })
-           .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: false });
+           .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: true });
 
     // Cancel or CLose
     $('#lookup_btn_cancel_account').click(function () {

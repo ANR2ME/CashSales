@@ -12,6 +12,7 @@ using Validation.Validation;
 using System.Linq.Dynamic;
 using System.Data.Entity;
 using Core.DomainModel;
+using Data.Context;
 
 namespace WebView.Controllers
 {
@@ -20,6 +21,8 @@ namespace WebView.Controllers
         //
         // GET: /Report/
         private readonly static log4net.ILog LOG = log4net.LogManager.GetLogger("ReportController");
+        private IWarehouseItemService _warehouseItemService;
+        private IWarehouseService _warehouseService;
         private IItemService _itemService;
         private IItemTypeService _itemTypeService;
         private IUoMService _uoMService;
@@ -65,10 +68,13 @@ namespace WebView.Controllers
 
         public ReportController()
         {
+            _warehouseItemService = new WarehouseItemService(new WarehouseItemRepository(), new WarehouseItemValidator());
+            _warehouseService = new WarehouseService(new WarehouseRepository(), new WarehouseValidator());
             _itemService = new ItemService(new ItemRepository(), new ItemValidator());
             _itemTypeService = new ItemTypeService(new ItemTypeRepository(), new ItemTypeValidator());
             _uoMService = new UoMService(new UoMRepository(), new UoMValidator());
             _companyService = new CompanyService(new CompanyRepository(), new CompanyValidator());
+
             _cashBankService = new CashBankService(new CashBankRepository(), new CashBankValidator());
             _payableService = new PayableService(new PayableRepository(), new PayableValidator());
             _paymentVoucherDetailService = new PaymentVoucherDetailService(new PaymentVoucherDetailRepository(), new PaymentVoucherDetailValidator());
@@ -93,38 +99,41 @@ namespace WebView.Controllers
             return View();
         }
 
-        public ActionResult ReportItem(int itemTypeId = 0)
+        public ActionResult ReportItem(int itemTypeId = 0, int warehouseId = 0)
         {
             var company = _companyService.GetQueryable().FirstOrDefault();
-            var q = _itemService.GetQueryable().Include("ItemType").Include("UoM");
-            
-            string filter = "true";
-            ItemType itemType = _itemTypeService.GetObjectById(itemTypeId);
-            if (itemType != null)
-            {
-                filter = "ItemTypeId == " + itemTypeId.ToString();
-            }
+
+            //string filter = "true";
+            //if (warehouseId > 0) filter = "WarehouseId == " + warehouseId.ToString();
+            //ItemType itemType = _itemTypeService.GetObjectById(itemTypeId);
+            //if (itemType != null)
+            //{
+            //    filter += " && Item.ItemTypeId == " + itemTypeId.ToString();
+            //}
+
+            var q = _warehouseItemService.GetQueryable().Include("Warehouse").Include("Item").Include("ItemType").Include("UoM").Where(x => (warehouseId <= 0 || x.WarehouseId == warehouseId) && (itemTypeId <= 0 || x.Item.ItemTypeId == itemTypeId));
             
             var query = (from model in q
                          select new
                          {
-                             model.Id,
-                             model.Name,
-                             model.ItemTypeId,
-                             itemtype = model.ItemType.Name,
-                             model.Sku,
-                             uom = model.UoM.Name,
+                             model.Item.Id,
+                             model.Item.Name,
+                             model.Item.ItemTypeId,
+                             itemtype = model.Item.ItemType.Name,
+                             model.Item.Sku,
+                             uom = model.Item.UoM.Name,
                              model.Quantity,
-                             model.SellingPrice,
-                             model.AvgPrice,
-                             model.Margin,
+                             model.Item.SellingPrice,
+                             model.Item.AvgPrice,
+                             model.Item.Margin,
                              model.PendingReceival,
                              model.PendingDelivery,
                              CompanyName = company.Name,
                              CompanyAddress = company.Address,
                              CompanyContactNo = company.ContactNo,
-                             cogs = model.AvgPrice * model.Quantity,
-                         }).Where(filter).ToList();
+                             cogs = model.Item.AvgPrice * model.Quantity,
+                             warehouse = model.Warehouse.Code,
+                         }).OrderBy(x => x.Sku).ThenBy(y => y.warehouse).ThenBy(z => z.itemtype).ToList();
           
             var rd = new ReportDocument();
 
@@ -136,6 +145,85 @@ namespace WebView.Controllers
 
             var stream = rd.ExportToStream(CrystalDecisions.Shared.ExportFormatType.PortableDocFormat);
             return File(stream, "application/pdf");
+        }
+
+        public ActionResult ItemDetail()
+        {
+            if (!AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.Item, Core.Constants.Constant.MenuGroupName.Report))
+            {
+                return Content(Core.Constants.Constant.ErrorPage.PageViewNotAllowed);
+            }
+
+            return View();
+        }
+
+        public ActionResult ReportItemDetail(int warehouseId = 0, DateTime? startDate = null, DateTime? endDate = null)
+        {
+            DateTime? startDay = startDate ?? startDate.GetValueOrDefault().Date;
+            DateTime? endDay = endDate ?? endDate.GetValueOrDefault().Date.AddDays(1);
+            var db = new OffsetPrintingSuppliesEntities();
+            using (db)
+            {
+                var q = db.WarehouseItems.Include("Warehouse").Include("Item").Include("ItemType").Include("UoM").Where(x => (warehouseId <= 0 || x.WarehouseId == warehouseId));
+                var p = db.CustomPurchaseInvoiceDetails.Include(x => x.Item).Include(x => x.CustomPurchaseInvoice).Where(x => !x.CustomPurchaseInvoice.IsDeleted && x.CustomPurchaseInvoice.IsConfirmed && x.CustomPurchaseInvoice.ConfirmationDate.Value >= startDay/* && x.CustomPurchaseInvoice.ConfirmationDate.Value < endDay*/);
+                var s = db.CashSalesInvoiceDetails.Include(x => x.Item).Include(x => x.CashSalesInvoice).Where(x => !x.CashSalesInvoice.IsDeleted && x.CashSalesInvoice.IsConfirmed && x.CashSalesInvoice.ConfirmationDate.Value >= startDay/* && x.CashSalesInvoice.ConfirmationDate.Value < endDay*/);
+                var rs = db.CashSalesReturnDetails.Include(x => x.CashSalesInvoiceDetail).Include(x => x.CashSalesReturn).Where(x => !x.CashSalesReturn.IsDeleted && x.CashSalesReturn.IsConfirmed && x.CashSalesReturn.ConfirmationDate.Value >= startDay/* && x.CashSalesReturn.ConfirmationDate.Value < endDay*/);
+
+                var company = _companyService.GetQueryable().FirstOrDefault();
+
+                //string filter = "true";
+                //if (warehouseId > 0) filter = "WarehouseId == " + warehouseId.ToString();
+                //ItemType itemType = _itemTypeService.GetObjectById(itemTypeId);
+                //if (itemType != null)
+                //{
+                //    filter += " && Item.ItemTypeId == " + itemTypeId.ToString();
+                //}
+
+                //var q = _warehouseItemService.GetQueryable().Include("Warehouse").Include("Item").Include("ItemType").Include("UoM").Where(x => (warehouseId <= 0 || x.WarehouseId == warehouseId));
+
+                //var p = _customPurchaseInvoiceDetailService.GetQueryable().Include(x => x.Item).Include(x => x.CustomPurchaseInvoice);
+                //var s = _cashSalesInvoiceDetailService.GetQueryable().Include(x => x.Item).Include(x => x.CashSalesInvoice);
+                //var rs = _cashSalesReturnDetailService.GetQueryable().Include(x => x.CashSalesInvoiceDetail).Include(x => x.CashSalesReturn);
+
+                var query = (from model in q
+                             select new
+                             {
+                                 model.Item.Id,
+                                 model.Item.Name,
+                                 model.Item.ItemTypeId,
+                                 itemtype = model.Item.ItemType.Name,
+                                 model.Item.Sku,
+                                 uom = model.Item.UoM.Name,
+                                 model.Quantity,
+                                 model.Item.SellingPrice,
+                                 model.Item.AvgPrice,
+                                 model.Item.Margin,
+                                 model.PendingReceival,
+                                 model.PendingDelivery,
+                                 CompanyName = company.Name,
+                                 CompanyAddress = company.Address,
+                                 CompanyContactNo = company.ContactNo,
+                                 cogs = model.Item.AvgPrice * model.Quantity,
+                                 warehouse = model.Warehouse.Code,
+                                 Purchased = (int?)p.Where(x => x.ItemId == model.ItemId && x.CustomPurchaseInvoice.WarehouseId == model.WarehouseId).Sum(x => x.Quantity) ?? 0,
+                                 ReturnedPurchase = 0,
+                                 Sold = (int?)s.Where(x => x.ItemId == model.ItemId && x.CashSalesInvoice.WarehouseId == model.WarehouseId).Sum(x => x.Quantity) ?? 0,
+                                 ReturnedSales = (int?)rs.Where(x => x.CashSalesInvoiceDetail.ItemId == model.ItemId && x.CashSalesReturn.CashSalesInvoice.WarehouseId == model.WarehouseId).Sum(x => x.Quantity) ?? 0,
+                                 StartDate = startDay.Value,
+                                 EndDate = DateTime.Today,
+                             }).OrderBy(x => x.warehouse).ThenBy(y => y.itemtype).ThenBy(z => z.Sku).ToList();
+
+                var rd = new ReportDocument();
+
+                //Loading Report
+                rd.Load(Server.MapPath("~/") + "Reports/General/ItemDetail.rpt");
+
+                // Setting report data source
+                rd.SetDataSource(query);
+
+                var stream = rd.ExportToStream(CrystalDecisions.Shared.ExportFormatType.PortableDocFormat);
+                return File(stream, "application/pdf");
+            }
         }
 
         public ActionResult ProfitLoss()

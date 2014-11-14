@@ -34,7 +34,7 @@ namespace WebView.Controllers
 
         public ActionResult Index()
         {
-            if (!AuthenticationModel.IsAllowed("View", Constant.MenuName.Memorial, Constant.MenuGroupName.Master))
+            if (!AuthenticationModel.IsAllowed("View", Constant.MenuName.Memorial, Constant.MenuGroupName.Transaction))
             {
                 return Content(Core.Constants.Constant.ErrorPage.PageViewNotAllowed);
             }
@@ -233,7 +233,7 @@ namespace WebView.Controllers
         {
             try
             {
-                if (!AuthenticationModel.IsAllowed("Create", Constant.MenuName.Memorial, Constant.MenuGroupName.Master))
+                if (!AuthenticationModel.IsAllowed("Create", Constant.MenuName.Memorial, Constant.MenuGroupName.Transaction))
                 {
                     Dictionary<string, string> Errors = new Dictionary<string, string>();
                     Errors.Add("Generic", "You are Not Allowed to Add record");
@@ -289,7 +289,7 @@ namespace WebView.Controllers
         {
             try
             {
-                if (!AuthenticationModel.IsAllowed("Edit", Constant.MenuName.Memorial, Constant.MenuGroupName.Master))
+                if (!AuthenticationModel.IsAllowed("Edit", Constant.MenuName.Memorial, Constant.MenuGroupName.Transaction))
                 {
                     Dictionary<string, string> Errors = new Dictionary<string, string>();
                     Errors.Add("Generic", "You are Not Allowed to Edit record");
@@ -328,7 +328,7 @@ namespace WebView.Controllers
         {
             try
             {
-                if (!AuthenticationModel.IsAllowed("Delete", Constant.MenuName.Memorial, Constant.MenuGroupName.Master))
+                if (!AuthenticationModel.IsAllowed("Delete", Constant.MenuName.Memorial, Constant.MenuGroupName.Transaction))
                 {
                     Dictionary<string, string> Errors = new Dictionary<string, string>();
                     Errors.Add("Generic", "You are Not Allowed to Delete Record");
@@ -409,7 +409,7 @@ namespace WebView.Controllers
         {
             try
             {
-                if (!AuthenticationModel.IsAllowed("Confirm", Constant.MenuName.Memorial, Constant.MenuGroupName.Master))
+                if (!AuthenticationModel.IsAllowed("Confirm", Constant.MenuName.Memorial, Constant.MenuGroupName.Transaction))
                 {
                     Dictionary<string, string> Errors = new Dictionary<string, string>();
                     Errors.Add("Generic", "You are Not Allowed to Confirm Record");
@@ -447,7 +447,7 @@ namespace WebView.Controllers
         {
             try
             {
-                if (!AuthenticationModel.IsAllowed("UnConfirm", Constant.MenuName.Memorial, Constant.MenuGroupName.Master))
+                if (!AuthenticationModel.IsAllowed("UnConfirm", Constant.MenuName.Memorial, Constant.MenuGroupName.Transaction))
                 {
                     Dictionary<string, string> Errors = new Dictionary<string, string>();
                     Errors.Add("Generic", "You are Not Allowed to UnConfirm record");

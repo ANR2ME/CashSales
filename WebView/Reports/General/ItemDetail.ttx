@@ -20,3 +20,5 @@ Purchased	Number
 ReturnedPurchase	Number
 Sold	Number
 ReturnedSales	Number
+StartDate	Date
+EndDate	Date

@@ -16,7 +16,7 @@ namespace Validation.Validation
         {
             if (closing.Period < 1 || closing.Period > 12)
             {
-                closing.Errors.Add("Period", "Harus antara 1 sampai 12");
+                closing.Errors.Add("Period", "Harus antara 1 sampai dengan 12");
             }
             return closing;
         }

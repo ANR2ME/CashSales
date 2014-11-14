@@ -30,7 +30,7 @@ namespace WebView.Controllers
 
         public ActionResult Index()
         {
-            if (!AuthenticationModel.IsAllowed("View", Constant.MenuName.GeneralLedger, Constant.MenuGroupName.Report))
+            if (!AuthenticationModel.IsAllowed("View", Constant.MenuName.GeneralLedger, Constant.MenuGroupName.Transaction))
             {
                 return Content(Constant.ErrorPage.PageViewNotAllowed);
             }

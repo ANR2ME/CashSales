@@ -43,9 +43,9 @@ namespace Validation.Validation
 
         public StockAdjustmentDetail VNonZeroQuantity(StockAdjustmentDetail stockAdjustmentDetail)
         {
-            if (stockAdjustmentDetail.Quantity <= 0)
+            if (stockAdjustmentDetail.Quantity == 0)
             {
-                stockAdjustmentDetail.Errors.Add("Quantity", "Harus lebih besar dari 0");
+                stockAdjustmentDetail.Errors.Add("Quantity", "Tidak boleh 0");
             }
             return stockAdjustmentDetail;
         }
@@ -117,7 +117,7 @@ namespace Validation.Validation
                                                                IItemService _itemService, IBarringService _barringService, IWarehouseItemService _warehouseItemService, bool ToConfirm)
         {
             int stockAdjustmentDetailQuantity = ToConfirm ? stockAdjustmentDetail.Quantity : ((-1) * stockAdjustmentDetail.Quantity);
-            decimal stockAdjustmentDetailPrice = ToConfirm ? stockAdjustmentDetail.Price : ((-1) * stockAdjustmentDetail.Price);
+            decimal stockAdjustmentDetailPrice = stockAdjustmentDetail.Price; //ToConfirm ? stockAdjustmentDetail.Price : ((-1) * stockAdjustmentDetail.Price);
             Item item = _itemService.GetObjectById(stockAdjustmentDetail.ItemId);
             StockAdjustment stockAdjustment = _stockAdjustmentService.GetObjectById(stockAdjustmentDetail.StockAdjustmentId);
             WarehouseItem warehouseItem = _warehouseItemService.FindOrCreateObject(stockAdjustment.WarehouseId, item.Id);

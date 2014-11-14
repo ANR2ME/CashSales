@@ -1,0 +1,7 @@
+Code	String	11
+Title	String	100
+Group	String	10
+Level	Number
+Type	String	10
+Parent	String	11
+CompanyName	String	50

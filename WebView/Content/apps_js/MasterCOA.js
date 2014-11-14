@@ -85,11 +85,11 @@
             } else if (rowGroup == 2){
                 rowGroup = "Expense";
             } else if (rowGroup == 3) {
-                rowGroup = "Equity";
-            } else if (rowGroup == 4) {
-                rowGroup = "Revenue";
-            } else if (rowGroup == 5) {
                 rowGroup = "Liability";
+            } else if (rowGroup == 4) {
+                rowGroup = "Equity";
+            } else if (rowGroup == 5) {
+                rowGroup = "Revenue";
             }
             $(this).jqGrid('setRowData', ids[i], { group: rowGroup});
 
@@ -155,11 +155,11 @@
                  } else if (rowGroup == 2) {
                      rowGroup = "Expense";
                  } else if (rowGroup == 3) {
-                     rowGroup = "Equity";
-                 } else if (rowGroup == 4) {
-                     rowGroup = "Revenue";
-                 } else if (rowGroup == 5) {
                      rowGroup = "Liability";
+                 } else if (rowGroup == 4) {
+                     rowGroup = "Equity";
+                 } else if (rowGroup == 5) {
+                     rowGroup = "Revenue";
                  }
                  $(this).jqGrid('setRowData', ids[i], { Group: rowGroup });
 

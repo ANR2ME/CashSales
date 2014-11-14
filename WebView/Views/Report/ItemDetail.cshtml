@@ -1,5 +1,5 @@
 ﻿@{
-    ViewBag.Title = "Stock Item";
+    ViewBag.Title = "Stock Item Detail";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
@@ -8,7 +8,7 @@
 
 @section Scripts {
     <script type="text/javascript" src="@Url.Content("~/Content/apps_js/tools.js")"></script>
-    <script type="text/javascript" src="@Url.Content("~/Content/apps_js/reportitem.js")"></script>
+    <script type="text/javascript" src="@Url.Content("~/Content/apps_js/reportitemdetail.js")"></script>
 }
 <div id="ua_panel" class="easyui-panel" style="text-align: left;" data-options="modal:true" 
     title=".: Stock Item :.">
@@ -30,17 +30,17 @@
                             <td colspan="3">
                                <input id="WarehouseId" hidden class="textright" type="text" size="10" maxlength="7" disabled="disabled" />
                                <input id="btnWarehouse" name="buttonactivated" type="button" style="cursor: pointer;" class="ui-corner-all ui-state-default" value=".." />
-                               <input id="WarehouseName" name="WarehouseId" type="text" size="56" maxlength="50" class="editable upper" disabled="disabled" />
-                                         
+                               <input id="WarehouseName" name="WarehouseId" type="text" size="56" maxlength="50" class="editable upper" disabled="disabled" />           
                         </tr>
 
                         <tr>
                             <td>
-                                <label>Item Type</label></td>
-                            <td colspan="3">
-                               <input id="ItemTypeId" hidden class="textright" type="text" size="10" maxlength="7" disabled="disabled" />
-                               <input id="btnItemType" name="buttonactivated" type="button" style="cursor: pointer;" class="ui-corner-all ui-state-default" value=".." />
-                               <input id="ItemTypeName" name="ItemType" type="text" size="56" maxlength="50" class="editable upper" disabled="disabled" />
+                                <label>Start Date</label></td>
+                             <td>
+                             <div id="StartDateDiv"><input id="StartDate" class="easyui-datebox" title="mm/dd/yyyy" type="text" size="10" value="@DateTime.Today.AddDays(-(DateTime.Today.Day-1)).ToShortDateString()"/>
+                            </div>
+                             @*<div id="StartDateDiv2"><input id="StartDate2" type="text" size="10" disabled="disabled"/></div>*@
+                             </td>
                         </tr>
 
                         <tr><td></td></tr>
@@ -50,20 +50,6 @@
             </form>
     </div>
 <!-- End Dialog Box -->
-
- <!-- Look Up ItemType -->
-    <div id="lookup_div_itemtype" class="easyui-dialog" title="List Item Type" style="padding: 0px 5px; height: 490px; width: 480px;"
-        data-options="iconCls:'icon-tip',modal:true">
-
-        <div id="lookup_toolbar_itemtype" class="grid_toolbar">
-            <a id="lookup_btn_add_itemtype" href="javascript:void(0)" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-add'">Select Data</a>
-            <a id="lookup_btn_cancel_itemtype" href="javascript:void(0)" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-remove'">Close Window</a>
-        </div>
-
-        <table id="lookup_table_itemtype" class="scroll" cellpadding="0" cellspacing="0"></table>
-        <div id="lookup_pager_itemtype" class="scroll" style="text-align: center;"></div>
-    </div>
-<!-- END Look Up Item Type -->
 
 <!-- Look Up Warehouse -->
     <div id="lookup_div_warehouse" class="easyui-dialog" title="List Warehouse" style="padding: 0px 5px; height: 490px; width: 480px;"

@@ -30,9 +30,9 @@ namespace WebView
         private ContactGroup baseContactGroup;
         private Contact baseContact;
         private Company baseCompany;
-        private Account Asset, CashBank, AccountReceivable, AccountReceivablePPNmasuk, AccountReceivableTrading, GBCHReceivable, Inventory;
+        private Account Asset, CashBank, AccountReceivable, AccountReceivablePPNmasuk, AccountReceivableTrading, GBCHReceivable, Inventory, TradingGoods;
         private Account Expense, CashBankAdjustmentExpense, COGS, SalesDiscount, SalesAllowance, StockAdjustmentExpense, FreightIn, SalesReturnExpense;
-        private Account TaxExpense, Divident, InterestEarning, Deprecation, Amortization, OperationalExpenses, NonOperationalExpenses;
+        private Account TaxExpense, Divident, InterestEarning, Depreciation, Amortization, OperationalExpenses, NonOperationalExpenses, FreightOutExpense;
         private Account Liability, AccountPayable, AccountPayableTrading, AccountPayableNonTrading, AccountPayablePPNkeluar, GBCHPayable, GoodsPendingClearance, PurchaseDiscount, PurchaseAllowance, SalesReturnAllowance;
         private Account Equity, OwnersEquity, EquityAdjustment, RetainedEarnings;
         private Account Revenue, FreightOut, Sales;
@@ -76,24 +76,26 @@ namespace WebView
                 AccountReceivablePPNmasuk = _accountService.FindOrCreateLegacyObject(new Account() { Name = "Account Receivable (PPN masuk)", IsLeaf = true, Code = Constant.AccountCode.AccountReceivablePPNmasukan, LegacyCode = Constant.AccountLegacyCode.AccountReceivablePPNmasukan, Level = 3, Group = Constant.AccountGroup.Asset, ParentId = AccountReceivable.Id, IsLegacy = true });
                 AccountReceivableTrading = _accountService.FindOrCreateLegacyObject(new Account() { Name = "Account Receivable (Trading)", IsLeaf = true, Code = Constant.AccountCode.AccountReceivableTrading, LegacyCode = Constant.AccountLegacyCode.AccountReceivableTrading, Level = 3, Group = Constant.AccountGroup.Asset, ParentId = AccountReceivable.Id, IsLegacy = true });
                 GBCHReceivable = _accountService.FindOrCreateLegacyObject(new Account() { Name = "GBCH Receivable", IsLeaf = true, Code = Constant.AccountCode.GBCHReceivable, LegacyCode = Constant.AccountLegacyCode.GBCHReceivable, Level = 2, Group = Constant.AccountGroup.Asset, ParentId = Asset.Id, IsLegacy = true });
-                Inventory = _accountService.FindOrCreateLegacyObject(new Account() { Name = "Inventory", IsLeaf = true, Code = Constant.AccountCode.Inventory, LegacyCode = Constant.AccountLegacyCode.Inventory, Level = 2, Group = Constant.AccountGroup.Asset, ParentId = Asset.Id, IsLegacy = true });
+                Inventory = _accountService.FindOrCreateLegacyObject(new Account() { Name = "Inventory", Code = Constant.AccountCode.Inventory, LegacyCode = Constant.AccountLegacyCode.Inventory, Level = 2, Group = Constant.AccountGroup.Asset, ParentId = Asset.Id, IsLegacy = true });
+                TradingGoods = _accountService.FindOrCreateLegacyObject(new Account() { Name = "Trading Goods", IsLeaf = true, Code = Constant.AccountCode.TradingGoods, LegacyCode = Constant.AccountLegacyCode.TradingGoods, Level = 2, Group = Constant.AccountGroup.Asset, ParentId = Inventory.Id, IsLegacy = true });
 
                 Expense = _accountService.FindOrCreateLegacyObject(new Account() { Name = "Expense", Code = Constant.AccountCode.Expense, LegacyCode = Constant.AccountLegacyCode.Expense, Level = 1, Group = Constant.AccountGroup.Expense, IsLegacy = true });
                 COGS = _accountService.FindOrCreateLegacyObject(new Account() { Name = "Cost Of Goods Sold", IsLeaf = true, Code = Constant.AccountCode.COGS, LegacyCode = Constant.AccountLegacyCode.COGS, Level = 2, Group = Constant.AccountGroup.Expense, ParentId = Expense.Id, IsLegacy = true });
                 OperationalExpenses = _accountService.FindOrCreateLegacyObject(new Account() { Name = "Operational Expenses", Code = Constant.AccountCode.OperationalExpenses, LegacyCode = Constant.AccountLegacyCode.OperationalExpenses, Level = 2, Group = Constant.AccountGroup.Expense, ParentId = Expense.Id, IsLegacy = true });
-                CashBankAdjustmentExpense = _accountService.FindOrCreateLegacyObject(new Account() { Name = "CashBank Adjustment Expense", IsLeaf = true, Code = Constant.AccountCode.CashBankAdjustmentExpense, LegacyCode = Constant.AccountLegacyCode.CashBankAdjustmentExpense, Level = 2, Group = Constant.AccountGroup.Expense, ParentId = OperationalExpenses.Id, IsLegacy = true });
-                SalesDiscount = _accountService.FindOrCreateLegacyObject(new Account() { Name = "Sales Discount", IsLeaf = true, Code = Constant.AccountCode.SalesDiscountExpense, LegacyCode = Constant.AccountLegacyCode.SalesDiscountExpense, Level = 2, Group = Constant.AccountGroup.Expense, ParentId = OperationalExpenses.Id, IsLegacy = true });
-                SalesAllowance = _accountService.FindOrCreateLegacyObject(new Account() { Name = "Sales Allowance", IsLeaf = true, Code = Constant.AccountCode.SalesAllowanceExpense, LegacyCode = Constant.AccountLegacyCode.SalesAllowanceExpense, Level = 2, Group = Constant.AccountGroup.Expense, ParentId = OperationalExpenses.Id, IsLegacy = true });
-                StockAdjustmentExpense = _accountService.FindOrCreateLegacyObject(new Account() { Name = "Stock Adjustment Expense", IsLeaf = true, Code = Constant.AccountCode.StockAdjustmentExpense, LegacyCode = Constant.AccountLegacyCode.StockAdjustmentExpense, Level = 2, Group = Constant.AccountGroup.Expense, ParentId = OperationalExpenses.Id, IsLegacy = true });
-                SalesReturnExpense = _accountService.FindOrCreateLegacyObject(new Account() { Name = "Sales Return Expense", IsLeaf = true, Code = Constant.AccountCode.SalesReturnExpense, LegacyCode = Constant.AccountLegacyCode.SalesReturnExpense, Level = 2, Group = Constant.AccountGroup.Expense, ParentId = OperationalExpenses.Id, IsLegacy = true });
-                FreightIn = _accountService.FindOrCreateLegacyObject(new Account() { Name = "Freight In", IsLeaf = true, Code = Constant.AccountCode.FreightIn, LegacyCode = Constant.AccountLegacyCode.FreightIn, Level = 2, Group = Constant.AccountGroup.Expense, ParentId = OperationalExpenses.Id, IsLegacy = true });
+                FreightOutExpense = _accountService.FindOrCreateLegacyObject(new Account() { Name = "Freight Out Expenses", Code = Constant.AccountCode.FreightOutExpense, LegacyCode = Constant.AccountLegacyCode.FreightOutExpense, Level = 3, Group = Constant.AccountGroup.Expense, ParentId = OperationalExpenses.Id, IsLegacy = true });
+                CashBankAdjustmentExpense = _accountService.FindOrCreateLegacyObject(new Account() { Name = "CashBank Adjustment Expense", IsLeaf = true, Code = Constant.AccountCode.CashBankAdjustmentExpense, LegacyCode = Constant.AccountLegacyCode.CashBankAdjustmentExpense, Level = 2, Group = Constant.AccountGroup.Expense, ParentId = Expense.Id, IsLegacy = true });
+                SalesDiscount = _accountService.FindOrCreateLegacyObject(new Account() { Name = "Sales Discount", IsLeaf = true, Code = Constant.AccountCode.SalesDiscountExpense, LegacyCode = Constant.AccountLegacyCode.SalesDiscountExpense, Level = 2, Group = Constant.AccountGroup.Expense, ParentId = Expense.Id, IsLegacy = true });
+                SalesAllowance = _accountService.FindOrCreateLegacyObject(new Account() { Name = "Sales Allowance", IsLeaf = true, Code = Constant.AccountCode.SalesAllowanceExpense, LegacyCode = Constant.AccountLegacyCode.SalesAllowanceExpense, Level = 2, Group = Constant.AccountGroup.Expense, ParentId = Expense.Id, IsLegacy = true });
+                StockAdjustmentExpense = _accountService.FindOrCreateLegacyObject(new Account() { Name = "Stock Adjustment Expense", IsLeaf = true, Code = Constant.AccountCode.StockAdjustmentExpense, LegacyCode = Constant.AccountLegacyCode.StockAdjustmentExpense, Level = 2, Group = Constant.AccountGroup.Expense, ParentId = Expense.Id, IsLegacy = true });
+                SalesReturnExpense = _accountService.FindOrCreateLegacyObject(new Account() { Name = "Sales Return Expense", IsLeaf = true, Code = Constant.AccountCode.SalesReturnExpense, LegacyCode = Constant.AccountLegacyCode.SalesReturnExpense, Level = 2, Group = Constant.AccountGroup.Expense, ParentId = Expense.Id, IsLegacy = true });
+                FreightIn = _accountService.FindOrCreateLegacyObject(new Account() { Name = "Freight In", IsLeaf = true, Code = Constant.AccountCode.FreightIn, LegacyCode = Constant.AccountLegacyCode.FreightIn, Level = 2, Group = Constant.AccountGroup.Expense, ParentId = Expense.Id, IsLegacy = true });
                 // Memorial Expenses
-                NonOperationalExpenses = _accountService.FindOrCreateLegacyObject(new Account() { Name = "Non-Operational Expenses", Code = Constant.AccountCode.NonOperationalExpenses, LegacyCode = Constant.AccountLegacyCode.NonOperationalExpenses, Level = 2, Group = Constant.AccountGroup.Expense, ParentId = Expense.Id, IsLegacy = true });
-                TaxExpense = _accountService.FindOrCreateLegacyObject(new Account() { Name = "Tax Expense", IsLeaf = true, Code = Constant.AccountCode.Tax, LegacyCode = Constant.AccountLegacyCode.Tax, Level = 2, Group = Constant.AccountGroup.Expense, ParentId = NonOperationalExpenses.Id, IsLegacy = true });
-                Divident = _accountService.FindOrCreateLegacyObject(new Account() { Name = "Divident", IsLeaf = true, Code = Constant.AccountCode.Divident, LegacyCode = Constant.AccountLegacyCode.Divident, Level = 2, Group = Constant.AccountGroup.Expense, ParentId = NonOperationalExpenses.Id, IsLegacy = true });
-                InterestEarning = _accountService.FindOrCreateLegacyObject(new Account() { Name = "Interest Earning", IsLeaf = true, Code = Constant.AccountCode.InterestEarning, LegacyCode = Constant.AccountLegacyCode.InterestEarning, Level = 2, Group = Constant.AccountGroup.Expense, ParentId = NonOperationalExpenses.Id, IsLegacy = true });
-                Deprecation = _accountService.FindOrCreateLegacyObject(new Account() { Name = "Deprecation", IsLeaf = true, Code = Constant.AccountCode.Depreciation, LegacyCode = Constant.AccountLegacyCode.Depreciation, Level = 2, Group = Constant.AccountGroup.Expense, ParentId = NonOperationalExpenses.Id, IsLegacy = true });
-                Amortization = _accountService.FindOrCreateLegacyObject(new Account() { Name = "Amortization", IsLeaf = true, Code = Constant.AccountCode.Amortization, LegacyCode = Constant.AccountLegacyCode.Amortization, Level = 2, Group = Constant.AccountGroup.Expense, ParentId = NonOperationalExpenses.Id, IsLegacy = true });
+                //NonOperationalExpenses = _accountService.FindOrCreateLegacyObject(new Account() { Name = "Non-Operational Expenses", Code = Constant.AccountCode.NonOperationalExpenses, LegacyCode = Constant.AccountLegacyCode.NonOperationalExpenses, Level = 2, Group = Constant.AccountGroup.Expense, ParentId = Expense.Id, IsLegacy = true });
+                TaxExpense = _accountService.FindOrCreateLegacyObject(new Account() { Name = "Tax Expense", IsLeaf = true, Code = Constant.AccountCode.Tax, LegacyCode = Constant.AccountLegacyCode.Tax, Level = 2, Group = Constant.AccountGroup.Expense, ParentId = Expense.Id, IsLegacy = true });
+                Divident = _accountService.FindOrCreateLegacyObject(new Account() { Name = "Divident", IsLeaf = true, Code = Constant.AccountCode.Divident, LegacyCode = Constant.AccountLegacyCode.Divident, Level = 2, Group = Constant.AccountGroup.Expense, ParentId = Expense.Id, IsLegacy = true });
+                InterestEarning = _accountService.FindOrCreateLegacyObject(new Account() { Name = "Interest Earning", IsLeaf = true, Code = Constant.AccountCode.InterestEarning, LegacyCode = Constant.AccountLegacyCode.InterestEarning, Level = 2, Group = Constant.AccountGroup.Expense, ParentId = Expense.Id, IsLegacy = true });
+                Depreciation = _accountService.FindOrCreateLegacyObject(new Account() { Name = "Depreciation", IsLeaf = true, Code = Constant.AccountCode.Depreciation, LegacyCode = Constant.AccountLegacyCode.Depreciation, Level = 2, Group = Constant.AccountGroup.Expense, ParentId = Expense.Id, IsLegacy = true });
+                Amortization = _accountService.FindOrCreateLegacyObject(new Account() { Name = "Amortization", IsLeaf = true, Code = Constant.AccountCode.Amortization, LegacyCode = Constant.AccountLegacyCode.Amortization, Level = 2, Group = Constant.AccountGroup.Expense, ParentId = Expense.Id, IsLegacy = true });
                 
 
                 Liability = _accountService.FindOrCreateLegacyObject(new Account() { Name = "Liability", Code = Constant.AccountCode.Liability, LegacyCode = Constant.AccountLegacyCode.Liability, Level = 1, Group = Constant.AccountGroup.Liability, IsLegacy = true });
@@ -123,6 +125,7 @@ namespace WebView
 
         public void CreateUserMenus()
         {
+            _userMenuService.CreateObject(Constant.MenuName.CompanyInfo, Constant.MenuGroupName.Master);
             _userMenuService.CreateObject(Constant.MenuName.Contact, Constant.MenuGroupName.Master);
             _userMenuService.CreateObject(Constant.MenuName.ItemType, Constant.MenuGroupName.Master);
             _userMenuService.CreateObject(Constant.MenuName.UoM, Constant.MenuGroupName.Master);
@@ -132,7 +135,7 @@ namespace WebView
             _userMenuService.CreateObject(Constant.MenuName.CashBankAdjustment, Constant.MenuGroupName.Master);
             _userMenuService.CreateObject(Constant.MenuName.CashBankMutation, Constant.MenuGroupName.Master);
             _userMenuService.CreateObject(Constant.MenuName.CashMutation, Constant.MenuGroupName.Master);
-            _userMenuService.CreateObject(Constant.MenuName.PaymentRequest, Constant.MenuGroupName.Master);
+            _userMenuService.CreateObject(Constant.MenuName.Account, Constant.MenuGroupName.Master);
 
             _userMenuService.CreateObject(Constant.MenuName.Item, Constant.MenuGroupName.Master);
             _userMenuService.CreateObject(Constant.MenuName.StockAdjustment, Constant.MenuGroupName.Master);
@@ -145,8 +148,7 @@ namespace WebView
             //_userMenuService.CreateObject(Constant.MenuName.PurchaseReceival, Constant.MenuGroupName.Transaction);
             //_userMenuService.CreateObject(Constant.MenuName.PurchaseInvoice, Constant.MenuGroupName.Transaction);
             _userMenuService.CreateObject(Constant.MenuName.CustomPurchaseInvoice, Constant.MenuGroupName.Transaction);
-            _userMenuService.CreateObject(Constant.MenuName.PaymentVoucher, Constant.MenuGroupName.Transaction);
-            _userMenuService.CreateObject(Constant.MenuName.Payable, Constant.MenuGroupName.Transaction);
+            
 
             //_userMenuService.CreateObject(Constant.MenuName.SalesOrder, Constant.MenuGroupName.Transaction);
             //_userMenuService.CreateObject(Constant.MenuName.DeliveryOrder, Constant.MenuGroupName.Transaction);
@@ -157,21 +159,25 @@ namespace WebView
             
             _userMenuService.CreateObject(Constant.MenuName.ReceiptVoucher, Constant.MenuGroupName.Transaction);
             _userMenuService.CreateObject(Constant.MenuName.Receivable, Constant.MenuGroupName.Transaction);
+            _userMenuService.CreateObject(Constant.MenuName.PaymentVoucher, Constant.MenuGroupName.Transaction);
+            _userMenuService.CreateObject(Constant.MenuName.Payable, Constant.MenuGroupName.Transaction);
+            _userMenuService.CreateObject(Constant.MenuName.PaymentRequest, Constant.MenuGroupName.Transaction);
+            _userMenuService.CreateObject(Constant.MenuName.Memorial, Constant.MenuGroupName.Transaction);
+            _userMenuService.CreateObject(Constant.MenuName.Closing, Constant.MenuGroupName.Transaction);
+            _userMenuService.CreateObject(Constant.MenuName.GeneralLedger, Constant.MenuGroupName.Transaction);
+            _userMenuService.CreateObject(Constant.MenuName.ValidComb, Constant.MenuGroupName.Transaction);
 
             _userMenuService.CreateObject(Constant.MenuName.Item, Constant.MenuGroupName.Report);
+            _userMenuService.CreateObject(Constant.MenuName.Purchase, Constant.MenuGroupName.Report);
             _userMenuService.CreateObject(Constant.MenuName.Sales, Constant.MenuGroupName.Report);
             _userMenuService.CreateObject(Constant.MenuName.TopSales, Constant.MenuGroupName.Report);
             _userMenuService.CreateObject(Constant.MenuName.ProfitLoss, Constant.MenuGroupName.Report);
-            _userMenuService.CreateObject(Constant.MenuName.Account, Constant.MenuGroupName.Report);
-            _userMenuService.CreateObject(Constant.MenuName.Closing, Constant.MenuGroupName.Report);
-            _userMenuService.CreateObject(Constant.MenuName.GeneralLedger, Constant.MenuGroupName.Report);
-            _userMenuService.CreateObject(Constant.MenuName.ValidComb, Constant.MenuGroupName.Report);
+            
             _userMenuService.CreateObject(Constant.MenuName.BalanceSheet, Constant.MenuGroupName.Report);
             _userMenuService.CreateObject(Constant.MenuName.IncomeStatement, Constant.MenuGroupName.Report);
             
             _userMenuService.CreateObject(Constant.MenuName.User, Constant.MenuGroupName.Setting);
             _userMenuService.CreateObject(Constant.MenuName.UserAccessRight, Constant.MenuGroupName.Setting);
-            _userMenuService.CreateObject(Constant.MenuName.CompanyInfo, Constant.MenuGroupName.Setting);
         }
 
         public void CreateSysAdmin()

@@ -76,6 +76,8 @@ namespace Service.Service
         public Item CreateObject(Item item, IUoMService _uomService, IItemTypeService _itemTypeService, IWarehouseItemService _warehouseItemService, IWarehouseService _warehouseService, 
                                  IPriceMutationService _priceMutationService, IContactGroupService _contactGroupService)
         {
+            if (item.Sku != null) item.Sku = item.Sku.Trim();
+            if (item.Name != null) item.Name = item.Name.Trim();
             item.Errors = new Dictionary<String, String>();
             if (_validator.ValidCreateObject(item, _uomService, this, _itemTypeService))
             {
@@ -109,6 +111,8 @@ namespace Service.Service
 
         public Item UpdateObject(Item item, IUoMService _uomService, IItemTypeService _itemTypeService, IPriceMutationService _priceMutationService, IContactGroupService _contactGroupService)
         {
+            if (item.Sku != null) item.Sku = item.Sku.Trim();
+            if (item.Name != null) item.Name = item.Name.Trim();
             if (_validator.ValidUpdateObject(item, _uomService, this, _itemTypeService))
             {
                 ContactGroup contactGroup = _contactGroupService.GetObjectByIsLegacy(true);

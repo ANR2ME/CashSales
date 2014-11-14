@@ -30,9 +30,9 @@
         colModel: [
     			  { name: 'id', index: 'id', width: 80, align: "center", hidden: true },
 				  { name: 'period', index: 'period', width: 60 },
-				  { name: 'year', index: 'yearperiod', width: 60 },
+				  { name: 'yearperiod', index: 'yearperiod', width: 60 },
                   { name: 'beginning', index: 'beginningperiod', width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: "Y-m-d", newformat: "M d, Y" } },
-                  { name: 'enddate', index: 'enddateperiod', width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: "Y-m-d", newformat: "M d, Y" } },
+                  { name: 'enddateperiod', index: 'enddateperiod', width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: "Y-m-d", newformat: "M d, Y" } },
                   { name: 'isclosed', index: 'isclosed', width: 80, stype: 'select', editoptions: { value: ':;true:Closed;false:Opened' } },
                   { name: 'closing', index: 'closing', width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: "Y-m-d", newformat: "M d, Y" } }
         ],
@@ -91,8 +91,12 @@
     $('#btn_add_new').click(function () {
         ClearData();
         clearForm('#frm');
-        $('#BeginningPeriod').datebox('setValue', $.datepicker.formatDate('mm/dd/yy', new Date()));
-        $('#EndDatePeriod').datebox('setValue', $.datepicker.formatDate('mm/dd/yy', new Date()));
+        var date = new Date();
+        //date.setFullYear(14, 0, 1);
+        $('#Period').val(new Date().getMonth() + 1);
+        $('#YearPeriod').val(new Date().getFullYear());
+        $('#BeginningPeriod').datebox('setValue', $.datepicker.formatDate('mm/dd/yy', new Date(date.getFullYear(), date.getMonth(), 1)));
+        $('#EndDatePeriod').datebox('setValue', $.datepicker.formatDate('mm/dd/yy', new Date(date.getFullYear(), date.getMonth() + 1, 0)));
         vStatusSaving = 0; //add data mode	
         $('#form_div').dialog('open');
     });

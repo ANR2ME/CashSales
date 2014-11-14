@@ -77,7 +77,6 @@ namespace Validation.Validation
                 {
                     stockAdjustmentDetail.Errors.Add("Generic", "Stock di dalam warehouse tidak boleh kurang dari 0");
                 }
-
                 else if (_itemService.CalculateAvgPrice(item, stockAdjustmentDetail.Quantity, stockAdjustmentDetailPrice) < 0)
                 {
                     stockAdjustment.Errors.Add("Generic", "AvgPrice tidak boleh kurang dari 0");
@@ -86,6 +85,47 @@ namespace Validation.Validation
                 {
                     stockAdjustmentDetail.ConfirmationDate = stockAdjustment.ConfirmationDate;
                     _stockAdjustmentDetailService.GetValidator().ValidConfirmObject(stockAdjustmentDetail, _stockAdjustmentService, _itemService, _barringService, _warehouseItemService);
+                    if (stockAdjustmentDetail.Errors.Any())
+                    {
+                        stockAdjustment.Errors.Clear();
+                        foreach (var err in stockAdjustmentDetail.Errors)
+                        {
+                            stockAdjustment.Errors.Add("Generic", err.Key + " " + err.Value);
+                        }
+                        break;
+                    }
+                }
+            }
+            return stockAdjustment;
+        }
+
+        public StockAdjustment VDetailsAreVerifiedUnconfirmable(StockAdjustment stockAdjustment, IStockAdjustmentService _stockAdjustmentService, IStockAdjustmentDetailService _stockAdjustmentDetailService,
+                                                              IItemService _itemService, IBarringService _barringService, IWarehouseItemService _warehouseItemService)
+        {
+            IList<StockAdjustmentDetail> details = _stockAdjustmentDetailService.GetObjectsByStockAdjustmentId(stockAdjustment.Id);
+            foreach (var stockAdjustmentDetail in details)
+            {
+                stockAdjustmentDetail.Errors = new Dictionary<string, string>();
+                int stockAdjustmentDetailQuantity = stockAdjustmentDetail.Quantity;
+                decimal stockAdjustmentDetailPrice = stockAdjustmentDetail.Price;
+                Item item = _itemService.GetObjectById(stockAdjustmentDetail.ItemId);
+                WarehouseItem warehouseItem = _warehouseItemService.FindOrCreateObject(stockAdjustment.WarehouseId, item.Id);
+                if (item.Quantity - stockAdjustmentDetailQuantity < 0)
+                {
+                    stockAdjustment.Errors.Add("Generic", "Stock barang tidak boleh menjadi kurang dari 0");
+                }
+                else if (warehouseItem.Quantity - stockAdjustmentDetailQuantity < 0)
+                {
+                    stockAdjustmentDetail.Errors.Add("Generic", "Stock di dalam warehouse tidak boleh kurang dari 0");
+                }
+                else if (_itemService.CalculateAvgPrice(item, stockAdjustmentDetail.Quantity, stockAdjustmentDetailPrice) < 0)
+                {
+                    stockAdjustment.Errors.Add("Generic", "AvgPrice tidak boleh kurang dari 0");
+                }
+                else
+                {
+                    //stockAdjustmentDetail.ConfirmationDate = stockAdjustment.ConfirmationDate;
+                    _stockAdjustmentDetailService.GetValidator().ValidUnconfirmObject(stockAdjustmentDetail, _stockAdjustmentService, _itemService, _barringService, _warehouseItemService);
                     if (stockAdjustmentDetail.Errors.Any())
                     {
                         stockAdjustment.Errors.Clear();
@@ -174,6 +214,8 @@ namespace Validation.Validation
                                                 IItemService _itemService, IBarringService _barringService, IWarehouseItemService _warehouseItemService, IClosingService _closingService)
         {
             VHasBeenConfirmed(stockAdjustment);
+            if (!isValid(stockAdjustment)) { return stockAdjustment; }
+            VDetailsAreVerifiedUnconfirmable(stockAdjustment, _stockAdjustmentService, _stockAdjustmentDetailService, _itemService, _barringService, _warehouseItemService);
             if (!isValid(stockAdjustment)) { return stockAdjustment; }
             VGeneralLedgerPostingHasNotBeenClosed(stockAdjustment, _closingService, 2);
             return stockAdjustment;

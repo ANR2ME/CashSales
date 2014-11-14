@@ -34,7 +34,7 @@ namespace WebView.Controllers
 
         public ActionResult Index()
         {
-            if (!AuthenticationModel.IsAllowed("View", Constant.MenuName.Closing, Constant.MenuGroupName.Report))
+            if (!AuthenticationModel.IsAllowed("View", Constant.MenuName.Closing, Constant.MenuGroupName.Transaction))
             {
                 return Content(Constant.ErrorPage.PageViewNotAllowed);
             }
@@ -171,7 +171,7 @@ namespace WebView.Controllers
         {
             try
             {
-                if (!AuthenticationModel.IsAllowed("Create", Constant.MenuName.Closing, Constant.MenuGroupName.Report))
+                if (!AuthenticationModel.IsAllowed("Create", Constant.MenuName.Closing, Constant.MenuGroupName.Transaction))
                 {
                     Dictionary<string, string> Errors = new Dictionary<string, string>();
                     Errors.Add("Generic", "You are Not Allowed to Add Record");
@@ -207,7 +207,7 @@ namespace WebView.Controllers
         {
             try
             {
-                if (!AuthenticationModel.IsAllowed("Confirm", Constant.MenuName.Closing, Constant.MenuGroupName.Report))
+                if (!AuthenticationModel.IsAllowed("Confirm", Constant.MenuName.Closing, Constant.MenuGroupName.Transaction))
                 {
                     Dictionary<string, string> Errors = new Dictionary<string, string>();
                     Errors.Add("Generic", "You are Not Allowed to Close Record");
@@ -245,7 +245,7 @@ namespace WebView.Controllers
         {
             try
             {
-                if (!AuthenticationModel.IsAllowed("UnConfirm", Constant.MenuName.Closing, Constant.MenuGroupName.Report))
+                if (!AuthenticationModel.IsAllowed("UnConfirm", Constant.MenuName.Closing, Constant.MenuGroupName.Transaction))
                 {
                     Dictionary<string, string> Errors = new Dictionary<string, string>();
                     Errors.Add("Generic", "You are Not Allowed to Reopen Record");
@@ -283,7 +283,7 @@ namespace WebView.Controllers
             Dictionary<string, string> Errors = new Dictionary<string, string>();
             try
             {
-                if (!AuthenticationModel.IsAllowed("Delete", Constant.MenuName.Closing, Constant.MenuGroupName.Report))
+                if (!AuthenticationModel.IsAllowed("Delete", Constant.MenuName.Closing, Constant.MenuGroupName.Transaction))
                 {
                     Errors.Add("Generic", "You are Not Allowed to Delete Record");
                     return Json(new

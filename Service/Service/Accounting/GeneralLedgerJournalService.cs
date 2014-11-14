@@ -581,7 +581,7 @@ namespace Service.Service
 
             GeneralLedgerJournal creditinventory = new GeneralLedgerJournal()
             {
-                AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.Inventory).Id,
+                AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.TradingGoods).Id,
                 SourceDocument = Constant.GeneralLedgerSource.CashSalesInvoice,
                 SourceDocumentId = cashSalesInvoice.Id,
                 TransactionDate = (DateTime)cashSalesInvoice.ConfirmationDate,
@@ -614,7 +614,7 @@ namespace Service.Service
 
             GeneralLedgerJournal debitinventory = new GeneralLedgerJournal()
             {
-                AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.Inventory).Id,
+                AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.TradingGoods).Id,
                 SourceDocument = Constant.GeneralLedgerSource.CashSalesInvoice,
                 SourceDocumentId = cashSalesInvoice.Id,
                 TransactionDate = UnconfirmationDate,
@@ -819,7 +819,7 @@ namespace Service.Service
 
             GeneralLedgerJournal debitinventory = new GeneralLedgerJournal()
             {
-                AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.Inventory).Id,
+                AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.TradingGoods).Id,
                 SourceDocument = Constant.GeneralLedgerSource.CashSalesReturn,
                 SourceDocumentId = cashSalesReturn.Id,
                 TransactionDate = (DateTime)cashSalesReturn.ConfirmationDate,
@@ -852,7 +852,7 @@ namespace Service.Service
 
             GeneralLedgerJournal creditinventory = new GeneralLedgerJournal()
             {
-                AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.Inventory).Id,
+                AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.TradingGoods).Id,
                 SourceDocument = Constant.GeneralLedgerSource.CashSalesReturn,
                 SourceDocumentId = cashSalesReturn.Id,
                 TransactionDate = UnconfirmationDate,
@@ -964,7 +964,7 @@ namespace Service.Service
             {
                 GeneralLedgerJournal debitinventory = new GeneralLedgerJournal()
                 {
-                    AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.Inventory).Id,
+                    AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.TradingGoods).Id,
                     SourceDocument = Constant.GeneralLedgerSource.StockAdjustment,
                     SourceDocumentId = stockAdjustment.Id,
                     TransactionDate = (DateTime)stockAdjustment.ConfirmationDate,
@@ -1002,7 +1002,7 @@ namespace Service.Service
 
                 GeneralLedgerJournal creditinventory = new GeneralLedgerJournal()
                 {
-                    AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.Inventory).Id,
+                    AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.TradingGoods).Id,
                     SourceDocument = Constant.GeneralLedgerSource.StockAdjustment,
                     SourceDocumentId = stockAdjustment.Id,
                     TransactionDate = (DateTime)stockAdjustment.ConfirmationDate,
@@ -1027,7 +1027,7 @@ namespace Service.Service
             {
                 GeneralLedgerJournal creditinventory = new GeneralLedgerJournal()
                 {
-                    AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.Inventory).Id,
+                    AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.TradingGoods).Id,
                     SourceDocument = Constant.GeneralLedgerSource.StockAdjustment,
                     SourceDocumentId = stockAdjustment.Id,
                     TransactionDate = UnconfirmationDate,
@@ -1065,7 +1065,7 @@ namespace Service.Service
 
                 GeneralLedgerJournal debitinventory = new GeneralLedgerJournal()
                 {
-                    AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.Inventory).Id,
+                    AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.TradingGoods).Id,
                     SourceDocument = Constant.GeneralLedgerSource.StockAdjustment,
                     SourceDocumentId = stockAdjustment.Id,
                     TransactionDate = UnconfirmationDate,
@@ -1093,7 +1093,7 @@ namespace Service.Service
 
             GeneralLedgerJournal debitinventory = new GeneralLedgerJournal()
             {
-                AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.Inventory).Id,
+                AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.TradingGoods).Id,
                 SourceDocument = Constant.GeneralLedgerSource.CustomPurchaseInvoice,
                 SourceDocumentId = customPurchaseInvoice.Id,
                 TransactionDate = (DateTime)customPurchaseInvoice.ConfirmationDate,
@@ -1132,7 +1132,7 @@ namespace Service.Service
 
             GeneralLedgerJournal creditinventory = new GeneralLedgerJournal()
             {
-                AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.Inventory).Id,
+                AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.TradingGoods).Id,
                 SourceDocument = Constant.GeneralLedgerSource.CustomPurchaseInvoice,
                 SourceDocumentId = customPurchaseInvoice.Id,
                 TransactionDate = UnconfirmationDate,

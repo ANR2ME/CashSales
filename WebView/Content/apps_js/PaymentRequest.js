@@ -644,7 +644,7 @@
                   { name: 'parentcode', index: 'parentid', width: 80, classes: "grid-col" },
                   { name: 'parent', index: 'parent', width: 80 },
                   { name: 'islegacy', index: 'islegacy', width: 40, stype: 'select', editoptions: { value: ':;true:Y;false:N' } },
-                  { name: 'iscashbank', index: 'iscashbank', width: 60, stype: 'select', editoptions: { value: ':;true:Y;false:N' } },
+                  { name: 'iscashbankaccount', index: 'iscashbankaccount', width: 60, stype: 'select', editoptions: { value: ':;true:Y;false:N' } },
                   { name: 'legacycode', index: 'legacycode', width: 80, hidden: true },
         ],
         page: '1',
@@ -671,13 +671,13 @@
                  }
                  $(this).jqGrid('setRowData', ids[i], { islegacy: rowIsLegacy });
 
-                 rowIsCashBankAccount = $(this).getRowData(cl).iscashbank;
+                 rowIsCashBankAccount = $(this).getRowData(cl).iscashbankaccount;
                  if (rowIsCashBankAccount == 'true') {
                      rowIsCashBankAccount = "Y";
                  } else {
                      rowIsCashBankAccount = "N";
                  }
-                 $(this).jqGrid('setRowData', ids[i], { iscashbank: rowIsCashBankAccount });
+                 $(this).jqGrid('setRowData', ids[i], { iscashbankaccount: rowIsCashBankAccount });
 
                  rowIsLeaf = $(this).getRowData(cl).isleaf;
                  if (rowIsLeaf == 'true') {
@@ -693,11 +693,11 @@
                  } else if (rowGroup == 2) {
                      rowGroup = "Expense";
                  } else if (rowGroup == 3) {
-                     rowGroup = "Equity";
-                 } else if (rowGroup == 4) {
-                     rowGroup = "Revenue";
-                 } else if (rowGroup == 5) {
                      rowGroup = "Liability";
+                 } else if (rowGroup == 4) {
+                     rowGroup = "Equity";
+                 } else if (rowGroup == 5) {
+                     rowGroup = "Revenue";
                  }
                  $(this).jqGrid('setRowData', ids[i], { group: rowGroup });
 
@@ -705,7 +705,7 @@
          }
     });
     $("#lookup_table_account").jqGrid('navGrid', '#lookup_toolbar_account', { del: false, add: false, edit: false, search: false })
-           .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: false });
+           .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: true });
 
     // Cancel or CLose
     $('#lookup_btn_cancel_account').click(function () {

@@ -265,6 +265,7 @@
     <Content Include="Content\apps_js\CashSalesReturn.js" />
     <Content Include="Content\apps_js\Company.js" />
     <Content Include="Content\apps_js\BalanceSheet.js" />
+    <Content Include="Content\apps_js\ReportItemDetail.js" />
     <Content Include="Content\apps_js\ReportPurchaseDetail.js" />
     <Content Include="Content\apps_js\ReportPurchase.js" />
     <Content Include="Content\apps_js\ReportSalesDetail.js" />
@@ -1088,6 +1089,12 @@
     <Content Include="Reports\General\PurchaseDetail.ttx" />
     <Content Include="Reports\General\SalesDetail.rpt" />
     <Content Include="Reports\General\SalesDetail.ttx" />
+    <Content Include="Reports\General\ItemDetail.rpt" />
+    <Content Include="Reports\General\ItemDetail.ttx" />
+    <Content Include="Reports\Finance\COA.rpt" />
+    <Content Include="Reports\Finance\COA.ttx" />
+    <Content Include="Reports\Finance\IncStt.rpt" />
+    <Content Include="Reports\Finance\IncStt.ttx" />
     <None Include="Scripts\jquery-1.7.1.intellisense.js" />
     <Content Include="Scripts\collapsiblePanel.js" />
     <Content Include="Scripts\jquery-1.1.3.1.pack.js" />
@@ -1258,6 +1265,7 @@
     <Content Include="Views\Report\SalesDetail.cshtml" />
     <Content Include="Views\Report\Purchase.cshtml" />
     <Content Include="Views\Report\PurchaseDetail.cshtml" />
+    <Content Include="Views\Report\ItemDetail.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

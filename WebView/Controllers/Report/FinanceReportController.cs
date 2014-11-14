@@ -85,9 +85,10 @@ namespace WebView.Controllers
             if (closing == null) return Content(Constant.ErrorPage.ClosingNotFound);
 
             ValidComb Revenue = _validCombService.FindOrCreateObjectByAccountAndClosing(_accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.Revenue).Id, closing.Id);
+            //ValidComb Sales = _validCombService.FindOrCreateObjectByAccountAndClosing(_accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.SalesRevenue).Id, closing.Id);
             ValidComb COGS = _validCombService.FindOrCreateObjectByAccountAndClosing(_accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.COGS).Id, closing.Id);
             // Memorial Expenses
-            ValidComb OperationalExpenses = _validCombService.FindOrCreateObjectByAccountAndClosing(_accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.OperationalExpenses).Id, closing.Id);
+            //ValidComb OperationalExpenses = _validCombService.FindOrCreateObjectByAccountAndClosing(_accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.OperationalExpenses).Id, closing.Id);
             ValidComb InterestEarning = _validCombService.FindOrCreateObjectByAccountAndClosing(_accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.InterestEarning).Id, closing.Id);
             ValidComb Depreciation = _validCombService.FindOrCreateObjectByAccountAndClosing(_accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.Depreciation).Id, closing.Id);
             ValidComb Amortization = _validCombService.FindOrCreateObjectByAccountAndClosing(_accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.Amortization).Id, closing.Id);
@@ -103,7 +104,7 @@ namespace WebView.Controllers
                 EndDate = closing.EndDatePeriod.Date,
                 Revenue = Revenue.Amount,
                 COGS = COGS.Amount,
-                OperationalExpenses = OperationalExpenses.Amount,
+                OperationalExpenses = 0, //OperationalExpenses.Amount,
                 InterestEarning = InterestEarning.Amount,
                 Depreciation = Depreciation.Amount,
                 Amortization = Amortization.Amount,

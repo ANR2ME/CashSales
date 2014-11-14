@@ -10,6 +10,7 @@ using Data.Repository;
 using Validation.Validation;
 using System.Linq.Dynamic;
 using System.Data.Entity;
+using Core.Constants;
 
 namespace WebView.Controllers
 {
@@ -25,7 +26,7 @@ namespace WebView.Controllers
 
         public ActionResult Index()
         {
-            if (!AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.CompanyInfo, Core.Constants.Constant.MenuGroupName.Setting))
+            if (!AuthenticationModel.IsAllowed("View", Constant.MenuName.CompanyInfo, Constant.MenuGroupName.Master))
             {
                 return Content(Core.Constants.Constant.ErrorPage.PageViewNotAllowed);
             }
@@ -178,7 +179,7 @@ namespace WebView.Controllers
         {
             try
             {
-                if (!AuthenticationModel.IsAllowed("Create", Core.Constants.Constant.MenuName.CompanyInfo, Core.Constants.Constant.MenuGroupName.Setting))
+                if (!AuthenticationModel.IsAllowed("Create", Constant.MenuName.CompanyInfo, Constant.MenuGroupName.Master))
                 {
                     Dictionary<string, string> Errors = new Dictionary<string, string>();
                     Errors.Add("Generic", "You are Not Allowed to Add record");
@@ -214,7 +215,7 @@ namespace WebView.Controllers
         {
             try
             {
-                if (!AuthenticationModel.IsAllowed("Edit", Core.Constants.Constant.MenuName.CompanyInfo, Core.Constants.Constant.MenuGroupName.Setting))
+                if (!AuthenticationModel.IsAllowed("Edit", Constant.MenuName.CompanyInfo, Constant.MenuGroupName.Master))
                 {
                     Dictionary<string, string> Errors = new Dictionary<string, string>();
                     Errors.Add("Generic", "You are Not Allowed to Edit record");
@@ -256,7 +257,7 @@ namespace WebView.Controllers
         {
             try
             {
-                if (!AuthenticationModel.IsAllowed("Delete", Core.Constants.Constant.MenuName.CompanyInfo, Core.Constants.Constant.MenuGroupName.Setting))
+                if (!AuthenticationModel.IsAllowed("Delete", Constant.MenuName.CompanyInfo, Constant.MenuGroupName.Master))
                 {
                     Dictionary<string, string> Errors = new Dictionary<string, string>();
                     Errors.Add("Generic", "You are Not Allowed to Delete Record");

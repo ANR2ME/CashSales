@@ -196,24 +196,26 @@ namespace Service
                 _accountService.FindOrCreateLegacyObject(new Account() { Name = "Account Receivable (PPN masuk)", IsLeaf = true, Code = Constant.AccountCode.AccountReceivablePPNmasukan, LegacyCode = Constant.AccountLegacyCode.AccountReceivablePPNmasukan, Level = 3, Group = Constant.AccountGroup.Asset, ParentId = AccountReceivable.Id, IsLegacy = true });
                 _accountService.FindOrCreateLegacyObject(new Account() { Name = "Account Receivable (Trading)", IsLeaf = true, Code = Constant.AccountCode.AccountReceivableTrading, LegacyCode = Constant.AccountLegacyCode.AccountReceivableTrading, Level = 3, Group = Constant.AccountGroup.Asset, ParentId = AccountReceivable.Id, IsLegacy = true });
                 _accountService.FindOrCreateLegacyObject(new Account() { Name = "GBCH Receivable", IsLeaf = true, Code = Constant.AccountCode.GBCHReceivable, LegacyCode = Constant.AccountLegacyCode.GBCHReceivable, Level = 2, Group = Constant.AccountGroup.Asset, ParentId = Asset.Id, IsLegacy = true });
-                _accountService.FindOrCreateLegacyObject(new Account() { Name = "Inventory", IsLeaf = true, Code = Constant.AccountCode.Inventory, LegacyCode = Constant.AccountLegacyCode.Inventory, Level = 2, Group = Constant.AccountGroup.Asset, ParentId = Asset.Id, IsLegacy = true });
+                Account Inventory = _accountService.FindOrCreateLegacyObject(new Account() { Name = "Inventory", Code = Constant.AccountCode.Inventory, LegacyCode = Constant.AccountLegacyCode.Inventory, Level = 2, Group = Constant.AccountGroup.Asset, ParentId = Asset.Id, IsLegacy = true });
+                _accountService.FindOrCreateLegacyObject(new Account() { Name = "Trading Goods", IsLeaf = true, Code = Constant.AccountCode.TradingGoods, LegacyCode = Constant.AccountLegacyCode.TradingGoods, Level = 3, Group = Constant.AccountGroup.Asset, ParentId = Inventory.Id, IsLegacy = true });
 
                 Account Expense = _accountService.FindOrCreateLegacyObject(new Account() { Name = "Expense", Code = Constant.AccountCode.Expense, LegacyCode = Constant.AccountLegacyCode.Expense, Level = 1, Group = Constant.AccountGroup.Expense, IsLegacy = true });
                 _accountService.FindOrCreateLegacyObject(new Account() { Name = "Cost Of Goods Sold", IsLeaf = true, Code = Constant.AccountCode.COGS, LegacyCode = Constant.AccountLegacyCode.COGS, Level = 2, Group = Constant.AccountGroup.Expense, ParentId = Expense.Id, IsLegacy = true });
                 Account OperationalExpenses = _accountService.FindOrCreateLegacyObject(new Account() { Name = "Operational Expenses", Code = Constant.AccountCode.OperationalExpenses, LegacyCode = Constant.AccountLegacyCode.OperationalExpenses, Level = 2, Group = Constant.AccountGroup.Expense, ParentId = Expense.Id, IsLegacy = true });
-                _accountService.FindOrCreateLegacyObject(new Account() { Name = "CashBank Adjustment Expense", IsLeaf = true, Code = Constant.AccountCode.CashBankAdjustmentExpense, LegacyCode = Constant.AccountLegacyCode.CashBankAdjustmentExpense, Level = 2, Group = Constant.AccountGroup.Expense, ParentId = OperationalExpenses.Id, IsLegacy = true });
-                _accountService.FindOrCreateLegacyObject(new Account() { Name = "Sales Discount", IsLeaf = true, Code = Constant.AccountCode.SalesDiscountExpense, LegacyCode = Constant.AccountLegacyCode.SalesDiscountExpense, Level = 2, Group = Constant.AccountGroup.Expense, ParentId = OperationalExpenses.Id, IsLegacy = true });
-                _accountService.FindOrCreateLegacyObject(new Account() { Name = "Sales Allowance", IsLeaf = true, Code = Constant.AccountCode.SalesAllowanceExpense, LegacyCode = Constant.AccountLegacyCode.SalesAllowanceExpense, Level = 2, Group = Constant.AccountGroup.Expense, ParentId = OperationalExpenses.Id, IsLegacy = true });
-                _accountService.FindOrCreateLegacyObject(new Account() { Name = "Stock Adjustment Expense", IsLeaf = true, Code = Constant.AccountCode.StockAdjustmentExpense, LegacyCode = Constant.AccountLegacyCode.StockAdjustmentExpense, Level = 2, Group = Constant.AccountGroup.Expense, ParentId = OperationalExpenses.Id, IsLegacy = true });
-                _accountService.FindOrCreateLegacyObject(new Account() { Name = "Sales Return Expense", IsLeaf = true, Code = Constant.AccountCode.SalesReturnExpense, LegacyCode = Constant.AccountLegacyCode.SalesReturnExpense, Level = 2, Group = Constant.AccountGroup.Expense, ParentId = OperationalExpenses.Id, IsLegacy = true });
-                _accountService.FindOrCreateLegacyObject(new Account() { Name = "Freight In", IsLeaf = true, Code = Constant.AccountCode.FreightIn, LegacyCode = Constant.AccountLegacyCode.FreightIn, Level = 2, Group = Constant.AccountGroup.Expense, ParentId = OperationalExpenses.Id, IsLegacy = true });
+                _accountService.FindOrCreateLegacyObject(new Account() { Name = "Freight Out Expenses", Code = Constant.AccountCode.FreightOutExpense, LegacyCode = Constant.AccountLegacyCode.FreightOutExpense, Level = 3, Group = Constant.AccountGroup.Expense, ParentId = OperationalExpenses.Id, IsLegacy = true });
+                _accountService.FindOrCreateLegacyObject(new Account() { Name = "CashBank Adjustment Expense", IsLeaf = true, Code = Constant.AccountCode.CashBankAdjustmentExpense, LegacyCode = Constant.AccountLegacyCode.CashBankAdjustmentExpense, Level = 2, Group = Constant.AccountGroup.Expense, ParentId = Expense.Id, IsLegacy = true });
+                _accountService.FindOrCreateLegacyObject(new Account() { Name = "Sales Discount", IsLeaf = true, Code = Constant.AccountCode.SalesDiscountExpense, LegacyCode = Constant.AccountLegacyCode.SalesDiscountExpense, Level = 2, Group = Constant.AccountGroup.Expense, ParentId = Expense.Id, IsLegacy = true });
+                _accountService.FindOrCreateLegacyObject(new Account() { Name = "Sales Allowance", IsLeaf = true, Code = Constant.AccountCode.SalesAllowanceExpense, LegacyCode = Constant.AccountLegacyCode.SalesAllowanceExpense, Level = 2, Group = Constant.AccountGroup.Expense, ParentId = Expense.Id, IsLegacy = true });
+                _accountService.FindOrCreateLegacyObject(new Account() { Name = "Stock Adjustment Expense", IsLeaf = true, Code = Constant.AccountCode.StockAdjustmentExpense, LegacyCode = Constant.AccountLegacyCode.StockAdjustmentExpense, Level = 2, Group = Constant.AccountGroup.Expense, ParentId = Expense.Id, IsLegacy = true });
+                _accountService.FindOrCreateLegacyObject(new Account() { Name = "Sales Return Expense", IsLeaf = true, Code = Constant.AccountCode.SalesReturnExpense, LegacyCode = Constant.AccountLegacyCode.SalesReturnExpense, Level = 2, Group = Constant.AccountGroup.Expense, ParentId = Expense.Id, IsLegacy = true });
+                _accountService.FindOrCreateLegacyObject(new Account() { Name = "Freight In", IsLeaf = true, Code = Constant.AccountCode.FreightIn, LegacyCode = Constant.AccountLegacyCode.FreightIn, Level = 2, Group = Constant.AccountGroup.Expense, ParentId = Expense.Id, IsLegacy = true });
                 // Memorial Expenses
-                Account NonOperationalExpenses = _accountService.FindOrCreateLegacyObject(new Account() { Name = "Non-Operational Expenses", Code = Constant.AccountCode.NonOperationalExpenses, LegacyCode = Constant.AccountLegacyCode.NonOperationalExpenses, Level = 2, Group = Constant.AccountGroup.Expense, ParentId = Expense.Id, IsLegacy = true });
-                _accountService.FindOrCreateLegacyObject(new Account() { Name = "Tax Expense", IsLeaf = true, Code = Constant.AccountCode.Tax, LegacyCode = Constant.AccountLegacyCode.Tax, Level = 2, Group = Constant.AccountGroup.Expense, ParentId = NonOperationalExpenses.Id, IsLegacy = true });
-                _accountService.FindOrCreateLegacyObject(new Account() { Name = "Divident", IsLeaf = true, Code = Constant.AccountCode.Divident, LegacyCode = Constant.AccountLegacyCode.Divident, Level = 2, Group = Constant.AccountGroup.Expense, ParentId = NonOperationalExpenses.Id, IsLegacy = true });
-                _accountService.FindOrCreateLegacyObject(new Account() { Name = "Interest Earning", IsLeaf = true, Code = Constant.AccountCode.InterestEarning, LegacyCode = Constant.AccountLegacyCode.InterestEarning, Level = 2, Group = Constant.AccountGroup.Expense, ParentId = NonOperationalExpenses.Id, IsLegacy = true });
-                _accountService.FindOrCreateLegacyObject(new Account() { Name = "Deprecation", IsLeaf = true, Code = Constant.AccountCode.Depreciation, LegacyCode = Constant.AccountLegacyCode.Depreciation, Level = 2, Group = Constant.AccountGroup.Expense, ParentId = NonOperationalExpenses.Id, IsLegacy = true });
-                _accountService.FindOrCreateLegacyObject(new Account() { Name = "Amortization", IsLeaf = true, Code = Constant.AccountCode.Amortization, LegacyCode = Constant.AccountLegacyCode.Amortization, Level = 2, Group = Constant.AccountGroup.Expense, ParentId = NonOperationalExpenses.Id, IsLegacy = true });
+                //Account NonOperationalExpenses = _accountService.FindOrCreateLegacyObject(new Account() { Name = "Non-Operational Expenses", Code = Constant.AccountCode.NonOperationalExpenses, LegacyCode = Constant.AccountLegacyCode.NonOperationalExpenses, Level = 2, Group = Constant.AccountGroup.Expense, ParentId = Expense.Id, IsLegacy = true });
+                _accountService.FindOrCreateLegacyObject(new Account() { Name = "Tax Expense", IsLeaf = true, Code = Constant.AccountCode.Tax, LegacyCode = Constant.AccountLegacyCode.Tax, Level = 2, Group = Constant.AccountGroup.Expense, ParentId = Expense.Id, IsLegacy = true });
+                _accountService.FindOrCreateLegacyObject(new Account() { Name = "Divident", IsLeaf = true, Code = Constant.AccountCode.Divident, LegacyCode = Constant.AccountLegacyCode.Divident, Level = 2, Group = Constant.AccountGroup.Expense, ParentId = Expense.Id, IsLegacy = true });
+                _accountService.FindOrCreateLegacyObject(new Account() { Name = "Interest Earning", IsLeaf = true, Code = Constant.AccountCode.InterestEarning, LegacyCode = Constant.AccountLegacyCode.InterestEarning, Level = 2, Group = Constant.AccountGroup.Expense, ParentId = Expense.Id, IsLegacy = true });
+                _accountService.FindOrCreateLegacyObject(new Account() { Name = "Depreciation", IsLeaf = true, Code = Constant.AccountCode.Depreciation, LegacyCode = Constant.AccountLegacyCode.Depreciation, Level = 2, Group = Constant.AccountGroup.Expense, ParentId = Expense.Id, IsLegacy = true });
+                _accountService.FindOrCreateLegacyObject(new Account() { Name = "Amortization", IsLeaf = true, Code = Constant.AccountCode.Amortization, LegacyCode = Constant.AccountLegacyCode.Amortization, Level = 2, Group = Constant.AccountGroup.Expense, ParentId = Expense.Id, IsLegacy = true });
                 
 
                 Account Liability = _accountService.FindOrCreateLegacyObject(new Account() { Name = "Liability", Code = Constant.AccountCode.Liability, LegacyCode = Constant.AccountLegacyCode.Liability, Level = 1, Group = Constant.AccountGroup.Liability, IsLegacy = true });
@@ -281,6 +283,7 @@ namespace Service
             {
                 foreach (var tableName in Enumerable.Reverse(masterDatas))
                 {
+                    if (tableName == "UserAccess" || tableName == "UserMenu") continue;
                     var a = db.Database.SqlQuery<string>(string.Format("select '[' + name + '], ' as [text()] from sys.columns where object_id = object_id('Temp{0}') for xml path('')", tableName)).ToList(); // where object_id = object_id('{0}')
                     string b = "";
                     foreach (var c in a) b += c;
@@ -788,9 +791,10 @@ namespace Service
                 // DisAllow defining the ID (also Set SEED to the highest Id)
                 foreach (var tableName in userDatas)
                 {
+                    // Strange Behaviour http://stackoverflow.com/questions/472578/dbcc-checkident-sets-identity-to-0
                     int? maxid = db.Database.SqlQuery<int?>(string.Format("SELECT MAX(Id) FROM {0}", tableName)).FirstOrDefault();
-                    if (maxid == null) maxid = 0;
-                    db.Database.ExecuteSqlCommand(string.Format("DBCC CHECKIDENT ({0}, RESEED, {1});", tableName, maxid.Value));
+                    if (maxid == null || maxid <= 0) maxid = 1; // if RESEED=0, ID will start from 0 if it's newly created table (don't have record yet), if it already have record RESEED=0 will start from ID=1
+                    db.Database.ExecuteSqlCommand(string.Format("DBCC CHECKIDENT ('{0}', RESEED, {1});", tableName, maxid.GetValueOrDefault()));
                     db.Database.ExecuteSqlCommand(string.Format("SET IDENTITY_INSERT [dbo].[{0}] OFF;", tableName));
                 }
 
@@ -807,7 +811,7 @@ namespace Service
                 {
                     //try
                     {
-                        db.Database.ExecuteSqlCommand(string.Format("DBCC CHECKIDENT (Temp{0}, RESEED, 0); ALTER TABLE Temp{0} NOCHECK CONSTRAINT ALL; DELETE FROM Temp{0};", tableName)); // ALTER TABLE Temp{0} DROP CONSTRAINT ALL; // ALTER TABLE Temp{0} CHECK CONSTRAINT ALL;
+                        db.Database.ExecuteSqlCommand(string.Format("DBCC CHECKIDENT (Temp{0}, RESEED, 1); ALTER TABLE Temp{0} NOCHECK CONSTRAINT ALL; DELETE FROM Temp{0};", tableName)); // ALTER TABLE Temp{0} DROP CONSTRAINT ALL; // ALTER TABLE Temp{0} CHECK CONSTRAINT ALL;
                     }
                     //catch (Exception ex)
                     {
@@ -817,7 +821,7 @@ namespace Service
 
                 foreach (var tableName in masterDatas)
                 {
-                    db.Database.ExecuteSqlCommand(string.Format("DBCC CHECKIDENT (Temp{0}, RESEED, 0); ALTER TABLE Temp{0} NOCHECK CONSTRAINT ALL; DELETE FROM Temp{0};", tableName));
+                    db.Database.ExecuteSqlCommand(string.Format("DBCC CHECKIDENT (Temp{0}, RESEED, 1); ALTER TABLE Temp{0} NOCHECK CONSTRAINT ALL; DELETE FROM Temp{0};", tableName));
                 }
             }
             return 0;
@@ -869,7 +873,7 @@ namespace Service
 
                 foreach (var tableName in tableNames)
                 {
-                    db.Database.ExecuteSqlCommand(string.Format("DBCC CHECKIDENT ({0}, RESEED, 0); ALTER TABLE {0} NOCHECK CONSTRAINT ALL; DELETE FROM {0}; ALTER TABLE {0} CHECK CONSTRAINT ALL;", tableName));
+                    db.Database.ExecuteSqlCommand(string.Format("DBCC CHECKIDENT ({0}, RESEED, 1); ALTER TABLE {0} NOCHECK CONSTRAINT ALL; DELETE FROM {0}; ALTER TABLE {0} CHECK CONSTRAINT ALL;", tableName));
                 }
 
                 //foreach (var tableName in tableNames)

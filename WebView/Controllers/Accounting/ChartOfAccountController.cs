@@ -26,7 +26,7 @@ namespace WebView.Controllers
 
         public ActionResult Index()
         {
-            if (!AuthenticationModel.IsAllowed("View", Constant.MenuName.Account, Constant.MenuGroupName.Report))
+            if (!AuthenticationModel.IsAllowed("View", Constant.MenuName.Account, Constant.MenuGroupName.Master))
             {
                 return Content(Constant.ErrorPage.PageViewNotAllowed);
             }
@@ -212,7 +212,9 @@ namespace WebView.Controllers
              GeneralFunction.ConstructWhereInLinq(strWhere, out filter);
              if (filter == "") filter = "true";
 
-             var q = _accountService.GetQueryable().Where(x => x.Level == Level && x.Group == Group && !x.IsDeleted);
+             var q = _accountService.GetQueryable().Where(x => x.Level == Level && x.Group == Group && !x.IsDeleted 
+                 //&& ((!x.IsLegacy && !x.IsCashBankAccount) || !x.IsLeaf)
+                 );
 
              var query = (from model in q
                           select new
@@ -304,7 +306,7 @@ namespace WebView.Controllers
         {
             try
             {
-                if (!AuthenticationModel.IsAllowed("Create", Constant.MenuName.Account, Constant.MenuGroupName.Report))
+                if (!AuthenticationModel.IsAllowed("Create", Constant.MenuName.Account, Constant.MenuGroupName.Master))
                 {
                     Dictionary<string, string> Errors = new Dictionary<string, string>();
                     Errors.Add("Generic", "You are Not Allowed to Add record");
@@ -341,17 +343,36 @@ namespace WebView.Controllers
         {
             try
             {
+                if (!AuthenticationModel.IsAllowed("Edit", Core.Constants.Constant.MenuName.Account, Core.Constants.Constant.MenuGroupName.Master))
+                {
+                    Dictionary<string, string> Errors = new Dictionary<string, string>();
+                    Errors.Add("Generic", "You are Not Allowed to Edit Record");
+
+                    return Json(new
+                    {
+                        Errors
+                    }, JsonRequestBehavior.AllowGet);
+                }
+
                 var data = _accountService.GetObjectById(model.Id);
                 int? oldparentid = data.ParentId;
-                data.Code = model.Code;
                 data.Name = model.Name;
-                data.Group = model.Group;
-                data.Level = model.Level;
-                data.ParentId = model.ParentId;
-                //data.IsLegacy = model.IsLegacy;
-                //data.IsCashBankAccount = model.IsCashBankAccount;
-                data.LegacyCode = model.LegacyCode;
-                model = _accountService.UpdateObject(data, oldparentid);
+                if (!data.IsLegacy)
+                {
+                    data.Code = model.Code;
+                    data.Group = model.Group;
+                    data.Level = model.Level;
+                    data.ParentId = model.ParentId;
+                    //data.IsLegacy = model.IsLegacy;
+                    //data.IsCashBankAccount = model.IsCashBankAccount;
+                    data.LegacyCode = model.LegacyCode;
+                    model = _accountService.UpdateObject(data, oldparentid);
+                }
+                else
+                {
+                    model = _accountService.UpdateObjectForLegacy(data, oldparentid);
+                }
+                
             }
             catch (Exception ex)
             {
@@ -370,7 +391,7 @@ namespace WebView.Controllers
         {
             try
             {
-                if (!AuthenticationModel.IsAllowed("Delete", Core.Constants.Constant.MenuName.Account, Core.Constants.Constant.MenuGroupName.Report))
+                if (!AuthenticationModel.IsAllowed("Delete", Core.Constants.Constant.MenuName.Account, Core.Constants.Constant.MenuGroupName.Master))
                 {
                     Dictionary<string, string> Errors = new Dictionary<string, string>();
                     Errors.Add("Generic", "You are Not Allowed to Delete Record");

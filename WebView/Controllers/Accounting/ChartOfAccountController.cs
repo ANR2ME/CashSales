@@ -81,7 +81,8 @@ namespace WebView.Controllers
                              IsLegacy = model.IsLegacy,
                              IsCashBankAccount = model.IsCashBankAccount,
                              LegacyCode = model.LegacyCode,
-                             model.IsLeaf
+                             model.IsLeaf,
+                             model.IsUsedBySystem,
                          }).Where(filter).OrderBy(sidx + " " + sord); //.ToList();
 
 
@@ -119,12 +120,14 @@ namespace WebView.Controllers
                              model.Name,
                              model.Group,
                              model.Level,
+                             model.ParentId,
                              model.ParentCode,
                              model.Parent,
                              model.IsLegacy,
                              model.IsCashBankAccount,
                              model.LegacyCode,
-                             model.IsLeaf
+                             model.IsLeaf,
+                             model.IsUsedBySystem,
                       }
                     }).ToArray()
             }, JsonRequestBehavior.AllowGet);
@@ -156,7 +159,8 @@ namespace WebView.Controllers
                               Parent = newaccount.Name,
                               IsLegacy = model.IsLegacy,
                               IsCashBankAccount = model.IsCashBankAccount,
-                              LegacyCode = model.LegacyCode
+                              LegacyCode = model.LegacyCode,
+                              model.IsUsedBySystem,
                           }).Where(filter).OrderBy(sidx + " " + sord); //.ToList();
 
 
@@ -194,11 +198,13 @@ namespace WebView.Controllers
                              model.Name,
                              model.Group,
                              model.Level,
+                             model.ParentId,
                              model.ParentCode,
                              model.Parent,
                              model.IsLegacy,
                              model.IsCashBankAccount,
                              model.LegacyCode,
+                             model.IsUsedBySystem,
                       }
                      }).ToArray()
              }, JsonRequestBehavior.AllowGet);
@@ -297,6 +303,7 @@ namespace WebView.Controllers
                  model.IsCashBankAccount,
                  model.LegacyCode,
                  model.IsLeaf,
+                 model.IsUsedBySystem,
                  model.Errors
              }, JsonRequestBehavior.AllowGet);
          }

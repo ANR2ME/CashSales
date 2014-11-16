@@ -9,7 +9,7 @@
 	}
 
 	function ReloadGrid() {
-		$("#list").setGridParam({ url: base_url + 'CashSalesReturn/GetList', postData: { filters: null }, page: 1 }).trigger("reloadGrid");
+	    $("#list").setGridParam({ url: base_url + 'CashSalesReturn/GetList?findSKU=' + $('#findSKU').val(), postData: { filters: null }, page: 1 }).trigger("reloadGrid");
 	}
 
 	function ReloadGridBySKU() {
@@ -115,6 +115,11 @@
 
 	$('#btn_find').click(function () {
 	    ReloadGridBySKU();
+	});
+
+	$('#findSKU').keypress(function (e) {
+	    if (e.keyCode == 13)
+	        $('#btn_find').click();
 	});
 
 	//TOOL BAR BUTTON

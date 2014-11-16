@@ -873,7 +873,7 @@ namespace Service.Service
 
             GeneralLedgerJournal creditpayable = new GeneralLedgerJournal()
             {
-                AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.AccountPayable).Id,
+                AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.AccountPayableTrading).Id,
                 SourceDocument = Constant.GeneralLedgerSource.CashSalesReturn,
                 SourceDocumentId = cashSalesReturn.Id,
                 TransactionDate = (DateTime)cashSalesReturn.ConfirmationDate,
@@ -918,7 +918,7 @@ namespace Service.Service
 
             GeneralLedgerJournal debitpayable = new GeneralLedgerJournal()
             {
-                AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.AccountPayable).Id,
+                AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.AccountPayableTrading).Id,
                 SourceDocument = Constant.GeneralLedgerSource.CashSalesReturn,
                 SourceDocumentId = cashSalesReturn.Id,
                 TransactionDate = UnconfirmationDate,

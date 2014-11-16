@@ -46,7 +46,7 @@ namespace WebView.Controllers
             return View();
         }
 
-        public dynamic GetList(string _search, long nd, int rows, int? page, string sidx, string sord, string filters = "")
+        public dynamic GetList(string _search, long nd, int rows, int? page, string sidx, string sord, string filters = "", string findSKU = "")
         {
             // Construct where statement
             string strWhere = GeneralFunction.ConstructWhere(filters);
@@ -55,7 +55,7 @@ namespace WebView.Controllers
             if (filter == "") filter = "true";
 
             // Get Data
-            var q = _warehouseMutationOrderService.GetQueryable().Include("WarehouseFrom").Include("WarehouseTo");
+            var q = _warehouseMutationOrderService.GetQueryable().Include("WarehouseFrom").Include("WarehouseTo").Include("WarehouseMutationOrderDetails").Where(x => findSKU == "" || x.WarehouseMutationOrderDetails.Where(y => y.Item.Sku.Contains(findSKU)).FirstOrDefault() != null);
 
             var query = (from model in q
                          select new
@@ -135,8 +135,10 @@ namespace WebView.Controllers
                              model.Id,
                              model.Code,
                              model.ItemId,
+                             itemSku = model.Item.Sku,
                              item = model.Item.Name,
-                             model.Quantity
+                             model.Quantity,
+                             uom = model.Item.UoM.Name,
                          }).Where(filter).OrderBy(sidx + " " + sord); //.ToList();
 
             var list = query.AsEnumerable();
@@ -170,8 +172,10 @@ namespace WebView.Controllers
                         cell = new object[] {
                             model.Code,
                             model.ItemId,
+                            model.itemSku,
                             model.item,
-                            model.Quantity
+                            model.Quantity,
+                            model.uom,
                       }
                     }).ToArray()
             }, JsonRequestBehavior.AllowGet);

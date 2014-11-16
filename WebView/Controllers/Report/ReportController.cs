@@ -164,7 +164,7 @@ namespace WebView.Controllers
             var db = new OffsetPrintingSuppliesEntities();
             using (db)
             {
-                var q = db.WarehouseItems.Include("Warehouse").Include("Item").Include("ItemType").Include("UoM").Where(x => (warehouseId <= 0 || x.WarehouseId == warehouseId));
+                var q = db.WarehouseItems.Include("Warehouse").Include("Item").Include("ItemType").Include("UoM").Where(x => !x.IsDeleted && (warehouseId <= 0 || x.WarehouseId == warehouseId));
                 var p = db.CustomPurchaseInvoiceDetails.Include(x => x.Item).Include(x => x.CustomPurchaseInvoice).Where(x => !x.CustomPurchaseInvoice.IsDeleted && x.CustomPurchaseInvoice.IsConfirmed && x.CustomPurchaseInvoice.ConfirmationDate.Value >= startDay/* && x.CustomPurchaseInvoice.ConfirmationDate.Value < endDay*/);
                 var s = db.CashSalesInvoiceDetails.Include(x => x.Item).Include(x => x.CashSalesInvoice).Where(x => !x.CashSalesInvoice.IsDeleted && x.CashSalesInvoice.IsConfirmed && x.CashSalesInvoice.ConfirmationDate.Value >= startDay/* && x.CashSalesInvoice.ConfirmationDate.Value < endDay*/);
                 var rs = db.CashSalesReturnDetails.Include(x => x.CashSalesInvoiceDetail).Include(x => x.CashSalesReturn).Where(x => !x.CashSalesReturn.IsDeleted && x.CashSalesReturn.IsConfirmed && x.CashSalesReturn.ConfirmationDate.Value >= startDay/* && x.CashSalesReturn.ConfirmationDate.Value < endDay*/);

@@ -9,7 +9,16 @@
     }
 
     function ReloadGrid() {
-        $("#list").setGridParam({ url: base_url + 'WarehouseMutationOrder/GetList', postData: { filters: null }, page: 1 }).trigger("reloadGrid");
+        $("#list").setGridParam({ url: base_url + 'WarehouseMutationOrder/GetList?findSKU=' + $('#findSKU').val(), postData: { filters: null }, page: 1 }).trigger("reloadGrid");
+    }
+
+    function ReloadGridBySKU() {
+        // Clear Search string jqGrid
+        //$('input[id*="gs_"]').val("");
+
+        var findSKU = $('#findSKU').val();
+
+        $("#list").setGridParam({ url: base_url + 'WarehouseMutationOrder/GetList', postData: { filters: null, findSKU: findSKU }, page: '1' }).trigger("reloadGrid");
     }
 
     function ReloadGridDetail() {
@@ -99,6 +108,15 @@
     //TOOL BAR BUTTON
     $('#btn_reload').click(function () {
         ReloadGrid();
+    });
+
+    $('#btn_find').click(function () {
+        ReloadGridBySKU();
+    });
+
+    $('#findSKU').keypress(function (e) {
+        if (e.keyCode == 13)
+            $('#btn_find').click();
     });
 
     $('#btn_print').click(function () {
@@ -405,19 +423,21 @@
     $("#listdetail").jqGrid({
         url: base_url,
         datatype: "json",
-        colNames: ['Code', 'Item Id', 'Item Name', 'Quantity',
+        colNames: ['Code', 'Item Id', 'Item SKU', 'Item Name', 'Quantity', 'UoM'
         ],
         colModel: [
                   { name: 'code', index: 'code', width: 100 },
-				  { name: 'itemid', index: 'itemid', width: 100, hidden: true },
-                  { name: 'item', index: 'item', width: 80 },
-                  { name: 'quantity', index: 'quantity', width: 100, formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: false },
+				  { name: 'itemid', index: 'itemid', width: 80, hidden: true },
+                  { name: 'itemsku', index: 'itemsku', width: 100 },
+                  { name: 'item', index: 'item', width: 150 },
+                  { name: 'quantity', index: 'quantity', width: 100, formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' } },
+                  { name: 'uom', index: 'uom', width: 80, sortable: true },
         ],
         page: '1',
         pager: $('#pagerdetail'),
         rowNum: 20,
         rowList: [20, 30, 60],
-        sortname: 'Code',
+        sortname: 'code',
         viewrecords: true,
         scrollrows: true,
         shrinkToFit: false,

@@ -71,6 +71,7 @@ namespace Service.Service
                         Code = Code,
                         IsCashBankAccount = true,
                         IsLeaf = true,
+                        IsUsedBySystem = true,
                         ParentId = parent.Id,
                         Level = parent.Level + 1,
                         LegacyCode = Constant.AccountLegacyCode.CashBank + cashBank.Id.ToString("D3"),
@@ -144,7 +145,7 @@ namespace Service.Service
             {
                 if (_accountService.GetObjectByLegacyCode(parentCode + newId.ToString("D3")) == null)
                 {
-                    return parentCode + newId.ToString();
+                    return parentCode + newId.ToString("D3");
                 }
                 newId += 1;
             }

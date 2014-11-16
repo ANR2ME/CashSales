@@ -108,6 +108,11 @@
         ReloadGridBySKU();
     });
 
+    $('#findSKU').keypress(function (e) {
+        if (e.keyCode == 13)
+            $('#btn_find').click();
+    });
+
     //TOOL BAR BUTTON
     $('#btn_reload').click(function () {
         ReloadGrid();
@@ -428,11 +433,11 @@
         colNames: ['Code', 'Item Id', 'Item SKU', 'Item Name', 'Quantity', 'UoM', 'Price'],
         colModel: [
                   { name: 'code', index: 'code', width: 80, sortable: true },
-				  { name: 'itemid', index: 'itemid', width: 100, hidden: true, sortable: true },
-                  { name: 'itemsku', index: 'itemsku', width: 80, sortable: true },
-                  { name: 'item', index: 'item', width: 100, sortable: true },
+				  { name: 'itemid', index: 'itemid', width: 80, hidden: true, sortable: true },
+                  { name: 'itemsku', index: 'itemsku', width: 100, sortable: true },
+                  { name: 'item', index: 'item', width: 150, sortable: true },
                   //{ name: 'itemtype', index: 'itemtype', width: 100, sortable: true },
-                  { name: 'quantity', index: 'quantity', width: 100, formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: true },
+                  { name: 'quantity', index: 'quantity', width: 80, formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: true },
                   { name: 'uom', index: 'uom', width: 80, sortable: true },
                   { name: 'price', index: 'price', width: 100, formatter: 'currency', sortable: true, formatoptions: { decimalSeparator: ".", thousandsSeparator: ",", decimalPlaces: 0, prefix: "", suffix: "", defaultValue: '0.00' } },
         ],

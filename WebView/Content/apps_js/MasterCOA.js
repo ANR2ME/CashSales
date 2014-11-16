@@ -25,19 +25,21 @@
     $("#list_mstcoa").jqGrid({
         url: base_url + 'ChartOfAccount/GetList',
         datatype: "json",
-        colNames: ['Id', 'Account Code', 'Account Name', 'Group', 'Level', 'Parent Code', 'Parent Name', 'Legacy','CashBank', 'Legacy Code', 'Leaf'],
+        colNames: ['ID', 'Account Code', 'Account Name', 'Group', 'Level', 'Parent ID', 'Parent Code', 'Parent Name', 'Legacy','Cash&Bank', 'Legacy Code', 'Leaf', 'Used By System'],
         colModel: [
 				  { name: 'Id', index: 'Id', width: 40, hidden: true},
 				  { name: 'Code', index: 'Code', width: 80, classes: "grid-col" },
 				  { name: 'name', index: 'name', width: 250 },
                   { name: 'group', index: 'group', width: 90 },
                   { name: 'level', index: 'level', width: 50 },
+                  { name: 'parentid', index: 'parentid', width: 40, hidden: true },
                   { name: 'parentcode', index: 'parentid', width: 80, classes: "grid-col" },
-                  { name: 'parent', index: 'parent', width: 150 },
+                  { name: 'parent', index: 'parent', width: 200 },
                   { name: 'islegacy', index: 'islegacy', width: 40, stype: 'select', editoptions: { value: ':;true:Y;false:N' } },
-                  { name: 'iscashbankaccount', index: 'iscashbankaccount', width: 60, stype: 'select', editoptions: { value: ':;true:Y;false:N' } },
+                  { name: 'iscashbankaccount', index: 'iscashbankaccount', width: 70, stype: 'select', editoptions: { value: ':;true:Y;false:N' } },
                   { name: 'legacycode', index: 'legacycode', width: 80, hidden: true },
                   { name: 'isleaf', index: 'isleaf', width: 40, stype: 'select', editoptions: { value: ':;true:Y;false:N' } },
+                  { name: 'isusedbysystem', index: 'isusedbysystem', width: 90, stype: 'select', editoptions: { value: ':;true:Y;false:N' } },
         ],
         page: '1',
         pager: $('#pager_mstcoa'),
@@ -78,6 +80,14 @@
                 rowIsLeaf = "N";
             }
             $(this).jqGrid('setRowData', ids[i], { isleaf: rowIsLeaf });
+
+            rowIsSystem = $(this).getRowData(cl).isusedbysystem;
+            if (rowIsSystem == 'true') {
+                rowIsSystem = "Y";
+            } else {
+                rowIsSystem = "N";
+            }
+            $(this).jqGrid('setRowData', ids[i], { isusedbysystem: rowIsSystem });
 
             rowGroup = $(this).getRowData(cl).group;
             if (rowGroup == 1) {
@@ -191,6 +201,49 @@
     $('#mstcoa_btn_add_new').click(function () {
         ClearData();
         clearForm('#frm');
+        var id = jQuery("#list_mstcoa").jqGrid('getGridParam', 'selrow');
+        if (id) {
+            // vStatusSaving = 1;//edit data mode
+            var ret = jQuery("#list_mstcoa").jqGrid('getRowData', id);
+            $('#ParentId').val(ret.Id);
+            $('#ParentCode').val(ret.Code);
+            $('#ParentName').val(ret.name);
+            $('#Code').val(ret.Code);
+            switch (ret.group) {
+                case ("Asset"):
+                    $('#radiogroup1').prop('checked', true);
+                    break;
+                case ("Expense"):
+                    $('#radiogroup2').prop('checked', true);
+                    break;
+                case ("Liability"):
+                    $('#radiogroup3').prop('checked', true);
+                    break;
+                case ("Equity"):
+                    $('#radiogroup4').prop('checked', true);
+                    break;
+                case ("Revenue"):
+                    $('#radiogroup5').prop('checked', true);
+                    break;
+            }
+            switch (parseInt(ret.level) + 1) {
+                case (1):
+                    $('#radiolevel1').prop('checked', true);
+                    break;
+                case (2):
+                    $('#radiolevel2').prop('checked', true);
+                    break;
+                case (3):
+                    $('#radiolevel3').prop('checked', true);
+                    break;
+                case (4):
+                    $('#radiolevel4').prop('checked', true);
+                    break;
+                case (5):
+                    $('#radiolevel5').prop('checked', true);
+                    break;
+            }
+        }
         $('#mstcoa_form_div').dialog('open');
     });
 

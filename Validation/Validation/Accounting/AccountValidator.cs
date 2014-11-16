@@ -108,6 +108,10 @@ namespace Validation.Validation
                     {
                         account.Errors.Add("Parent", "Tidak ada");
                     }
+                    else if (parent.IsLeaf && parent.IsUsedBySystem)
+                    {
+                        account.Errors.Add("Parent", "Tidak boleh ada account anak pada account yang digunakan oleh System");
+                    }
                 }
             }
             return account;

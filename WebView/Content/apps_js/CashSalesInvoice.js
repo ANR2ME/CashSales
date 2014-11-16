@@ -9,16 +9,18 @@
 	}
 
 	function ReloadGrid() {
-		$("#list").setGridParam({ url: base_url + 'CashSalesInvoice/GetList', postData: { filters: null }, page: 1 }).trigger("reloadGrid");
+	    //findSku = $('#findSKU').val();
+
+	    $("#list").setGridParam({ url: base_url + 'CashSalesInvoice/GetList?findSKU=' + $('#findSKU').val(), postData: { filters: null }, page: 1 }).trigger("reloadGrid");
 	}
 
 	function ReloadGridBySKU() {
 	    // Clear Search string jqGrid
 	    //$('input[id*="gs_"]').val("");
 
-	    var findSKU = $('#findSKU').val();
+	    //findSku = $('#findSKU').val();
 
-	    $("#list").setGridParam({ url: base_url + 'CashSalesInvoice/GetList', postData: { filters: null, findSKU: findSKU }, page: '1' }).trigger("reloadGrid");
+	    $("#list").setGridParam({ url: base_url + 'CashSalesInvoice/GetList?findSKU=' + $('#findSKU').val(), postData: { filters: null }, page: '1' }).trigger("reloadGrid");
 	}
 
 	function ReloadGridDetail() {
@@ -84,7 +86,7 @@
 
 	//GRID +++++++++++++++
 	$("#list").jqGrid({
-		url: base_url + 'CashSalesInvoice/GetList',
+	    url: base_url + 'CashSalesInvoice/GetList',
 		datatype: "json",
 		colNames: ['ID', 'Code', 'Description', 
 				   'Discount', 'Tax', 'Delivery Cost', 'Allowance', 'Amount Paid', 'Total', 'CoGS', 'Profit/Loss', 'Is Confirmed', 'Confirmation Date',
@@ -181,6 +183,11 @@
 
     $('#btn_find').click(function () {
         ReloadGridBySKU();
+    });
+
+    $('#findSKU').keypress(function (e) {
+        if (e.keyCode == 13)
+            $('#btn_find').click();
     });
 
 	//TOOL BAR BUTTON

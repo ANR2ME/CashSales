@@ -264,5 +264,20 @@ namespace Service.Service
             }
             return count;
         }
+
+        public string GetGroupName(int Group)
+        {
+            string name = "";
+            switch (Group)
+            {
+                case 1: name = "Asset"; break;
+                case 2: name = "Expense"; break;
+                case 3: name = "Liability"; break;
+                case 4: name = "Equity"; break;
+                case 5: name = "Revenue"; break;
+            }
+            return name;
+        }
+
     }
 }

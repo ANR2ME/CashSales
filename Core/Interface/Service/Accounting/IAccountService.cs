@@ -32,5 +32,6 @@ namespace Core.Interface.Service
         Account SoftDeleteObjectForLegacy(Account account);
         bool DeleteObject(int Id);
         bool IsCodeDuplicated(Account account);
+        string GetGroupName(int Group);
     }
 }

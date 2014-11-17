@@ -13,6 +13,7 @@ using System.Linq.Dynamic;
 using System.Data.Entity;
 using Core.DomainModel;
 using Core.Constants;
+using Data.Context;
 
 namespace WebView.Controllers
 {
@@ -40,6 +41,22 @@ namespace WebView.Controllers
             public decimal Amortization { get; set; }
             public decimal Tax { get; set; }
             public decimal Divident { get; set; }
+        }
+
+        public class ModelIncomeStatementDetail
+        {
+            public string CompanyName { get; set; }
+            public DateTime Date { get; set; }
+            public DateTime RangeDate { get; set; }
+            public string Title { get; set; }
+            public string JenisRange { get; set; }
+            public decimal Current { get; set; }
+            public decimal Previous { get; set; }
+            public string Group { get; set; }
+            public string Level { get; set; }
+            public string GroupLevel { get; set; }
+            public string AccountCode { get; set; }
+            public string Unaudited { get; set; }
         }
 
         public class ModelBalanceSheet
@@ -125,6 +142,61 @@ namespace WebView.Controllers
 
             var stream = rd.ExportToStream(CrystalDecisions.Shared.ExportFormatType.PortableDocFormat);
             return File(stream, "application/pdf");
+        }
+
+        public ActionResult IncomeStatementDetail()
+        {
+            if (!AuthenticationModel.IsAllowed("View", Constant.MenuName.IncomeStatement, Constant.MenuGroupName.Report))
+            {
+                return Content(Constant.ErrorPage.PageViewNotAllowed);
+            }
+
+            return View();
+        }
+
+        // Revenue - Expense - TaxExpense - Divident = NetEarnings
+        public ActionResult ReportIncomeStatementDetail(int period, int yearPeriod)
+        {
+            DateTime startDate = new DateTime(yearPeriod, period, 1);
+            DateTime prevStartDate = startDate.AddMonths(-1);
+            var company = _companyService.GetQueryable().FirstOrDefault();
+            Closing closing = _closingService.GetObjectByPeriodAndYear(period, yearPeriod);
+
+            if (closing == null) return Content(Constant.ErrorPage.ClosingNotFound);
+            var db = new OffsetPrintingSuppliesEntities();
+            using (db)
+            {
+                var q = db.ValidCombs.Include("Closing").Include("Account").Where(x => x.Closing.BeginningPeriod == startDate).OrderBy(x => x.Account.Code);
+                var prevq = db.ValidCombs.Include("Closing").Include("Account").Where(x => x.Closing.BeginningPeriod == prevStartDate); //.OrderByDescending(x => x.Closing.EndDatePeriod);
+
+                var query = (from model in q
+                             select new
+                             {
+                                 CompanyName = company.Name,
+                                 Date = model.Closing.BeginningPeriod,
+                                 RangeDate = model.Closing.EndDatePeriod,
+                                 Title = model.Account.Name,
+                                 JenisRange = "Monthly",
+                                 Current = model.Amount,
+                                 Previous = (decimal?)prevq.Where(x => x.AccountId == model.AccountId).FirstOrDefault().Amount ?? 0,
+                                 Group = _accountService.GetGroupName(model.Account.Group), // "Sales (Netto)", "Cost of Goods Sold"
+                                 Level = model.Account.Level.ToString(), // not used
+                                 GroupLevel = "1", // "EXP", "IMP", "DOM"
+                                 AccountCode = model.Account.Code,
+                                 Unaudited = "",
+                             }).ToList();
+
+                var rd = new ReportDocument();
+
+                //Loading Report
+                rd.Load(Server.MapPath("~/") + "Reports/Finance/IncStt.rpt");
+
+                // Setting report data source
+                rd.SetDataSource(query);
+
+                var stream = rd.ExportToStream(CrystalDecisions.Shared.ExportFormatType.PortableDocFormat);
+                return File(stream, "application/pdf");
+            }
         }
 
         public ActionResult BalanceSheet()

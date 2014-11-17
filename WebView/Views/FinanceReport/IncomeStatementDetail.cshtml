@@ -1,0 +1,121 @@
+﻿@{
+    ViewBag.Title = "Income Statement Detail Report";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section Head {
+
+}
+@section Scripts {
+    <script type="text/javascript" src="@Url.Content("~/Content/apps_js/tools.js")"></script>
+
+    <script type="text/javascript">
+        function myformatter(date) {
+            var y = date.getFullYear();
+            var m = date.getMonth() + 1;
+            var d = date.getDate();
+            return y + '-' + (m < 10 ? ('0' + m) : m) + '-' + (d < 10 ? ('0' + d) : d);
+        }
+
+        function myparser(s) {
+            if (!s) return new Date();
+            var ss = (s.split('-'));
+            var y = parseInt(ss[0], 10);
+            var m = parseInt(ss[1], 10);
+            var d = parseInt(ss[2], 10);
+            if (!isNaN(y) && !isNaN(m) && !isNaN(d)) {
+                return new Date(y, m - 1, d);
+            } else {
+                return new Date();
+            }
+        }
+    </script>
+}
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        var today = new Date();
+        var vTahun = "";
+        var vBulan = "";
+
+        document.getElementById("cboTahun").selectedIndex = 10;
+        document.getElementById("cboBulan").selectedIndex = new Date().getMonth();
+
+        $(' #txtcompanyname').attr("disabled", true);
+
+        $('#btnprint').click(function () {
+
+            vTahun = $("#cboTahun").val();
+            vBulan = $('#cboBulan').val();
+
+            window.open(base_url + "FinanceReport/ReportIncomeStatementDetail?period=" + vBulan + "&yearPeriod=" + vTahun);
+        });
+
+        $.ajax({
+            dataType: "json",
+            url: base_url + "Company/GetDefaultInfo",
+            success: function (result) {
+                if (result.Id == null) {
+                    $.messager.alert('Information', 'Data Not Found...!!', 'info');
+                }
+                else {
+                    $('#txtcompanyname').val(result.Name);
+                }
+            }
+        });
+
+    });
+</script>
+
+<!--  Dialog Payable Cost List -->
+<div id="summarygl" class="easyui-panel" title="Income Statement Report" style="width: 600px; padding: 10px 10px 10px 30px;">
+    <table width="100%" border="0">
+        <tr>
+            <td width="27%">Company</td>
+            <td colspan="3">
+                <input id="txtcompanyname" type="text" size="47" maxlength="47" align="left" value="Company Name" /></td>
+        </tr>
+        <tr>
+            <td>Period</td>
+            <td colspan="3">
+                Month:
+                <select name="cboBulan" id="cboBulan" style="width: 150px;">
+                    <option value="1">January</option>
+                    <option value="2">February</option>
+                    <option value="3">March</option>
+                    <option value="4">April</option>
+                    <option value="5">May</option>
+                    <option value="6">June</option>
+                    <option value="7">July</option>
+                    <option value="8">August</option>
+                    <option value="9">September</option>
+                    <option value="10">October</option>
+                    <option value="11">November</option>
+                    <option value="12">December</option>
+                </select>
+                &nbsp;&nbsp;
+                Year:
+                <select name="cboTahun" id="cboTahun">
+                    @for (int i = DateTime.Today.Year - 10; i <= DateTime.Today.Year + 1; i++)
+                    {
+                        <option value="@i">@i</option>
+                    }
+                </select>
+            </td>
+            <td>&nbsp;</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td colspan="4" align="right">&nbsp;</td>
+        </tr>
+        <tr>
+            <td>&nbsp;</td>
+            <td><a id="btnprint" href="#" class="easyui-linkbutton" iconcls="icon-print">Print</a></td>
+        </tr>
+        <tr>
+            <td colspan="4" align="right">&nbsp;</td>
+        </tr>
+    </table>
+</div>
+<!-- END Dialog Payable Cost List -->
+

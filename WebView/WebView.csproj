@@ -1266,6 +1266,7 @@
     <Content Include="Views\Report\Purchase.cshtml" />
     <Content Include="Views\Report\PurchaseDetail.cshtml" />
     <Content Include="Views\Report\ItemDetail.cshtml" />
+    <Content Include="Views\FinanceReport\IncomeStatementDetail.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

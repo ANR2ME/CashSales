@@ -90,7 +90,7 @@ namespace Validation.Validation
                 }
                 case (2): // Unconfirm
                 {
-                    if (_closingService.IsDateClosed(DateTime.Now))
+                    if (_closingService.IsDateClosed(cashBankAdjustment.ConfirmationDate.GetValueOrDefault()))
                     {
                         cashBankAdjustment.Errors.Add("Generic", "Ledger sudah tutup buku");
                     }

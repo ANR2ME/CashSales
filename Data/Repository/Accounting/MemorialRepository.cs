@@ -79,7 +79,7 @@ namespace Data.Repository
         public Memorial UnconfirmObject(Memorial memorial)
         {
             memorial.IsConfirmed = false;
-            memorial.ConfirmationDate = null;
+            //memorial.ConfirmationDate = null;
             UpdateObject(memorial);
             return memorial;
         }

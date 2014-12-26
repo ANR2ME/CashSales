@@ -71,13 +71,14 @@ namespace Validation.Validation
             return cashSalesInvoiceDetail;
         }*/
 
-        public CashSalesInvoiceDetail VIsValidQuantityOrdered(CashSalesInvoiceDetail cashSalesInvoiceDetail, ICashSalesInvoiceService _cashSalesInvoiceService, IWarehouseItemService _warehouseItemService)
+        public CashSalesInvoiceDetail VIsValidQuantityOrdered(CashSalesInvoiceDetail cashSalesInvoiceDetail, ICashSalesInvoiceService _cashSalesInvoiceService, IWarehouseItemService _warehouseItemService, IItemService _itemService)
         {
             CashSalesInvoice cashSalesInvoice = _cashSalesInvoiceService.GetObjectById(cashSalesInvoiceDetail.CashSalesInvoiceId);
+            Item item = _itemService.GetObjectById(cashSalesInvoiceDetail.ItemId);
             WarehouseItem warehouseItem = _warehouseItemService.FindOrCreateObject(cashSalesInvoice.WarehouseId, cashSalesInvoiceDetail.ItemId);
             if (warehouseItem.Quantity - cashSalesInvoiceDetail.Quantity < 0)
             {
-                cashSalesInvoiceDetail.Errors.Add("Generic", "Quantity harus lebih kecil atau sama dengan WarehouseItem Quantity");
+                cashSalesInvoiceDetail.Errors.Add("Generic", String.Format("Quantity Item(SKU:{0}) harus lebih kecil atau sama dengan WarehouseItem Quantity", item.Sku));
                 return cashSalesInvoiceDetail;
             }
             return cashSalesInvoiceDetail;
@@ -86,10 +87,11 @@ namespace Validation.Validation
         public CashSalesInvoiceDetail VIsValidQuantity(CashSalesInvoiceDetail cashSalesInvoiceDetail, ICashSalesInvoiceService _cashSalesInvoiceService, IWarehouseItemService _warehouseItemService)
         {
             CashSalesInvoice cashSalesInvoice = _cashSalesInvoiceService.GetObjectById(cashSalesInvoiceDetail.CashSalesInvoiceId);
-            WarehouseItem warehouseItem = _warehouseItemService.FindOrCreateObject(cashSalesInvoice.WarehouseId, cashSalesInvoiceDetail.ItemId);
-            if (cashSalesInvoiceDetail.Quantity <= 0 || cashSalesInvoiceDetail.Quantity > warehouseItem.Quantity)
+            //WarehouseItem warehouseItem = _warehouseItemService.FindOrCreateObject(cashSalesInvoice.WarehouseId, cashSalesInvoiceDetail.ItemId);
+            if (cashSalesInvoiceDetail.Quantity <= 0 /*|| cashSalesInvoiceDetail.Quantity > warehouseItem.Quantity*/)
             {
-                cashSalesInvoiceDetail.Errors.Add("Quantity", "Quantity harus lebih besar dari 0 dan lebih kecil atau sama dengan WarehouseItem Quantity");
+                //cashSalesInvoiceDetail.Errors.Add("Quantity", "Quantity harus lebih besar dari 0 dan lebih kecil atau sama dengan WarehouseItem Quantity");
+                cashSalesInvoiceDetail.Errors.Add("Quantity", "Quantity harus lebih besar dari 0");
                 return cashSalesInvoiceDetail;
             }
             return cashSalesInvoiceDetail;
@@ -113,9 +115,9 @@ namespace Validation.Validation
             return cashSalesInvoiceDetail;
         }
 
-        public CashSalesInvoiceDetail VConfirmObject(CashSalesInvoiceDetail cashSalesInvoiceDetail, ICashSalesInvoiceService _cashSalesInvoiceService, IWarehouseItemService _warehouseItemService)
+        public CashSalesInvoiceDetail VConfirmObject(CashSalesInvoiceDetail cashSalesInvoiceDetail, ICashSalesInvoiceService _cashSalesInvoiceService, IWarehouseItemService _warehouseItemService, IItemService _itemService)
         {
-            VIsValidQuantityOrdered(cashSalesInvoiceDetail, _cashSalesInvoiceService, _warehouseItemService);
+            VIsValidQuantityOrdered(cashSalesInvoiceDetail, _cashSalesInvoiceService, _warehouseItemService, _itemService);
             return cashSalesInvoiceDetail;
         }
 
@@ -142,8 +144,8 @@ namespace Validation.Validation
             VHasItem(cashSalesInvoiceDetail, _itemService);
             if (!isValid(cashSalesInvoiceDetail)) { return cashSalesInvoiceDetail; }
             VUniqueItem(cashSalesInvoiceDetail, _cashSalesInvoiceDetailService, _itemService);
-            if (!isValid(cashSalesInvoiceDetail)) { return cashSalesInvoiceDetail; }
-            VConfirmObject(cashSalesInvoiceDetail, _cashSalesInvoiceService, _warehouseItemService);
+            //if (!isValid(cashSalesInvoiceDetail)) { return cashSalesInvoiceDetail; }
+            //VConfirmObject(cashSalesInvoiceDetail, _cashSalesInvoiceService, _warehouseItemService, _itemService);
             //if (!isValid(cashSalesInvoiceDetail)) { return cashSalesInvoiceDetail; }
             //VHasQuantityPricing(cashSalesInvoiceDetail, _itemService, _quantityPricingService);
             return cashSalesInvoiceDetail;
@@ -172,10 +174,10 @@ namespace Validation.Validation
             return isValid(cashSalesInvoiceDetail);
         }
 
-        public bool ValidConfirmObject(CashSalesInvoiceDetail cashSalesInvoiceDetail, ICashSalesInvoiceService _cashSalesInvoiceService, IWarehouseItemService _warehouseItemService)
+        public bool ValidConfirmObject(CashSalesInvoiceDetail cashSalesInvoiceDetail, ICashSalesInvoiceService _cashSalesInvoiceService, IWarehouseItemService _warehouseItemService, IItemService _itemService)
         {
             cashSalesInvoiceDetail.Errors.Clear();
-            VConfirmObject(cashSalesInvoiceDetail, _cashSalesInvoiceService, _warehouseItemService);
+            VConfirmObject(cashSalesInvoiceDetail, _cashSalesInvoiceService, _warehouseItemService, _itemService);
             return isValid(cashSalesInvoiceDetail);
         }
 

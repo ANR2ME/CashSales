@@ -16,17 +16,17 @@ namespace Core.Constants
 
         public class GeneralLedgerSource
         {
-            public static string CashBankAdjustment = "CashBankAdjustment";
-            public static string CashBankMutation = "CashBankMutation";
-            public static string CashSalesInvoice = "CashSalesInvoice";
-            public static string CashSalesReturn = "CashSalesReturn";
-            public static string CustomPurchaseInvoice = "CustomPurchaseInvoice";
-            public static string Memorial = "Memorial";
-            public static string PaymentRequest = "PaymentRequest";
-            public static string PaymentVoucher = "PaymentVoucher";
-            public static string ReceiptVoucher = "ReceiptVoucher";
-            public static string RetailSalesInvoice = "RetailSalesInvoice";
-            public static string StockAdjustment = "StockAdjustment";
+            public const string CashBankAdjustment = "CashBankAdjustment";
+            public const string CashBankMutation = "CashBankMutation";
+            public const string CashSalesInvoice = "CashSalesInvoice";
+            public const string CashSalesReturn = "CashSalesReturn";
+            public const string CustomPurchaseInvoice = "CustomPurchaseInvoice";
+            public const string Memorial = "Memorial";
+            public const string PaymentRequest = "PaymentRequest";
+            public const string PaymentVoucher = "PaymentVoucher";
+            public const string ReceiptVoucher = "ReceiptVoucher";
+            public const string RetailSalesInvoice = "RetailSalesInvoice";
+            public const string StockAdjustment = "StockAdjustment";
         }
 
         public class AccountGroup

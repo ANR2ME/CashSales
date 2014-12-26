@@ -118,6 +118,8 @@ namespace Service.Service
             paymentVoucherDetail.ConfirmationDate = ConfirmationDate;
             if (_validator.ValidConfirmObject(paymentVoucherDetail, _payableService, _paymentVoucherDetailService))
             {
+                paymentVoucherDetail = _repository.ConfirmObject(paymentVoucherDetail);
+
                 PaymentVoucher paymentVoucher = _paymentVoucherService.GetObjectById(paymentVoucherDetail.PaymentVoucherId);
                 Payable payable = _payableService.GetObjectById(paymentVoucherDetail.PayableId);
 
@@ -126,11 +128,10 @@ namespace Service.Service
                 if (payable.RemainingAmount == 0 && payable.PendingClearanceAmount == 0)
                 {
                     payable.IsCompleted = true;
-                    payable.CompletionDate = DateTime.Now;
+                    payable.CompletionDate = ConfirmationDate; // DateTime.Now;
                 }
                 _payableService.UpdateObject(payable);
-
-                paymentVoucherDetail = _repository.ConfirmObject(paymentVoucherDetail);
+                
             }
             return paymentVoucherDetail;
         }
@@ -139,6 +140,8 @@ namespace Service.Service
         {
             if (_validator.ValidUnconfirmObject(paymentVoucherDetail))
             {
+                paymentVoucherDetail = _repository.UnconfirmObject(paymentVoucherDetail);
+
                 PaymentVoucher paymentVoucher = _paymentVoucherService.GetObjectById(paymentVoucherDetail.PaymentVoucherId);
                 Payable payable = _payableService.GetObjectById(paymentVoucherDetail.PayableId);
 
@@ -150,8 +153,7 @@ namespace Service.Service
                     payable.CompletionDate = null;
                 }
                 _payableService.UpdateObject(payable);
-
-                paymentVoucherDetail = _repository.UnconfirmObject(paymentVoucherDetail);
+                
             }
             return paymentVoucherDetail;
         }

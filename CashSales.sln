@@ -19,6 +19,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitValidation", "UnitValid
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Repair", "Repair\Repair.csproj", "{9598F1B8-97B9-4AA7-9BF2-319C3CF9C504}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FixJournal", "FixJournal\FixJournal.csproj", "{1782A04C-C50E-406A-A9D1-F7B013F64AC7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -55,6 +57,10 @@ Global
 		{9598F1B8-97B9-4AA7-9BF2-319C3CF9C504}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9598F1B8-97B9-4AA7-9BF2-319C3CF9C504}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9598F1B8-97B9-4AA7-9BF2-319C3CF9C504}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1782A04C-C50E-406A-A9D1-F7B013F64AC7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1782A04C-C50E-406A-A9D1-F7B013F64AC7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1782A04C-C50E-406A-A9D1-F7B013F64AC7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1782A04C-C50E-406A-A9D1-F7B013F64AC7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

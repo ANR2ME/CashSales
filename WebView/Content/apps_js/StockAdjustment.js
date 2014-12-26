@@ -439,7 +439,7 @@
                   //{ name: 'itemtype', index: 'itemtype', width: 100, sortable: true },
                   { name: 'quantity', index: 'quantity', width: 80, formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: true },
                   { name: 'uom', index: 'uom', width: 80, sortable: true },
-                  { name: 'price', index: 'price', width: 100, formatter: 'currency', sortable: true, formatoptions: { decimalSeparator: ".", thousandsSeparator: ",", decimalPlaces: 0, prefix: "", suffix: "", defaultValue: '0.00' } },
+                  { name: 'price', index: 'price', width: 100, formatter: 'currency', sortable: true, formatoptions: { decimalSeparator: ".", thousandsSeparator: ",", decimalPlaces: 2, prefix: "", suffix: "", defaultValue: '0.00' } },
         ],
         page: '1',
         pager: $('#pagerdetail'),

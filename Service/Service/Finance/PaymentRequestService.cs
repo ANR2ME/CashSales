@@ -134,19 +134,20 @@ namespace Service.Service
         {
             if (_validator.ValidUnconfirmObject(paymentRequest, _paymentRequestDetailService, _closingService))
             {
+                DateTime confirmdate = paymentRequest.ConfirmationDate.GetValueOrDefault();
                 Payable payable = _payableService.GetObjectBySource(Constant.PayableSource.PaymentRequest, paymentRequest.Id);
                 _payableService.SoftDeleteObject(payable, _paymentVoucherDetailService); // DeleteObject(payable.Id);
                 if (!payable.Errors.Any())
                 {
                     _repository.UnconfirmObject(paymentRequest);
-                    _generalLedgerJournalService.CreateUnconfirmationJournalForPaymentRequest(paymentRequest, _paymentRequestDetailService, _accountService);
+                    _generalLedgerJournalService.CreateUnconfirmationJournalForPaymentRequest(paymentRequest, confirmdate, _paymentRequestDetailService, _accountService);
                 }
                 else
                 {
                     paymentRequest.Errors.Clear();
                     foreach (var err in payable.Errors)
                     {
-                        paymentRequest.Errors.Add(err.Key, err.Value);
+                        paymentRequest.Errors.Add("Generic", err.Key + " " + err.Value);
                     }
                 }
             }

@@ -1,0 +1,15 @@
+CompanyName	String	50	
+StartDate	DateTime		
+EndDate	DateTime			
+DCNote	String	1		
+AccountName	String	50		
+AccountGroup	String	50
+AccountParent	String	100
+AccountTitle	String	100	
+AccountLevel	Number	
+CurrentAmount	Number		
+PrevAmount	Number
+ASSET	String	8
+AccountCode	String	11
+AccountParentCode	String	11
+IsLeaf	Boolean

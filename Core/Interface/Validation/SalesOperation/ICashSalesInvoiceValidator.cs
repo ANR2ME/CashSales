@@ -20,7 +20,7 @@ namespace Core.Interface.Validation
         CashSalesInvoice VHasCashSalesInvoiceDetails(CashSalesInvoice cashSalesInvoice, ICashSalesInvoiceDetailService _cashSalesInvoiceDetailService);
         CashSalesInvoice VHasNoCashSalesReturns(CashSalesInvoice cashSalesInvoice, ICashSalesReturnService _cashSalesReturnService);
         CashSalesInvoice VIsConfirmableCashSalesInvoiceDetails(CashSalesInvoice cashSalesInvoice, ICashSalesInvoiceDetailService _cashSalesInvoiceDetailService,
-                                                                          ICashSalesInvoiceService _cashSalesInvoiceService, IWarehouseItemService _warehouseItemService);
+                                                                          ICashSalesInvoiceService _cashSalesInvoiceService, IWarehouseItemService _warehouseItemService, IItemService _itemService);
         CashSalesInvoice VIsUnconfirmableCashSalesInvoiceDetails(CashSalesInvoice cashSalesInvoice, ICashSalesInvoiceDetailService _cashSalesInvoiceDetailService);
         CashSalesInvoice VIsNotDeleted(CashSalesInvoice cashSalesInvoice);
         CashSalesInvoice VIsNotPaid(CashSalesInvoice cashSalesInvoice);
@@ -36,8 +36,8 @@ namespace Core.Interface.Validation
         //CashSalesInvoice VIsCashBankTypeNotBank(CashSalesInvoice cashSalesInvoice, ICashBankService _cashBankService);
         CashSalesInvoice VGeneralLedgerPostingHasNotBeenClosed(CashSalesInvoice cashSalesInvoice, IClosingService _closingService, int CaseConfirmUnconfirm);
 
-        CashSalesInvoice VConfirmObject(CashSalesInvoice cashSalesInvoice, ICashSalesInvoiceDetailService _cashSalesInvoiceDetailService, ICashSalesInvoiceService _cashSalesInvoiceService, 
-                                        IWarehouseItemService _warehouseItemService, IContactService _contactService, ICashBankService _cashBankService, IClosingService _closingService);
+        CashSalesInvoice VConfirmObject(CashSalesInvoice cashSalesInvoice, ICashSalesInvoiceDetailService _cashSalesInvoiceDetailService, ICashSalesInvoiceService _cashSalesInvoiceService,
+                                        IWarehouseItemService _warehouseItemService, IContactService _contactService, ICashBankService _cashBankService, IItemService _itemService, IClosingService _closingService);
         CashSalesInvoice VUnconfirmObject(CashSalesInvoice cashSalesInvoice, ICashSalesInvoiceDetailService _cashSalesInvoiceDetailService, 
                                           IReceivableService _receivableService, IReceiptVoucherDetailService _receiptVoucherDetailService, IClosingService _closingService);
         CashSalesInvoice VPaidObject(CashSalesInvoice cashSalesInvoice, ICashBankService _cashBankService, IReceiptVoucherService _receiptVoucherService, ICashSalesReturnService _cashSalesReturnService,
@@ -49,7 +49,7 @@ namespace Core.Interface.Validation
         CashSalesInvoice VDeleteObject(CashSalesInvoice cashSalesInvoice, ICashSalesInvoiceDetailService _cashSalesInvoiceDetailService);
 
         bool ValidConfirmObject(CashSalesInvoice cashSalesInvoice, ICashSalesInvoiceDetailService _cashSalesInvoiceDetailService, ICashSalesInvoiceService _cashSalesInvoiceService,
-                                IWarehouseItemService _warehouseItemService, IContactService _contactService, ICashBankService _cashBankService, IClosingService _closingService);
+                                IWarehouseItemService _warehouseItemService, IContactService _contactService, ICashBankService _cashBankService, IItemService _itemService, IClosingService _closingService);
         bool ValidUnconfirmObject(CashSalesInvoice cashSalesInvoice, ICashSalesInvoiceDetailService _cashSalesInvoiceDetailService, 
                                   IReceivableService _receivableService, IReceiptVoucherDetailService _receiptVoucherDetailService, IClosingService _closingService);
         bool ValidPaidObject(CashSalesInvoice cashSalesInvoice, ICashBankService _cashBankService, IReceiptVoucherService _receiptVoucherService, ICashSalesReturnService _cashSalesReturnService,

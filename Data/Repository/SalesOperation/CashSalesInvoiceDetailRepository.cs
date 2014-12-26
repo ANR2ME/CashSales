@@ -20,12 +20,12 @@ namespace Data.Repository
 
         public IQueryable<CashSalesInvoiceDetail> GetQueryable()
         {
-            return FindAll(x => !x.IsDeleted);
+            return FindAll(x => !x.IsDeleted).Include("Item").Include("CashSalesInvoice").Include(x => x.PriceMutation).Include(x => x.CashSalesReturnDetails);
         }
 
         public IList<CashSalesInvoiceDetail> GetAll()
         {
-            return FindAll(x => !x.IsDeleted).ToList();
+            return FindAll(x => !x.IsDeleted).Include("Item").Include("CashSalesInvoice").Include(x => x.PriceMutation).Include(x => x.CashSalesReturnDetails).ToList();
         }
 
         public IList<CashSalesInvoiceDetail> GetAllByMonthCreated()
@@ -35,17 +35,17 @@ namespace Data.Repository
 
         public IQueryable<CashSalesInvoiceDetail> GetQueryableObjectsByCashSalesInvoiceId(int CashSalesInvoiceId)
         {
-            return FindAll(x => x.CashSalesInvoiceId == CashSalesInvoiceId && !x.IsDeleted);
+            return FindAll(x => x.CashSalesInvoiceId == CashSalesInvoiceId && !x.IsDeleted).Include("Item").Include("CashSalesInvoice").Include(x => x.PriceMutation).Include(x => x.CashSalesReturnDetails);
         }
 
         public IList<CashSalesInvoiceDetail> GetObjectsByCashSalesInvoiceId(int CashSalesInvoiceId)
         {
-            return FindAll(x => x.CashSalesInvoiceId == CashSalesInvoiceId && !x.IsDeleted).ToList();
+            return FindAll(x => x.CashSalesInvoiceId == CashSalesInvoiceId && !x.IsDeleted).Include("Item").Include("CashSalesInvoice").Include(x => x.PriceMutation).Include(x => x.CashSalesReturnDetails).ToList();
         }
 
         public CashSalesInvoiceDetail GetObjectById(int Id)
         {
-            CashSalesInvoiceDetail cashSalesInvoiceDetail = FindAll(x => x.Id == Id && !x.IsDeleted).Include("Item").Include("CashSalesInvoice").FirstOrDefault();
+            CashSalesInvoiceDetail cashSalesInvoiceDetail = FindAll(x => x.Id == Id && !x.IsDeleted).Include("Item").Include("CashSalesInvoice").Include(x => x.PriceMutation).Include(x => x.CashSalesReturnDetails).FirstOrDefault();
             if (cashSalesInvoiceDetail != null) { cashSalesInvoiceDetail.Errors = new Dictionary<string, string>(); }
             return cashSalesInvoiceDetail;
         }

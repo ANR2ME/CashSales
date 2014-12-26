@@ -39,7 +39,7 @@
     			  { name: 'id', index: 'id', width: 60, align: "center" },
     			  { name: 'cashbankid', index: 'cashbankid', width: 35, align: "center", hidden: true},
 				  { name: 'cashbank', index: 'cashbank', width: 120 },
-                  { name: 'amount', index: 'amount', width: 150, align: 'right', formatter: 'currency', formatoptions: { decimalSeparator: ".", thousandsSeparator: ",", decimalPlaces: 0, prefix: "", suffix: "", defaultValue: '0.00' } },
+                  { name: 'amount', index: 'amount', width: 150, align: 'right', formatter: 'currency', formatoptions: { decimalSeparator: ".", thousandsSeparator: ",", decimalPlaces: 2, prefix: "", suffix: "", defaultValue: '0.00' } },
 				  { name: 'sourcedocumenttype', index: 'sourcedocumenttype', width: 120, align: 'right' },
 				  { name: 'sourcedocumentid', index: 'sourcedocumentid', width: 60, hidden: true },
                   { name: 'sourcedocumentcode', index: 'sourcedocumentcode', width: 90, stype: 'text' },

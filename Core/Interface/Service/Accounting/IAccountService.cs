@@ -23,6 +23,7 @@ namespace Core.Interface.Service
         Account CreateObject(Account account);
         Account CreateLegacyObject(Account account);
         Account FindOrCreateLegacyObject(Account account);
+        Account UpdateOrCreateLegacyObject(Account account);
         Account CreateCashBankAccount(Account account);
         Account UpdateObject(Account account, int? OldParentId);
         Account UpdateObjectForCashBank(Account account, int? OldParentId);

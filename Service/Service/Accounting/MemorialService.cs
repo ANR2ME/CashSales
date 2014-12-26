@@ -93,6 +93,7 @@ namespace Service.Service
         {
             if (_validator.ValidUnconfirmObject(memorial, _memorialDetailService, _closingService))
             {
+                DateTime confirmdate = memorial.ConfirmationDate.GetValueOrDefault();
                 IList<MemorialDetail> memorialDetails = _memorialDetailService.GetObjectsByMemorialId(memorial.Id);
                 foreach (var detail in memorialDetails)
                 {
@@ -100,7 +101,7 @@ namespace Service.Service
                     _memorialDetailService.UnconfirmObject(detail, this);
                 }
                 _repository.UnconfirmObject(memorial);
-                _generalLedgerJournalService.CreateUnconfirmationJournalForMemorial(memorial, _memorialDetailService, _accountService);
+                _generalLedgerJournalService.CreateUnconfirmationJournalForMemorial(memorial, confirmdate, _memorialDetailService, _accountService);
             }
             return memorial;
         }

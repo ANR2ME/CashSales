@@ -144,6 +144,7 @@ namespace Service.Service
         {
             if (_validator.ValidUnconfirmObject(cashSalesReturn, _cashSalesReturnDetailService, _payableService, _paymentVoucherDetailService, _warehouseItemService, _cashSalesInvoiceDetailService))
             {
+                DateTime confirmdate = cashSalesReturn.ConfirmationDate.GetValueOrDefault();
                 IList<CashSalesReturnDetail> cashSalesReturnDetails = _cashSalesReturnDetailService.GetObjectsByCashSalesReturnId(cashSalesReturn.Id);
                 foreach (var cashSalesReturnDetail in cashSalesReturnDetails)
                 {
@@ -151,7 +152,7 @@ namespace Service.Service
                     _cashSalesReturnDetailService.UnconfirmObject(cashSalesReturnDetail, _cashSalesInvoiceDetailService, _warehouseItemService,
                                                                   _warehouseService, _itemService, _barringService, _stockMutationService);
                 }
-                _generalLedgerJournalService.CreateUnconfirmationJournalForCashSalesReturn(cashSalesReturn, _accountService);
+                _generalLedgerJournalService.CreateUnconfirmationJournalForCashSalesReturn(cashSalesReturn, confirmdate, _accountService);
                 Payable payable = _payableService.GetObjectBySource(Core.Constants.Constant.PayableSource.CashSalesReturn, cashSalesReturn.Id);
                 _payableService.SoftDeleteObject(payable, _paymentVoucherDetailService);
                 cashSalesReturn.Total = 0;
@@ -179,7 +180,7 @@ namespace Service.Service
                 if (payable.RemainingAmount > 0)
                 {
                     paymentVoucher = _paymentVoucherService.CreateObject((int)cashSalesReturn.CashBankId.GetValueOrDefault(), payable.ContactId,
-                                                                                        DateTime.Now, payable.RemainingAmount, false, payable.DueDate, cashBank.IsBank, VoucherCode,
+                                                                                        cashSalesReturn.ConfirmationDate.GetValueOrDefault()/*DateTime.Now*/, payable.RemainingAmount, false, payable.DueDate, cashBank.IsBank, VoucherCode,
                                                                                         _paymentVoucherDetailService, _payableService, _contactService, _cashBankService);
                     PaymentVoucherDetail paymentVoucherDetail = _paymentVoucherDetailService.CreateObject(paymentVoucher.Id, payable.Id, payable.RemainingAmount,
                                                                                     "Automatic Payment", VoucherDetailCode, _paymentVoucherService, _cashBankService, _payableService);
@@ -196,7 +197,7 @@ namespace Service.Service
                     cashSalesReturn.Errors.Clear();
                     foreach (var error in paymentVoucher.Errors)
                     {
-                        cashSalesReturn.Errors.Add(error.Key, error.Value);
+                        cashSalesReturn.Errors.Add("Generic", error.Key + " " + error.Value);
                     }
                 }
             }
@@ -220,7 +221,7 @@ namespace Service.Service
                 if (payable.RemainingAmount > 0)
                 {
                     paymentVoucher = _paymentVoucherService.CreateObject((int)cashSalesReturn.CashBankId.GetValueOrDefault(), payable.ContactId,
-                                                                                        DateTime.Now, payable.RemainingAmount, false, payable.DueDate, cashBank.IsBank, "",
+                                                                                        cashSalesReturn.ConfirmationDate.GetValueOrDefault()/*DateTime.Now*/, payable.RemainingAmount, false, payable.DueDate, cashBank.IsBank, "",
                                                                                         _paymentVoucherDetailService, _payableService, _contactService, _cashBankService);
                     PaymentVoucherDetail paymentVoucherDetail = _paymentVoucherDetailService.CreateObject(paymentVoucher.Id, payable.Id, payable.RemainingAmount,
                                                                                     "Automatic Payment", "", _paymentVoucherService, _cashBankService, _payableService);
@@ -237,7 +238,7 @@ namespace Service.Service
                     cashSalesReturn.Errors.Clear();
                     foreach (var error in paymentVoucher.Errors)
                     {
-                        cashSalesReturn.Errors.Add(error.Key, error.Value);
+                        cashSalesReturn.Errors.Add("Generic", error.Key + " " + error.Value);
                     }
                 }
             }
@@ -250,6 +251,7 @@ namespace Service.Service
         {
             if (_validator.ValidUnpaidObject(cashSalesReturn))
             {
+                DateTime confirmdate = cashSalesReturn.ConfirmationDate.GetValueOrDefault(); 
                 Payable payable = _payableService.GetObjectBySource(Core.Constants.Constant.PayableSource.CashSalesReturn, cashSalesReturn.Id);
                 IList<PaymentVoucher> paymentVouchers = _paymentVoucherService.GetObjectsByCashBankId((int)cashSalesReturn.CashBankId.GetValueOrDefault());
                 foreach (var paymentVoucher in paymentVouchers)
@@ -269,7 +271,7 @@ namespace Service.Service
                         _paymentVoucherService.SoftDeleteObject(paymentVoucher, _paymentVoucherDetailService);
                     }
                 }
-                _generalLedgerJournalService.CreateUnpaidJournalForCashSalesReturn(cashSalesReturn, _accountService);
+                _generalLedgerJournalService.CreateUnpaidJournalForCashSalesReturn(cashSalesReturn, confirmdate, _accountService);
                 payable.AllowanceAmount = 0;
                 _payableService.UpdateObject(payable);
                 cashSalesReturn.Allowance = 0;

@@ -60,7 +60,7 @@ namespace WebView.Controllers
                             model.Amount,
                             model.SourceDocument,
                             model.SourceDocumentId
-                         }).Where(filter).OrderBy(sidx + " " + sord); //.ToList();
+                         }).Where(filter).OrderBy(sidx + " " + sord + ", id " + sord); //.ToList();
 
             var list = query.AsEnumerable();
 
@@ -131,7 +131,7 @@ namespace WebView.Controllers
                              model.Amount,
                              model.SourceDocument,
                              model.SourceDocumentId
-                         }).Where(filter, startdate.GetValueOrDefault().Date, enddate.GetValueOrDefault().AddDays(1).Date).OrderBy(sidx + " " + sord); //.ToList();
+                         }).Where(filter, startdate.GetValueOrDefault().Date, enddate.GetValueOrDefault().AddDays(1).Date).OrderBy(sidx + " " + sord + ", id " + sord); //.ToList();
 
             var list = query.AsEnumerable();
 

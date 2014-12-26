@@ -14,6 +14,8 @@ using System.Data.Entity;
 using Core.DomainModel;
 using Core.Constants;
 using Data.Context;
+using System.Data.Objects;
+using System.Data.Objects.SqlClient;
 
 namespace WebView.Controllers
 {
@@ -67,11 +69,15 @@ namespace WebView.Controllers
             public string DCNote { get; set; }
             public string AccountName { get; set; }
             public string AccountGroup { get; set; }
+            public string AccountParent { get; set; }
             public string AccountTitle { get; set; }
             public decimal CurrentAmount { get; set; }
             public decimal PrevAmount { get; set; }
             public string ASSET { get; set; }
             public string AccountCode { get; set; }
+            public string AccountParentCode { get; set; }
+            public int AccountLevel { get; set; }
+            public bool IsLeaf { get; set; }
         }
 
         public FinanceReportController()
@@ -105,7 +111,7 @@ namespace WebView.Controllers
             //ValidComb Sales = _validCombService.FindOrCreateObjectByAccountAndClosing(_accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.SalesRevenue).Id, closing.Id);
             ValidComb COGS = _validCombService.FindOrCreateObjectByAccountAndClosing(_accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.COGS).Id, closing.Id);
             // Memorial Expenses
-            //ValidComb OperationalExpenses = _validCombService.FindOrCreateObjectByAccountAndClosing(_accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.OperationalExpenses).Id, closing.Id);
+            ValidComb OperationalExpenses = _validCombService.FindOrCreateObjectByAccountAndClosing(_accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.OperationalExpenses).Id, closing.Id);
             ValidComb InterestEarning = _validCombService.FindOrCreateObjectByAccountAndClosing(_accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.InterestEarning).Id, closing.Id);
             ValidComb Depreciation = _validCombService.FindOrCreateObjectByAccountAndClosing(_accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.Depreciation).Id, closing.Id);
             ValidComb Amortization = _validCombService.FindOrCreateObjectByAccountAndClosing(_accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.Amortization).Id, closing.Id);
@@ -121,7 +127,7 @@ namespace WebView.Controllers
                 EndDate = closing.EndDatePeriod.Date,
                 Revenue = Revenue.Amount,
                 COGS = COGS.Amount,
-                OperationalExpenses = 0, //OperationalExpenses.Amount,
+                OperationalExpenses = OperationalExpenses.Amount,
                 InterestEarning = InterestEarning.Amount,
                 Depreciation = Depreciation.Amount,
                 Amortization = Amortization.Amount,
@@ -166,8 +172,8 @@ namespace WebView.Controllers
             var db = new OffsetPrintingSuppliesEntities();
             using (db)
             {
-                var q = db.ValidCombs.Include("Closing").Include("Account").Where(x => x.Closing.BeginningPeriod == startDate).OrderBy(x => x.Account.Code);
-                var prevq = db.ValidCombs.Include("Closing").Include("Account").Where(x => x.Closing.BeginningPeriod == prevStartDate); //.OrderByDescending(x => x.Closing.EndDatePeriod);
+                var q = db.ValidCombs.Include("Closing").Include("Account").Where(x => x.Closing.BeginningPeriod == startDate && (x.Account.Group == Constant.AccountGroup.Expense || x.Account.Group == Constant.AccountGroup.Revenue)).OrderBy(x => x.Account.Code);
+                var prevq = db.ValidCombs.Include("Closing").Include("Account").Where(x => x.Closing.BeginningPeriod == prevStartDate && (x.Account.Group == Constant.AccountGroup.Expense || x.Account.Group == Constant.AccountGroup.Revenue)); //.OrderByDescending(x => x.Closing.EndDatePeriod);
 
                 var query = (from model in q
                              select new
@@ -179,10 +185,19 @@ namespace WebView.Controllers
                                  JenisRange = "Monthly",
                                  Current = model.Amount,
                                  Previous = (decimal?)prevq.Where(x => x.AccountId == model.AccountId).FirstOrDefault().Amount ?? 0,
-                                 Group = _accountService.GetGroupName(model.Account.Group), // "Sales (Netto)", "Cost of Goods Sold"
-                                 Level = model.Account.Level.ToString(), // not used
-                                 GroupLevel = "1", // "EXP", "IMP", "DOM"
+                                 Group = (model.Account.Code.Substring(0, Constant.AccountCode.Revenue.Length) == Constant.AccountCode.Revenue) ? Constant.AccountCode.Revenue : // "Sales ( Gross )"
+                                         (model.Account.Code.Substring(0, Constant.AccountCode.COGS.Length) == Constant.AccountCode.COGS) ? Constant.AccountCode.COGS : // "Cost of Goods Sold" 
+                                         (model.Account.Code.Substring(0, Constant.AccountCode.OperationalExpenses.Length) == Constant.AccountCode.OperationalExpenses) ? Constant.AccountCode.OperationalExpenses : // "Operational Expenses"
+                                         (model.Account.Code.Substring(0, 3) == "214") ? "214" : // "Non-Operational Expenses"
+                                         (model.Account.Code.Substring(0, Constant.AccountCode.InterestEarning.Length) == Constant.AccountCode.InterestEarning) ? Constant.AccountCode.InterestEarning :
+                                         (model.Account.Code.Substring(0, Constant.AccountCode.Depreciation.Length) == Constant.AccountCode.Depreciation) ? Constant.AccountCode.Depreciation :
+                                         (model.Account.Code.Substring(0, Constant.AccountCode.Amortization.Length) == Constant.AccountCode.Amortization) ? Constant.AccountCode.Amortization :
+                                         (model.Account.Code.Substring(0, Constant.AccountCode.Tax.Length) == Constant.AccountCode.Tax) ? Constant.AccountCode.Tax :
+                                         (model.Account.Code.Substring(0, Constant.AccountCode.Divident.Length) == Constant.AccountCode.Divident) ? Constant.AccountCode.Divident : "Other", //SqlFunctions.StringConvert(model.Account.Group), // "Sales (Netto)", "Cost of Goods Sold"
+                                 Level = SqlFunctions.StringConvert((decimal?)model.Account.Level), // not used
+                                 GroupLevel = "GOODS", // "EXP", "IMP", "DOM", "SOT" // "GOODS", "SERVS"
                                  AccountCode = model.Account.Code,
+                                 //GroupIndex = 0,
                                  Unaudited = "",
                              }).ToList();
 
@@ -254,5 +269,66 @@ namespace WebView.Controllers
             var stream = rd.ExportToStream(CrystalDecisions.Shared.ExportFormatType.PortableDocFormat);
             return File(stream, "application/pdf");
         }
+
+        public ActionResult BalanceSheetDetail()
+        {
+            if (!AuthenticationModel.IsAllowed("View", Constant.MenuName.BalanceSheet, Constant.MenuGroupName.Report))
+            {
+                return Content(Constant.ErrorPage.PageViewNotAllowed);
+            }
+
+            return View();
+        }
+
+        public ActionResult ReportBalanceSheetDetail(Nullable<int> closingId)
+        {
+            var company = _companyService.GetQueryable().FirstOrDefault();
+            Closing closing = _closingService.GetObjectById(closingId.GetValueOrDefault());
+
+            if (closing == null) return Content(Constant.ErrorPage.ClosingNotFound);
+
+            var balanceValidComb = _validCombService.GetQueryable().Include("Account").Include("Closing")
+                                                    .Where(x => x.ClosingId == closing.Id & x.Account.Level >= 2
+                                                    && x.Account.Group != Constant.AccountGroup.Expense && x.Account.Group != Constant.AccountGroup.Revenue
+                                                    );
+
+            List<ModelBalanceSheet> query = new List<ModelBalanceSheet>();
+            query = (from obj in balanceValidComb
+                     select new ModelBalanceSheet()
+                     {
+                         CompanyName = company.Name,
+                         StartDate = closing.BeginningPeriod.Date,
+                         EndDate = closing.EndDatePeriod.Date,
+                         DCNote = (obj.Account.Group == Constant.AccountGroup.Asset ||
+                                  obj.Account.Group == Constant.AccountGroup.Expense) ? "D" : "C",
+                         AccountName = obj.Account.Code.Substring(0, 1),
+                         AccountGroup = (obj.Account.Group == Constant.AccountGroup.Asset) ? "Asset" :
+                                        (obj.Account.Group == Constant.AccountGroup.Expense) ? "Expense" :
+                                        (obj.Account.Group == Constant.AccountGroup.Liability) ? "Liability" :
+                                        (obj.Account.Group == Constant.AccountGroup.Equity) ? "Equity" :
+                                        (obj.Account.Group == Constant.AccountGroup.Revenue) ? "Revenue" : "",
+                         AccountTitle = obj.Account.Name,
+                         AccountParent = obj.Account.Parent.Name,
+                         CurrentAmount = obj.Amount,
+                         PrevAmount = obj.Amount,
+                         ASSET = "nonASSET", // untuk Fix Asset ? "ASSET" : "nonASSET",
+                         AccountCode = obj.Account.Code,
+                         AccountParentCode = obj.Account.Parent.Code,
+                         AccountLevel = obj.Account.Level,
+                         IsLeaf = obj.Account.IsLeaf,
+                     }).OrderBy(x => x.AccountCode).ToList();
+
+            var rd = new ReportDocument();
+
+            //Loading Report
+            rd.Load(Server.MapPath("~/") + "Reports/Finance/BalanceSheetDetail.rpt");
+           
+            // Setting report data source
+            rd.SetDataSource(query);
+
+            var stream = rd.ExportToStream(CrystalDecisions.Shared.ExportFormatType.PortableDocFormat);
+            return File(stream, "application/pdf");
+        }
+
     }
 }

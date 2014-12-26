@@ -158,18 +158,18 @@ namespace Core.Constants
 
         public class PayableSource
         {
-            public static string PurchaseInvoice = "PurchaseInvoice";
-            public static string RetailPurchaseInvoice = "RetailPurchaseInvoice";
-            public static string CashSalesReturn = "CashSalesReturn";
-            public static string CustomPurchaseInvoice = "CustomPurchaseInvoice";
-            public static string PaymentRequest = "PaymentRequest";
+            public const string PurchaseInvoice = "PurchaseInvoice";
+            public const string RetailPurchaseInvoice = "RetailPurchaseInvoice";
+            public const string CashSalesReturn = "CashSalesReturn";
+            public const string CustomPurchaseInvoice = "CustomPurchaseInvoice";
+            public const string PaymentRequest = "PaymentRequest";
         }
 
         public class ReceivableSource
         {
-            public static string SalesInvoice = "SalesInvoice";
-            public static string RetailSalesInvoice = "RetailSalesInvoice";
-            public static string CashSalesInvoice = "CashSalesInvoice";
+            public const string SalesInvoice = "SalesInvoice";
+            public const string RetailSalesInvoice = "RetailSalesInvoice";
+            public const string CashSalesInvoice = "CashSalesInvoice";
         }
 
         public class ErrorPage

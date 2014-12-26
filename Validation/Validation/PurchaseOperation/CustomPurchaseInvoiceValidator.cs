@@ -327,7 +327,7 @@ namespace Validation.Validation
                 }
                 case (2): // Unconfirm
                 {
-                    if (_closingService.IsDateClosed(DateTime.Now))
+                    if (_closingService.IsDateClosed(customPurchaseInvoice.ConfirmationDate.GetValueOrDefault()))
                     {
                         customPurchaseInvoice.Errors.Add("Generic", "Ledger sudah tutup buku");
                     }
@@ -343,7 +343,7 @@ namespace Validation.Validation
                 }
                 case (4): // Unpaid
                 {
-                    if (_closingService.IsDateClosed(DateTime.Now))
+                    if (_closingService.IsDateClosed(customPurchaseInvoice.PaymentDate.GetValueOrDefault()))
                     {
                         customPurchaseInvoice.Errors.Add("Generic", "Ledger sudah tutup buku");
                     }

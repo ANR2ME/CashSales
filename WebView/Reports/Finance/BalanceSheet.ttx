@@ -1,0 +1,11 @@
+CompanyName	String	50	
+StartDate	DateTime		
+EndDate	DateTime			
+DCNote	String	1		
+AccountName	String	50		
+AccountGroup	String	50
+AccountTitle	String	100		
+CurrentAmount	Number		
+PrevAmount	Number
+ASSET	String	8
+AccountCode	String	11

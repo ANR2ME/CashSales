@@ -11,7 +11,7 @@ namespace Core.DomainModel
         public int CashBankId { get; set; }
 
         public DateTime AdjustmentDate { get; set; }
-        public int Amount { get; set; }
+        public decimal Amount { get; set; }
         public string Code { get; set; }
 
         public bool IsConfirmed { get; set; }

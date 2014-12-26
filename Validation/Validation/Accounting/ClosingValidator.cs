@@ -34,7 +34,7 @@ namespace Validation.Validation
         {
             if (closing.BeginningPeriod == null || closing.BeginningPeriod.Equals(DateTime.FromBinary(0)))
             {
-                closing.Errors.Add("BeginningPeriod", "Tidak valid");
+                closing.Errors.Add("BeginningPeriod", "Tidak ada");
             }
             return closing;
         }
@@ -43,7 +43,7 @@ namespace Validation.Validation
         {
             if (closing.EndDatePeriod == null || closing.EndDatePeriod.Equals(DateTime.FromBinary(0)))
             {
-                closing.Errors.Add("EndDatePeriod", "Tidak valid");
+                closing.Errors.Add("EndDatePeriod", "Tidak ada");
             }
             return closing;
         }

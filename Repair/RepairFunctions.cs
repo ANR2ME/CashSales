@@ -15,7 +15,7 @@ using Core.DomainModel;
 using System.Reflection;
 using Core.Constants;
 
-namespace Service
+namespace Repair
 {
     /// <summary>
     /// A static class for reflection type functions
@@ -96,10 +96,25 @@ namespace Service
         public IBarringService _barringService;
         public IQuantityPricingService _quantityPricingService;
 
-        struct sourceid {
+        public struct sourceid {
                 public string source;
                 public int id;
             };
+
+        public class TranSource
+        {
+            public const string StockAdjustment = "stockadjustment";
+            public const string WarehouseMutationOrder = "warehousemutationorder";
+            public const string CashBankAdjustment = "cashbankadjustment";
+            public const string CashBankMutation = "cashbankmutation";
+            public const string CustomPurchaseInvoice = "custompurchaseinvoice";
+            public const string CashSalesInvoice = "cashsalesinvoice";
+            public const string CashSalesReturn = "cashsalesreturn";
+            public const string PaymentRequest = "paymentrequest";
+            public const string ReceiptVoucher = "receiptvoucher";
+            public const string PaymentVoucher = "paymentvoucher";
+            public const string Memorial = "memorial";
+        };
 
         public IList<String> userDatas = new List<String>()
                                         {   
@@ -200,7 +215,7 @@ namespace Service
                 Account AccountReceivable = _accountService.FindOrCreateLegacyObject(new Account() { Name = "Account Receivable", Code = Constant.AccountCode.AccountReceivable, LegacyCode = Constant.AccountLegacyCode.AccountReceivable, Level = 2, Group = Constant.AccountGroup.Asset, ParentId = Asset.Id, IsLegacy = true });
                 _accountService.FindOrCreateLegacyObject(new Account() { Name = "Account Receivable (PPN masuk)", IsUsedBySystem = true, IsLeaf = true, Code = Constant.AccountCode.AccountReceivablePPNmasukan, LegacyCode = Constant.AccountLegacyCode.AccountReceivablePPNmasukan, Level = 3, Group = Constant.AccountGroup.Asset, ParentId = AccountReceivable.Id, IsLegacy = true });
                 _accountService.FindOrCreateLegacyObject(new Account() { Name = "Account Receivable (Trading)", IsUsedBySystem = true, IsLeaf = true, Code = Constant.AccountCode.AccountReceivableTrading, LegacyCode = Constant.AccountLegacyCode.AccountReceivableTrading, Level = 3, Group = Constant.AccountGroup.Asset, ParentId = AccountReceivable.Id, IsLegacy = true });
-                _accountService.FindOrCreateLegacyObject(new Account() { Name = "GBCH Receivable", IsLeaf = true, Code = Constant.AccountCode.GBCHReceivable, LegacyCode = Constant.AccountLegacyCode.GBCHReceivable, Level = 2, Group = Constant.AccountGroup.Asset, ParentId = Asset.Id, IsLegacy = true });
+                _accountService.FindOrCreateLegacyObject(new Account() { Name = "GBCH Receivable", IsUsedBySystem = true, IsLeaf = true, Code = Constant.AccountCode.GBCHReceivable, LegacyCode = Constant.AccountLegacyCode.GBCHReceivable, Level = 2, Group = Constant.AccountGroup.Asset, ParentId = Asset.Id, IsLegacy = true });
                 Account Inventory = _accountService.FindOrCreateLegacyObject(new Account() { Name = "Inventory", Code = Constant.AccountCode.Inventory, LegacyCode = Constant.AccountLegacyCode.Inventory, Level = 2, Group = Constant.AccountGroup.Asset, ParentId = Asset.Id, IsLegacy = true });
                 _accountService.FindOrCreateLegacyObject(new Account() { Name = "Trading Goods", IsUsedBySystem = true, IsLeaf = true, Code = Constant.AccountCode.TradingGoods, LegacyCode = Constant.AccountLegacyCode.TradingGoods, Level = 3, Group = Constant.AccountGroup.Asset, ParentId = Inventory.Id, IsLegacy = true });
 
@@ -228,7 +243,7 @@ namespace Service
                 _accountService.FindOrCreateLegacyObject(new Account() { Name = "Account Payable (Trading)", IsUsedBySystem = true, IsLeaf = true, Code = Constant.AccountCode.AccountPayableTrading, LegacyCode = Constant.AccountLegacyCode.AccountPayableTrading, Level = 3, Group = Constant.AccountGroup.Liability, ParentId = AccountPayable.Id, IsLegacy = true });
                 _accountService.FindOrCreateLegacyObject(new Account() { Name = "Account Payable (Non Trading)", IsUsedBySystem = true, IsLeaf = true, Code = Constant.AccountCode.AccountPayableNonTrading, LegacyCode = Constant.AccountLegacyCode.AccountPayableNonTrading, Level = 3, Group = Constant.AccountGroup.Liability, ParentId = AccountPayable.Id, IsLegacy = true });
                 _accountService.FindOrCreateLegacyObject(new Account() { Name = "Account Payable (PPN keluaran)", IsUsedBySystem = true, IsLeaf = true, Code = Constant.AccountCode.AccountPayablePPNkeluaran, LegacyCode = Constant.AccountLegacyCode.AccountPayablePPNkeluaran, Level = 3, Group = Constant.AccountGroup.Liability, ParentId = AccountPayable.Id, IsLegacy = true });
-                _accountService.FindOrCreateLegacyObject(new Account() { Name = "GBCH Payable", IsLeaf = true, Code = Constant.AccountCode.GBCHPayable, LegacyCode = Constant.AccountLegacyCode.GBCHPayable, Level = 2, Group = Constant.AccountGroup.Liability, ParentId = Liability.Id, IsLegacy = true });
+                _accountService.FindOrCreateLegacyObject(new Account() { Name = "GBCH Payable", IsUsedBySystem = true, IsLeaf = true, Code = Constant.AccountCode.GBCHPayable, LegacyCode = Constant.AccountLegacyCode.GBCHPayable, Level = 2, Group = Constant.AccountGroup.Liability, ParentId = Liability.Id, IsLegacy = true });
                 _accountService.FindOrCreateLegacyObject(new Account() { Name = "Goods Pending Clearance", IsUsedBySystem = true, IsLeaf = true, Code = Constant.AccountCode.GoodsPendingClearance, LegacyCode = Constant.AccountLegacyCode.GoodsPendingClearance, Level = 2, Group = Constant.AccountGroup.Liability, ParentId = Liability.Id, IsLegacy = true });
                 _accountService.FindOrCreateLegacyObject(new Account() { Name = "Purchase Discount", IsUsedBySystem = true, IsLeaf = true, Code = Constant.AccountCode.PurchaseDiscount, LegacyCode = Constant.AccountLegacyCode.PurchaseDiscount, Level = 2, Group = Constant.AccountGroup.Liability, ParentId = Liability.Id, IsLegacy = true });
                 _accountService.FindOrCreateLegacyObject(new Account() { Name = "Purchase Allowance", IsUsedBySystem = true, IsLeaf = true, Code = Constant.AccountCode.PurchaseAllowance, LegacyCode = Constant.AccountLegacyCode.PurchaseAllowance, Level = 2, Group = Constant.AccountGroup.Liability, ParentId = Liability.Id, IsLegacy = true });
@@ -281,9 +296,535 @@ namespace Service
             return 0;
         }
 
+        public int OrderedRestoration(OffsetPrintingSuppliesEntities db, IDictionary<DateTime, sourceid> trans, bool reconfirm, bool repaid_reconcile)
+        {
+            int count = 0;
+            // Sort and Process Documents
+            var sa = db.TempStockAdjustments.OrderByDescending(x => x.Id);
+            var wmo = db.TempWarehouseMutationOrders.OrderByDescending(x => x.Id);
+            var cba = db.TempCashBankAdjustments.OrderByDescending(x => x.Id);
+            var cbm = db.TempCashBankMutations.OrderByDescending(x => x.Id);
+            var cpi = db.TempCustomPurchaseInvoices.OrderByDescending(x => x.Id);
+            var csi = db.TempCashSalesInvoices.OrderByDescending(x => x.Id);
+            var csr = db.TempCashSalesReturns.OrderByDescending(x => x.Id);
+            var pr = db.TempPaymentRequests.OrderByDescending(x => x.Id);
+            var rv = db.TempReceiptVouchers.OrderByDescending(x => x.Id);
+            var pv = db.TempPaymentVouchers.OrderByDescending(x => x.Id);
+            var mem = db.TempMemorials.OrderByDescending(x => x.Id);
+            // Loop from old to new
+            foreach (var tran in trans.OrderBy(x => x.Key))
+            {
+                switch (tran.Value.source.ToLower())
+                {
+                    case TranSource.StockAdjustment:
+                        {
+                            var rec = sa.Where(x => x.Id == tran.Value.id && !x.IsDeleted).FirstOrDefault();
+                            if (rec == null) rec = sa.Where(x => x.Id == tran.Value.id).FirstOrDefault();
+                            // ReCreate the objects
+                            StockAdjustment obj = new StockAdjustment();
+                            Reflection.CopyProperties(rec, obj);
+                            obj.IsConfirmed = false;
+                            obj.IsDeleted = false;
+                            db.Database.ExecuteSqlCommand(string.Format("DBCC CHECKIDENT ({0}, RESEED, {1});", obj.GetType().Name, rec.Id - 1));
+                            _stockAdjustmentService.CreateObject(obj, _warehouseService);
+                            Log(obj.Errors, obj.GetType().Name, obj.Code, rec.Id, obj.Id);
+                            if (obj != null)
+                            {
+                                // ReCreate the details
+                                foreach (var det in db.TempStockAdjustmentDetails.Where(x => !x.IsDeleted && x.StockAdjustmentId == rec.Id).OrderBy(x => x.Id).ToList())
+                                {
+                                    StockAdjustmentDetail detobj = new StockAdjustmentDetail();
+                                    Reflection.CopyProperties(det, detobj);
+                                    detobj.IsConfirmed = false;
+                                    detobj.IsDeleted = false;
+                                    db.Database.ExecuteSqlCommand(string.Format("DBCC CHECKIDENT ({0}, RESEED, {1});", detobj.GetType().Name, det.Id - 1));
+                                    _stockAdjustmentDetailService.CreateObject(detobj, _stockAdjustmentService, _itemService, _warehouseItemService);
+                                    Log(detobj.Errors, detobj.GetType().Name, detobj.Code, det.Id, detobj.Id);
+                                }
+                                // ReConfirm the objects
+                                if (reconfirm && rec.IsConfirmed && !obj.IsConfirmed)
+                                {
+                                    _stockAdjustmentService.ConfirmObject(obj, rec.ConfirmationDate.GetValueOrDefault(), _stockAdjustmentDetailService, _stockMutationService, _itemService, _barringService, _warehouseItemService, _generalLedgerJournalService, _accountService, _closingService);
+                                    Log(obj.Errors, obj.GetType().Name, obj.Code, rec.Id, obj.Id);
+                                }
+                            }
+                            break;
+                        };
+                    case TranSource.WarehouseMutationOrder:
+                        {
+                            var rec = wmo.Where(x => x.Id == tran.Value.id && !x.IsDeleted).FirstOrDefault();
+                            if (rec == null) rec = wmo.Where(x => x.Id == tran.Value.id).FirstOrDefault();
+                            // ReCreate the objects
+                            WarehouseMutationOrder obj = new WarehouseMutationOrder();
+                            Reflection.CopyProperties(rec, obj);
+                            obj.IsConfirmed = false;
+                            obj.IsDeleted = false; 
+                            obj.IsCompleted = false;
+                            db.Database.ExecuteSqlCommand(string.Format("DBCC CHECKIDENT ({0}, RESEED, {1});", obj.GetType().Name, rec.Id - 1));
+                            _warehouseMutationOrderService.CreateObject(obj, _warehouseService);
+                            Log(obj.Errors, obj.GetType().Name, obj.Code, rec.Id, obj.Id);
+                            if (obj != null)
+                            {
+                                // ReCreate the details
+                                foreach (var det in db.TempWarehouseMutationOrderDetails.Where(x => !x.IsDeleted && x.WarehouseMutationOrderId == rec.Id).OrderBy(x => x.Id).ToList())
+                                {
+                                    WarehouseMutationOrderDetail detobj = new WarehouseMutationOrderDetail();
+                                    Reflection.CopyProperties(det, detobj);
+                                    detobj.IsConfirmed = false;
+                                    detobj.IsDeleted = false;
+                                    db.Database.ExecuteSqlCommand(string.Format("DBCC CHECKIDENT ({0}, RESEED, {1});", detobj.GetType().Name, det.Id - 1));
+                                    _warehouseMutationOrderDetailService.CreateObject(detobj, _warehouseMutationOrderService, _itemService, _warehouseItemService);
+                                    Log(detobj.Errors, detobj.GetType().Name, detobj.Code, det.Id, detobj.Id);
+                                }
+                                // ReConfirm the objects
+                                if (reconfirm && rec.IsConfirmed && !obj.IsConfirmed)
+                                {
+                                    _warehouseMutationOrderService.ConfirmObject(obj, rec.ConfirmationDate.GetValueOrDefault(), _warehouseMutationOrderDetailService, _itemService, _barringService, _warehouseItemService, _stockMutationService);
+                                    Log(obj.Errors, obj.GetType().Name, obj.Code, rec.Id, obj.Id);
+                                }
+                            }
+                            break;
+                        };
+                    case TranSource.CashBankAdjustment:
+                        {
+                            var rec = cba.Where(x => x.Id == tran.Value.id && !x.IsDeleted).FirstOrDefault();
+                            if (rec == null) rec = cba.Where(x => x.Id == tran.Value.id).FirstOrDefault();
+                            // ReCreate the objects
+                            CashBankAdjustment obj = new CashBankAdjustment();
+                            Reflection.CopyProperties(rec, obj);
+                            obj.IsConfirmed = false;
+                            obj.IsDeleted = false;
+                            db.Database.ExecuteSqlCommand(string.Format("DBCC CHECKIDENT ({0}, RESEED, {1});", obj.GetType().Name, rec.Id - 1));
+                            _cashBankAdjustmentService.CreateObject(obj, _cashBankService);
+                            Log(obj.Errors, obj.GetType().Name, obj.Code, rec.Id, obj.Id);
+                            if (obj != null)
+                            {
+                                // ReConfirm the objects
+                                if (reconfirm && rec.IsConfirmed && !obj.IsConfirmed)
+                                {
+                                    _cashBankAdjustmentService.ConfirmObject(obj, rec.ConfirmationDate.GetValueOrDefault(), _cashMutationService, _cashBankService, _generalLedgerJournalService, _accountService, _closingService);
+                                    Log(obj.Errors, obj.GetType().Name, obj.Code, rec.Id, obj.Id);
+                                }
+                            }
+                            break;
+                        };
+                    case TranSource.CashBankMutation:
+                        {
+                            var rec = cbm.Where(x => x.Id == tran.Value.id && !x.IsDeleted).FirstOrDefault();
+                            if (rec == null) rec = cbm.Where(x => x.Id == tran.Value.id).FirstOrDefault();
+                            // ReCreate the objects
+                            CashBankMutation obj = new CashBankMutation();
+                            Reflection.CopyProperties(rec, obj);
+                            obj.IsConfirmed = false;
+                            obj.IsDeleted = false;
+                            db.Database.ExecuteSqlCommand(string.Format("DBCC CHECKIDENT ({0}, RESEED, {1});", obj.GetType().Name, rec.Id - 1));
+                            _cashBankMutationService.CreateObject(obj, _cashBankService);
+                            Log(obj.Errors, obj.GetType().Name, obj.Code, rec.Id, obj.Id);
+                            if (obj != null)
+                            {
+                                // ReConfirm the objects
+                                if (reconfirm && rec.IsConfirmed && !obj.IsConfirmed)
+                                {
+                                    _cashBankMutationService.ConfirmObject(obj, rec.ConfirmationDate.GetValueOrDefault(), _cashMutationService, _cashBankService, _generalLedgerJournalService, _accountService, _closingService);
+                                    Log(obj.Errors, obj.GetType().Name, obj.Code, rec.Id, obj.Id);
+                                }
+                            }
+                            break;
+                        };
+                    case TranSource.CustomPurchaseInvoice:
+                        {
+                            var rec = cpi.Where(x => x.Id == tran.Value.id && !x.IsDeleted).FirstOrDefault();
+                            if (rec == null) rec = cpi.Where(x => x.Id == tran.Value.id).FirstOrDefault();
+                            // ReCreate the objects
+                            CustomPurchaseInvoice obj = new CustomPurchaseInvoice();
+                            Reflection.CopyProperties(rec, obj);
+                            obj.IsConfirmed = false;
+                            obj.IsPaid = false;
+                            obj.IsFullPayment = false;
+                            obj.IsDeleted = false;
+                            if (rec.ConfirmationDate != null && rec.DueDate < rec.ConfirmationDate.GetValueOrDefault()) obj.DueDate = rec.ConfirmationDate;
+                            else if (rec.DueDate < rec.PurchaseDate) obj.DueDate = rec.PurchaseDate;
+                            db.Database.ExecuteSqlCommand(string.Format("DBCC CHECKIDENT ({0}, RESEED, {1});", obj.GetType().Name, rec.Id - 1));
+                            _customPurchaseInvoiceService.CreateObject(obj, _warehouseService, _contactService, _cashBankService);
+                            Log(obj.Errors, obj.GetType().Name, obj.Code, rec.Id, obj.Id);
+                            if (obj != null)
+                            {
+                                // ReCreate the details
+                                foreach (var det in db.TempCustomPurchaseInvoiceDetails.Where(x => !x.IsDeleted && x.CustomPurchaseInvoiceId == rec.Id).OrderBy(x => x.Id).ToList())
+                                {
+                                    CustomPurchaseInvoiceDetail detobj = new CustomPurchaseInvoiceDetail();
+                                    Reflection.CopyProperties(det, detobj);
+                                    detobj.IsDeleted = false;
+                                    db.Database.ExecuteSqlCommand(string.Format("DBCC CHECKIDENT ({0}, RESEED, {1});", detobj.GetType().Name, det.Id - 1));
+                                    _customPurchaseInvoiceDetailService.CreateObject(detobj, _customPurchaseInvoiceService, _itemService, _warehouseItemService);
+                                    Log(detobj.Errors, detobj.GetType().Name, detobj.Code, det.Id, detobj.Id);
+                                }
+                                TempPayable payable = db.TempPayables.Where(x => !x.IsDeleted && x.PayableSourceId == rec.Id && x.PayableSource == Constant.PayableSource.CustomPurchaseInvoice).OrderByDescending(x => x.Id).FirstOrDefault();
+                                //// ReConfirm the objects
+                                //if (reconfirm && rec.IsConfirmed && !obj.IsConfirmed)
+                                //{
+                                //    obj.Errors = new Dictionary<string, string>();
+                                //    db.Database.ExecuteSqlCommand(string.Format("DBCC CHECKIDENT (Payable, RESEED, {0});", payable.Id - 1));
+                                //    _customPurchaseInvoiceService.ConfirmObjectForRepair(obj, rec.PurchaseDate/*rec.ConfirmationDate.GetValueOrDefault()*/, payable.Code,
+                                //                                        _customPurchaseInvoiceDetailService, _contactService, _priceMutationService,
+                                //                                        _payableService, _customPurchaseInvoiceService, _warehouseItemService, _warehouseService, _itemService, _barringService, _stockMutationService,
+                                //                                        _generalLedgerJournalService, _accountService, _closingService);
+                                //    Log(obj.Errors, obj.GetType().Name, obj.Code, rec.Id, obj.Id);
+                                //    // RePaid the objects
+                                //    if (repaid_reconcile && rec.IsPaid && !obj.IsPaid)
+                                //    {
+                                //        TempPaymentVoucherDetail voucherDetail = db.TempPaymentVoucherDetails.Where(x => !x.IsDeleted && x.PayableId == payable.Id && x.Description.Contains("Automatic")).OrderByDescending(x => x.Id).FirstOrDefault();
+                                //        if (voucherDetail == null)
+                                //        {
+                                //            //continue;
+                                //            voucherDetail = db.TempPaymentVoucherDetails.Where(x => x.PayableId == payable.Id && x.Description.Contains("Automatic")).OrderByDescending(x => x.Id).FirstOrDefault();
+                                //            Console.WriteLine("WARNING : Missing Automatic PaymentVoucherDetail on CPI[{0}]:{1} - Payable[{2}]:{3}", rec.Id, rec.Code, payable.Id, payable.Code);
+                                //        }
+                                //        if (voucherDetail != null)
+                                //        {
+                                //            TempPaymentVoucher voucher = db.TempPaymentVouchers.Where(x => !x.IsDeleted && x.Id == voucherDetail.PaymentVoucherId).OrderByDescending(x => x.Id).FirstOrDefault();
+                                //            if (voucher == null)
+                                //            {
+                                //                voucher = db.TempPaymentVouchers.Where(x => x.Id == voucherDetail.PaymentVoucherId).OrderByDescending(x => x.Id).FirstOrDefault();
+                                //            }
+                                //            db.Database.ExecuteSqlCommand(string.Format("DBCC CHECKIDENT (PaymentVoucher, RESEED, {0});", voucher.Id - 1));
+                                //            db.Database.ExecuteSqlCommand(string.Format("DBCC CHECKIDENT (PaymentVoucherDetail, RESEED, {0});", voucherDetail.Id - 1));
+                                //            _customPurchaseInvoiceService.PaidObjectForRepair(obj, rec.AmountPaid.GetValueOrDefault(), rec.PaymentDate, voucher.Code, voucherDetail.Code,
+                                //                                                _cashBankService, _payableService, _paymentVoucherService, _paymentVoucherDetailService, _contactService, _cashMutationService,
+                                //                                                _generalLedgerJournalService, _accountService, _closingService);
+                                //            Log(obj.Errors, obj.GetType().Name, obj.Code, rec.Id, obj.Id);
+                                //        }
+                                //        // No vouchers found ?? buggy??
+                                //        else
+                                //        {
+                                //            Console.WriteLine("WARNING : Unrecoverable PaymentVoucherDetail on CPI[{0}]:{1} - Payable[{2}]:{3} ! Need to be paid Manually", rec.Id, rec.Code, payable.Id, payable.Code);
+                                //        }
+                                //    }
+                                //}
+                            }
+                            break;
+                        };
+                    case TranSource.CashSalesInvoice:
+                        {
+                            var rec = csi.Where(x => x.Id == tran.Value.id && !x.IsDeleted).FirstOrDefault();
+                            if (rec == null) rec = csi.Where(x => x.Id == tran.Value.id).FirstOrDefault();
+                            // ReCreate the objects
+                            CashSalesInvoice obj = new CashSalesInvoice();
+                            Reflection.CopyProperties(rec, obj);
+                            obj.IsConfirmed = false;
+                            obj.IsPaid = false;
+                            obj.IsFullPayment = false;
+                            obj.IsDeleted = false;
+                            if (rec.ConfirmationDate != null && rec.DueDate < rec.ConfirmationDate.GetValueOrDefault()) obj.DueDate = rec.ConfirmationDate;
+                            else if (rec.DueDate < rec.SalesDate) obj.DueDate = rec.SalesDate;
+                            db.Database.ExecuteSqlCommand(string.Format("DBCC CHECKIDENT ({0}, RESEED, {1});", obj.GetType().Name, rec.Id - 1));
+                            _cashSalesInvoiceService.CreateObject(obj, _warehouseService, _cashBankService);
+                            Log(obj.Errors, obj.GetType().Name, obj.Code, rec.Id, obj.Id);
+                            if (obj != null)
+                            {
+                                // ReCreate the details
+                                foreach (var det in db.TempCashSalesInvoiceDetails.Where(x => !x.IsDeleted && x.CashSalesInvoiceId == rec.Id).OrderBy(x => x.Id).ToList())
+                                {
+                                    CashSalesInvoiceDetail detobj = new CashSalesInvoiceDetail();
+                                    Reflection.CopyProperties(det, detobj);
+                                    detobj.IsDeleted = false;
+                                    db.Database.ExecuteSqlCommand(string.Format("DBCC CHECKIDENT ({0}, RESEED, {1});", detobj.GetType().Name, det.Id - 1));
+                                    _cashSalesInvoiceDetailService.CreateObject(detobj, _cashSalesInvoiceService, _itemService, _warehouseItemService, _quantityPricingService);
+                                    Log(detobj.Errors, detobj.GetType().Name, detobj.Code, det.Id, detobj.Id);
+                                    if (detobj.Errors.Any())
+                                    {
+                                        Item item = _itemService.GetObjectById(det.ItemId);
+                                        Console.WriteLine("CSID Item SKU : {0} (QTY = {1})", item.Sku, detobj.Quantity);
+                                    }
+                                }
+                                //// ReConfirm the objects
+                                //if (reconfirm && rec.IsConfirmed && !obj.IsConfirmed)
+                                //{
+                                //    obj.Errors = new Dictionary<string, string>();
+                                //    TempReceivable receivable = db.TempReceivables.Where(x => !x.IsDeleted && x.ReceivableSourceId == rec.Id && x.ReceivableSource == Constant.ReceivableSource.CashSalesInvoice).OrderByDescending(x => x.Id).FirstOrDefault();
+                                //    db.Database.ExecuteSqlCommand(string.Format("DBCC CHECKIDENT (Receivable, RESEED, {0});", receivable.Id - 1));
+                                //    _cashSalesInvoiceService.ConfirmObjectForRepair(obj, rec.SalesDate/*rec.ConfirmationDate.GetValueOrDefault()*/, rec.Discount, rec.Tax, receivable.Code,
+                                //                                        _cashSalesInvoiceDetailService, _contactService, _priceMutationService,
+                                //                                        _receivableService, _cashSalesInvoiceService, _warehouseItemService, _warehouseService, _itemService, _barringService, _stockMutationService, _cashBankService,
+                                //                                        _generalLedgerJournalService, _accountService, _closingService);
+                                //    Log(obj.Errors, obj.GetType().Name, obj.Code, rec.Id, obj.Id);
+                                //    // RePaid the objects
+                                //    if (repaid_reconcile && rec.IsPaid && !obj.IsPaid)
+                                //    {
+                                //        TempReceiptVoucherDetail voucherDetail = db.TempReceiptVoucherDetails.Where(x => !x.IsDeleted && x.ReceivableId == receivable.Id && x.Description.Contains("Automatic")).OrderByDescending(x => x.Id).FirstOrDefault();
+                                //        if (voucherDetail == null)
+                                //        {
+                                //            //continue;
+                                //            voucherDetail = db.TempReceiptVoucherDetails.Where(x => x.ReceivableId == receivable.Id && x.Description.Contains("Automatic")).OrderByDescending(x => x.Id).FirstOrDefault();
+                                //            Console.WriteLine("WARNING : Missing Automatic ReceiptVoucherDetail on CSI[{0}]:{1} - Receivable[{2}]:{3}", rec.Id, rec.Code, receivable.Id, receivable.Code);
+                                //        }
+                                //        if (voucherDetail != null)
+                                //        {
+                                //            TempReceiptVoucher voucher = db.TempReceiptVouchers.Where(x => !x.IsDeleted && x.Id == voucherDetail.ReceiptVoucherId).OrderByDescending(x => x.Id).FirstOrDefault();
+                                //            if (voucher == null)
+                                //            {
+                                //                voucher = db.TempReceiptVouchers.Where(x => x.Id == voucherDetail.ReceiptVoucherId).OrderByDescending(x => x.Id).FirstOrDefault();
+                                //            }
+                                //            db.Database.ExecuteSqlCommand(string.Format("DBCC CHECKIDENT (ReceiptVoucher, RESEED, {0});", voucher.Id - 1));
+                                //            db.Database.ExecuteSqlCommand(string.Format("DBCC CHECKIDENT (ReceiptVoucherDetail, RESEED, {0});", voucherDetail.Id - 1));
+                                //            _cashSalesInvoiceService.PaidObjectForRepair(obj, rec.AmountPaid.GetValueOrDefault(), rec.Allowance, voucher.Code, voucherDetail.Code,
+                                //                                                _cashBankService, _receivableService, _receiptVoucherService, _receiptVoucherDetailService, _contactService, _cashMutationService, _cashSalesReturnService,
+                                //                                                _generalLedgerJournalService, _accountService, _closingService);
+                                //            Log(obj.Errors, obj.GetType().Name, obj.Code, rec.Id, obj.Id);
+                                //        }
+                                //        // No vouchers found ?? buggy??
+                                //        else
+                                //        {
+                                //            Console.WriteLine("WARNING : Unrecoverable ReceiptVoucherDetail on CSI[{0}]:{1} - Receivable[{2}]:{3} ! Need to be paid Manually", rec.Id, rec.Code, receivable.Id, receivable.Code);
+                                //        }
+                                //    }
+                                //}
+                            }
+                            break;
+                        };
+                    case TranSource.CashSalesReturn:
+                        {
+                            var rec = csr.Where(x => x.Id == tran.Value.id && !x.IsDeleted).FirstOrDefault();
+                            if (rec == null) rec = csr.Where(x => x.Id == tran.Value.id).FirstOrDefault();
+                            // ReCreate the objects
+                            CashSalesReturn obj = new CashSalesReturn();
+                            Reflection.CopyProperties(rec, obj);
+                            obj.IsConfirmed = false;
+                            obj.IsPaid = false;
+                            obj.IsDeleted = false;
+                            db.Database.ExecuteSqlCommand(string.Format("DBCC CHECKIDENT ({0}, RESEED, {1});", obj.GetType().Name, rec.Id - 1));
+                            _cashSalesReturnService.CreateObject(obj, _cashSalesInvoiceService, _cashBankService);
+                            Log(obj.Errors, obj.GetType().Name, obj.Code, rec.Id, obj.Id);
+                            if (obj != null)
+                            {
+                                // ReCreate the details
+                                foreach (var det in db.TempCashSalesReturnDetails.Where(x => !x.IsDeleted && x.CashSalesReturnId == rec.Id).OrderBy(x => x.Id).ToList())
+                                {
+                                    CashSalesReturnDetail detobj = new CashSalesReturnDetail();
+                                    Reflection.CopyProperties(det, detobj);
+                                    detobj.IsDeleted = false;
+                                    db.Database.ExecuteSqlCommand(string.Format("DBCC CHECKIDENT ({0}, RESEED, {1});", detobj.GetType().Name, det.Id - 1));
+                                    _cashSalesReturnDetailService.CreateObject(detobj, _cashSalesReturnService, _cashSalesInvoiceDetailService);
+                                    Log(detobj.Errors, detobj.GetType().Name, detobj.Code, det.Id, detobj.Id);
+                                }
+                                TempPayable payable = db.TempPayables.Where(x => !x.IsDeleted && x.PayableSourceId == rec.Id && x.PayableSource == Constant.PayableSource.CashSalesReturn).OrderByDescending(x => x.Id).FirstOrDefault();
+                                // ReConfirm the objects
+                                if (reconfirm && rec.IsConfirmed && !obj.IsConfirmed)
+                                {
+                                    db.Database.ExecuteSqlCommand(string.Format("DBCC CHECKIDENT (Payable, RESEED, {0});", payable.Id - 1));
+                                    _cashSalesReturnService.ConfirmObjectForRepair(obj, rec.ReturnDate.GetValueOrDefault()/*rec.ConfirmationDate.GetValueOrDefault()*/, rec.Allowance, payable.Code,
+                                                                        _cashSalesReturnDetailService, _contactService, _cashSalesInvoiceService, _cashSalesInvoiceDetailService, _priceMutationService,
+                                                                        _payableService, _cashSalesReturnService, _warehouseItemService, _warehouseService, _itemService, _barringService, _stockMutationService,
+                                                                        _generalLedgerJournalService, _accountService, _closingService);
+                                    Log(obj.Errors, obj.GetType().Name, obj.Code, rec.Id, obj.Id);
+                                    // RePaid the objects
+                                    if (repaid_reconcile && rec.IsPaid && !obj.IsPaid)
+                                    {
+                                        TempPaymentVoucherDetail voucherDetail = db.TempPaymentVoucherDetails.Where(x => !x.IsDeleted && x.PayableId == payable.Id && x.Description.Contains("Automatic")).OrderByDescending(x => x.Id).FirstOrDefault();
+                                        if (voucherDetail == null)
+                                        {
+                                            //continue;
+                                            voucherDetail = db.TempPaymentVoucherDetails.Where(x => x.PayableId == payable.Id && x.Description.Contains("Automatic")).OrderByDescending(x => x.Id).FirstOrDefault();
+                                            Console.WriteLine("WARNING : Missing Automatic PaymentVoucherDetail on CSR[{0}]:{1} - Payable[{2}]:{3}", rec.Id, rec.Code, payable.Id, payable.Code);
+                                        }
+                                        if (voucherDetail != null)
+                                        {
+                                            TempPaymentVoucher voucher = db.TempPaymentVouchers.Where(x => !x.IsDeleted && x.Id == voucherDetail.PaymentVoucherId).OrderByDescending(x => x.Id).FirstOrDefault();
+                                            if (voucher == null)
+                                            {
+                                                voucher = db.TempPaymentVouchers.Where(x => x.Id == voucherDetail.PaymentVoucherId).OrderByDescending(x => x.Id).FirstOrDefault();
+                                            }
+                                            db.Database.ExecuteSqlCommand(string.Format("DBCC CHECKIDENT (PaymentVoucher, RESEED, {0});", voucher.Id - 1));
+                                            db.Database.ExecuteSqlCommand(string.Format("DBCC CHECKIDENT (PaymentVoucherDetail, RESEED, {0});", voucherDetail.Id - 1));
+                                            _cashSalesReturnService.PaidObjectForRepair(obj, voucher.Code, voucherDetail.Code,
+                                                                                _cashBankService, _payableService, _paymentVoucherService, _paymentVoucherDetailService, _contactService, _cashMutationService,
+                                                                                _generalLedgerJournalService, _accountService, _closingService);
+                                            Log(obj.Errors, obj.GetType().Name, obj.Code, rec.Id, obj.Id);
+                                        }
+                                        // No vouchers found ?? buggy??
+                                        else
+                                        {
+                                            Console.WriteLine("WARNING : Unrecoverable PaymentVoucherDetail on CSR[{0}]:{1} - Payable[{2}]:{3} ! Need to be Paid Manually", rec.Id, rec.Code, payable.Id, payable.Code);
+                                        }
+                                    }
+                                }
+                            }
+                            break;
+                        };
+                    case TranSource.PaymentRequest:
+                        {
+                            var rec = pr.Where(x => x.Id == tran.Value.id && !x.IsDeleted).FirstOrDefault();
+                            if (rec == null) rec = pr.Where(x => x.Id == tran.Value.id).FirstOrDefault();
+                            // ReCreate the objects
+                            TempPaymentRequestDetail tmp = db.TempPaymentRequestDetails.Where(x => !x.IsDeleted && x.PaymentRequestId == rec.Id && x.IsLegacy && x.Status == Constant.GeneralLedgerStatus.Credit).OrderByDescending(x => x.Id).FirstOrDefault();
+                            PaymentRequest obj = new PaymentRequest();
+                            Reflection.CopyProperties(rec, obj);
+                            obj.IsConfirmed = false;
+                            obj.IsDeleted = false;
+                            db.Database.ExecuteSqlCommand(string.Format("DBCC CHECKIDENT ({0}, RESEED, {1});", obj.GetType().Name, rec.Id - 1));
+                            db.Database.ExecuteSqlCommand(string.Format("DBCC CHECKIDENT (PaymentRequestDetail, RESEED, {0});", tmp.Id - 1));
+                            _paymentRequestService.CreateObject(obj, _contactService, _paymentRequestDetailService, _accountService, _generalLedgerJournalService, _closingService);
+                            Log(obj.Errors, obj.GetType().Name, obj.Code, rec.Id, obj.Id);
+                            if (obj != null)
+                            {
+                                // ReCreate the details
+                                foreach (var det in db.TempPaymentRequestDetails.Where(x => !x.IsDeleted && x.PaymentRequestId == rec.Id && !x.IsLegacy).OrderBy(x => x.Id).ToList())
+                                {
+                                    PaymentRequestDetail detobj = new PaymentRequestDetail();
+                                    Reflection.CopyProperties(det, detobj);
+                                    detobj.IsConfirmed = false;
+                                    detobj.IsDeleted = false;
+                                    db.Database.ExecuteSqlCommand(string.Format("DBCC CHECKIDENT ({0}, RESEED, {1});", detobj.GetType().Name, det.Id - 1));
+                                    _paymentRequestDetailService.CreateObject(detobj, _paymentRequestService, _accountService);
+                                    Log(detobj.Errors, detobj.GetType().Name, detobj.Code, det.Id, detobj.Id);
+                                }
+                                TempPayable payable = db.TempPayables.Where(x => !x.IsDeleted && x.PayableSourceId == rec.Id && x.PayableSource == Constant.PayableSource.PaymentRequest).OrderByDescending(x => x.Id).FirstOrDefault();
+                                // ReConfirm the objects
+                                if (reconfirm && rec.IsConfirmed && !obj.IsConfirmed)
+                                {
+                                    db.Database.ExecuteSqlCommand(string.Format("DBCC CHECKIDENT (Payable, RESEED, {0});", payable.Id - 1));
+                                    _paymentRequestService.ConfirmObject(obj, rec.ConfirmationDate.GetValueOrDefault(), _payableService, _paymentRequestDetailService,
+                                                                _accountService, _generalLedgerJournalService, _closingService);
+                                    Log(obj.Errors, obj.GetType().Name, obj.Code, rec.Id, obj.Id);
+                                }
+                            }
+                            break;
+                        };
+                    case TranSource.ReceiptVoucher:
+                        {
+                            var rec = rv.Where(x => x.Id == tran.Value.id && !x.IsDeleted).FirstOrDefault();
+                            if (rec == null) rec = rv.Where(x => x.Id == tran.Value.id).FirstOrDefault();
+                            // ReCreate the objects
+                            var obj = _receiptVoucherService.GetObjectById(rec.Id);
+                            //ReceiptVoucher obj = new ReceiptVoucher();
+                            //Reflection.CopyProperties(rec, obj);
+                            //obj.IsConfirmed = false;
+                            //obj.IsReconciled = false;
+                            //obj.IsDeleted = false;
+                            //db.Database.ExecuteSqlCommand(string.Format("DBCC CHECKIDENT ({0}, RESEED, {1});", obj.GetType().Name, rec.Id - 1));
+                            //_receiptVoucherService.CreateObject(obj, _receiptVoucherDetailService, _receivableService, _contactService, _cashBankService);
+                            //Log(obj.Errors, obj.GetType().Name, obj.Code, rec.Id, obj.Id);
+                            if (obj != null)
+                            {
+                                // ReCreate the details
+                                foreach (var det in db.TempReceiptVoucherDetails.Where(x => !x.IsDeleted && x.ReceiptVoucherId == rec.Id && !x.Description.Contains("Automatic")).OrderBy(x => x.Id).ToList())
+                                {
+                                    TempReceivable tmp = db.TempReceivables.Where(x => !x.IsDeleted && x.Id == det.ReceivableId).OrderByDescending(x => x.Id).FirstOrDefault();
+                                    if (tmp == null) tmp = db.TempReceivables.Where(x => x.Id == det.ReceivableId).OrderByDescending(x => x.Id).FirstOrDefault();
+                                    ReceiptVoucherDetail detobj = new ReceiptVoucherDetail();
+                                    Reflection.CopyProperties(det, detobj);
+                                    detobj.IsConfirmed = false;
+                                    detobj.IsDeleted = false;
+                                    detobj.ReceivableId = _receivableService.GetObjectBySource(tmp.ReceivableSource, tmp.ReceivableSourceId).Id;
+                                    db.Database.ExecuteSqlCommand(string.Format("DBCC CHECKIDENT ({0}, RESEED, {1});", detobj.GetType().Name, det.Id - 1));
+                                    _receiptVoucherDetailService.CreateObject(detobj, _receiptVoucherService, _cashBankService, _receivableService);
+                                    Log(detobj.Errors, detobj.GetType().Name, detobj.Code, det.Id, detobj.Id);
+                                }
+                                // ReConfirm the objects
+                                if (reconfirm && rec.IsConfirmed && !obj.IsConfirmed)
+                                {
+                                    _receiptVoucherService.ConfirmObject(obj, rec.ConfirmationDate.GetValueOrDefault(), _receiptVoucherDetailService, _cashBankService, _receivableService, _cashMutationService,
+                                                                _generalLedgerJournalService, _accountService, _closingService);
+                                    Log(obj.Errors, obj.GetType().Name, obj.Code, rec.Id, obj.Id);
+                                    // ReReconcile the objects
+                                    if (repaid_reconcile && rec.IsReconciled && !obj.IsReconciled)
+                                    {
+                                        _receiptVoucherService.ReconcileObject(obj, rec.ReconciliationDate.GetValueOrDefault(), _receiptVoucherDetailService, _cashMutationService, _cashBankService, _receivableService, _generalLedgerJournalService, _accountService, _closingService);
+                                        Log(obj.Errors, obj.GetType().Name, obj.Code, rec.Id, obj.Id);
+                                    }
+                                }
+                            }
+                            break;
+                        };
+                    case TranSource.PaymentVoucher:
+                        {
+                            var rec = pv.Where(x => x.Id == tran.Value.id && !x.IsDeleted).FirstOrDefault();
+                            if (rec == null) rec = pv.Where(x => x.Id == tran.Value.id).FirstOrDefault();
+                            // ReCreate the objects
+                            var obj = _paymentVoucherService.GetObjectById(rec.Id);
+                            //PaymentVoucher obj = new PaymentVoucher();
+                            //Reflection.CopyProperties(rec, obj);
+                            //obj.IsConfirmed = false;
+                            //obj.IsReconciled = false;
+                            //obj.IsDeleted = false;
+                            //db.Database.ExecuteSqlCommand(string.Format("DBCC CHECKIDENT ({0}, RESEED, {1});", obj.GetType().Name, rec.Id - 1));
+                            //_paymentVoucherService.CreateObject(obj, _paymentVoucherDetailService, _payableService, _contactService, _cashBankService);
+                            //Log(obj.Errors, obj.GetType().Name, obj.Code, rec.Id, obj.Id);
+                            if (obj != null)
+                            {
+                                // ReCreate the details
+                                foreach (var det in db.TempPaymentVoucherDetails.Where(x => !x.IsDeleted && x.PaymentVoucherId == rec.Id && !x.Description.Contains("Automatic")).OrderBy(x => x.Id).ToList())
+                                {
+                                    TempPayable tmp = db.TempPayables.Where(x => !x.IsDeleted && x.Id == det.PayableId).OrderByDescending(x => x.Id).FirstOrDefault();
+                                    if (tmp == null) tmp = db.TempPayables.Where(x => x.Id == det.PayableId).OrderByDescending(x => x.Id).FirstOrDefault();
+                                    PaymentVoucherDetail detobj = new PaymentVoucherDetail();
+                                    Reflection.CopyProperties(det, detobj);
+                                    detobj.IsConfirmed = false;
+                                    detobj.IsDeleted = false;
+                                    detobj.PayableId = _payableService.GetObjectBySource(tmp.PayableSource, tmp.PayableSourceId).Id;
+                                    db.Database.ExecuteSqlCommand(string.Format("DBCC CHECKIDENT ({0}, RESEED, {1});", detobj.GetType().Name, det.Id - 1));
+                                    _paymentVoucherDetailService.CreateObject(detobj, _paymentVoucherService, _cashBankService, _payableService);
+                                    Log(detobj.Errors, detobj.GetType().Name, detobj.Code, det.Id, detobj.Id);
+                                }
+                                // ReConfirm the objects
+                                if (reconfirm && rec.IsConfirmed && !obj.IsConfirmed)
+                                {
+                                    _paymentVoucherService.ConfirmObject(obj, rec.ConfirmationDate.GetValueOrDefault(), _paymentVoucherDetailService, _cashBankService, _payableService, _cashMutationService,
+                                                                _generalLedgerJournalService, _accountService, _closingService);
+                                    Log(obj.Errors, obj.GetType().Name, obj.Code, rec.Id, obj.Id);
+                                    // ReReconcile the objects
+                                    if (repaid_reconcile && rec.IsReconciled && !obj.IsReconciled)
+                                    {
+                                        _paymentVoucherService.ReconcileObject(obj, rec.ReconciliationDate.GetValueOrDefault(), _paymentVoucherDetailService, _cashMutationService, _cashBankService, _payableService, _generalLedgerJournalService, _accountService, _closingService);
+                                        Log(obj.Errors, obj.GetType().Name, obj.Code, rec.Id, obj.Id);
+                                    }
+                                }
+                            }
+                            break;
+                        };
+                    case TranSource.Memorial:
+                        {
+                            var rec = mem.Where(x => x.Id == tran.Value.id && !x.IsDeleted).FirstOrDefault();
+                            if (rec == null) rec = mem.Where(x => x.Id == tran.Value.id).FirstOrDefault();
+                            // ReCreate the objects
+                            Memorial obj = new Memorial();
+                            Reflection.CopyProperties(rec, obj);
+                            obj.IsConfirmed = false;
+                            obj.IsDeleted = false;
+                            db.Database.ExecuteSqlCommand(string.Format("DBCC CHECKIDENT ({0}, RESEED, {1});", obj.GetType().Name, rec.Id - 1));
+                            _memorialService.CreateObject(obj);
+                            Log(obj.Errors, obj.GetType().Name, obj.Code, rec.Id, obj.Id);
+                            if (obj != null)
+                            {
+                                // ReCreate the details
+                                foreach (var det in db.TempMemorialDetails.Where(x => !x.IsDeleted && x.MemorialId == rec.Id).OrderBy(x => x.Id).ToList())
+                                {
+                                    MemorialDetail detobj = new MemorialDetail();
+                                    Reflection.CopyProperties(det, detobj);
+                                    detobj.IsConfirmed = false;
+                                    detobj.IsDeleted = false;
+                                    db.Database.ExecuteSqlCommand(string.Format("DBCC CHECKIDENT ({0}, RESEED, {1});", detobj.GetType().Name, det.Id - 1));
+                                    _memorialDetailService.CreateObject(detobj, _memorialService, _accountService);
+                                    Log(detobj.Errors, detobj.GetType().Name, detobj.Code, det.Id, detobj.Id);
+                                }
+                                // ReConfirm the objects
+                                if (reconfirm && rec.IsConfirmed && !obj.IsConfirmed)
+                                {
+                                    _memorialService.ConfirmObject(obj, rec.ConfirmationDate.GetValueOrDefault(), _memorialDetailService, _accountService, _generalLedgerJournalService, _closingService);
+                                    Log(obj.Errors, obj.GetType().Name, obj.Code, rec.Id, obj.Id);
+                                }
+                            }
+                            break;
+                        };
+                }
+            }
+            return count;
+        }
+
         public int Restore(Nullable<DateTime> startDate, Nullable<DateTime> endDate)
         {
-            IDictionary<DateTime, sourceid> trans = new Dictionary<DateTime, sourceid>();
+            IDictionary<DateTime, sourceid> trans = new Dictionary<DateTime, sourceid>(); // Document DateTime & ID
+            //IList<KeyValuePair<DateTime, sourceid>> trans = new List<KeyValuePair<DateTime, sourceid>>(); // Document DateTime & ID
 
             var db = new OffsetPrintingSuppliesEntities();
             using (db)
@@ -334,38 +875,6 @@ namespace Service
 
                 //FixAccounts();
 
-                // CashBankAdjustment
-                foreach (var rec in db.TempCashBankAdjustments.Where(x => !x.IsDeleted).OrderBy(x => x.Id).ToList())
-                {
-                    CashBankAdjustment obj = new CashBankAdjustment();
-                    Reflection.CopyProperties(rec, obj);
-                    obj.IsConfirmed = false;
-                    db.Database.ExecuteSqlCommand(string.Format("DBCC CHECKIDENT ({0}, RESEED, {1});", obj.GetType().Name, rec.Id - 1));
-                    _cashBankAdjustmentService.CreateObject(obj, _cashBankService);
-                    Log(obj.Errors, obj.GetType().Name, obj.Code, rec.Id, obj.Id);
-                    if (rec.IsConfirmed)
-                    {
-                        _cashBankAdjustmentService.ConfirmObject(obj, rec.ConfirmationDate.GetValueOrDefault(), _cashMutationService, _cashBankService, _generalLedgerJournalService, _accountService, _closingService);
-                        Log(obj.Errors, obj.GetType().Name, obj.Code, rec.Id, obj.Id);
-                    }
-                }
-
-                // CashBankMutation
-                foreach (var rec in db.TempCashBankMutations.Where(x => !x.IsDeleted).OrderBy(x => x.Id).ToList())
-                {
-                    CashBankMutation obj = new CashBankMutation();
-                    Reflection.CopyProperties(rec, obj);
-                    obj.IsConfirmed = false;
-                    db.Database.ExecuteSqlCommand(string.Format("DBCC CHECKIDENT ({0}, RESEED, {1});", obj.GetType().Name, rec.Id - 1));
-                    _cashBankMutationService.CreateObject(obj, _cashBankService);
-                    Log(obj.Errors, obj.GetType().Name, obj.Code, rec.Id, obj.Id);
-                    if (rec.IsConfirmed)
-                    {
-                        _cashBankMutationService.ConfirmObject(obj, rec.ConfirmationDate.GetValueOrDefault(), _cashMutationService, _cashBankService, _generalLedgerJournalService, _accountService, _closingService);
-                        Log(obj.Errors, obj.GetType().Name, obj.Code, rec.Id, obj.Id);
-                    }
-                }
-
                 // Item
                 foreach (var rec in db.TempItems.Where(x => !x.IsDeleted).OrderBy(x => x.Id).ToList())
                 {
@@ -397,277 +906,75 @@ namespace Service
                 // StockAdjustment
                 foreach (var rec in db.TempStockAdjustments.Where(x => !x.IsDeleted).OrderBy(x => x.Id).ToList())
                 {
-                    StockAdjustment obj = new StockAdjustment();
+                    var obj = new StockAdjustment();
                     Reflection.CopyProperties(rec, obj);
-                    obj.IsConfirmed = false;
-                    db.Database.ExecuteSqlCommand(string.Format("DBCC CHECKIDENT ({0}, RESEED, {1});", obj.GetType().Name, rec.Id - 1));
-                    _stockAdjustmentService.CreateObject(obj, _warehouseService);
-                    Log(obj.Errors, obj.GetType().Name, obj.Code, rec.Id, obj.Id);
-                    foreach (var det in db.TempStockAdjustmentDetails.Where(x => !x.IsDeleted && x.StockAdjustmentId == rec.Id).OrderBy(x => x.Id).ToList())
-                    {
-                        StockAdjustmentDetail detobj = new StockAdjustmentDetail();
-                        Reflection.CopyProperties(det, detobj);
-                        detobj.IsConfirmed = false;
-                        db.Database.ExecuteSqlCommand(string.Format("DBCC CHECKIDENT ({0}, RESEED, {1});", detobj.GetType().Name, det.Id - 1));
-                        _stockAdjustmentDetailService.CreateObject(detobj, _stockAdjustmentService, _itemService, _warehouseItemService);
-                        Log(detobj.Errors, detobj.GetType().Name, detobj.Code, det.Id, detobj.Id);
-                    }
-                    if (rec.IsConfirmed)
-                    {
-                        _stockAdjustmentService.ConfirmObject(obj, rec.ConfirmationDate.GetValueOrDefault(), _stockAdjustmentDetailService, _stockMutationService, _itemService, _barringService, _warehouseItemService, _generalLedgerJournalService, _accountService, _closingService);
-                        Log(obj.Errors, obj.GetType().Name, obj.Code, rec.Id, obj.Id);
-                    }
+                    trans.Add(rec.AdjustmentDate.AddMilliseconds(rec.Id + 10000), new sourceid() { source = obj.GetType().Name, id = rec.Id });
                 }
 
                 // Warehouse Mutation
                 foreach (var rec in db.TempWarehouseMutationOrders.Where(x => !x.IsDeleted).OrderBy(x => x.Id).ToList())
                 {
-                    WarehouseMutationOrder obj = new WarehouseMutationOrder();
+                    var obj = new WarehouseMutationOrder();
                     Reflection.CopyProperties(rec, obj);
-                    obj.IsConfirmed = false;
-                    db.Database.ExecuteSqlCommand(string.Format("DBCC CHECKIDENT ({0}, RESEED, {1});", obj.GetType().Name, rec.Id - 1));
-                    _warehouseMutationOrderService.CreateObject(obj, _warehouseService);
-                    Log(obj.Errors, obj.GetType().Name, obj.Code, rec.Id, obj.Id);
-                    foreach (var det in db.TempWarehouseMutationOrderDetails.Where(x => !x.IsDeleted && x.WarehouseMutationOrderId == rec.Id).OrderBy(x => x.Id).ToList())
+                    trans.Add(rec.MutationDate.AddMilliseconds(rec.Id + 20000), new sourceid() { source = obj.GetType().Name, id = rec.Id });
+                }
+
+                // CashBankAdjustment
+                foreach (var rec in db.TempCashBankAdjustments.Where(x => !x.IsDeleted).OrderBy(x => x.Id).ToList())
+                {
+                    var obj = new CashBankAdjustment();
+                    Reflection.CopyProperties(rec, obj);
+                    trans.Add(rec.AdjustmentDate.AddMilliseconds(rec.Id + 30000), new sourceid() { source = obj.GetType().Name, id = rec.Id });
+                }
+
+                // CashBankMutation
+                foreach (var rec in db.TempCashBankMutations.Where(x => !x.IsDeleted).OrderBy(x => x.Id).ToList())
+                {
+                    var obj = new CashBankMutation();
+                    Reflection.CopyProperties(rec, obj);
+                    if (rec.ConfirmationDate == null)
                     {
-                        WarehouseMutationOrderDetail detobj = new WarehouseMutationOrderDetail();
-                        Reflection.CopyProperties(det, detobj);
-                        detobj.IsConfirmed = false;
-                        db.Database.ExecuteSqlCommand(string.Format("DBCC CHECKIDENT ({0}, RESEED, {1});", detobj.GetType().Name, det.Id - 1));
-                        _warehouseMutationOrderDetailService.CreateObject(detobj, _warehouseMutationOrderService, _itemService, _warehouseItemService);
-                        Log(detobj.Errors, detobj.GetType().Name, detobj.Code, det.Id, detobj.Id);
+                        Console.WriteLine("WARNING : Unknown Confirmation Date on CashBankMutation[{0}]:{1} ! Need to be Confirmed Manually", rec.Id, rec.Code);
                     }
-                    if (rec.IsConfirmed)
-                    {
-                        _warehouseMutationOrderService.ConfirmObject(obj, rec.ConfirmationDate.GetValueOrDefault(), _warehouseMutationOrderDetailService, _itemService, _barringService, _warehouseItemService, _stockMutationService);
-                        Log(obj.Errors, obj.GetType().Name, obj.Code, rec.Id, obj.Id);
-                    }
+                    trans.Add(rec.ConfirmationDate.GetValueOrDefault().AddMilliseconds(rec.Id + 40000), new sourceid() { source = obj.GetType().Name, id = rec.Id });
                 }
 
                 // CustomPurchaseInvoice
                 foreach (var rec in db.TempCustomPurchaseInvoices.Where(x => !x.IsDeleted).OrderBy(x => x.Id).ToList())
                 {
-                    //try
-                    {
-                        CustomPurchaseInvoice obj = new CustomPurchaseInvoice();
-                        Reflection.CopyProperties(rec, obj);
-                        obj.IsConfirmed = false;
-                        obj.IsPaid = false;
-                        if (rec.ConfirmationDate != null && rec.DueDate < rec.ConfirmationDate.GetValueOrDefault()) obj.DueDate = rec.ConfirmationDate;
-                        else if (rec.DueDate < rec.PurchaseDate) obj.DueDate = rec.PurchaseDate;
-                        db.Database.ExecuteSqlCommand(string.Format("DBCC CHECKIDENT ({0}, RESEED, {1});", obj.GetType().Name, rec.Id - 1));
-                        _customPurchaseInvoiceService.CreateObject(obj, _warehouseService, _contactService, _cashBankService);
-                        Log(obj.Errors, obj.GetType().Name, obj.Code, rec.Id, obj.Id);
-                        foreach (var det in db.TempCustomPurchaseInvoiceDetails.Where(x => !x.IsDeleted && x.CustomPurchaseInvoiceId == rec.Id).OrderBy(x => x.Id).ToList())
-                        {
-                            CustomPurchaseInvoiceDetail detobj = new CustomPurchaseInvoiceDetail();
-                            Reflection.CopyProperties(det, detobj);
-                            db.Database.ExecuteSqlCommand(string.Format("DBCC CHECKIDENT ({0}, RESEED, {1});", detobj.GetType().Name, det.Id - 1));
-                            _customPurchaseInvoiceDetailService.CreateObject(detobj, _customPurchaseInvoiceService, _itemService, _warehouseItemService);
-                            Log(detobj.Errors, detobj.GetType().Name, detobj.Code, det.Id, detobj.Id);
-                        }
-                        //TempPayable payable = db.TempPayables.Where(x => !x.IsDeleted && x.PayableSourceId == rec.Id && x.PayableSource == Constant.PayableSource.CustomPurchaseInvoice).OrderByDescending(x => x.Id).FirstOrDefault();
-                        //if (rec.IsConfirmed)
-                        //{
-                        //    trans.Add(rec.PurchaseDate.AddMilliseconds(rec.Id), new sourceid() { source = obj.GetType().Name, id = rec.Id });
-                        //    db.Database.ExecuteSqlCommand(string.Format("DBCC CHECKIDENT (Payable, RESEED, {0});", payable.Id - 1));
-                        //    _customPurchaseInvoiceService.ConfirmObjectForRepair(obj, rec.PurchaseDate/*rec.ConfirmationDate.GetValueOrDefault()*/, payable.Code,
-                        //                                        _customPurchaseInvoiceDetailService, _contactService, _priceMutationService,
-                        //                                        _payableService, _customPurchaseInvoiceService, _warehouseItemService, _warehouseService, _itemService, _barringService, _stockMutationService,
-                        //                                        _generalLedgerJournalService, _accountService, _closingService);
-                        //    Log(obj.Errors, obj.GetType().Name, obj.Code, rec.Id, obj.Id);
-                        //}
-                        //if (rec.IsPaid)
-                        //{
-                        //    TempPaymentVoucherDetail voucherDetail = db.TempPaymentVoucherDetails.Where(x => !x.IsDeleted && x.PayableId == payable.Id && x.Description.Contains("Automatic")).OrderByDescending(x => x.Id).FirstOrDefault();
-                        //    if (voucherDetail == null)
-                        //    {
-                        //        //continue;
-                        //        voucherDetail = db.TempPaymentVoucherDetails.Where(x => x.PayableId == payable.Id && x.Description.Contains("Automatic")).OrderByDescending(x => x.Id).FirstOrDefault();
-                        //        Console.WriteLine("WARNING : Missing Automatic PaymentVoucherDetail on CPI {0} - Payable {1}", rec.Code, payable.Code);
-                        //    }
-                        //    TempPaymentVoucher voucher = db.TempPaymentVouchers.Where(x => !x.IsDeleted && x.Id == voucherDetail.PaymentVoucherId).OrderByDescending(x => x.Id).FirstOrDefault();
-                        //    if (voucher == null)
-                        //    {
-                        //        voucher = db.TempPaymentVouchers.Where(x => x.Id == voucherDetail.PaymentVoucherId).OrderByDescending(x => x.Id).FirstOrDefault();
-                        //    }
-                        //    db.Database.ExecuteSqlCommand(string.Format("DBCC CHECKIDENT (PaymentVoucher, RESEED, {0});", voucher.Id - 1));
-                        //    db.Database.ExecuteSqlCommand(string.Format("DBCC CHECKIDENT (PaymentVoucherDetail, RESEED, {0});", voucherDetail.Id - 1));
-                        //    _customPurchaseInvoiceService.PaidObjectForRepair(obj, rec.AmountPaid.GetValueOrDefault(), rec.PaymentDate, voucher.Code, voucherDetail.Code,
-                        //                                        _cashBankService, _payableService, _paymentVoucherService, _paymentVoucherDetailService, _contactService, _cashMutationService,
-                        //                                        _generalLedgerJournalService, _accountService, _closingService);
-                        //    Log(obj.Errors, obj.GetType().Name, obj.Code, rec.Id, obj.Id);
-                        //}
-                    }
-                    //catch 
-                    //{
-                    //    Console.WriteLine("ERROR at {0}:{1}", rec.GetType().Name, rec.Code);
-                    //}
+                    var obj = new CustomPurchaseInvoice();
+                    Reflection.CopyProperties(rec, obj);
+                    trans.Add(rec.PurchaseDate.AddMilliseconds(rec.Id + 50000), new sourceid() { source = obj.GetType().Name, id = rec.Id });
                 }
                 
                 // CashSalesInvoice
                 foreach (var rec in db.TempCashSalesInvoices.Where(x => !x.IsDeleted).OrderBy(x => x.Id).ToList())
                 {
-                    //try
-                    {
-                        CashSalesInvoice obj = new CashSalesInvoice();
-                        Reflection.CopyProperties(rec, obj);
-                        obj.IsConfirmed = false;
-                        obj.IsPaid = false;
-                        if (rec.ConfirmationDate != null && rec.DueDate < rec.ConfirmationDate.GetValueOrDefault()) obj.DueDate = rec.ConfirmationDate;
-                        else if (rec.DueDate < rec.SalesDate) obj.DueDate = rec.SalesDate;
-                        db.Database.ExecuteSqlCommand(string.Format("DBCC CHECKIDENT ({0}, RESEED, {1});", obj.GetType().Name, rec.Id - 1));
-                        _cashSalesInvoiceService.CreateObject(obj, _warehouseService, _cashBankService);
-                        Log(obj.Errors, obj.GetType().Name, obj.Code, rec.Id, obj.Id);
-                        foreach (var det in db.TempCashSalesInvoiceDetails.Where(x => !x.IsDeleted && x.CashSalesInvoiceId == rec.Id).OrderBy(x => x.Id).ToList())
-                        {
-                            CashSalesInvoiceDetail detobj = new CashSalesInvoiceDetail();
-                            Reflection.CopyProperties(det, detobj);
-                            db.Database.ExecuteSqlCommand(string.Format("DBCC CHECKIDENT ({0}, RESEED, {1});", detobj.GetType().Name, det.Id - 1));
-                            _cashSalesInvoiceDetailService.CreateObject(detobj, _cashSalesInvoiceService, _itemService, _warehouseItemService, _quantityPricingService);
-                            Log(detobj.Errors, detobj.GetType().Name, detobj.Code, det.Id, detobj.Id);
-                            if (detobj.Errors.Any())
-                            {
-                                Item item = _itemService.GetObjectById(det.ItemId);
-                                Console.WriteLine("CSID Item SKU : {0} (QTY = {1})", item.Sku, detobj.Quantity);
-                            }
-                        }
-                        //TempReceivable receivable = db.TempReceivables.Where(x => !x.IsDeleted && x.ReceivableSourceId == rec.Id && x.ReceivableSource == Constant.ReceivableSource.CashSalesInvoice).OrderByDescending(x => x.Id).FirstOrDefault();
-                        //if (rec.IsConfirmed)
-                        //{
-                        //    trans.Add(rec.SalesDate.AddMilliseconds(rec.Id + 100000), new sourceid() { source = obj.GetType().Name, id = rec.Id });
-                        //    db.Database.ExecuteSqlCommand(string.Format("DBCC CHECKIDENT (Receivable, RESEED, {0});", receivable.Id - 1));
-                        //    _cashSalesInvoiceService.ConfirmObjectForRepair(obj, rec.SalesDate/*rec.ConfirmationDate.GetValueOrDefault()*/, rec.Discount, rec.Tax, receivable.Code,
-                        //                                        _cashSalesInvoiceDetailService, _contactService, _priceMutationService,
-                        //                                        _receivableService, _cashSalesInvoiceService, _warehouseItemService, _warehouseService, _itemService, _barringService, _stockMutationService, _cashBankService,
-                        //                                        _generalLedgerJournalService, _accountService, _closingService);
-                        //    Log(obj.Errors, obj.GetType().Name, obj.Code, rec.Id, obj.Id);
-                        //}
-                        //if (rec.IsPaid)
-                        //{
-                        //    TempReceiptVoucherDetail voucherDetail = db.TempReceiptVoucherDetails.Where(x => !x.IsDeleted && x.ReceivableId == receivable.Id && x.Description.Contains("Automatic")).OrderByDescending(x => x.Id).FirstOrDefault();
-                        //    if (voucherDetail == null)
-                        //    {
-                        //        //continue;
-                        //        voucherDetail = db.TempReceiptVoucherDetails.Where(x => x.ReceivableId == receivable.Id && x.Description.Contains("Automatic")).OrderByDescending(x => x.Id).FirstOrDefault();
-                        //        Console.WriteLine("WARNING : Missing Automatic ReceiptVoucherDetail on CSI {0} - Receivable {1}", rec.Code, receivable.Code);
-                        //    }
-                        //    TempReceiptVoucher voucher = db.TempReceiptVouchers.Where(x => !x.IsDeleted && x.Id == voucherDetail.ReceiptVoucherId).OrderByDescending(x => x.Id).FirstOrDefault();
-                        //    if (voucher == null)
-                        //    {
-                        //        voucher = db.TempReceiptVouchers.Where(x => x.Id == voucherDetail.ReceiptVoucherId).OrderByDescending(x => x.Id).FirstOrDefault();
-                        //    }
-                        //    db.Database.ExecuteSqlCommand(string.Format("DBCC CHECKIDENT (ReceiptVoucher, RESEED, {0});", voucher.Id - 1));
-                        //    db.Database.ExecuteSqlCommand(string.Format("DBCC CHECKIDENT (ReceiptVoucherDetail, RESEED, {0});", voucherDetail.Id - 1));
-                        //    _cashSalesInvoiceService.PaidObjectForRepair(obj, rec.AmountPaid.GetValueOrDefault(), rec.Allowance, voucher.Code, voucherDetail.Code,
-                        //                                        _cashBankService, _receivableService, _receiptVoucherService, _receiptVoucherDetailService, _contactService, _cashMutationService, _cashSalesReturnService,
-                        //                                        _generalLedgerJournalService, _accountService, _closingService);
-                        //    Log(obj.Errors, obj.GetType().Name, obj.Code, rec.Id, obj.Id);
-                        //}
-                    }
-                    //catch
-                    //{
-                    //    Console.WriteLine("ERROR at {0}:{1}", rec.GetType().Name, rec.Code);
-                    //}
+                    var obj = new CashSalesInvoice();
+                    Reflection.CopyProperties(rec, obj);
+                    trans.Add(rec.SalesDate.AddMilliseconds(rec.Id + 60000), new sourceid() { source = obj.GetType().Name, id = rec.Id });
                 }
-
-                //// Sort and Process Purchases/Sales
-                //var cpi = db.TempCustomPurchaseInvoices.Where(x => !x.IsDeleted);
-                //var csi = db.TempCashSalesInvoices.Where(x => !x.IsDeleted);
-                //foreach (var tran in trans.OrderBy(x => x.Key))
-                //{
-                //    switch (tran.Value.source.ToLower())
-                //    {
-                //        case "custompurchaseinvoice":
-                //            {
-                //                var rec = cpi.Where(x => x.Id == tran.Value.id).FirstOrDefault();
-                //                if (rec.IsConfirmed)
-                //                {
-                //                    var obj = db.CustomPurchaseInvoices.Where(x => !x.IsDeleted && x.Id == rec.Id).FirstOrDefault();
-                //                    if (obj != null)
-                //                    {
-                //                        obj.Errors = new Dictionary<string, string>();
-                //                        TempPayable payable = db.TempPayables.Where(x => !x.IsDeleted && x.PayableSourceId == rec.Id && x.PayableSource == Constant.PayableSource.CustomPurchaseInvoice).OrderByDescending(x => x.Id).FirstOrDefault();
-                //                        db.Database.ExecuteSqlCommand(string.Format("DBCC CHECKIDENT (Payable, RESEED, {0});", payable.Id - 1));
-                //                        _customPurchaseInvoiceService.ConfirmObjectForRepair(obj, rec.PurchaseDate/*rec.ConfirmationDate.GetValueOrDefault()*/, payable.Code,
-                //                                                            _customPurchaseInvoiceDetailService, _contactService, _priceMutationService,
-                //                                                            _payableService, _customPurchaseInvoiceService, _warehouseItemService, _warehouseService, _itemService, _barringService, _stockMutationService,
-                //                                                            _generalLedgerJournalService, _accountService, _closingService);
-                //                        Log(obj.Errors, obj.GetType().Name, obj.Code, rec.Id, obj.Id);
-                //                    }
-                //                }
-                //                break;
-                //            };
-                //        case "cashsalesinvoice":
-                //            {
-                //                var rec = csi.Where(x => x.Id == tran.Value.id).FirstOrDefault();
-                //                if (rec.IsConfirmed)
-                //                {
-                //                    var obj = db.CashSalesInvoices.Where(x => !x.IsDeleted && x.Id == rec.Id).FirstOrDefault();
-                //                    if (obj != null)
-                //                    {
-                //                        obj.Errors = new Dictionary<string, string>();
-                //                        TempReceivable receivable = db.TempReceivables.Where(x => !x.IsDeleted && x.ReceivableSourceId == rec.Id && x.ReceivableSource == Constant.ReceivableSource.CashSalesInvoice).OrderByDescending(x => x.Id).FirstOrDefault();
-                //                        db.Database.ExecuteSqlCommand(string.Format("DBCC CHECKIDENT (Receivable, RESEED, {0});", receivable.Id - 1));
-                //                        _cashSalesInvoiceService.ConfirmObjectForRepair(obj, rec.SalesDate/*rec.ConfirmationDate.GetValueOrDefault()*/, rec.Discount, rec.Tax, receivable.Code,
-                //                                                            _cashSalesInvoiceDetailService, _contactService, _priceMutationService,
-                //                                                            _receivableService, _cashSalesInvoiceService, _warehouseItemService, _warehouseService, _itemService, _barringService, _stockMutationService, _cashBankService,
-                //                                                            _generalLedgerJournalService, _accountService, _closingService);
-                //                        Log(obj.Errors, obj.GetType().Name, obj.Code, rec.Id, obj.Id);
-
-                //                        if (rec.IsPaid)
-                //                        {
-                //                            TempReceiptVoucherDetail voucherDetail = db.TempReceiptVoucherDetails.Where(x => !x.IsDeleted && x.ReceivableId == receivable.Id && x.Description.Contains("Automatic")).OrderByDescending(x => x.Id).FirstOrDefault();
-                //                            if (voucherDetail == null)
-                //                            {
-                //                                //continue;
-                //                                voucherDetail = db.TempReceiptVoucherDetails.Where(x => x.ReceivableId == receivable.Id && x.Description.Contains("Automatic")).OrderByDescending(x => x.Id).FirstOrDefault();
-                //                                Console.WriteLine("WARNING : Missing Automatic ReceiptVoucherDetail on CSI {0} - Receivable {1}", rec.Code, receivable.Code);
-                //                            }
-                //                            TempReceiptVoucher voucher = db.TempReceiptVouchers.Where(x => !x.IsDeleted && x.Id == voucherDetail.ReceiptVoucherId).OrderByDescending(x => x.Id).FirstOrDefault();
-                //                            if (voucher == null)
-                //                            {
-                //                                voucher = db.TempReceiptVouchers.Where(x => x.Id == voucherDetail.ReceiptVoucherId).OrderByDescending(x => x.Id).FirstOrDefault();
-                //                            }
-                //                            db.Database.ExecuteSqlCommand(string.Format("DBCC CHECKIDENT (ReceiptVoucher, RESEED, {0});", voucher.Id - 1));
-                //                            db.Database.ExecuteSqlCommand(string.Format("DBCC CHECKIDENT (ReceiptVoucherDetail, RESEED, {0});", voucherDetail.Id - 1));
-                //                            _cashSalesInvoiceService.PaidObjectForRepair(obj, rec.AmountPaid.GetValueOrDefault(), rec.Allowance, voucher.Code, voucherDetail.Code,
-                //                                                                _cashBankService, _receivableService, _receiptVoucherService, _receiptVoucherDetailService, _contactService, _cashMutationService, _cashSalesReturnService,
-                //                                                                _generalLedgerJournalService, _accountService, _closingService);
-                //                            Log(obj.Errors, obj.GetType().Name, obj.Code, rec.Id, obj.Id);
-                //                        }
-                //                    }
-                //                }
-                //                break;
-                //            };
-                //    }
-                //}
                 
                 // ReceiptVoucherDetail
-                //foreach (var det in db.TempReceiptVoucherDetails.Where(x => !x.IsDeleted && !x.Description.Contains("Automatic")).OrderBy(x => x.Id).ToList())
-                //{
-                //    TempReceiptVoucher rec = db.TempReceiptVouchers.Where(x => !x.IsDeleted && x.Id == det.ReceiptVoucherId).OrderByDescending(x => x.Id).FirstOrDefault();
-                //    ReceiptVoucher obj = _receiptVoucherService.GetObjectById(rec.Id);
-                //    if (obj == null)
-                //    {
-                //        obj = new ReceiptVoucher();
-                //        Reflection.CopyProperties(rec, obj);
-                //        obj.IsConfirmed = false;
-                //        obj.IsReconciled = false;
-                //        db.Database.ExecuteSqlCommand(string.Format("DBCC CHECKIDENT ({0}, RESEED, {1});", obj.GetType().Name, rec.Id - 1));
-                //        _receiptVoucherService.CreateObject(obj, _receiptVoucherDetailService, _receivableService, _contactService, _cashBankService);
-                //        Log(obj.Errors, obj.GetType().Name, obj.Code, rec.Id, obj.Id);
-                //    }
-                //    TempReceivable tmp = db.TempReceivables.Where(x => !x.IsDeleted && x.Id == det.ReceivableId).FirstOrDefault();
-                //    ReceiptVoucherDetail detobj = new ReceiptVoucherDetail();
-                //    Reflection.CopyProperties(det, detobj);
-                //    detobj.IsConfirmed = false;
-                //    detobj.ReceivableId = _receivableService.GetObjectBySource(tmp.ReceivableSource, tmp.ReceivableSourceId).Id;
-                //    db.Database.ExecuteSqlCommand(string.Format("DBCC CHECKIDENT ({0}, RESEED, {1});", detobj.GetType().Name, det.Id - 1));
-                //    _receiptVoucherDetailService.CreateObject(detobj, _receiptVoucherService, _cashBankService, _receivableService);
-                //    Log(detobj.Errors, detobj.GetType().Name, detobj.Code, det.Id, detobj.Id);
-                //}
-                //// ReceiptVoucher
+                foreach (var det in db.TempReceiptVoucherDetails.Where(x => !x.IsDeleted && !x.Description.Contains("Automatic")).OrderBy(x => x.Id).ToList())
+                {
+                    TempReceiptVoucher rec = db.TempReceiptVouchers.Where(x => !x.IsDeleted && x.Id == det.ReceiptVoucherId).OrderByDescending(x => x.Id).FirstOrDefault();
+                    if (rec == null) rec = db.TempReceiptVouchers.Where(x => x.Id == det.ReceiptVoucherId).OrderByDescending(x => x.Id).FirstOrDefault();
+                    ReceiptVoucher obj = _receiptVoucherService.GetObjectById(rec.Id);
+                    if (obj == null)
+                    {
+                        obj = new ReceiptVoucher();
+                        Reflection.CopyProperties(rec, obj);
+                        obj.IsConfirmed = false;
+                        obj.IsReconciled = false;
+                        obj.IsDeleted = false;
+                        db.Database.ExecuteSqlCommand(string.Format("DBCC CHECKIDENT ({0}, RESEED, {1});", obj.GetType().Name, rec.Id - 1));
+                        _receiptVoucherService.CreateObject(obj, _receiptVoucherDetailService, _receivableService, _contactService, _cashBankService);
+                        Log(obj.Errors, obj.GetType().Name, obj.Code, rec.Id, obj.Id);
+                        trans.Add(rec.ReceiptDate.AddMilliseconds(rec.Id + 70000), new sourceid() { source = obj.GetType().Name, id = rec.Id });
+                    }
+                }
+                // ReceiptVoucher
                 //foreach (var rec in db.TempReceiptVouchers.Where(x => !x.IsDeleted).OrderBy(x => x.Id).ToList())
                 //{
                 //    ReceiptVoucher obj = _receiptVoucherService.GetObjectById(rec.Id);
@@ -687,148 +994,42 @@ namespace Service
                 //    }
                 //}
 
-                //// Try Paying CustomPurchaseInvoice
-                //foreach (var rec in db.TempCustomPurchaseInvoices.Where(x => !x.IsDeleted).OrderBy(x => x.Id).ToList())
-                //{
-                //    CustomPurchaseInvoice obj = _customPurchaseInvoiceService.GetObjectById(rec.Id);
-                //    if (obj != null)
-                //    {
-                //        //if (rec.IsPaid && !obj.IsPaid)
-                //        //{
-                //        //    TempPayable payable = db.TempPayables.Where(x => !x.IsDeleted && x.PayableSourceId == rec.Id && x.PayableSource == Constant.PayableSource.CustomPurchaseInvoice).OrderByDescending(x => x.Id).FirstOrDefault();
-                //        //    TempPaymentVoucherDetail voucherDetail = db.TempPaymentVoucherDetails.Where(x => !x.IsDeleted && x.PayableId == payable.Id && x.Description.Contains("Automatic")).OrderByDescending(x => x.Id).FirstOrDefault();
-                //        //    if (voucherDetail == null)
-                //        //    {
-                //        //        //continue;
-                //        //        voucherDetail = db.TempPaymentVoucherDetails.Where(x => x.PayableId == payable.Id && x.Description.Contains("Automatic")).OrderByDescending(x => x.Id).FirstOrDefault();
-                //        //        Console.WriteLine("WARNING : Missing Automatic PaymentVoucherDetail on CPI {0} - Payable {1}", rec.Code, payable.Code);
-                //        //    }
-                //        //    TempPaymentVoucher voucher = db.TempPaymentVouchers.Where(x => !x.IsDeleted && x.Id == voucherDetail.PaymentVoucherId).OrderByDescending(x => x.Id).FirstOrDefault();
-                //        //    if (voucher == null)
-                //        //    {
-                //        //        voucher = db.TempPaymentVouchers.Where(x => x.Id == voucherDetail.PaymentVoucherId).OrderByDescending(x => x.Id).FirstOrDefault();
-                //        //    }
-                //        //    db.Database.ExecuteSqlCommand(string.Format("DBCC CHECKIDENT (PaymentVoucher, RESEED, {0});", voucher.Id - 1));
-                //        //    db.Database.ExecuteSqlCommand(string.Format("DBCC CHECKIDENT (PaymentVoucherDetail, RESEED, {0});", voucherDetail.Id - 1));
-                //        //    _customPurchaseInvoiceService.PaidObjectForRepair(obj, rec.AmountPaid.GetValueOrDefault(), rec.PaymentDate, voucher.Code, voucherDetail.Code,
-                //        //                                        _cashBankService, _payableService, _paymentVoucherService, _paymentVoucherDetailService, _contactService, _cashMutationService,
-                //        //                                        _generalLedgerJournalService, _accountService, _closingService);
-                //        //    Log(obj.Errors, obj.GetType().Name, obj.Code, rec.Id, obj.Id);
-                //        //}
-                //    }
-                //}
-                
-                //// CashSalesReturn
-                //foreach (var rec in db.TempCashSalesReturns.Where(x => !x.IsDeleted).OrderBy(x => x.Id).ToList())
-                //{
-                //    //try
-                //    {
-                //        CashSalesReturn obj = new CashSalesReturn();
-                //        Reflection.CopyProperties(rec, obj);
-                //        obj.IsConfirmed = false;
-                //        obj.IsPaid = false;
-                //        db.Database.ExecuteSqlCommand(string.Format("DBCC CHECKIDENT ({0}, RESEED, {1});", obj.GetType().Name, rec.Id - 1));
-                //        _cashSalesReturnService.CreateObject(obj, _cashSalesInvoiceService, _cashBankService);
-                //        Log(obj.Errors, obj.GetType().Name, obj.Code, rec.Id, obj.Id);
-                //        foreach (var det in db.TempCashSalesReturnDetails.Where(x => !x.IsDeleted && x.CashSalesReturnId == rec.Id).OrderBy(x => x.Id).ToList())
-                //        {
-                //            CashSalesReturnDetail detobj = new CashSalesReturnDetail();
-                //            Reflection.CopyProperties(det, detobj);
-                //            db.Database.ExecuteSqlCommand(string.Format("DBCC CHECKIDENT ({0}, RESEED, {1});", detobj.GetType().Name, det.Id - 1));
-                //            _cashSalesReturnDetailService.CreateObject(detobj, _cashSalesReturnService, _cashSalesInvoiceDetailService);
-                //            Log(detobj.Errors, detobj.GetType().Name, detobj.Code, det.Id, detobj.Id);
-                //        }
-                //        TempPayable payable = db.TempPayables.Where(x => !x.IsDeleted && x.PayableSourceId == rec.Id && x.PayableSource == Constant.PayableSource.CashSalesReturn).OrderByDescending(x => x.Id).FirstOrDefault();
-                //        if (rec.IsConfirmed)
-                //        {
-                //            db.Database.ExecuteSqlCommand(string.Format("DBCC CHECKIDENT (Payable, RESEED, {0});", payable.Id - 1));
-                //            _cashSalesReturnService.ConfirmObjectForRepair(obj, rec.ReturnDate.GetValueOrDefault()/*rec.ConfirmationDate.GetValueOrDefault()*/, rec.Allowance, payable.Code,
-                //                                                _cashSalesReturnDetailService, _contactService, _cashSalesInvoiceService, _cashSalesInvoiceDetailService, _priceMutationService,
-                //                                                _payableService, _cashSalesReturnService, _warehouseItemService, _warehouseService, _itemService, _barringService, _stockMutationService,
-                //                                                _generalLedgerJournalService, _accountService, _closingService);
-                //            Log(obj.Errors, obj.GetType().Name, obj.Code, rec.Id, obj.Id);
-                //        }
-                //        if (rec.IsPaid)
-                //        {
-                //            TempPaymentVoucherDetail voucherDetail = db.TempPaymentVoucherDetails.Where(x => !x.IsDeleted && x.PayableId == payable.Id && x.Description.Contains("Automatic")).OrderByDescending(x => x.Id).FirstOrDefault();
-                //            if (voucherDetail == null)
-                //            {
-                //                //continue;
-                //                voucherDetail = db.TempPaymentVoucherDetails.Where(x => x.PayableId == payable.Id && x.Description.Contains("Automatic")).OrderByDescending(x => x.Id).FirstOrDefault();
-                //                Console.WriteLine("WARNING : Missing Automatic PaymentVoucherDetail on CSR {0} - Payable {1}", rec.Code, payable.Code);
-                //            }
-                //            TempPaymentVoucher voucher = db.TempPaymentVouchers.Where(x => !x.IsDeleted && x.Id == voucherDetail.PaymentVoucherId).OrderByDescending(x => x.Id).FirstOrDefault();
-                //            if (voucher == null)
-                //            {
-                //                voucher = db.TempPaymentVouchers.Where(x => x.Id == voucherDetail.PaymentVoucherId).OrderByDescending(x => x.Id).FirstOrDefault();
-                //            }
-                //            db.Database.ExecuteSqlCommand(string.Format("DBCC CHECKIDENT (PaymentVoucher, RESEED, {0});", voucher.Id - 1));
-                //            db.Database.ExecuteSqlCommand(string.Format("DBCC CHECKIDENT (PaymentVoucherDetail, RESEED, {0});", voucherDetail.Id - 1));
-                //            _cashSalesReturnService.PaidObjectForRepair(obj, voucher.Code, voucherDetail.Code,
-                //                                                _cashBankService, _payableService, _paymentVoucherService, _paymentVoucherDetailService, _contactService, _cashMutationService,
-                //                                                _generalLedgerJournalService, _accountService, _closingService);
-                //            Log(obj.Errors, obj.GetType().Name, obj.Code, rec.Id, obj.Id);
-                //        }
-                //    }
-                //    //catch
-                //    //{
-                //    //    Console.WriteLine("ERROR at {0}:{1}", rec.GetType().Name, rec.Code);
-                //    //}
-                //}
+                // CashSalesReturn
+                foreach (var rec in db.TempCashSalesReturns.Where(x => !x.IsDeleted).OrderBy(x => x.Id).ToList())
+                {
+                    var obj = new CashSalesReturn();
+                    Reflection.CopyProperties(rec, obj);
+                    trans.Add(rec.ReturnDate.GetValueOrDefault().AddMilliseconds(rec.Id + 80000), new sourceid() { source = obj.GetType().Name, id = rec.Id });
+                }
 
-                //// PaymentRequest
-                //foreach (var rec in db.TempPaymentRequests.Where(x => !x.IsDeleted).OrderBy(x => x.Id).ToList())
-                //{
-                //    TempPaymentRequestDetail tmp = db.TempPaymentRequestDetails.Where(x => !x.IsDeleted && x.PaymentRequestId == rec.Id && x.IsLegacy).OrderByDescending(x => x.Id).FirstOrDefault();
-                //    PaymentRequest obj = new PaymentRequest();
-                //    Reflection.CopyProperties(rec, obj);
-                //    obj.IsConfirmed = false;
-                //    db.Database.ExecuteSqlCommand(string.Format("DBCC CHECKIDENT ({0}, RESEED, {1});", obj.GetType().Name, rec.Id - 1));
-                //    db.Database.ExecuteSqlCommand(string.Format("DBCC CHECKIDENT (PaymentRequestDetail, RESEED, {0});", tmp.Id - 1));
-                //    _paymentRequestService.CreateObject(obj, _contactService, _paymentRequestDetailService, _accountService, _generalLedgerJournalService, _closingService);
-                //    Log(obj.Errors, obj.GetType().Name, obj.Code, rec.Id, obj.Id);
-                //    foreach (var det in db.TempPaymentRequestDetails.Where(x => !x.IsDeleted && x.PaymentRequestId == rec.Id && !x.IsLegacy).OrderBy(x => x.Id).ToList())
-                //    {
-                //        PaymentRequestDetail detobj = new PaymentRequestDetail();
-                //        Reflection.CopyProperties(det, detobj);
-                //        detobj.IsConfirmed = false;
-                //        db.Database.ExecuteSqlCommand(string.Format("DBCC CHECKIDENT ({0}, RESEED, {1});", detobj.GetType().Name, det.Id - 1));
-                //        _paymentRequestDetailService.CreateObject(detobj, _paymentRequestService, _accountService);
-                //        Log(detobj.Errors, detobj.GetType().Name, detobj.Code, det.Id, detobj.Id);
-                //    }
-                //    if (rec.IsConfirmed)
-                //    {
-                //        _paymentRequestService.ConfirmObject(obj, rec.ConfirmationDate.GetValueOrDefault(), _payableService, _paymentRequestDetailService, 
-                //                                    _accountService, _generalLedgerJournalService, _closingService);
-                //        Log(obj.Errors, obj.GetType().Name, obj.Code, rec.Id, obj.Id);
-                //    }
-                //}
-                
-                //// PaymentVoucherDetail
-                //foreach (var det in db.TempPaymentVoucherDetails.Where(x => !x.IsDeleted && !x.Description.Contains("Automatic")).OrderBy(x => x.Id).ToList())
-                //{
-                //    TempPaymentVoucher rec = db.TempPaymentVouchers.Where(x => !x.IsDeleted && x.Id == det.PaymentVoucherId).OrderByDescending(x => x.Id).FirstOrDefault();
-                //    PaymentVoucher obj = _paymentVoucherService.GetObjectById(rec.Id);
-                //    if (obj == null)
-                //    {
-                //        obj = new PaymentVoucher();
-                //        Reflection.CopyProperties(rec, obj);
-                //        obj.IsConfirmed = false;
-                //        obj.IsReconciled = false;
-                //        db.Database.ExecuteSqlCommand(string.Format("DBCC CHECKIDENT ({0}, RESEED, {1});", obj.GetType().Name, rec.Id - 1));
-                //        _paymentVoucherService.CreateObject(obj, _paymentVoucherDetailService, _payableService, _contactService, _cashBankService);
-                //        Log(obj.Errors, obj.GetType().Name, obj.Code, rec.Id, obj.Id);
-                //    }
-                //    TempPayable tmp = db.TempPayables.Where(x => !x.IsDeleted && x.Id == det.PayableId).FirstOrDefault();
-                //    PaymentVoucherDetail detobj = new PaymentVoucherDetail();
-                //    Reflection.CopyProperties(det, detobj);
-                //    detobj.IsConfirmed = false;
-                //    detobj.PayableId = _payableService.GetObjectBySource(tmp.PayableSource, tmp.PayableSourceId).Id;
-                //    db.Database.ExecuteSqlCommand(string.Format("DBCC CHECKIDENT ({0}, RESEED, {1});", detobj.GetType().Name, det.Id - 1));
-                //    _paymentVoucherDetailService.CreateObject(detobj, _paymentVoucherService, _cashBankService, _payableService);
-                //    Log(detobj.Errors, detobj.GetType().Name, detobj.Code, det.Id, detobj.Id);
-                //}
-                //// PaymentVoucher
+                // PaymentRequest
+                foreach (var rec in db.TempPaymentRequests.Where(x => !x.IsDeleted).OrderBy(x => x.Id).ToList())
+                {
+                    var obj = new PaymentRequest();
+                    Reflection.CopyProperties(rec, obj);
+                    trans.Add(rec.RequestedDate.AddMilliseconds(rec.Id + 90000), new sourceid() { source = obj.GetType().Name, id = rec.Id });
+                }
+
+                // PaymentVoucherDetail
+                foreach (var det in db.TempPaymentVoucherDetails.Where(x => !x.IsDeleted && !x.Description.Contains("Automatic")).OrderBy(x => x.Id).ToList())
+                {
+                    TempPaymentVoucher rec = db.TempPaymentVouchers.Where(x => !x.IsDeleted && x.Id == det.PaymentVoucherId).OrderByDescending(x => x.Id).FirstOrDefault();
+                    if (rec == null) rec = db.TempPaymentVouchers.Where(x => x.Id == det.PaymentVoucherId).OrderByDescending(x => x.Id).FirstOrDefault();
+                    PaymentVoucher obj = _paymentVoucherService.GetObjectById(rec.Id);
+                    if (obj == null)
+                    {
+                        obj = new PaymentVoucher();
+                        Reflection.CopyProperties(rec, obj);
+                        obj.IsConfirmed = false;
+                        obj.IsReconciled = false;
+                        obj.IsDeleted = false;
+                        db.Database.ExecuteSqlCommand(string.Format("DBCC CHECKIDENT ({0}, RESEED, {1});", obj.GetType().Name, rec.Id - 1));
+                        _paymentVoucherService.CreateObject(obj, _paymentVoucherDetailService, _payableService, _contactService, _cashBankService);
+                        Log(obj.Errors, obj.GetType().Name, obj.Code, rec.Id, obj.Id);
+                        trans.Add(rec.PaymentDate.AddMilliseconds(rec.Id + 100000), new sourceid() { source = obj.GetType().Name, id = rec.Id });
+                    }
+                }
+                // PaymentVoucher
                 //foreach (var rec in db.TempPaymentVouchers.Where(x => !x.IsDeleted).OrderBy(x => x.Id).ToList())
                 //{
                 //    PaymentVoucher obj = _paymentVoucherService.GetObjectById(rec.Id);
@@ -851,27 +1052,17 @@ namespace Service
                 // Memorial
                 foreach (var rec in db.TempMemorials.Where(x => !x.IsDeleted).OrderBy(x => x.Id).ToList())
                 {
-                    Memorial obj = new Memorial();
+                    var obj = new Memorial();
                     Reflection.CopyProperties(rec, obj);
-                    obj.IsConfirmed = false;
-                    db.Database.ExecuteSqlCommand(string.Format("DBCC CHECKIDENT ({0}, RESEED, {1});", obj.GetType().Name, rec.Id - 1));
-                    _memorialService.CreateObject(obj);
-                    Log(obj.Errors, obj.GetType().Name, obj.Code, rec.Id, obj.Id);
-                    foreach (var det in db.TempMemorialDetails.Where(x => !x.IsDeleted && x.MemorialId == rec.Id).OrderBy(x => x.Id).ToList())
+                    if (rec.ConfirmationDate == null)
                     {
-                        MemorialDetail detobj = new MemorialDetail();
-                        Reflection.CopyProperties(det, detobj);
-                        detobj.IsConfirmed = false;
-                        db.Database.ExecuteSqlCommand(string.Format("DBCC CHECKIDENT ({0}, RESEED, {1});", detobj.GetType().Name, det.Id - 1));
-                        _memorialDetailService.CreateObject(detobj, _memorialService, _accountService);
-                        Log(detobj.Errors, detobj.GetType().Name, detobj.Code, det.Id, detobj.Id);
+                        Console.WriteLine("WARNING : Unknown Confirmation Date on Memorial[{0}]:{1} ! Need to be Confirmed Manually", rec.Id, rec.Code);
                     }
-                    if (rec.IsConfirmed)
-                    {
-                        _memorialService.ConfirmObject(obj, rec.ConfirmationDate.GetValueOrDefault(), _memorialDetailService, _accountService, _generalLedgerJournalService, _closingService);
-                        Log(obj.Errors, obj.GetType().Name, obj.Code, rec.Id, obj.Id);
-                    }
+                    trans.Add(rec.ConfirmationDate.GetValueOrDefault().AddMilliseconds(rec.Id + 110000), new sourceid() { source = obj.GetType().Name, id = rec.Id });
                 }
+
+                // Sort and Process Purchases/Sales
+                OrderedRestoration(db, trans, true, true);
 
                 // DisAllow defining the ID (also Set SEED to the highest Id)
                 foreach (var tableName in userDatas)

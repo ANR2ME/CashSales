@@ -87,7 +87,7 @@ namespace Validation.Validation
                     }
                 case (2): // Unconfirm
                     {
-                        if (_closingService.IsDateClosed(DateTime.Now))
+                        if (_closingService.IsDateClosed(memorial.ConfirmationDate.GetValueOrDefault()))
                         {
                             memorial.Errors.Add("Generic", "Ledger sudah tutup buku");
                         }

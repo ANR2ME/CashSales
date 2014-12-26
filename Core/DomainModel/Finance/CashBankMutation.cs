@@ -13,7 +13,7 @@ namespace Core.DomainModel
         public int TargetCashBankId { get; set; }
         //public string SourceCashBankName { get; set; }
         //public string TargetCashBankName { get; set; }
-        public int Amount { get; set; }
+        public decimal Amount { get; set; }
         public string Code { get; set; }
 
         public bool IsConfirmed { get; set; }

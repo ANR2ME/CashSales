@@ -99,7 +99,7 @@ namespace Data.Repository
         public CashBankMutation UnconfirmObject(CashBankMutation cashBankMutation)
         {
             cashBankMutation.IsConfirmed = false;
-            cashBankMutation.ConfirmationDate = null;
+            //cashBankMutation.ConfirmationDate = null;
             Update(cashBankMutation);
             return cashBankMutation;
         }

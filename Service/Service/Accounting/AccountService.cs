@@ -123,6 +123,31 @@ namespace Service.Service
             return legacyAccount;
         }
 
+        public Account UpdateOrCreateLegacyObject(Account account)
+        {
+            Account legacyAccount = GetObjectByLegacyCode(account.LegacyCode);
+            if (legacyAccount == null)
+            {
+                legacyAccount = CreateLegacyObject(account);
+            }
+            else
+            {
+                legacyAccount.Code = account.Code;
+                legacyAccount.LegacyCode = account.LegacyCode;
+                legacyAccount.Name = account.Name;
+                legacyAccount.Group = account.Group;
+                legacyAccount.Level = account.Level;
+                legacyAccount.ParentId = account.ParentId;
+                legacyAccount.IsLeaf = account.IsLeaf;
+                legacyAccount.IsLegacy = account.IsLegacy;
+                legacyAccount.IsUsedBySystem = account.IsUsedBySystem;
+                //legacyAccount.IsCashBankAccount = account.IsCashBankAccount;
+
+                _repository.UpdateObject(legacyAccount);
+            }
+            return legacyAccount;
+        }
+
         public Account CreateCashBankAccount(Account account)
         {
             account.IsCashBankAccount = true;

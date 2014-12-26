@@ -118,6 +118,8 @@ namespace Service.Service
             receiptVoucherDetail.ConfirmationDate = ConfirmationDate;
             if (_validator.ValidConfirmObject(receiptVoucherDetail, _receivableService, _receiptVoucherDetailService))
             {
+                receiptVoucherDetail = _repository.ConfirmObject(receiptVoucherDetail);
+
                 ReceiptVoucher receiptVoucher = _receiptVoucherService.GetObjectById(receiptVoucherDetail.ReceiptVoucherId);
                 Receivable receivable = _receivableService.GetObjectById(receiptVoucherDetail.ReceivableId);
 
@@ -126,11 +128,10 @@ namespace Service.Service
                 if (receivable.RemainingAmount == 0 && receivable.PendingClearanceAmount == 0)
                 {
                     receivable.IsCompleted = true;
-                    receivable.CompletionDate = DateTime.Now;
+                    receivable.CompletionDate = ConfirmationDate; // DateTime.Now;
                 }
                 _receivableService.UpdateObject(receivable);
-
-                receiptVoucherDetail = _repository.ConfirmObject(receiptVoucherDetail);
+                
             }
             return receiptVoucherDetail;
         }
@@ -139,6 +140,8 @@ namespace Service.Service
         {
             if (_validator.ValidUnconfirmObject(receiptVoucherDetail))
             {
+                receiptVoucherDetail = _repository.UnconfirmObject(receiptVoucherDetail);
+
                 ReceiptVoucher receiptVoucher = _receiptVoucherService.GetObjectById(receiptVoucherDetail.ReceiptVoucherId);
                 Receivable receivable = _receivableService.GetObjectById(receiptVoucherDetail.ReceivableId);
 
@@ -150,8 +153,7 @@ namespace Service.Service
                     receivable.CompletionDate = null;
                 }
                 _receivableService.UpdateObject(receivable);
-
-                receiptVoucherDetail = _repository.UnconfirmObject(receiptVoucherDetail);
+                
             }
             return receiptVoucherDetail;
         }

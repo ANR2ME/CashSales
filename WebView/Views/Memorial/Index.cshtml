@@ -60,13 +60,13 @@
                             <td>
                                 <label>Description</label></td>
                             <td colspan="3">
-                                <input id="Description" name="Description" type="text" size="60" maxlength="60" align="left" /></td>
+                                <textarea name="Description" id="Description" cols="60" rows="3"></textarea></td>
                         </tr>
                         <tr>
                             <td >
                                 <label>Amount</label></td>
                             <td colspan="5">
-                               <input id="TotalAmount" name="TotalAmount" type="text" size="15" maxlength="20" class="textright easyui-numberbox" data-options="groupSeparator:','" value="0"  />
+                               <input id="TotalAmount" name="TotalAmount" type="text" size="15" maxlength="20" class="textright easyui-numberbox" data-options="precision:2,groupSeparator:','" value="0"  />
                             </td>     
                         </tr> 
                                              
@@ -121,7 +121,7 @@
                         Amount
                     </td>
                     <td>
-                        <input id="Amount" name="Amount" type="text" size="15" maxlength="20" class="textright easyui-numberbox" data-options="groupSeparator:','" value="0" />
+                        <input id="Amount" name="Amount" type="text" size="15" maxlength="20" class="textright easyui-numberbox" data-options="precision:2,groupSeparator:','" value="0" />
                     </td>
                   </tr>
               </table>

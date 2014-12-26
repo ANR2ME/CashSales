@@ -20,6 +20,11 @@ namespace Data.Mapping
                 .WithMany()
                 .HasForeignKey(csid => csid.PriceMutationId)
                 .WillCascadeOnDelete(false);
+            HasRequired(csid => csid.Item)
+                .WithMany()
+                .HasForeignKey(csid => csid.ItemId)
+                .WillCascadeOnDelete(false);
+            HasMany(csid => csid.CashSalesReturnDetails);
             Ignore(csid => csid.Errors);
         }
     }

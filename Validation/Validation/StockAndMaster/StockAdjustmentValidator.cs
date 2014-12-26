@@ -154,7 +154,7 @@ namespace Validation.Validation
                     }
                 case (2): // Unconfirm
                     {
-                        if (_closingService.IsDateClosed(DateTime.Now))
+                        if (_closingService.IsDateClosed(stockAdjustment.ConfirmationDate.GetValueOrDefault()))
                         {
                             stockAdjustment.Errors.Add("Generic", "Ledger sudah tutup buku");
                         }

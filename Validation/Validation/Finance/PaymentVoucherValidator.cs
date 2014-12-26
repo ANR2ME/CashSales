@@ -215,7 +215,7 @@ namespace Validation.Validation
         {
             if (!paymentVoucher.IsGBCH)
             {
-                paymentVoucher.Errors.Add("IsGBCH", "Harus GBCH");
+                paymentVoucher.Errors.Add("Generic", "Hanya untuk GBCH");
             }
             return paymentVoucher;
         }
@@ -234,7 +234,7 @@ namespace Validation.Validation
                 }
                 case(2): // Unconfirm
                 {
-                    if (_closingService.IsDateClosed(DateTime.Now))
+                    if (_closingService.IsDateClosed(paymentVoucher.ConfirmationDate.GetValueOrDefault()))
                     {
                         paymentVoucher.Errors.Add("Generic", "Ledger sudah tutup buku");
                     }
@@ -250,7 +250,7 @@ namespace Validation.Validation
                 }
                 case (4): // Unreconcile
                 {
-                    if (_closingService.IsDateClosed(DateTime.Now))
+                    if (_closingService.IsDateClosed(paymentVoucher.ReconciliationDate.GetValueOrDefault()))
                     {
                         paymentVoucher.Errors.Add("Generic", "Ledger sudah tutup buku");
                     }

@@ -68,7 +68,7 @@
             ],
             colModel: [
                       { name: 'id', index: 'id', width: 80, align: "center", frozen: true },
-                      { name: 'discount', index: 'discount', width: 100, formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' } },
+                      { name: 'discount', index: 'discount', width: 100, formatter: 'currency', formatoptions: { thousandsSeparator: ",", decimalPlaces: 2, defaultValue: '0' } },
                       { name: 'minquantity', index: 'minquantity', width: 100, formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' } },
                       { name: 'isinfinitemaxquantity', index: 'isinfinitemaxquantity', width: 130 },
                       { name: 'maxquantity', index: 'maxquantity', width: 100, formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' } },

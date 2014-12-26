@@ -97,7 +97,7 @@ namespace Validation.Validation
                     }
                 case (2): // Unconfirm
                     {
-                        if (_closingService.IsDateClosed(DateTime.Now))
+                        if (_closingService.IsDateClosed(paymentRequest.ConfirmationDate.GetValueOrDefault()))
                         {
                             paymentRequest.Errors.Add("Generic", "Ledger sudah tutup buku");
                         }

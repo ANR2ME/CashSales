@@ -132,7 +132,7 @@ namespace Service.Service
         public CashSalesInvoiceDetail ConfirmObject(CashSalesInvoiceDetail cashSalesInvoiceDetail, ICashSalesInvoiceService _cashSalesInvoiceService, IWarehouseItemService _warehouseItemService, 
                                                       IWarehouseService _warehouseService, IItemService _itemService, IBarringService _barringService, IStockMutationService _stockMutationService)
         {
-            if(_validator.ValidConfirmObject(cashSalesInvoiceDetail, _cashSalesInvoiceService, _warehouseItemService))
+            if(_validator.ValidConfirmObject(cashSalesInvoiceDetail, _cashSalesInvoiceService, _warehouseItemService, _itemService))
             {
                 CashSalesInvoice cashSalesInvoice = _cashSalesInvoiceService.GetObjectById(cashSalesInvoiceDetail.CashSalesInvoiceId);
                 WarehouseItem warehouseItem = _warehouseItemService.FindOrCreateObject(cashSalesInvoice.WarehouseId, cashSalesInvoiceDetail.ItemId);

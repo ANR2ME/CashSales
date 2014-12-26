@@ -135,8 +135,8 @@ namespace Validation.Validation
             return cashSalesInvoice;
         }
 
-        public CashSalesInvoice VIsConfirmableCashSalesInvoiceDetails(CashSalesInvoice cashSalesInvoice, ICashSalesInvoiceDetailService _cashSalesInvoiceDetailService, 
-                                                                          ICashSalesInvoiceService _cashSalesInvoiceService, IWarehouseItemService _warehouseItemService)
+        public CashSalesInvoice VIsConfirmableCashSalesInvoiceDetails(CashSalesInvoice cashSalesInvoice, ICashSalesInvoiceDetailService _cashSalesInvoiceDetailService,
+                                                                          ICashSalesInvoiceService _cashSalesInvoiceService, IWarehouseItemService _warehouseItemService, IItemService _itemService)
         {
             IList<CashSalesInvoiceDetail> cashSalesInvoiceDetails = _cashSalesInvoiceDetailService.GetObjectsByCashSalesInvoiceId(cashSalesInvoice.Id);
             if (!cashSalesInvoiceDetails.Any())
@@ -149,7 +149,7 @@ namespace Validation.Validation
                 foreach (var cashSalesInvoiceDetail in cashSalesInvoiceDetails)
                 {
                     cashSalesInvoiceDetail.Errors = new Dictionary<string, string>();
-                    if (!validator.ValidConfirmObject(cashSalesInvoiceDetail, _cashSalesInvoiceService,_warehouseItemService))
+                    if (!validator.ValidConfirmObject(cashSalesInvoiceDetail, _cashSalesInvoiceService,_warehouseItemService, _itemService))
                     {
                         //cashSalesInvoice.Errors.Add("Generic", "CashSalesInvoiceDetails harus confirmable semua");
                         cashSalesInvoice.Errors.Clear();
@@ -303,7 +303,7 @@ namespace Validation.Validation
                 }
                 case (2): // Unconfirm & Unpaid
                 {
-                    if (_closingService.IsDateClosed(DateTime.Now))
+                    if (_closingService.IsDateClosed(cashSalesInvoice.ConfirmationDate.GetValueOrDefault()))
                     {
                         cashSalesInvoice.Errors.Add("Generic", "Ledger sudah tutup buku");
                     }
@@ -315,11 +315,11 @@ namespace Validation.Validation
 
         public CashSalesInvoice VConfirmObject(CashSalesInvoice cashSalesInvoice, ICashSalesInvoiceDetailService _cashSalesInvoiceDetailService, 
                                                ICashSalesInvoiceService _cashSalesInvoiceService, IWarehouseItemService _warehouseItemService, IContactService _contactService,
-                                               ICashBankService _cashBankService, IClosingService _closingService)
+                                               ICashBankService _cashBankService, IItemService _itemService, IClosingService _closingService)
         {
             VHasCashSalesInvoiceDetails(cashSalesInvoice, _cashSalesInvoiceDetailService);
             if (!isValid(cashSalesInvoice)) { return cashSalesInvoice; }
-            VIsConfirmableCashSalesInvoiceDetails(cashSalesInvoice, _cashSalesInvoiceDetailService, _cashSalesInvoiceService, _warehouseItemService);
+            VIsConfirmableCashSalesInvoiceDetails(cashSalesInvoice, _cashSalesInvoiceDetailService, _cashSalesInvoiceService, _warehouseItemService, _itemService);
             if (!isValid(cashSalesInvoice)) { return cashSalesInvoice; }
             VIsNotConfirmed(cashSalesInvoice);
             //if (!isValid(cashSalesInvoice)) { return cashSalesInvoice; }
@@ -436,11 +436,11 @@ namespace Validation.Validation
             return isValid(cashSalesInvoice);
         }
 
-        public bool ValidConfirmObject(CashSalesInvoice cashSalesInvoice, ICashSalesInvoiceDetailService _cashSalesInvoiceDetailService, ICashSalesInvoiceService _cashSalesInvoiceService, 
-                                       IWarehouseItemService _warehouseItemService, IContactService _contactService, ICashBankService _cashBankService, IClosingService _closingService)
+        public bool ValidConfirmObject(CashSalesInvoice cashSalesInvoice, ICashSalesInvoiceDetailService _cashSalesInvoiceDetailService, ICashSalesInvoiceService _cashSalesInvoiceService,
+                                       IWarehouseItemService _warehouseItemService, IContactService _contactService, ICashBankService _cashBankService, IItemService _itemService, IClosingService _closingService)
         {
             cashSalesInvoice.Errors.Clear();
-            VConfirmObject(cashSalesInvoice, _cashSalesInvoiceDetailService, _cashSalesInvoiceService, _warehouseItemService, _contactService, _cashBankService, _closingService);
+            VConfirmObject(cashSalesInvoice, _cashSalesInvoiceDetailService, _cashSalesInvoiceService, _warehouseItemService, _contactService, _cashBankService, _itemService, _closingService);
             return isValid(cashSalesInvoice);
         }
 

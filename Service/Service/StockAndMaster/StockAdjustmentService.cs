@@ -97,13 +97,14 @@ namespace Service.Service
         {
             if (_validator.ValidUnconfirmObject(stockAdjustment, this, _stockAdjustmentDetailService, _itemService, _barringService, _warehouseItemService, _closingService))
             {
+                DateTime confirmdate = stockAdjustment.ConfirmationDate.GetValueOrDefault();
                 IList<StockAdjustmentDetail> stockAdjustmentDetails = _stockAdjustmentDetailService.GetObjectsByStockAdjustmentId(stockAdjustment.Id);
                 foreach (var detail in stockAdjustmentDetails)
                 {
                     detail.Errors = new Dictionary<string, string>();
                     _stockAdjustmentDetailService.UnconfirmObject(detail, this, _stockMutationService, _itemService, _barringService, _warehouseItemService);
                 }
-                _generalLedgerJournalService.CreateUnconfirmationJournalForStockAdjustment(stockAdjustment, _accountService);
+                _generalLedgerJournalService.CreateUnconfirmationJournalForStockAdjustment(stockAdjustment, confirmdate, _accountService);
                 _repository.UnconfirmObject(stockAdjustment);
             }
             return stockAdjustment;

@@ -32,6 +32,7 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Data.Entity" />
     <Reference Include="System.Linq.Dynamic">
       <HintPath>..\packages\References\System.Linq.Dynamic.dll</HintPath>
     </Reference>

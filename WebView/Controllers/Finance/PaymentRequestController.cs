@@ -83,7 +83,7 @@ namespace WebView.Controllers
                              model.DueDate,
                              model.CreatedAt,
                              model.UpdatedAt,
-                         }).Where(filter).OrderBy(sidx + " " + sord); //.ToList();
+                         }).Where(filter).OrderBy(sidx + " " + sord + ", confirmationdate " + sord + ", id " + sord); //.ToList();
 
             var list = query.AsEnumerable();
 

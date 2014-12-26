@@ -6,7 +6,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Data.Entity;
 using Core.Interface.Validation;
+using System.Data.Objects;
 
 namespace Service.Service
 {
@@ -74,6 +76,9 @@ namespace Service.Service
         {
             if (_validator.ValidCloseObject(closing, this))
             {
+                // Get Last Closing
+                var lastClosing = _repository.GetQueryable().Where(x => EntityFunctions.AddDays(EntityFunctions.TruncateTime(x.EndDatePeriod), 1) == closing.BeginningPeriod).FirstOrDefault();
+
                 // Count ValidComb for each leaf account
                 IList<Account> leafAccounts = _accountService.GetLeafObjects();
                 foreach(var leaf in leafAccounts)
@@ -85,6 +90,16 @@ namespace Service.Service
                                                                  x.TransactionDate < EndDate)
                                                           .ToList();
                     decimal totalAmountInLedgers = 0;
+                    decimal totalAmountLast = 0;
+                    if (lastClosing != null 
+                        && (leaf.Group != Constant.AccountGroup.Expense && leaf.Group != Constant.AccountGroup.Revenue)
+                        )
+                    {
+                        var lastVC = _validCombService.GetQueryable().
+                            Where(x => x.ClosingId == lastClosing.Id && x.AccountId == leaf.Id).FirstOrDefault();
+                        totalAmountLast = lastVC != null ? lastVC.Amount : 0;
+                    }
+                    totalAmountInLedgers += totalAmountLast;
                     foreach(var ledger in ledgers)
                     {
                         Account account = _accountService.GetObjectById(ledger.AccountId);
@@ -126,7 +141,7 @@ namespace Service.Service
                 ValidComb VCRetainedEarnings = _validCombService.FindOrCreateObjectByAccountAndClosing(RetainedEarnings.Id, closing.Id);
                 ValidComb VCEquity = _validCombService.FindOrCreateObjectByAccountAndClosing(Equity.Id, closing.Id);
 
-                VCRetainedEarnings.Amount += (VCRevenue.Amount - VCExpense.Amount);
+                VCRetainedEarnings.Amount += (VCRevenue.Amount - VCExpense.Amount); // use += instead of = if Rev & Exp not zeroed
                 _validCombService.UpdateObject(VCRetainedEarnings, _accountService, this);
                 VCEquity.Amount += VCRetainedEarnings.Amount;
                 _validCombService.UpdateObject(VCEquity, _accountService, this);

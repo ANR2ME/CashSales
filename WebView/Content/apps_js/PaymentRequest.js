@@ -57,9 +57,9 @@
 				  { name: 'contactid', index: 'contactid', width: 100, hidden: true },
                   { name: 'contact', index: 'contact', width: 100 },
                   { name: 'description', index: 'description', width: 200 },
-                  { name: 'amount', index: 'amount', width: 100, formatter: 'currency', formatoptions: { decimalSeparator: ".", thousandsSeparator: ",", decimalPlaces: 0, prefix: "", suffix: "", defaultValue: '0.00' } },
-                  { name: 'isconfirmed', index: 'isconfirmed', width: 100, stype: 'select', editoptions: { value: ':All;true:Yes;false:No' }, hidden: true },
-                  { name: 'confirmationdate', index: 'confirmationdate', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
+                  { name: 'amount', index: 'amount', width: 100, formatter: 'currency', formatoptions: { decimalSeparator: ".", thousandsSeparator: ",", decimalPlaces: 2, prefix: "", suffix: "", defaultValue: '0.00' } },
+                  { name: 'isconfirmed', index: 'isconfirmed', width: 100, stype: 'select', editoptions: { value: ':All;true:Yes;false:No' } },
+                  { name: 'confirmationdate', index: 'confirmationdate', hidden:true, search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'Y/m/d' } },
                   { name: 'requesteddate', index: 'requesteddate', width: 110, search: false, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
                   { name: 'duedate', index: 'duedate', width: 100, search: false, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
                   { name: 'createdat', index: 'createdat', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
@@ -120,6 +120,7 @@
         $('#DueDateDiv').show();
         $('#DueDateDiv2').hide();
         $("#TotalAmount").removeAttr('disabled');
+        $('#Description').removeAttr('disabled');
         $('#form_btn_save').show();
         $('#form_div').dialog('open');
     });
@@ -162,6 +163,8 @@
                             $('#DueDateDiv2').show();
                             $('#form_btn_save').hide();
                             $("#TotalAmount").attr('disabled', true);
+                            $("#Description").attr('disabled', true);
+                            $('#btnContact').attr('disabled', true);
                             $('#btnAccount').removeAttr('disabled');
                             $('#tabledetail_div').show();
                             ReloadGridDetail();
@@ -214,6 +217,7 @@
                             $('#form_btn_save').hide();
                             $('#btnContact').removeAttr('disabled');
                             $("#TotalAmount").removeAttr('disabled');
+                            $('#Description').removeAttr('disabled');
                             $('#tabledetail_div').hide();
                             $('#form_btn_save').show();
                             $('#form_div').dialog('open');
@@ -230,7 +234,8 @@
         var id = jQuery("#list").jqGrid('getGridParam', 'selrow');
         if (id) {
             var ret = jQuery("#list").jqGrid('getRowData', id);
-            $('#ConfirmationDate').datebox('setValue', $.datepicker.formatDate('mm/dd/yy', new Date()));
+            //$('#ConfirmationDate').datebox('setValue', $.datepicker.formatDate('mm/dd/yy', new Date()));
+            $('#ConfirmationDate').datebox('setValue', ret.requesteddate);
             $('#confirmAmount').numberbox('setValue', ret.amount);
             $('#confirmCode').val(ret.code);
             $('#idconfirm').val(ret.id);
@@ -437,7 +442,7 @@
                   { name: 'accountcode', index: 'accountcode', width: 80 },
                   { name: 'account', index: 'account', width: 200 },
                   { name: 'status', index: 'status', width: 40 },
-                  { name: 'amount', index: 'amount', width: 100, align: 'right', formatter: 'currency', formatoptions: { decimalSeparator: ".", thousandsSeparator: ",", decimalPlaces: 0, prefix: "", suffix: "", defaultValue: '0.00' } },
+                  { name: 'amount', index: 'amount', width: 100, align: 'right', formatter: 'currency', formatoptions: { decimalSeparator: ".", thousandsSeparator: ",", decimalPlaces: 2, prefix: "", suffix: "", defaultValue: '0.00' } },
         ],
         //page: '1',
         //pager: $('#pagerdetail'),

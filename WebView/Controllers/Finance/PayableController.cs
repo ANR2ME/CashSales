@@ -65,7 +65,7 @@ namespace WebView.Controllers
                              model.CompletionDate,
                              model.DueDate,
                              model.CreatedAt,
-                         }).Where(filter).OrderBy(sidx + " " + sord); //.ToList();
+                         }).Where(filter).OrderBy(sidx + " " + sord + ", CompletionDate " + sord + ", id " + sord); //.ToList();
 
             var list = query.AsEnumerable();
 
@@ -152,7 +152,7 @@ namespace WebView.Controllers
                              model.CompletionDate,
                              model.CreatedAt,
                          }
-                         ).Where(filter, startdate.GetValueOrDefault().Date, enddate.GetValueOrDefault().AddDays(1).Date).OrderBy(sidx + " " + sord); //.ToList();
+                         ).Where(filter, startdate.GetValueOrDefault().Date, enddate.GetValueOrDefault().AddDays(1).Date).OrderBy(sidx + " " + sord + ", CompletionDate " + sord + ", id " + sord); //.ToList();
 
             var list = query.AsEnumerable();
 

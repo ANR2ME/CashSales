@@ -28,7 +28,7 @@ namespace Data.Repository
 
         public IList<DeliveryOrder> GetAllByMonthCreated()
         {
-            return FindAll(x => x.CreatedAt.Month == DateTime.Today.Month && !x.IsDeleted).ToList();
+            return FindAll(x => x.CreatedAt.Month == DateTime.Today.Month).ToList();
         }
 
         public DeliveryOrder GetObjectById(int Id)

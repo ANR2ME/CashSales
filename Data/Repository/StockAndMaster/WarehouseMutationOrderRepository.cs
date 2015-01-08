@@ -30,7 +30,7 @@ namespace Data.Repository
 
         public IList<WarehouseMutationOrder> GetAllByMonthCreated()
         {
-            return FindAll(x => x.CreatedAt.Month == DateTime.Today.Month && !x.IsDeleted).ToList();
+            return FindAll(x => x.CreatedAt.Month == DateTime.Today.Month).ToList();
         }
 
         public WarehouseMutationOrder GetObjectById(int Id)

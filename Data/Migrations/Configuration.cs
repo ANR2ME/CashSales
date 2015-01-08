@@ -27,6 +27,18 @@ namespace Data.Migrations
             //      new Person { FullName = "Rowan Miller" }
             //    );
             //
+
+            foreach (var x in context.CashSalesInvoices.Where(x => x.PaymentDate == null && x.IsPaid))
+            {
+                x.PaymentDate = x.ConfirmationDate;
+            }
+
+            foreach (var x in context.CashSalesReturns.Where(x => x.PaymentDate == null && x.IsPaid))
+            {
+                x.PaymentDate = x.ConfirmationDate;
+            }
+
+            //context.SaveChanges();
         }
     }
 }

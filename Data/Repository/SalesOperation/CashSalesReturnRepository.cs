@@ -33,7 +33,7 @@ namespace Data.Repository
 
         public IList<CashSalesReturn> GetAllByMonthCreated()
         {
-            return FindAll(x => x.CreatedAt.Month == DateTime.Today.Month && !x.IsDeleted).ToList();
+            return FindAll(x => x.CreatedAt.Month == DateTime.Today.Month).ToList();
         }
 
         public CashSalesReturn GetObjectById(int Id)

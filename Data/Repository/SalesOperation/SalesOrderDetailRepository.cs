@@ -28,7 +28,7 @@ namespace Data.Repository
 
         public IList<SalesOrderDetail> GetAllByMonthCreated()
         {
-            return FindAll(x => x.CreatedAt.Month == DateTime.Today.Month && !x.IsDeleted).ToList();
+            return FindAll(x => x.CreatedAt.Month == DateTime.Today.Month).ToList();
         }
 
         public IQueryable<SalesOrderDetail> GetQueryableObjectsBySalesOrderId(int salesOrderId)

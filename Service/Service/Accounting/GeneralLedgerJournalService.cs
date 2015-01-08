@@ -793,6 +793,13 @@ namespace Service.Service
         public IList<GeneralLedgerJournal> CreateConfirmationJournalForCashSalesInvoice(CashSalesInvoice cashSalesInvoice, IAccountService _accountService)
         {
             IList<GeneralLedgerJournal> journals = new List<GeneralLedgerJournal>();
+            DateTime TransactionDate = cashSalesInvoice.ConfirmationDate.GetValueOrDefault(); // ConfirmationDate
+
+            decimal TotalBeforeShippingFee = cashSalesInvoice.Total - cashSalesInvoice.ShippingFee;
+            decimal TotalBeforeTax = Math.Round(TotalBeforeShippingFee * 100 / (100 + cashSalesInvoice.Tax));
+            decimal TotalBeforeDisc = Math.Round(TotalBeforeTax * 100 / (100 - cashSalesInvoice.Discount));
+            decimal Tax = TotalBeforeShippingFee - TotalBeforeTax;
+            decimal Disc = TotalBeforeDisc - TotalBeforeTax;
 
             GeneralLedgerJournal debitcogs = new GeneralLedgerJournal()
             {
@@ -816,8 +823,70 @@ namespace Service.Service
             };
             creditinventory = CreateObject(creditinventory, _accountService);
 
+            //Assuming the items have been delivered
+            GeneralLedgerJournal debitreceivable = new GeneralLedgerJournal()
+            {
+                AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.AccountReceivableTrading).Id,
+                SourceDocument = Constant.GeneralLedgerSource.CashSalesInvoice,
+                SourceDocumentId = cashSalesInvoice.Id,
+                TransactionDate = TransactionDate,
+                Status = Constant.GeneralLedgerStatus.Debit,
+                Amount = cashSalesInvoice.Total, //Total - cashSalesInvoice.Allowance,
+            };
+            debitreceivable = CreateObject(debitreceivable, _accountService);
+
+            GeneralLedgerJournal debitdiscount = new GeneralLedgerJournal()
+            {
+                AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.SalesDiscountExpense).Id,
+                SourceDocument = Constant.GeneralLedgerSource.CashSalesInvoice,
+                SourceDocumentId = cashSalesInvoice.Id,
+                TransactionDate = TransactionDate,
+                Status = Constant.GeneralLedgerStatus.Debit,
+                Amount = Disc,
+            };
+            debitdiscount = CreateObject(debitdiscount, _accountService);
+
+            GeneralLedgerJournal creditrevenuesales = new GeneralLedgerJournal()
+            {
+                AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.SalesRevenue).Id,
+                SourceDocument = Constant.GeneralLedgerSource.CashSalesInvoice,
+                SourceDocumentId = cashSalesInvoice.Id,
+                TransactionDate = TransactionDate,
+                Status = Constant.GeneralLedgerStatus.Credit,
+                Amount = TotalBeforeDisc,
+            };
+            creditrevenuesales = CreateObject(creditrevenuesales, _accountService);
+
+            GeneralLedgerJournal creditppn = new GeneralLedgerJournal()
+            {
+                AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.AccountPayablePPNkeluaran).Id,
+                SourceDocument = Constant.GeneralLedgerSource.CashSalesInvoice,
+                SourceDocumentId = cashSalesInvoice.Id,
+                TransactionDate = TransactionDate,
+                Status = Constant.GeneralLedgerStatus.Credit,
+                Amount = Tax,
+            };
+            creditppn = CreateObject(creditppn, _accountService);
+
+            GeneralLedgerJournal creditfreight = new GeneralLedgerJournal()
+            {
+                AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.FreightOut).Id,
+                SourceDocument = Constant.GeneralLedgerSource.CashSalesInvoice,
+                SourceDocumentId = cashSalesInvoice.Id,
+                TransactionDate = TransactionDate,
+                Status = Constant.GeneralLedgerStatus.Credit,
+                Amount = cashSalesInvoice.ShippingFee,
+            };
+            creditfreight = CreateObject(creditfreight, _accountService);
+
             journals.Add(debitcogs);
             journals.Add(creditinventory);
+            //Assuming the items have been delivered
+            journals.Add(debitreceivable);
+            journals.Add(debitdiscount);
+            journals.Add(creditppn);
+            journals.Add(creditfreight);
+            journals.Add(creditrevenuesales);
 
             return journals;
         }
@@ -826,6 +895,12 @@ namespace Service.Service
         {
             IList<GeneralLedgerJournal> journals = new List<GeneralLedgerJournal>();
             //DateTime UnconfirmationDate = cashSalesInvoice.ConfirmationDate.GetValueOrDefault(); // DateTime.Now;
+
+            decimal TotalBeforeShippingFee = cashSalesInvoice.Total - cashSalesInvoice.ShippingFee;
+            decimal TotalBeforeTax = Math.Round(TotalBeforeShippingFee * 100 / (100 + cashSalesInvoice.Tax));
+            decimal TotalBeforeDisc = Math.Round(TotalBeforeTax * 100 / (100 - cashSalesInvoice.Discount));
+            decimal Tax = TotalBeforeShippingFee - TotalBeforeTax;
+            decimal Disc = TotalBeforeDisc - TotalBeforeTax;
 
             GeneralLedgerJournal creditcogs = new GeneralLedgerJournal()
             {
@@ -849,159 +924,46 @@ namespace Service.Service
             };
             debitinventory = CreateObject(debitinventory, _accountService);
 
-            journals.Add(creditcogs);
-            journals.Add(debitinventory);
-
-            return journals;
-        }
-
-        public IList<GeneralLedgerJournal> CreatePaidJournalForCashSalesInvoice(CashSalesInvoice cashSalesInvoice, IAccountService _accountService)
-        {
-            IList<GeneralLedgerJournal> journals = new List<GeneralLedgerJournal>();
-
-            decimal TotalBeforeShippingFee = cashSalesInvoice.Total - cashSalesInvoice.ShippingFee;
-            decimal TotalBeforeTax = Math.Round(TotalBeforeShippingFee * 100 / (100 + cashSalesInvoice.Tax));
-            decimal TotalBeforeDisc = Math.Round(TotalBeforeTax * 100 / (100 - cashSalesInvoice.Discount));
-            decimal Tax = TotalBeforeShippingFee - TotalBeforeTax;
-            decimal Disc = TotalBeforeDisc - TotalBeforeTax;
-
-            GeneralLedgerJournal debitreceivable = new GeneralLedgerJournal()
-            {
-                AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.AccountReceivableTrading).Id,
-                SourceDocument = Constant.GeneralLedgerSource.CashSalesInvoice,
-                SourceDocumentId = cashSalesInvoice.Id,
-                TransactionDate = (DateTime)cashSalesInvoice.ConfirmationDate,
-                Status = Constant.GeneralLedgerStatus.Debit,
-                Amount = cashSalesInvoice.Total - cashSalesInvoice.Allowance,
-            };
-            debitreceivable = CreateObject(debitreceivable, _accountService);
-
-            GeneralLedgerJournal debitallowance = new GeneralLedgerJournal()
-            {
-                AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.SalesAllowanceExpense).Id,
-                SourceDocument = Constant.GeneralLedgerSource.CashSalesInvoice,
-                SourceDocumentId = cashSalesInvoice.Id,
-                TransactionDate = (DateTime)cashSalesInvoice.ConfirmationDate,
-                Status = Constant.GeneralLedgerStatus.Debit,
-                Amount = cashSalesInvoice.Allowance,
-            };
-            debitallowance = CreateObject(debitallowance, _accountService);
-
-            GeneralLedgerJournal debitdiscount = new GeneralLedgerJournal()
-            {
-                AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.SalesDiscountExpense).Id,
-                SourceDocument = Constant.GeneralLedgerSource.CashSalesInvoice,
-                SourceDocumentId = cashSalesInvoice.Id,
-                TransactionDate = (DateTime)cashSalesInvoice.ConfirmationDate,
-                Status = Constant.GeneralLedgerStatus.Debit,
-                Amount = Disc,
-            };
-            debitdiscount = CreateObject(debitdiscount, _accountService);
-
-            GeneralLedgerJournal creditrevenuesales = new GeneralLedgerJournal()
-            {
-                AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.SalesRevenue).Id,
-                SourceDocument = Constant.GeneralLedgerSource.CashSalesInvoice,
-                SourceDocumentId = cashSalesInvoice.Id,
-                TransactionDate = (DateTime)cashSalesInvoice.ConfirmationDate,
-                Status = Constant.GeneralLedgerStatus.Credit,
-                Amount = TotalBeforeDisc, 
-            };
-            creditrevenuesales = CreateObject(creditrevenuesales, _accountService);
-
-            GeneralLedgerJournal creditppn = new GeneralLedgerJournal()
-            {
-                AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.AccountPayablePPNkeluaran).Id,
-                SourceDocument = Constant.GeneralLedgerSource.CashSalesInvoice,
-                SourceDocumentId = cashSalesInvoice.Id,
-                TransactionDate = (DateTime)cashSalesInvoice.ConfirmationDate,
-                Status = Constant.GeneralLedgerStatus.Credit,
-                Amount = Tax, 
-            };
-            creditppn = CreateObject(creditppn, _accountService);
-
-            GeneralLedgerJournal creditfreight = new GeneralLedgerJournal()
-            {
-                AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.FreightOut).Id,
-                SourceDocument = Constant.GeneralLedgerSource.CashSalesInvoice,
-                SourceDocumentId = cashSalesInvoice.Id,
-                TransactionDate = (DateTime)cashSalesInvoice.ConfirmationDate,
-                Status = Constant.GeneralLedgerStatus.Credit,
-                Amount = cashSalesInvoice.ShippingFee,
-            };
-            creditfreight = CreateObject(creditfreight, _accountService);
-
-            journals.Add(debitreceivable);
-            journals.Add(debitallowance);
-            journals.Add(debitdiscount);
-            journals.Add(creditppn);
-            journals.Add(creditfreight);
-            journals.Add(creditrevenuesales);
-
-            return journals;
-        }
-
-        public IList<GeneralLedgerJournal> CreateUnpaidJournalForCashSalesInvoice(CashSalesInvoice cashSalesInvoice, DateTime UnconfirmationDate, IAccountService _accountService)
-        {
-            IList<GeneralLedgerJournal> journals = new List<GeneralLedgerJournal>();
-            //DateTime UnconfirmationDate = cashSalesInvoice.ConfirmationDate.GetValueOrDefault(); // DateTime.Now;
-
-            decimal TotalBeforeShippingFee = cashSalesInvoice.Total - cashSalesInvoice.ShippingFee;
-            decimal TotalBeforeTax = Math.Round(TotalBeforeShippingFee * 100 / (100 + cashSalesInvoice.Tax));
-            decimal TotalBeforeDisc = Math.Round(TotalBeforeTax * 100 / (100 - cashSalesInvoice.Discount));
-            decimal Tax = TotalBeforeShippingFee - TotalBeforeTax;
-            decimal Disc = TotalBeforeDisc - TotalBeforeTax;
-
+            //Assuming the items were delivered
             GeneralLedgerJournal creditreceivable = new GeneralLedgerJournal()
             {
                 AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.AccountReceivableTrading).Id,
                 SourceDocument = Constant.GeneralLedgerSource.CashSalesInvoice,
                 SourceDocumentId = cashSalesInvoice.Id,
-                TransactionDate = (DateTime)cashSalesInvoice.ConfirmationDate,
+                TransactionDate = UnconfirmationDate,
                 Status = Constant.GeneralLedgerStatus.Credit,
-                Amount = cashSalesInvoice.Total - cashSalesInvoice.Allowance,
+                Amount = cashSalesInvoice.Total, //Total - cashSalesInvoice.Allowance,
             };
             creditreceivable = CreateObject(creditreceivable, _accountService);
-
-            GeneralLedgerJournal creditallowance = new GeneralLedgerJournal()
-            {
-                AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.SalesAllowanceExpense).Id,
-                SourceDocument = Constant.GeneralLedgerSource.CashSalesInvoice,
-                SourceDocumentId = cashSalesInvoice.Id,
-                TransactionDate = (DateTime)cashSalesInvoice.ConfirmationDate,
-                Status = Constant.GeneralLedgerStatus.Credit,
-                Amount = cashSalesInvoice.Allowance,
-            };
-            creditallowance = CreateObject(creditallowance, _accountService);
-
-            GeneralLedgerJournal creditdiscount = new GeneralLedgerJournal()
-            {
-                AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.SalesDiscountExpense).Id,
-                SourceDocument = Constant.GeneralLedgerSource.CashSalesInvoice,
-                SourceDocumentId = cashSalesInvoice.Id,
-                TransactionDate = (DateTime)cashSalesInvoice.ConfirmationDate,
-                Status = Constant.GeneralLedgerStatus.Credit,
-                Amount = Disc,
-            };
-            creditdiscount = CreateObject(creditdiscount, _accountService);
 
             GeneralLedgerJournal debitrevenuesales = new GeneralLedgerJournal()
             {
                 AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.SalesRevenue).Id,
                 SourceDocument = Constant.GeneralLedgerSource.CashSalesInvoice,
                 SourceDocumentId = cashSalesInvoice.Id,
-                TransactionDate = (DateTime)cashSalesInvoice.ConfirmationDate,
+                TransactionDate = UnconfirmationDate,
                 Status = Constant.GeneralLedgerStatus.Debit,
                 Amount = TotalBeforeDisc,
             };
             debitrevenuesales = CreateObject(debitrevenuesales, _accountService);
+
+            GeneralLedgerJournal creditdiscount = new GeneralLedgerJournal()
+            {
+                AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.SalesDiscountExpense).Id,
+                SourceDocument = Constant.GeneralLedgerSource.CashSalesInvoice,
+                SourceDocumentId = cashSalesInvoice.Id,
+                TransactionDate = UnconfirmationDate,
+                Status = Constant.GeneralLedgerStatus.Credit,
+                Amount = Disc,
+            };
+            creditdiscount = CreateObject(creditdiscount, _accountService);
 
             GeneralLedgerJournal debitppn = new GeneralLedgerJournal()
             {
                 AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.AccountPayablePPNkeluaran).Id,
                 SourceDocument = Constant.GeneralLedgerSource.CashSalesInvoice,
                 SourceDocumentId = cashSalesInvoice.Id,
-                TransactionDate = (DateTime)cashSalesInvoice.ConfirmationDate,
+                TransactionDate = UnconfirmationDate,
                 Status = Constant.GeneralLedgerStatus.Debit,
                 Amount = Tax,
             };
@@ -1012,18 +974,98 @@ namespace Service.Service
                 AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.FreightOut).Id,
                 SourceDocument = Constant.GeneralLedgerSource.CashSalesInvoice,
                 SourceDocumentId = cashSalesInvoice.Id,
-                TransactionDate = (DateTime)cashSalesInvoice.ConfirmationDate,
+                TransactionDate = UnconfirmationDate,
                 Status = Constant.GeneralLedgerStatus.Debit,
                 Amount = cashSalesInvoice.ShippingFee,
             };
             debitfreight = CreateObject(debitfreight, _accountService);
 
+            journals.Add(creditcogs);
+            journals.Add(debitinventory);
+            //Assuming the items were delivered
             journals.Add(creditreceivable);
-            journals.Add(creditallowance);
             journals.Add(creditdiscount);
-            journals.Add(debitrevenuesales);
             journals.Add(debitppn);
             journals.Add(debitfreight);
+            journals.Add(debitrevenuesales);
+
+            return journals;
+        }
+
+        public IList<GeneralLedgerJournal> CreatePaidJournalForCashSalesInvoice(CashSalesInvoice cashSalesInvoice, IAccountService _accountService)
+        {
+            IList<GeneralLedgerJournal> journals = new List<GeneralLedgerJournal>();
+            DateTime TransactionDate = cashSalesInvoice.PaymentDate.GetValueOrDefault(); // ConfirmationDate
+
+            //decimal TotalBeforeShippingFee = cashSalesInvoice.Total - cashSalesInvoice.ShippingFee;
+            //decimal TotalBeforeTax = Math.Round(TotalBeforeShippingFee * 100 / (100 + cashSalesInvoice.Tax));
+            //decimal TotalBeforeDisc = Math.Round(TotalBeforeTax * 100 / (100 - cashSalesInvoice.Discount));
+            //decimal Tax = TotalBeforeShippingFee - TotalBeforeTax;
+            //decimal Disc = TotalBeforeDisc - TotalBeforeTax;
+
+            GeneralLedgerJournal creditreceivable = new GeneralLedgerJournal()
+            {
+                AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.AccountReceivableTrading).Id,
+                SourceDocument = Constant.GeneralLedgerSource.CashSalesInvoice,
+                SourceDocumentId = cashSalesInvoice.Id,
+                TransactionDate = TransactionDate,
+                Status = Constant.GeneralLedgerStatus.Credit,
+                Amount = cashSalesInvoice.Allowance,
+            };
+            creditreceivable = CreateObject(creditreceivable, _accountService);
+
+            GeneralLedgerJournal debitallowance = new GeneralLedgerJournal()
+            {
+                AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.SalesAllowanceExpense).Id,
+                SourceDocument = Constant.GeneralLedgerSource.CashSalesInvoice,
+                SourceDocumentId = cashSalesInvoice.Id,
+                TransactionDate = TransactionDate,
+                Status = Constant.GeneralLedgerStatus.Debit,
+                Amount = cashSalesInvoice.Allowance,
+            };
+            debitallowance = CreateObject(debitallowance, _accountService);
+
+            journals.Add(creditreceivable);
+            journals.Add(debitallowance);
+
+            return journals;
+        }
+
+        public IList<GeneralLedgerJournal> CreateUnpaidJournalForCashSalesInvoice(CashSalesInvoice cashSalesInvoice, DateTime UnpaidDate, IAccountService _accountService)
+        {
+            IList<GeneralLedgerJournal> journals = new List<GeneralLedgerJournal>();
+            //DateTime UnpaidDate = cashSalesInvoice.PaymentDate.GetValueOrDefault(); // DateTime.Now;
+
+            //decimal TotalBeforeShippingFee = cashSalesInvoice.Total - cashSalesInvoice.ShippingFee;
+            //decimal TotalBeforeTax = Math.Round(TotalBeforeShippingFee * 100 / (100 + cashSalesInvoice.Tax));
+            //decimal TotalBeforeDisc = Math.Round(TotalBeforeTax * 100 / (100 - cashSalesInvoice.Discount));
+            //decimal Tax = TotalBeforeShippingFee - TotalBeforeTax;
+            //decimal Disc = TotalBeforeDisc - TotalBeforeTax;
+
+            GeneralLedgerJournal debitreceivable = new GeneralLedgerJournal()
+            {
+                AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.AccountReceivableTrading).Id,
+                SourceDocument = Constant.GeneralLedgerSource.CashSalesInvoice,
+                SourceDocumentId = cashSalesInvoice.Id,
+                TransactionDate = UnpaidDate,
+                Status = Constant.GeneralLedgerStatus.Debit,
+                Amount = cashSalesInvoice.Allowance,
+            };
+            debitreceivable = CreateObject(debitreceivable, _accountService);
+
+            GeneralLedgerJournal creditallowance = new GeneralLedgerJournal()
+            {
+                AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.SalesAllowanceExpense).Id,
+                SourceDocument = Constant.GeneralLedgerSource.CashSalesInvoice,
+                SourceDocumentId = cashSalesInvoice.Id,
+                TransactionDate = UnpaidDate,
+                Status = Constant.GeneralLedgerStatus.Credit,
+                Amount = cashSalesInvoice.Allowance,
+            };
+            creditallowance = CreateObject(creditallowance, _accountService);
+
+            journals.Add(debitreceivable);
+            journals.Add(creditallowance);
 
             return journals;
         }
@@ -1031,13 +1073,14 @@ namespace Service.Service
         public IList<GeneralLedgerJournal> CreateConfirmationJournalForCashSalesReturn(CashSalesReturn cashSalesReturn, IAccountService _accountService)
         {
             IList<GeneralLedgerJournal> journals = new List<GeneralLedgerJournal>();
+            DateTime TransactionDate = cashSalesReturn.ConfirmationDate.GetValueOrDefault(); // 
 
             GeneralLedgerJournal creditcogs = new GeneralLedgerJournal()
             {
                 AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.COGS).Id,
                 SourceDocument = Constant.GeneralLedgerSource.CashSalesReturn,
                 SourceDocumentId = cashSalesReturn.Id,
-                TransactionDate = (DateTime)cashSalesReturn.ConfirmationDate,
+                TransactionDate = TransactionDate,
                 Status = Constant.GeneralLedgerStatus.Credit,
                 Amount = cashSalesReturn.CoGS //Total
             };
@@ -1048,14 +1091,40 @@ namespace Service.Service
                 AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.TradingGoods).Id,
                 SourceDocument = Constant.GeneralLedgerSource.CashSalesReturn,
                 SourceDocumentId = cashSalesReturn.Id,
-                TransactionDate = (DateTime)cashSalesReturn.ConfirmationDate,
+                TransactionDate = TransactionDate,
                 Status = Constant.GeneralLedgerStatus.Debit,
                 Amount = cashSalesReturn.CoGS, //Total
             };
             debitinventory = CreateObject(debitinventory, _accountService);
 
+            //Assuming the items have arrived
+            GeneralLedgerJournal creditpayable = new GeneralLedgerJournal()
+            {
+                AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.AccountPayableTrading).Id,
+                SourceDocument = Constant.GeneralLedgerSource.CashSalesReturn,
+                SourceDocumentId = cashSalesReturn.Id,
+                TransactionDate = TransactionDate,
+                Status = Constant.GeneralLedgerStatus.Credit,
+                Amount = cashSalesReturn.Total, //Total - cashSalesReturn.Allowance,
+            };
+            creditpayable = CreateObject(creditpayable, _accountService);
+
+            GeneralLedgerJournal debitsalesreturn = new GeneralLedgerJournal()
+            {
+                AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.SalesReturnExpense).Id,
+                SourceDocument = Constant.GeneralLedgerSource.CashSalesReturn,
+                SourceDocumentId = cashSalesReturn.Id,
+                TransactionDate = TransactionDate,
+                Status = Constant.GeneralLedgerStatus.Debit,
+                Amount = cashSalesReturn.Total,
+            };
+            debitsalesreturn = CreateObject(debitsalesreturn, _accountService);
+
             journals.Add(creditcogs);
             journals.Add(debitinventory);
+            //Assuming the items have arrived
+            journals.Add(creditpayable);
+            journals.Add(debitsalesreturn);
 
             return journals;
         }
@@ -1087,61 +1156,7 @@ namespace Service.Service
             };
             creditinventory = CreateObject(creditinventory, _accountService);
 
-            journals.Add(debitcogs);
-            journals.Add(creditinventory);
-
-            return journals;
-        }
-
-        public IList<GeneralLedgerJournal> CreatePaidJournalForCashSalesReturn(CashSalesReturn cashSalesReturn, IAccountService _accountService)
-        {
-            IList<GeneralLedgerJournal> journals = new List<GeneralLedgerJournal>();
-
-            GeneralLedgerJournal creditpayable = new GeneralLedgerJournal()
-            {
-                AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.AccountPayableTrading).Id,
-                SourceDocument = Constant.GeneralLedgerSource.CashSalesReturn,
-                SourceDocumentId = cashSalesReturn.Id,
-                TransactionDate = (DateTime)cashSalesReturn.ConfirmationDate,
-                Status = Constant.GeneralLedgerStatus.Credit,
-                Amount = cashSalesReturn.Total - cashSalesReturn.Allowance,
-            };
-            creditpayable = CreateObject(creditpayable, _accountService);
-
-            GeneralLedgerJournal creditallowance = new GeneralLedgerJournal()
-            {
-                AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.SalesReturnAllowance).Id,
-                SourceDocument = Constant.GeneralLedgerSource.CashSalesReturn,
-                SourceDocumentId = cashSalesReturn.Id,
-                TransactionDate = (DateTime)cashSalesReturn.ConfirmationDate,
-                Status = Constant.GeneralLedgerStatus.Credit,  // contra account
-                Amount = cashSalesReturn.Allowance,
-            };
-            creditallowance = CreateObject(creditallowance, _accountService);
-
-            GeneralLedgerJournal debitsalesreturn = new GeneralLedgerJournal()
-            {
-                AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.SalesReturnExpense).Id,
-                SourceDocument = Constant.GeneralLedgerSource.CashSalesReturn,
-                SourceDocumentId = cashSalesReturn.Id,
-                TransactionDate = (DateTime)cashSalesReturn.ConfirmationDate,
-                Status = Constant.GeneralLedgerStatus.Debit,
-                Amount = cashSalesReturn.Total,
-            };
-            debitsalesreturn = CreateObject(debitsalesreturn, _accountService);
-
-            journals.Add(creditpayable);
-            journals.Add(creditallowance);
-            journals.Add(debitsalesreturn);
-
-            return journals;
-        }
-
-        public IList<GeneralLedgerJournal> CreateUnpaidJournalForCashSalesReturn(CashSalesReturn cashSalesReturn, DateTime UnconfirmationDate, IAccountService _accountService)
-        {
-            IList<GeneralLedgerJournal> journals = new List<GeneralLedgerJournal>();
-            //DateTime UnconfirmationDate = cashSalesReturn.ConfirmationDate.GetValueOrDefault(); // DateTime.Now;
-
+            //Assuming the items were arrived
             GeneralLedgerJournal debitpayable = new GeneralLedgerJournal()
             {
                 AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.AccountPayableTrading).Id,
@@ -1149,35 +1164,92 @@ namespace Service.Service
                 SourceDocumentId = cashSalesReturn.Id,
                 TransactionDate = UnconfirmationDate,
                 Status = Constant.GeneralLedgerStatus.Debit,
-                Amount = cashSalesReturn.Total - cashSalesReturn.Allowance,
+                Amount = cashSalesReturn.Total, //Total - cashSalesReturn.Allowance,
             };
             debitpayable = CreateObject(debitpayable, _accountService);
 
-            GeneralLedgerJournal debitallowance = new GeneralLedgerJournal()
-            {
-                AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.SalesReturnAllowance).Id,
-                SourceDocument = Constant.GeneralLedgerSource.CashSalesReturn,
-                SourceDocumentId = cashSalesReturn.Id,
-                TransactionDate = (DateTime)cashSalesReturn.ConfirmationDate,
-                Status = Constant.GeneralLedgerStatus.Debit,  // contra account
-                Amount = cashSalesReturn.Allowance,
-            };
-            debitallowance = CreateObject(debitallowance, _accountService);
-
-            GeneralLedgerJournal creditsalesreturn = new GeneralLedgerJournal() 
+            GeneralLedgerJournal creditsalesreturn = new GeneralLedgerJournal()
             {
                 AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.SalesReturnExpense).Id,
                 SourceDocument = Constant.GeneralLedgerSource.CashSalesReturn,
                 SourceDocumentId = cashSalesReturn.Id,
                 TransactionDate = UnconfirmationDate,
                 Status = Constant.GeneralLedgerStatus.Credit,
-                Amount = cashSalesReturn.Total, 
+                Amount = cashSalesReturn.Total,
             };
             creditsalesreturn = CreateObject(creditsalesreturn, _accountService);
 
+            journals.Add(debitcogs);
+            journals.Add(creditinventory);
+            //Assuming the items were arrived
             journals.Add(debitpayable);
-            journals.Add(debitallowance);
             journals.Add(creditsalesreturn);
+
+            return journals;
+        }
+
+        public IList<GeneralLedgerJournal> CreatePaidJournalForCashSalesReturn(CashSalesReturn cashSalesReturn, IAccountService _accountService)
+        {
+            IList<GeneralLedgerJournal> journals = new List<GeneralLedgerJournal>();
+            DateTime TransactionDate = cashSalesReturn.PaymentDate.GetValueOrDefault(); // ConfirmationDate
+
+            GeneralLedgerJournal debitpayable = new GeneralLedgerJournal()
+            {
+                AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.AccountPayableTrading).Id,
+                SourceDocument = Constant.GeneralLedgerSource.CashSalesReturn,
+                SourceDocumentId = cashSalesReturn.Id,
+                TransactionDate = TransactionDate,
+                Status = Constant.GeneralLedgerStatus.Debit,
+                Amount = cashSalesReturn.Allowance,
+            };
+            debitpayable = CreateObject(debitpayable, _accountService);
+
+            GeneralLedgerJournal creditallowance = new GeneralLedgerJournal()
+            {
+                AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.SalesReturnAllowance).Id,
+                SourceDocument = Constant.GeneralLedgerSource.CashSalesReturn,
+                SourceDocumentId = cashSalesReturn.Id,
+                TransactionDate = TransactionDate,
+                Status = Constant.GeneralLedgerStatus.Credit,  // contra account
+                Amount = cashSalesReturn.Allowance,
+            };
+            creditallowance = CreateObject(creditallowance, _accountService);
+
+            journals.Add(debitpayable);
+            journals.Add(creditallowance);
+
+            return journals;
+        }
+
+        public IList<GeneralLedgerJournal> CreateUnpaidJournalForCashSalesReturn(CashSalesReturn cashSalesReturn, DateTime UnpaidDate, IAccountService _accountService)
+        {
+            IList<GeneralLedgerJournal> journals = new List<GeneralLedgerJournal>();
+            //DateTime UnpaidDate = cashSalesReturn.PaymentDate.GetValueOrDefault(); //ConfirmationDate //DateTime.Now;
+
+            GeneralLedgerJournal creditpayable = new GeneralLedgerJournal()
+            {
+                AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.AccountPayableTrading).Id,
+                SourceDocument = Constant.GeneralLedgerSource.CashSalesReturn,
+                SourceDocumentId = cashSalesReturn.Id,
+                TransactionDate = UnpaidDate,
+                Status = Constant.GeneralLedgerStatus.Credit,
+                Amount = cashSalesReturn.Allowance,
+            };
+            creditpayable = CreateObject(creditpayable, _accountService);
+
+            GeneralLedgerJournal debitallowance = new GeneralLedgerJournal()
+            {
+                AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.SalesReturnAllowance).Id,
+                SourceDocument = Constant.GeneralLedgerSource.CashSalesReturn,
+                SourceDocumentId = cashSalesReturn.Id,
+                TransactionDate = UnpaidDate,
+                Status = Constant.GeneralLedgerStatus.Debit,  // contra account
+                Amount = cashSalesReturn.Allowance,
+            };
+            debitallowance = CreateObject(debitallowance, _accountService);
+
+            journals.Add(creditpayable);
+            journals.Add(debitallowance);
 
             return journals;
         }
@@ -1310,6 +1382,7 @@ namespace Service.Service
         public IList<GeneralLedgerJournal> CreateConfirmationJournalForCustomPurchaseInvoice(CustomPurchaseInvoice customPurchaseInvoice, IAccountService _accountService)
         {
             IList<GeneralLedgerJournal> journals = new List<GeneralLedgerJournal>();
+            DateTime TransactionDate = customPurchaseInvoice.ConfirmationDate.GetValueOrDefault();
 
             decimal TotalBeforeShippingFee = customPurchaseInvoice.Total - customPurchaseInvoice.ShippingFee;
             decimal TotalBeforeTax = Math.Round(TotalBeforeShippingFee * 100 / (100 + customPurchaseInvoice.Tax));
@@ -1322,7 +1395,7 @@ namespace Service.Service
                 AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.TradingGoods).Id,
                 SourceDocument = Constant.GeneralLedgerSource.CustomPurchaseInvoice,
                 SourceDocumentId = customPurchaseInvoice.Id,
-                TransactionDate = (DateTime)customPurchaseInvoice.ConfirmationDate,
+                TransactionDate = TransactionDate,
                 Status = Constant.GeneralLedgerStatus.Debit,
                 Amount = TotalBeforeDisc, //CoGS
             };
@@ -1333,74 +1406,19 @@ namespace Service.Service
                 AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.GoodsPendingClearance).Id,
                 SourceDocument = Constant.GeneralLedgerSource.CustomPurchaseInvoice,
                 SourceDocumentId = customPurchaseInvoice.Id,
-                TransactionDate = (DateTime)customPurchaseInvoice.ConfirmationDate,
+                TransactionDate = TransactionDate,
                 Status = Constant.GeneralLedgerStatus.Credit,
                 Amount = TotalBeforeDisc, //CoGS
             };
             creditgoodsPendingclearance = CreateObject(creditgoodsPendingclearance, _accountService);
 
-            journals.Add(debitinventory);
-            journals.Add(creditgoodsPendingclearance);
-
-            return journals;
-        }
-
-        public IList<GeneralLedgerJournal> CreateUnconfirmationJournalForCustomPurchaseInvoice(CustomPurchaseInvoice customPurchaseInvoice, DateTime UnconfirmationDate, IAccountService _accountService)
-        {
-            IList<GeneralLedgerJournal> journals = new List<GeneralLedgerJournal>();
-            //DateTime UnconfirmationDate = customPurchaseInvoice.ConfirmationDate.GetValueOrDefault(); // DateTime.Now;
-
-            decimal TotalBeforeShippingFee = customPurchaseInvoice.Total - customPurchaseInvoice.ShippingFee;
-            decimal TotalBeforeTax = Math.Round(TotalBeforeShippingFee * 100 / (100 + customPurchaseInvoice.Tax));
-            decimal TotalBeforeDisc = Math.Round(TotalBeforeTax * 100 / (100 - customPurchaseInvoice.Discount));
-            decimal Tax = TotalBeforeShippingFee - TotalBeforeTax;
-            decimal Disc = TotalBeforeDisc - TotalBeforeTax;
-
-            GeneralLedgerJournal creditinventory = new GeneralLedgerJournal()
-            {
-                AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.TradingGoods).Id,
-                SourceDocument = Constant.GeneralLedgerSource.CustomPurchaseInvoice,
-                SourceDocumentId = customPurchaseInvoice.Id,
-                TransactionDate = UnconfirmationDate,
-                Status = Constant.GeneralLedgerStatus.Credit,
-                Amount = TotalBeforeDisc, //CoGS
-            };
-            creditinventory = CreateObject(creditinventory, _accountService);
-
-            GeneralLedgerJournal debitgoodsPendingclearance = new GeneralLedgerJournal()
-            {
-                AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.GoodsPendingClearance).Id,
-                SourceDocument = Constant.GeneralLedgerSource.CustomPurchaseInvoice,
-                SourceDocumentId = customPurchaseInvoice.Id,
-                TransactionDate = UnconfirmationDate,
-                Status = Constant.GeneralLedgerStatus.Debit,
-                Amount = TotalBeforeDisc, //CoGS
-            };
-            debitgoodsPendingclearance = CreateObject(debitgoodsPendingclearance, _accountService);
-
-            journals.Add(creditinventory);
-            journals.Add(debitgoodsPendingclearance);
-
-            return journals;
-        }
-
-        public IList<GeneralLedgerJournal> CreatePaidJournalForCustomPurchaseInvoice(CustomPurchaseInvoice customPurchaseInvoice, IAccountService _accountService)
-        {
-            IList<GeneralLedgerJournal> journals = new List<GeneralLedgerJournal>();
-            DateTime TransactionDate = customPurchaseInvoice.PaymentDate.GetValueOrDefault(); // ConfirmationDate
-
-            decimal TotalBeforeShippingFee = customPurchaseInvoice.Total - customPurchaseInvoice.ShippingFee;
-            decimal TotalBeforeTax = Math.Round(TotalBeforeShippingFee * 100 / (100 + customPurchaseInvoice.Tax));
-            decimal TotalBeforeDisc = Math.Round(TotalBeforeTax * 100 / (100 - customPurchaseInvoice.Discount));
-            decimal Tax = TotalBeforeShippingFee - TotalBeforeTax;
-            decimal Disc = TotalBeforeDisc - TotalBeforeTax;
-
+            //Assuming the Goods have arrived
             GeneralLedgerJournal debitGoodsPendingClearance = new GeneralLedgerJournal()
             {
                 AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.GoodsPendingClearance).Id,
                 SourceDocument = Constant.GeneralLedgerSource.CustomPurchaseInvoice,
                 SourceDocumentId = customPurchaseInvoice.Id,
-                TransactionDate = TransactionDate, 
+                TransactionDate = TransactionDate,
                 Status = Constant.GeneralLedgerStatus.Debit,
                 Amount = TotalBeforeDisc, // Total
             };
@@ -1446,9 +1464,144 @@ namespace Service.Service
                 SourceDocumentId = customPurchaseInvoice.Id,
                 TransactionDate = TransactionDate,
                 Status = Constant.GeneralLedgerStatus.Credit,
-                Amount = customPurchaseInvoice.Total - customPurchaseInvoice.Allowance,
+                Amount = customPurchaseInvoice.Total, //Total - customPurchaseInvoice.Allowance,
             };
             creditaccountpayable = CreateObject(creditaccountpayable, _accountService);
+
+            journals.Add(debitinventory);
+            journals.Add(creditgoodsPendingclearance);
+            //Assuming the Goods have arrived
+            journals.Add(debitGoodsPendingClearance);
+            journals.Add(debitppn);
+            journals.Add(debitfreight);
+            journals.Add(creditdiscount);
+            journals.Add(creditaccountpayable);
+
+            return journals;
+        }
+
+        public IList<GeneralLedgerJournal> CreateUnconfirmationJournalForCustomPurchaseInvoice(CustomPurchaseInvoice customPurchaseInvoice, DateTime UnconfirmationDate, IAccountService _accountService)
+        {
+            IList<GeneralLedgerJournal> journals = new List<GeneralLedgerJournal>();
+            //DateTime UnconfirmationDate = customPurchaseInvoice.ConfirmationDate.GetValueOrDefault(); // DateTime.Now;
+
+            decimal TotalBeforeShippingFee = customPurchaseInvoice.Total - customPurchaseInvoice.ShippingFee;
+            decimal TotalBeforeTax = Math.Round(TotalBeforeShippingFee * 100 / (100 + customPurchaseInvoice.Tax));
+            decimal TotalBeforeDisc = Math.Round(TotalBeforeTax * 100 / (100 - customPurchaseInvoice.Discount));
+            decimal Tax = TotalBeforeShippingFee - TotalBeforeTax;
+            decimal Disc = TotalBeforeDisc - TotalBeforeTax;
+
+            GeneralLedgerJournal creditinventory = new GeneralLedgerJournal()
+            {
+                AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.TradingGoods).Id,
+                SourceDocument = Constant.GeneralLedgerSource.CustomPurchaseInvoice,
+                SourceDocumentId = customPurchaseInvoice.Id,
+                TransactionDate = UnconfirmationDate,
+                Status = Constant.GeneralLedgerStatus.Credit,
+                Amount = TotalBeforeDisc, //CoGS
+            };
+            creditinventory = CreateObject(creditinventory, _accountService);
+
+            GeneralLedgerJournal debitgoodsPendingclearance = new GeneralLedgerJournal()
+            {
+                AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.GoodsPendingClearance).Id,
+                SourceDocument = Constant.GeneralLedgerSource.CustomPurchaseInvoice,
+                SourceDocumentId = customPurchaseInvoice.Id,
+                TransactionDate = UnconfirmationDate,
+                Status = Constant.GeneralLedgerStatus.Debit,
+                Amount = TotalBeforeDisc, //CoGS
+            };
+            debitgoodsPendingclearance = CreateObject(debitgoodsPendingclearance, _accountService);
+
+            //Assuming the Goods were arrived
+            GeneralLedgerJournal creditGoodsPendingClearance = new GeneralLedgerJournal()
+            {
+                AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.GoodsPendingClearance).Id,
+                SourceDocument = Constant.GeneralLedgerSource.CustomPurchaseInvoice,
+                SourceDocumentId = customPurchaseInvoice.Id,
+                TransactionDate = UnconfirmationDate,
+                Status = Constant.GeneralLedgerStatus.Credit,
+                Amount = TotalBeforeDisc, // Total
+            };
+            creditGoodsPendingClearance = CreateObject(creditGoodsPendingClearance, _accountService);
+
+            GeneralLedgerJournal debitaccountpayable = new GeneralLedgerJournal()
+            {
+                AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.AccountPayableTrading).Id,
+                SourceDocument = Constant.GeneralLedgerSource.CustomPurchaseInvoice,
+                SourceDocumentId = customPurchaseInvoice.Id,
+                TransactionDate = UnconfirmationDate,
+                Status = Constant.GeneralLedgerStatus.Debit,
+                Amount = customPurchaseInvoice.Total, //Total - customPurchaseInvoice.Allowance,
+            };
+            debitaccountpayable = CreateObject(debitaccountpayable, _accountService);
+
+            GeneralLedgerJournal creditppn = new GeneralLedgerJournal()
+            {
+                AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.AccountReceivablePPNmasukan).Id,
+                SourceDocument = Constant.GeneralLedgerSource.CustomPurchaseInvoice,
+                SourceDocumentId = customPurchaseInvoice.Id,
+                TransactionDate = UnconfirmationDate,
+                Status = Constant.GeneralLedgerStatus.Credit,
+                Amount = Tax,
+            };
+            creditppn = CreateObject(creditppn, _accountService);
+
+            GeneralLedgerJournal creditfreight = new GeneralLedgerJournal()
+            {
+                AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.FreightIn).Id,
+                SourceDocument = Constant.GeneralLedgerSource.CustomPurchaseInvoice,
+                SourceDocumentId = customPurchaseInvoice.Id,
+                TransactionDate = UnconfirmationDate,
+                Status = Constant.GeneralLedgerStatus.Credit,
+                Amount = customPurchaseInvoice.ShippingFee,
+            };
+            creditfreight = CreateObject(creditfreight, _accountService);
+
+            GeneralLedgerJournal debitdisc = new GeneralLedgerJournal()
+            {
+                AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.PurchaseDiscount).Id,
+                SourceDocument = Constant.GeneralLedgerSource.CustomPurchaseInvoice,
+                SourceDocumentId = customPurchaseInvoice.Id,
+                TransactionDate = UnconfirmationDate,
+                Status = Constant.GeneralLedgerStatus.Debit, // contra account
+                Amount = Disc,
+            };
+            debitdisc = CreateObject(debitdisc, _accountService);
+
+            journals.Add(creditinventory);
+            journals.Add(debitgoodsPendingclearance);
+            //Assuming the Goods were arrived
+            journals.Add(creditGoodsPendingClearance);
+            journals.Add(creditppn);
+            journals.Add(creditfreight);
+            journals.Add(debitdisc);
+            journals.Add(debitaccountpayable);
+
+            return journals;
+        }
+
+        public IList<GeneralLedgerJournal> CreatePaidJournalForCustomPurchaseInvoice(CustomPurchaseInvoice customPurchaseInvoice, IAccountService _accountService)
+        {
+            IList<GeneralLedgerJournal> journals = new List<GeneralLedgerJournal>();
+            DateTime TransactionDate = customPurchaseInvoice.PaymentDate.GetValueOrDefault(); // ConfirmationDate
+
+            //decimal TotalBeforeShippingFee = customPurchaseInvoice.Total - customPurchaseInvoice.ShippingFee;
+            //decimal TotalBeforeTax = Math.Round(TotalBeforeShippingFee * 100 / (100 + customPurchaseInvoice.Tax));
+            //decimal TotalBeforeDisc = Math.Round(TotalBeforeTax * 100 / (100 - customPurchaseInvoice.Discount));
+            //decimal Tax = TotalBeforeShippingFee - TotalBeforeTax;
+            //decimal Disc = TotalBeforeDisc - TotalBeforeTax;
+
+            GeneralLedgerJournal debitaccountpayable = new GeneralLedgerJournal()
+            {
+                AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.AccountPayableTrading).Id,
+                SourceDocument = Constant.GeneralLedgerSource.CustomPurchaseInvoice,
+                SourceDocumentId = customPurchaseInvoice.Id,
+                TransactionDate = TransactionDate,
+                Status = Constant.GeneralLedgerStatus.Debit,
+                Amount = customPurchaseInvoice.Allowance,
+            };
+            debitaccountpayable = CreateObject(debitaccountpayable, _accountService);
 
             GeneralLedgerJournal creditallowance = new GeneralLedgerJournal()
             {
@@ -1460,12 +1613,8 @@ namespace Service.Service
                 Amount = customPurchaseInvoice.Allowance,
             };
             creditallowance = CreateObject(creditallowance, _accountService);
-
-            journals.Add(debitGoodsPendingClearance);
-            journals.Add(debitppn);
-            journals.Add(debitfreight);
-            journals.Add(creditdiscount);
-            journals.Add(creditaccountpayable);
+            
+            journals.Add(debitaccountpayable);
             journals.Add(creditallowance);
 
             return journals;
@@ -1476,66 +1625,22 @@ namespace Service.Service
             IList<GeneralLedgerJournal> journals = new List<GeneralLedgerJournal>();
             //DateTime UnpaidDate = customPurchaseInvoice.PaymentDate.GetValueOrDefault(); // ConfirmationDate.GetValueOrDefault() ?? // DateTime.Now;
 
-            decimal TotalBeforeShippingFee = customPurchaseInvoice.Total - customPurchaseInvoice.ShippingFee;
-            decimal TotalBeforeTax = Math.Round(TotalBeforeShippingFee * 100 / (100 + customPurchaseInvoice.Tax));
-            decimal TotalBeforeDisc = Math.Round(TotalBeforeTax * 100 / (100 - customPurchaseInvoice.Discount));
-            decimal Tax = TotalBeforeShippingFee - TotalBeforeTax;
-            decimal Disc = TotalBeforeDisc - TotalBeforeTax;
+            //decimal TotalBeforeShippingFee = customPurchaseInvoice.Total - customPurchaseInvoice.ShippingFee;
+            //decimal TotalBeforeTax = Math.Round(TotalBeforeShippingFee * 100 / (100 + customPurchaseInvoice.Tax));
+            //decimal TotalBeforeDisc = Math.Round(TotalBeforeTax * 100 / (100 - customPurchaseInvoice.Discount));
+            //decimal Tax = TotalBeforeShippingFee - TotalBeforeTax;
+            //decimal Disc = TotalBeforeDisc - TotalBeforeTax;
 
-            GeneralLedgerJournal creditGoodsPendingClearance = new GeneralLedgerJournal()
-            {
-                AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.GoodsPendingClearance).Id,
-                SourceDocument = Constant.GeneralLedgerSource.CustomPurchaseInvoice,
-                SourceDocumentId = customPurchaseInvoice.Id,
-                TransactionDate = UnpaidDate,
-                Status = Constant.GeneralLedgerStatus.Credit,
-                Amount = TotalBeforeDisc, // Total
-            };
-            creditGoodsPendingClearance = CreateObject(creditGoodsPendingClearance, _accountService);
-
-            GeneralLedgerJournal creditppn = new GeneralLedgerJournal()
-            {
-                AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.AccountReceivablePPNmasukan).Id,
-                SourceDocument = Constant.GeneralLedgerSource.CustomPurchaseInvoice,
-                SourceDocumentId = customPurchaseInvoice.Id,
-                TransactionDate = UnpaidDate,
-                Status = Constant.GeneralLedgerStatus.Credit,
-                Amount = Tax,
-            };
-            creditppn = CreateObject(creditppn, _accountService);
-
-            GeneralLedgerJournal creditfreight = new GeneralLedgerJournal()
-            {
-                AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.FreightIn).Id,
-                SourceDocument = Constant.GeneralLedgerSource.CustomPurchaseInvoice,
-                SourceDocumentId = customPurchaseInvoice.Id,
-                TransactionDate = UnpaidDate,
-                Status = Constant.GeneralLedgerStatus.Credit,
-                Amount = customPurchaseInvoice.ShippingFee,
-            };
-            creditfreight = CreateObject(creditfreight, _accountService);
-
-            GeneralLedgerJournal debitdisc = new GeneralLedgerJournal()
-            {
-                AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.PurchaseDiscount).Id,
-                SourceDocument = Constant.GeneralLedgerSource.CustomPurchaseInvoice,
-                SourceDocumentId = customPurchaseInvoice.Id,
-                TransactionDate = UnpaidDate,
-                Status = Constant.GeneralLedgerStatus.Debit, // contra account
-                Amount = Disc,
-            };
-            debitdisc = CreateObject(debitdisc, _accountService);
-
-            GeneralLedgerJournal debitaccountpayable = new GeneralLedgerJournal()
+            GeneralLedgerJournal creditaccountpayable = new GeneralLedgerJournal()
             {
                 AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.AccountPayableTrading).Id,
                 SourceDocument = Constant.GeneralLedgerSource.CustomPurchaseInvoice,
                 SourceDocumentId = customPurchaseInvoice.Id,
                 TransactionDate = UnpaidDate,
                 Status = Constant.GeneralLedgerStatus.Debit,
-                Amount = customPurchaseInvoice.Total - customPurchaseInvoice.Allowance,
+                Amount = customPurchaseInvoice.Allowance,
             };
-            debitaccountpayable = CreateObject(debitaccountpayable, _accountService);
+            creditaccountpayable = CreateObject(creditaccountpayable, _accountService);
 
             GeneralLedgerJournal debitallowance = new GeneralLedgerJournal()
             {
@@ -1548,11 +1653,7 @@ namespace Service.Service
             };
             debitallowance = CreateObject(debitallowance, _accountService);
 
-            journals.Add(creditGoodsPendingClearance);
-            journals.Add(creditppn);
-            journals.Add(creditfreight);
-            journals.Add(debitdisc);
-            journals.Add(debitaccountpayable);
+            journals.Add(creditaccountpayable);
             journals.Add(debitallowance);
 
             return journals;

@@ -251,6 +251,16 @@
                                 <input id="paidCode" name ="Code" type="text" size="10" disabled="disabled" /></td>
                   </tr>
                   <tr>
+                      <td>
+                          Payment Date
+                      </td>
+                      <td>
+                         <input id="PaymentDate"class="easyui-datebox" title="mm/dd/yyyy" type="text" size="10" value="@DateTime.Today.ToShortDateString()"/>
+                         <input name="PaymentDate" type="text" size="1" hidden="hidden"/>
+                         <input name="IsPaid" type="text" size="1" hidden="hidden"/>
+                      </td>
+                  </tr>
+                  <tr>
                         <td>
                             <label>Total</label></td>
                         <td colspan="3">

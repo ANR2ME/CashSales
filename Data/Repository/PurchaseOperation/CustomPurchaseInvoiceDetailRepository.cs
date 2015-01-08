@@ -28,7 +28,7 @@ namespace Data.Repository
 
         public IList<CustomPurchaseInvoiceDetail> GetAllByMonthCreated()
         {
-            return FindAll(x => x.CreatedAt.Month == DateTime.Today.Month && !x.IsDeleted).ToList();
+            return FindAll(x => x.CreatedAt.Month == DateTime.Today.Month).ToList();
         }
 
         public IQueryable<CustomPurchaseInvoiceDetail> GetQueryableObjectsByCustomPurchaseInvoiceId(int CustomPurchaseInvoiceId)

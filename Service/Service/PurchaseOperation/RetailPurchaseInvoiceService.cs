@@ -154,23 +154,25 @@ namespace Service.Service
             if (_validator.ValidUnpaidObject(retailPurchaseInvoice))
             {
                 Payable payable = _payableService.GetObjectBySource(Core.Constants.Constant.PayableSource.RetailPurchaseInvoice, retailPurchaseInvoice.Id);
-                IList<PaymentVoucher> paymentVouchers = _paymentVoucherService.GetObjectsByCashBankId((int)retailPurchaseInvoice.CashBankId.GetValueOrDefault());
-                foreach (var paymentVoucher in paymentVouchers)
-                {
-                    if (paymentVoucher.ContactId == retailPurchaseInvoice.ContactId)
-                    {
-                        paymentVoucher.Errors = new Dictionary<string, string>();
-                        _paymentVoucherService.UnconfirmObject(paymentVoucher, _paymentVoucherDetailService, _cashBankService, _payableService,
-                                                               _cashMutationService, _generalLedgerJournalService, _accountService, _closingService);
+                PaymentVoucherDetail pvDetail = _paymentVoucherDetailService.GetObjectsByPayableId(payable.Id).Where(x => x.Description.Contains("Automatic")).FirstOrDefault(); //Find the Automatic voucher
+                PaymentVoucher paymentVoucher = _paymentVoucherService.GetObjectById(pvDetail.PaymentVoucherId);
+                //IList<PaymentVoucher> paymentVouchers = _paymentVoucherService.GetObjectsByCashBankId((int)retailPurchaseInvoice.CashBankId.GetValueOrDefault());
+                //foreach (var paymentVoucher in paymentVouchers)
+                //{
+                //    if (paymentVoucher.ContactId == retailPurchaseInvoice.ContactId)
+                //    {
+                paymentVoucher.Errors = new Dictionary<string, string>();
+                _paymentVoucherService.UnconfirmObject(paymentVoucher, _paymentVoucherDetailService, _cashBankService, _payableService,
+                                                       _cashMutationService, _generalLedgerJournalService, _accountService, _closingService);
 
-                        IList<PaymentVoucherDetail> paymentVoucherDetails = _paymentVoucherDetailService.GetObjectsByPaymentVoucherId(paymentVoucher.Id);
-                        foreach (var paymentVoucherDetail in paymentVoucherDetails)
-                        {
-                            _paymentVoucherDetailService.SoftDeleteObject(paymentVoucherDetail, _paymentVoucherService);
-                        }
-                        _paymentVoucherService.SoftDeleteObject(paymentVoucher, _paymentVoucherDetailService);
-                    }
+                IList<PaymentVoucherDetail> paymentVoucherDetails = _paymentVoucherDetailService.GetObjectsByPaymentVoucherId(paymentVoucher.Id);
+                foreach (var paymentVoucherDetail in paymentVoucherDetails)
+                {
+                    _paymentVoucherDetailService.SoftDeleteObject(paymentVoucherDetail, _paymentVoucherService);
                 }
+                _paymentVoucherService.SoftDeleteObject(paymentVoucher, _paymentVoucherDetailService);
+                //    }
+                //}
                 retailPurchaseInvoice.AmountPaid = 0;
                 retailPurchaseInvoice.IsFullPayment = false;
                 retailPurchaseInvoice = _repository.UnpaidObject(retailPurchaseInvoice);

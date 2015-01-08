@@ -281,23 +281,21 @@ namespace Service.Service
                 //DateTime confirmdate = customPurchaseInvoice.ConfirmationDate.GetValueOrDefault(); // 
                 DateTime paymentdate = customPurchaseInvoice.PaymentDate.GetValueOrDefault();
                 Payable payable = _payableService.GetObjectBySource(Core.Constants.Constant.PayableSource.CustomPurchaseInvoice, customPurchaseInvoice.Id);
-                IList<PaymentVoucher> paymentVouchers = _paymentVoucherService.GetObjectsByCashBankId((int)customPurchaseInvoice.CashBankId.GetValueOrDefault());
-                foreach (var paymentVoucher in paymentVouchers)
+                PaymentVoucherDetail pvDetail = _paymentVoucherDetailService.GetObjectsByPayableId(payable.Id).Where(x => x.Description.Contains("Automatic")).FirstOrDefault(); //Find the Automatic voucher
+                if (pvDetail != null)
                 {
-                    if (paymentVoucher.ContactId == customPurchaseInvoice.ContactId)
-                    {
-                        paymentVoucher.Errors = new Dictionary<string, string>();
-                        _paymentVoucherService.UnconfirmObject(paymentVoucher, _paymentVoucherDetailService, _cashBankService,
-                                                               _payableService, _cashMutationService,_generalLedgerJournalService,_accountService, _closingService);
+                    PaymentVoucher paymentVoucher = _paymentVoucherService.GetObjectById(pvDetail.PaymentVoucherId);
+                    paymentVoucher.Errors = new Dictionary<string, string>();
+                    _paymentVoucherService.UnconfirmObject(paymentVoucher, _paymentVoucherDetailService, _cashBankService,
+                                                           _payableService, _cashMutationService, _generalLedgerJournalService, _accountService, _closingService);
 
-                        IList<PaymentVoucherDetail> paymentVoucherDetails = _paymentVoucherDetailService.GetObjectsByPaymentVoucherId(paymentVoucher.Id);
-                        foreach (var paymentVoucherDetail in paymentVoucherDetails)
-                        {
-                            paymentVoucherDetail.Errors = new Dictionary<string, string>();
-                            _paymentVoucherDetailService.SoftDeleteObject(paymentVoucherDetail, _paymentVoucherService);
-                        }
-                        _paymentVoucherService.SoftDeleteObject(paymentVoucher, _paymentVoucherDetailService);
+                    IList<PaymentVoucherDetail> paymentVoucherDetails = _paymentVoucherDetailService.GetObjectsByPaymentVoucherId(paymentVoucher.Id);
+                    foreach (var paymentVoucherDetail in paymentVoucherDetails)
+                    {
+                        paymentVoucherDetail.Errors = new Dictionary<string, string>();
+                        _paymentVoucherDetailService.SoftDeleteObject(paymentVoucherDetail, _paymentVoucherService);
                     }
+                    _paymentVoucherService.SoftDeleteObject(paymentVoucher, _paymentVoucherDetailService);
                 }
                 _generalLedgerJournalService.CreateUnpaidJournalForCustomPurchaseInvoice(customPurchaseInvoice, paymentdate, _accountService);
                 //_generalLedgerJournalService.CreateUnconfirmationJournalForCustomPurchaseInvoice(customPurchaseInvoice, _accountService);

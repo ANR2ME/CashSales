@@ -504,7 +504,9 @@
 	    if (id) {
 	        var ret = jQuery("#list").jqGrid('getRowData', id);
 	        //$('#PaymentDate').datebox('setValue', $.datepicker.formatDate('mm/dd/yy', new Date()));
-	        $('#PaymentDate').datebox('setValue', ret.confirmationdate);
+	        var paymentdate = ret.confirmationdate;
+	        if (ret.paymentdate != null && ret.paymentdate != undefined && ret.paymentdate.trim() != "") paymentdate = ret.paymentdate;
+	        $('#PaymentDate').datebox('setValue', paymentdate);
 	        $('#paidAllowance').numberbox('setValue', ret.allowance);
 	        $('#AmountPaid').numberbox('setValue', ret.amountpaid);
 	        $('#paidTotal').numberbox('setValue', ret.total);

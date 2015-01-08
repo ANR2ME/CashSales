@@ -29,7 +29,7 @@ namespace Data.Repository
 
         public IList<StockAdjustmentDetail> GetAllByMonthCreated()
         {
-            return FindAll(x => x.CreatedAt.Month == DateTime.Today.Month && !x.IsDeleted).ToList();
+            return FindAll(x => x.CreatedAt.Month == DateTime.Today.Month).ToList();
         }
 
         public IQueryable<StockAdjustmentDetail> GetQueryableObjectsByStockAdjustmentId(int stockAdjustmentId)

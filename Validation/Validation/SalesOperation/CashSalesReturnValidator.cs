@@ -32,6 +32,19 @@ namespace Validation.Validation
             return cashSalesReturn;
         }
 
+        public CashSalesReturn VHasPaymentDate(CashSalesReturn cashSalesReturn)
+        {
+            if (cashSalesReturn.PaymentDate == null || cashSalesReturn.PaymentDate.Equals(DateTime.FromBinary(0)))
+            {
+                cashSalesReturn.Errors.Add("PaymentDate", "Tidak ada");
+            }
+            //else if (customPurchaseInvoice.PaymentDate.GetValueOrDefault().Date.AddDays(1) < customPurchaseInvoice.ConfirmationDate.Date)
+            //{
+            //    customPurchaseInvoice.Errors.Add("PaymentDate", "Harus lebih besar atau sama dengan Confirmation Date");
+            //}
+            return cashSalesReturn;
+        }
+
         public CashSalesReturn VIsValidTotal(CashSalesReturn cashSalesReturn)
         {
             if (cashSalesReturn.Total < 0)
@@ -273,6 +286,8 @@ namespace Validation.Validation
             VIsNotPaid(cashSalesReturn);
             if (!isValid(cashSalesReturn)) { return cashSalesReturn; }
             VIsConfirmed(cashSalesReturn);
+            if (!isValid(cashSalesReturn)) { return cashSalesReturn; }
+            VHasPaymentDate(cashSalesReturn);
             if (!isValid(cashSalesReturn)) { return cashSalesReturn; }
             VHasCashBank(cashSalesReturn, _cashBankService);
             //if (!isValid(cashSalesReturn)) { return cashSalesReturn; }

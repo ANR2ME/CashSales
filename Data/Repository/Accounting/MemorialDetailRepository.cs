@@ -28,7 +28,7 @@ namespace Data.Repository
 
         public IList<MemorialDetail> GetAllByMonthCreated()
         {
-            return FindAll(x => x.CreatedAt.Month == DateTime.Today.Month && !x.IsDeleted).ToList();
+            return FindAll(x => x.CreatedAt.Month == DateTime.Today.Month).ToList();
         }
 
         public IList<MemorialDetail> GetObjectsByMemorialId(int memorialId)

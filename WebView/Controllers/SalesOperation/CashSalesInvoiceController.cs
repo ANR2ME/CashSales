@@ -114,6 +114,7 @@ namespace WebView.Controllers
                             cashbank = model.CashBank.Name,
                             model.IsBank,
                             model.IsPaid,
+                            model.PaymentDate,
                             model.IsFullPayment,
                             model.ContactName,
                             model.ContactPhone,
@@ -171,6 +172,7 @@ namespace WebView.Controllers
                             model.cashbank,
                             model.IsBank,
                             model.IsPaid,
+                            model.PaymentDate,
                             model.IsFullPayment,
                             model.ContactName,
                             model.ContactPhone,
@@ -216,6 +218,7 @@ namespace WebView.Controllers
                              cashbank = model.CashBank.Name,
                              model.IsBank,
                              model.IsPaid,
+                             model.PaymentDate,
                              model.IsFullPayment,
                              model.ContactName,
                              model.ContactPhone,
@@ -273,6 +276,7 @@ namespace WebView.Controllers
                             model.cashbank,
                             model.IsBank,
                             model.IsPaid,
+                            model.PaymentDate,
                             model.IsFullPayment,
                             model.ContactName,
                             model.ContactPhone,
@@ -820,6 +824,7 @@ namespace WebView.Controllers
                 data.Allowance = model.Allowance;
                 data.ContactName = model.ContactName;
                 data.ContactPhone = model.ContactPhone;
+                data.PaymentDate = model.PaymentDate;
                 model = _cashSalesInvoiceService.PaidObject(data, model.AmountPaid.Value, model.Allowance, _cashBankService, _receivableService, _receiptVoucherService, _receiptVoucherDetailService, 
                                                            _contactService, _cashMutationService, _cashSalesReturnService,
                                                            _generalLedgerJournalService,_accountService,_closingService);

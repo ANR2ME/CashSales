@@ -150,23 +150,25 @@ namespace Service.Service
             if (_validator.ValidUnpaidObject(retailSalesInvoice))
             {
                 Receivable receivable = _receivableService.GetObjectBySource(Core.Constants.Constant.ReceivableSource.RetailSalesInvoice, retailSalesInvoice.Id);
-                IList<ReceiptVoucher> receiptVouchers = _receiptVoucherService.GetObjectsByCashBankId((int)retailSalesInvoice.CashBankId.GetValueOrDefault());
-                foreach (var receiptVoucher in receiptVouchers)
-                {
-                    if (receiptVoucher.ContactId == retailSalesInvoice.ContactId)
-                    {
-                        receiptVoucher.Errors = new Dictionary<string, string>();
-                        _receiptVoucherService.UnconfirmObject(receiptVoucher, _receiptVoucherDetailService, _cashBankService, _receivableService,
-                                                               _cashMutationService, _generalLedgerJournalService, _accountService, _closingService);
+                ReceiptVoucherDetail rvDetail = _receiptVoucherDetailService.GetQueryableObjectsByReceivableId(receivable.Id).Where(x => x.Description.Contains("Automatic")).FirstOrDefault(); //Find the Automatic voucher
+                ReceiptVoucher receiptVoucher = _receiptVoucherService.GetObjectById(rvDetail.ReceiptVoucherId);
+                //IList<ReceiptVoucher> receiptVouchers = _receiptVoucherService.GetObjectsByCashBankId((int)retailSalesInvoice.CashBankId.GetValueOrDefault());
+                //foreach (var receiptVoucher in receiptVouchers)
+                //{
+                //    if (receiptVoucher.ContactId == retailSalesInvoice.ContactId)
+                //    {
+                receiptVoucher.Errors = new Dictionary<string, string>();
+                _receiptVoucherService.UnconfirmObject(receiptVoucher, _receiptVoucherDetailService, _cashBankService, _receivableService,
+                                                       _cashMutationService, _generalLedgerJournalService, _accountService, _closingService);
 
-                        IList<ReceiptVoucherDetail> receiptVoucherDetails = _receiptVoucherDetailService.GetObjectsByReceiptVoucherId(receiptVoucher.Id);
-                        foreach (var receiptVoucherDetail in receiptVoucherDetails)
-                        {
-                            _receiptVoucherDetailService.SoftDeleteObject(receiptVoucherDetail, _receiptVoucherService);
-                        }
-                        _receiptVoucherService.SoftDeleteObject(receiptVoucher, _receiptVoucherDetailService);
-                    }
+                IList<ReceiptVoucherDetail> receiptVoucherDetails = _receiptVoucherDetailService.GetObjectsByReceiptVoucherId(receiptVoucher.Id);
+                foreach (var receiptVoucherDetail in receiptVoucherDetails)
+                {
+                    _receiptVoucherDetailService.SoftDeleteObject(receiptVoucherDetail, _receiptVoucherService);
                 }
+                _receiptVoucherService.SoftDeleteObject(receiptVoucher, _receiptVoucherDetailService);
+                //    }
+                //}
                 retailSalesInvoice.AmountPaid = 0;
                 retailSalesInvoice.IsFullPayment = false;
                 retailSalesInvoice = _repository.UnpaidObject(retailSalesInvoice);

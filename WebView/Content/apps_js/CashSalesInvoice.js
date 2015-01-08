@@ -90,7 +90,7 @@
 		datatype: "json",
 		colNames: ['ID', 'Code', 'Description', 
 				   'Discount', 'Tax', 'Delivery Cost', 'Allowance', 'Amount Paid', 'Total', 'CoGS', 'Profit/Loss', 'Is Confirmed', 'Confirmation Date',
-				   'CashBank ID', 'CashBank Name', 'Is Bank', 'Is Paid', 'Is Full Payment',
+				   'CashBank ID', 'CashBank Name', 'Is Bank', 'Is Paid', 'Payment Date', 'Is Full Payment',
                    'Name', 'Phone Number',
 				   'Warehouse ID', 'Warehouse Name',
 				   'Sales Date', 'Due Date', 'Created At', 'Updated At'],
@@ -112,6 +112,7 @@
 				  { name: 'cashbank', index: 'cashbank', width: 100 },
 				  { name: 'isbank', index: 'isbank', width: 80, boolean: { defaultValue: 'false' } },
 				  { name: 'ispaid', index: 'ispaid', width: 80, boolean: { defaultValue: 'false' } },
+                  { name: 'paymentdate', index: 'paymentdate', hidden: true, search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
 				  { name: 'isfullpayment', index: 'isfullpayment', width: 100, boolean: { defaultValue: 'false' } },
                   { name: 'contactname', index: 'contactname', width: 100 },
                   { name: 'contactphone', index: 'contactphone', width: 100 },
@@ -154,9 +155,9 @@
 				  $(this).jqGrid('setRowData', ids[i], { isbank: rowIsBank });
 				  rowIsPaid = $(this).getRowData(cl).ispaid;
 				  if (rowIsPaid == 'true') {
-					  rowIsPaid = "YES";
+				      rowIsPaid = "YES, " + $(this).getRowData(cl).paymentdate;
 				  } else {
-					  rowIsPaid = "NO";
+				      rowIsPaid = "NO";
 				  }
 				  $(this).jqGrid('setRowData', ids[i], { ispaid: rowIsPaid });
 				  rowIsFullpayment = $(this).getRowData(cl).isfullpayment;
@@ -452,6 +453,10 @@
 	    var id = jQuery("#list").jqGrid('getGridParam', 'selrow');
 	    if (id) {
 	        var ret = jQuery("#list").jqGrid('getRowData', id);
+	        //$('#PaymentDate').datebox('setValue', $.datepicker.formatDate('mm/dd/yy', new Date()));
+	        var paymentdate = ret.confirmationdate;
+	        if (ret.paymentdate != null && ret.paymentdate != undefined && ret.paymentdate.trim() != "") paymentdate = ret.paymentdate;
+	        $('#PaymentDate').datebox('setValue', paymentdate);
 	        $('#paidAllowance').numberbox('setValue', ret.allowance);
 	        $('#AmountPaid').numberbox('setValue', ret.amountpaid);
 	        $('#paidTotal').numberbox('setValue', ret.total);
@@ -511,7 +516,7 @@
 	        contentType: "application/json",
 	        data: JSON.stringify({
 	            Id: $('#idpaid').val(), AmountPaid: $('#AmountPaid').numberbox('getValue'),
-	            Allowance: $('#paidAllowance').numberbox('getValue'),
+	            Allowance: $('#paidAllowance').numberbox('getValue'), PaymentDate: $('#PaymentDate').datebox('getValue'),
 	            ContactName: $('#ContactName').val(), ContactPhone: $('#ContactPhone').val(),
 	        }),
 	        success: function (result) {

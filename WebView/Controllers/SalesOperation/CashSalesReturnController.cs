@@ -112,6 +112,7 @@ namespace WebView.Controllers
                              cashbank = model.CashBank.Name,
                              isbank = model.CashBank.IsBank,
                              model.IsPaid,
+                             model.PaymentDate,
                              model.ReturnDate,
                              model.CreatedAt,
                              model.UpdatedAt,
@@ -159,6 +160,7 @@ namespace WebView.Controllers
                             model.cashbank,
                             model.isbank,
                             model.IsPaid,
+                            model.PaymentDate,
                             model.ReturnDate,
                             model.CreatedAt,
                             model.UpdatedAt,
@@ -565,6 +567,7 @@ namespace WebView.Controllers
 
                 var data = _cashSalesReturnService.GetObjectById(model.Id);
                 data.Allowance = model.Allowance;
+                data.PaymentDate = model.PaymentDate;
                 model = _cashSalesReturnService.PaidObject(data, _cashBankService, _payableService, _paymentVoucherService, _paymentVoucherDetailService, 
                                                     _contactService, _cashMutationService, _generalLedgerJournalService, _accountService,_closingService);
             }

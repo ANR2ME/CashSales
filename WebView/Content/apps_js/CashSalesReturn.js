@@ -18,7 +18,7 @@
 
 	    var findSKU = $('#findSKU').val();
 
-	    $("#list").setGridParam({ url: base_url + 'CashSalesInvoice/GetList', postData: { filters: null, findSKU: findSKU }, page: '1' }).trigger("reloadGrid");
+	    $("#list").setGridParam({ url: base_url + 'CashSalesReturn/GetList', postData: { filters: null, findSKU: findSKU }, page: '1' }).trigger("reloadGrid");
 	}
 
 	function ReloadGridDetail() {
@@ -49,7 +49,7 @@
 		datatype: "json",
 		colNames: ['ID', 'Code', 'Description', 'CashSalesInvoice ID', 'CashSalesInvoice Code',
 				   'Allowance', 'Total', 'Is Confirmed', 'Confirmation Date',
-				   'CashBank ID', 'CashBank Name', 'Is Bank', 'Is Paid',
+				   'CashBank ID', 'CashBank Name', 'Is Bank', 'Is Paid', 'Payment Date',
 				   'Return Date', 'Created At', 'Updated At'],
 		colModel: [
 				  { name: 'id', index: 'id', width: 50, align: "center" },
@@ -65,6 +65,7 @@
 				  { name: 'cashbank', index: 'cashbank', width: 100 },
 				  { name: 'isbank', index: 'isbank', width: 80, boolean: { defaultValue: 'false' } },
 				  { name: 'ispaid', index: 'ispaid', width: 80, boolean: { defaultValue: 'false' } },
+                  { name: 'paymentdate', index: 'paymentdate', hidden: true, search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
                   { name: 'returndate', index: 'returndate', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
                   { name: 'createdat', index: 'createdat', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
 				  { name: 'updatedat', index: 'updatedat', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
@@ -101,9 +102,9 @@
 				  $(this).jqGrid('setRowData', ids[i], { isbank: rowIsBank });
 				  rowIsPaid = $(this).getRowData(cl).ispaid;
 				  if (rowIsPaid == 'true') {
-					  rowIsPaid = "YES";
+				      rowIsPaid = "YES, " + $(this).getRowData(cl).paymentdate;
 				  } else {
-					  rowIsPaid = "NO";
+				      rowIsPaid = "NO";
 				  }
 				  $(this).jqGrid('setRowData', ids[i], { ispaid: rowIsPaid });
 			  }
@@ -347,6 +348,10 @@
 	    var id = jQuery("#list").jqGrid('getGridParam', 'selrow');
 	    if (id) {
 	        var ret = jQuery("#list").jqGrid('getRowData', id);
+	        //$('#PaymentDate').datebox('setValue', $.datepicker.formatDate('mm/dd/yy', new Date()));
+	        var paymentdate = ret.confirmationdate;
+	        if (ret.paymentdate != null && ret.paymentdate != undefined && ret.paymentdate.trim() != "") paymentdate = ret.paymentdate;
+	        $('#PaymentDate').datebox('setValue', paymentdate);
 	        $('#paidAllowance').numberbox('setValue', ret.allowance);
 	        $('#paidTotal').numberbox('setValue', ret.total);
 	        $('#idpaid').val(ret.id);
@@ -403,6 +408,7 @@
 	        contentType: "application/json",
 	        data: JSON.stringify({
 	            Id: $('#idpaid').val(), Allowance: $('#paidAllowance').numberbox('getValue'),
+	            PaymentDate: $('#PaymentDate').datebox('getValue'),
 	        }),
 	        success: function (result) {
 	            if (JSON.stringify(result.Errors) != '{}') {

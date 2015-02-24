@@ -163,11 +163,12 @@ namespace Service.Service
             return cashSalesReturn;
         }
 
-        public CashSalesReturn PaidObjectForRepair(CashSalesReturn cashSalesReturn, /*decimal Allowance,*/ string VoucherCode, string VoucherDetailCode,
+        public CashSalesReturn PaidObjectForRepair(CashSalesReturn cashSalesReturn, Nullable<DateTime> PaymentDate, /*decimal Allowance,*/ string VoucherCode, string VoucherDetailCode, int VoucherId,
                                           ICashBankService _cashBankService, IPayableService _payableService, IPaymentVoucherService _paymentVoucherService, IPaymentVoucherDetailService _paymentVoucherDetailService,
                                           IContactService _contactService, ICashMutationService _cashMutationService,
                                           IGeneralLedgerJournalService _generalLedgerJournalService, IAccountService _accountService, IClosingService _closingService)
         {
+            cashSalesReturn.PaymentDate = PaymentDate;
             if (_validator.ValidPaidObject(cashSalesReturn, _cashBankService))
             {
                 CashBank cashBank = _cashBankService.GetObjectById((int)cashSalesReturn.CashBankId.GetValueOrDefault());
@@ -179,13 +180,33 @@ namespace Service.Service
                 PaymentVoucher paymentVoucher = null;
                 if (payable.RemainingAmount > 0)
                 {
-                    paymentVoucher = _paymentVoucherService.CreateObject((int)cashSalesReturn.CashBankId.GetValueOrDefault(), payable.ContactId,
-                                                                                        cashSalesReturn.PaymentDate.GetValueOrDefault()/*DateTime.Now*/, payable.RemainingAmount, false, payable.DueDate, cashBank.IsBank, VoucherCode,
-                                                                                        _paymentVoucherDetailService, _payableService, _contactService, _cashBankService);
-                    PaymentVoucherDetail paymentVoucherDetail = _paymentVoucherDetailService.CreateObject(paymentVoucher.Id, payable.Id, payable.RemainingAmount,
-                                                                                    "Automatic Payment", VoucherDetailCode, _paymentVoucherService, _cashBankService, _payableService);
-                    _paymentVoucherService.ConfirmObject(paymentVoucher, (DateTime)cashSalesReturn.PaymentDate.GetValueOrDefault(), _paymentVoucherDetailService,
-                                                         _cashBankService, _payableService, _cashMutationService, _generalLedgerJournalService, _accountService, _closingService);
+                    if (VoucherId > 0)
+                    {
+                        paymentVoucher = _paymentVoucherService.GetObjectById(VoucherId);
+                    }
+                    if (paymentVoucher == null)
+                    {
+                        paymentVoucher = _paymentVoucherService.CreateObject((int)cashSalesReturn.CashBankId.GetValueOrDefault(), payable.ContactId,
+                                                                                            cashSalesReturn.PaymentDate.GetValueOrDefault()/*DateTime.Now*/, payable.RemainingAmount, false, payable.DueDate, cashBank.IsBank, VoucherCode,
+                                                                                            _paymentVoucherDetailService, _payableService, _contactService, _cashBankService);
+                    }
+                    if (paymentVoucher != null)
+                    {
+                        if (!(paymentVoucher.TotalAmount >= payable.RemainingAmount && _paymentVoucherDetailService.GetObjectsByPaymentVoucherId(paymentVoucher.Id).Any()))
+                        {
+                            PaymentVoucherDetail paymentVoucherDetail = _paymentVoucherDetailService.CreateObject(paymentVoucher.Id, payable.Id, payable.RemainingAmount,
+                                                                                            "Automatic Payment", VoucherDetailCode, _paymentVoucherService, _cashBankService, _payableService);
+                            if (paymentVoucherDetail != null)
+                            {
+                                paymentVoucherDetail.IsAutomatic = true;
+                            }
+                        }
+                        if (!paymentVoucher.IsConfirmed)
+                        {
+                            _paymentVoucherService.ConfirmObject(paymentVoucher, (DateTime)cashSalesReturn.PaymentDate.GetValueOrDefault(), _paymentVoucherDetailService,
+                                                                 _cashBankService, _payableService, _cashMutationService, _generalLedgerJournalService, _accountService, _closingService);
+                        }
+                    }
                 }
                 if (paymentVoucher == null || !paymentVoucher.Errors.Any())
                 {
@@ -223,10 +244,20 @@ namespace Service.Service
                     paymentVoucher = _paymentVoucherService.CreateObject((int)cashSalesReturn.CashBankId.GetValueOrDefault(), payable.ContactId,
                                                                                         cashSalesReturn.PaymentDate.GetValueOrDefault()/*DateTime.Now*/, payable.RemainingAmount, false, payable.DueDate, cashBank.IsBank, "",
                                                                                         _paymentVoucherDetailService, _payableService, _contactService, _cashBankService);
-                    PaymentVoucherDetail paymentVoucherDetail = _paymentVoucherDetailService.CreateObject(paymentVoucher.Id, payable.Id, payable.RemainingAmount,
-                                                                                    "Automatic Payment", "", _paymentVoucherService, _cashBankService, _payableService);
-                    _paymentVoucherService.ConfirmObject(paymentVoucher, (DateTime)cashSalesReturn.PaymentDate.GetValueOrDefault(), _paymentVoucherDetailService,
-                                                         _cashBankService, _payableService, _cashMutationService, _generalLedgerJournalService, _accountService, _closingService);
+                    if (paymentVoucher != null)
+                    {
+                        //if (!(paymentVoucher.TotalAmount >= payable.RemainingAmount && _paymentVoucherDetailService.GetObjectsByPaymentVoucherId(paymentVoucher.Id).Any()))
+                        {
+                            PaymentVoucherDetail paymentVoucherDetail = _paymentVoucherDetailService.CreateObject(paymentVoucher.Id, payable.Id, payable.RemainingAmount,
+                                                                                            "Automatic Payment", "", _paymentVoucherService, _cashBankService, _payableService);
+                            if (paymentVoucherDetail != null)
+                            {
+                                paymentVoucherDetail.IsAutomatic = true;
+                            }
+                        }
+                        _paymentVoucherService.ConfirmObject(paymentVoucher, (DateTime)cashSalesReturn.PaymentDate.GetValueOrDefault(), _paymentVoucherDetailService,
+                                                             _cashBankService, _payableService, _cashMutationService, _generalLedgerJournalService, _accountService, _closingService);
+                    }
                 }
                 if (paymentVoucher == null || !paymentVoucher.Errors.Any())
                 {

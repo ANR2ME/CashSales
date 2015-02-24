@@ -111,8 +111,8 @@ namespace WebView.Controllers
             //ValidComb Sales = _validCombService.FindOrCreateObjectByAccountAndClosing(_accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.SalesRevenue).Id, closing.Id);
             ValidComb COGS = _validCombService.FindOrCreateObjectByAccountAndClosing(_accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.COGS).Id, closing.Id);
             // Memorial Expenses
-            ValidComb OperationalExpenses = _validCombService.FindOrCreateObjectByAccountAndClosing(_accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.OperationalExpenses).Id, closing.Id);
-            ValidComb InterestEarning = _validCombService.FindOrCreateObjectByAccountAndClosing(_accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.InterestEarning).Id, closing.Id);
+            ValidComb OperationalExpenses = _validCombService.FindOrCreateObjectByAccountAndClosing(_accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.OperatingExpenses).Id, closing.Id);
+            ValidComb InterestEarning = _validCombService.FindOrCreateObjectByAccountAndClosing(_accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.InterestExpense).Id, closing.Id);
             ValidComb Depreciation = _validCombService.FindOrCreateObjectByAccountAndClosing(_accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.Depreciation).Id, closing.Id);
             ValidComb Amortization = _validCombService.FindOrCreateObjectByAccountAndClosing(_accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.Amortization).Id, closing.Id);
             ValidComb Tax = _validCombService.FindOrCreateObjectByAccountAndClosing(_accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.Tax).Id, closing.Id);
@@ -172,8 +172,8 @@ namespace WebView.Controllers
             var db = new OffsetPrintingSuppliesEntities();
             using (db)
             {
-                var q = db.ValidCombs.Include("Closing").Include("Account").Where(x => x.Closing.BeginningPeriod == startDate && (x.Account.Group == Constant.AccountGroup.Expense || x.Account.Group == Constant.AccountGroup.Revenue)).OrderBy(x => x.Account.Code);
-                var prevq = db.ValidCombs.Include("Closing").Include("Account").Where(x => x.Closing.BeginningPeriod == prevStartDate && (x.Account.Group == Constant.AccountGroup.Expense || x.Account.Group == Constant.AccountGroup.Revenue)); //.OrderByDescending(x => x.Closing.EndDatePeriod);
+                var q = db.ValidCombs.Include("Closing").Include("Account").Where(x => x.Closing.BeginningPeriod == startDate && (x.Account.Group == (int)Constant.AccountGroup.Expense || x.Account.Group == (int)Constant.AccountGroup.Revenue)).OrderBy(x => x.Account.Code);
+                var prevq = db.ValidCombs.Include("Closing").Include("Account").Where(x => x.Closing.BeginningPeriod == prevStartDate && (x.Account.Group == (int)Constant.AccountGroup.Expense || x.Account.Group == (int)Constant.AccountGroup.Revenue)); //.OrderByDescending(x => x.Closing.EndDatePeriod);
 
                 var query = (from model in q
                              select new
@@ -187,9 +187,9 @@ namespace WebView.Controllers
                                  Previous = (decimal?)prevq.Where(x => x.AccountId == model.AccountId).FirstOrDefault().Amount ?? 0,
                                  Group = (model.Account.Code.Substring(0, Constant.AccountCode.Revenue.Length) == Constant.AccountCode.Revenue) ? Constant.AccountCode.Revenue : // "Sales ( Gross )"
                                          (model.Account.Code.Substring(0, Constant.AccountCode.COGS.Length) == Constant.AccountCode.COGS) ? Constant.AccountCode.COGS : // "Cost of Goods Sold" 
-                                         (model.Account.Code.Substring(0, Constant.AccountCode.OperationalExpenses.Length) == Constant.AccountCode.OperationalExpenses) ? Constant.AccountCode.OperationalExpenses : // "Operational Expenses"
+                                         (model.Account.Code.Substring(0, Constant.AccountCode.OperatingExpenses.Length) == Constant.AccountCode.OperatingExpenses) ? Constant.AccountCode.OperatingExpenses : // "Operational Expenses"
                                          (model.Account.Code.Substring(0, 3) == "214") ? "214" : // "Non-Operational Expenses"
-                                         (model.Account.Code.Substring(0, Constant.AccountCode.InterestEarning.Length) == Constant.AccountCode.InterestEarning) ? Constant.AccountCode.InterestEarning :
+                                         (model.Account.Code.Substring(0, Constant.AccountCode.InterestExpense.Length) == Constant.AccountCode.InterestExpense) ? Constant.AccountCode.InterestExpense :
                                          (model.Account.Code.Substring(0, Constant.AccountCode.Depreciation.Length) == Constant.AccountCode.Depreciation) ? Constant.AccountCode.Depreciation :
                                          (model.Account.Code.Substring(0, Constant.AccountCode.Amortization.Length) == Constant.AccountCode.Amortization) ? Constant.AccountCode.Amortization :
                                          (model.Account.Code.Substring(0, Constant.AccountCode.Tax.Length) == Constant.AccountCode.Tax) ? Constant.AccountCode.Tax :
@@ -233,7 +233,7 @@ namespace WebView.Controllers
 
             var balanceValidComb = _validCombService.GetQueryable().Include("Account").Include("Closing")
                                                     .Where(x => x.ClosingId == closing.Id & x.Account.Level == 2 
-                                                    && x.Account.Group != Constant.AccountGroup.Expense && x.Account.Group != Constant.AccountGroup.Revenue
+                                                    && x.Account.Group != (int)Constant.AccountGroup.Expense && x.Account.Group != (int)Constant.AccountGroup.Revenue
                                                     );
 
             List<ModelBalanceSheet> query = new List<ModelBalanceSheet>();
@@ -243,14 +243,14 @@ namespace WebView.Controllers
                          CompanyName = company.Name,
                          StartDate = closing.BeginningPeriod.Date,
                          EndDate = closing.EndDatePeriod.Date,
-                         DCNote = (obj.Account.Group == Constant.AccountGroup.Asset ||
-                                  obj.Account.Group == Constant.AccountGroup.Expense) ? "D" : "C",
+                         DCNote = (obj.Account.Group == (int)Constant.AccountGroup.Asset ||
+                                  obj.Account.Group == (int)Constant.AccountGroup.Expense) ? "D" : "C",
                          AccountName = obj.Account.Code.Substring(0, 1),
-                         AccountGroup = (obj.Account.Group == Constant.AccountGroup.Asset) ? "Asset" :
-                                        (obj.Account.Group == Constant.AccountGroup.Expense) ? "Expense" :
-                                        (obj.Account.Group == Constant.AccountGroup.Liability) ? "Liability" :
-                                        (obj.Account.Group == Constant.AccountGroup.Equity) ? "Equity" :
-                                        (obj.Account.Group == Constant.AccountGroup.Revenue) ? "Revenue" : "",
+                         AccountGroup = (obj.Account.Group == (int)Constant.AccountGroup.Asset) ? "Asset" :
+                                        (obj.Account.Group == (int)Constant.AccountGroup.Expense) ? "Expense" :
+                                        (obj.Account.Group == (int)Constant.AccountGroup.Liability) ? "Liability" :
+                                        (obj.Account.Group == (int)Constant.AccountGroup.Equity) ? "Equity" :
+                                        (obj.Account.Group == (int)Constant.AccountGroup.Revenue) ? "Revenue" : "",
                         AccountTitle = obj.Account.Name,
                         CurrentAmount = obj.Amount,
                         PrevAmount = obj.Amount,
@@ -289,24 +289,24 @@ namespace WebView.Controllers
 
             var balanceValidComb = _validCombService.GetQueryable().Include("Account").Include("Closing")
                                                     .Where(x => x.ClosingId == closing.Id & x.Account.Level >= 2
-                                                    && x.Account.Group != Constant.AccountGroup.Expense && x.Account.Group != Constant.AccountGroup.Revenue
+                                                    && x.Account.Group != (int)Constant.AccountGroup.Expense && x.Account.Group != (int)Constant.AccountGroup.Revenue
                                                     );
 
-            List<ModelBalanceSheet> query = new List<ModelBalanceSheet>();
-            query = (from obj in balanceValidComb
+            //List<ModelBalanceSheet> query = new List<ModelBalanceSheet>();
+            var query = (from obj in balanceValidComb
                      select new ModelBalanceSheet()
                      {
                          CompanyName = company.Name,
                          StartDate = closing.BeginningPeriod.Date,
                          EndDate = closing.EndDatePeriod.Date,
-                         DCNote = (obj.Account.Group == Constant.AccountGroup.Asset ||
-                                  obj.Account.Group == Constant.AccountGroup.Expense) ? "D" : "C",
+                         DCNote = (obj.Account.Group == (int)Constant.AccountGroup.Asset ||
+                                  obj.Account.Group == (int)Constant.AccountGroup.Expense) ? "D" : "C",
                          AccountName = obj.Account.Code.Substring(0, 1),
-                         AccountGroup = (obj.Account.Group == Constant.AccountGroup.Asset) ? "Asset" :
-                                        (obj.Account.Group == Constant.AccountGroup.Expense) ? "Expense" :
-                                        (obj.Account.Group == Constant.AccountGroup.Liability) ? "Liability" :
-                                        (obj.Account.Group == Constant.AccountGroup.Equity) ? "Equity" :
-                                        (obj.Account.Group == Constant.AccountGroup.Revenue) ? "Revenue" : "",
+                         AccountGroup = (obj.Account.Group == (int)Constant.AccountGroup.Asset) ? "Asset" :
+                                        (obj.Account.Group == (int)Constant.AccountGroup.Expense) ? "Expense" :
+                                        (obj.Account.Group == (int)Constant.AccountGroup.Liability) ? "Liability" :
+                                        (obj.Account.Group == (int)Constant.AccountGroup.Equity) ? "Equity" :
+                                        (obj.Account.Group == (int)Constant.AccountGroup.Revenue) ? "Revenue" : "",
                          AccountTitle = obj.Account.Name,
                          AccountParent = obj.Account.Parent.Name,
                          CurrentAmount = obj.Amount,
@@ -316,7 +316,10 @@ namespace WebView.Controllers
                          AccountParentCode = obj.Account.Parent.Code,
                          AccountLevel = obj.Account.Level,
                          IsLeaf = obj.Account.IsLeaf,
-                     }).OrderBy(x => x.AccountCode).ToList();
+                     }).OrderBy(x => x.AccountCode);
+
+            var query1 = query.Where(x => x.AccountGroup == "Asset" || x.AccountGroup == "Expense").ToList();
+            var query2 = query.Where(x => x.AccountGroup != "Asset" && x.AccountGroup != "Expense").ToList();
 
             var rd = new ReportDocument();
 
@@ -324,7 +327,16 @@ namespace WebView.Controllers
             rd.Load(Server.MapPath("~/") + "Reports/Finance/BalanceSheetDetail.rpt");
            
             // Setting report data source
-            rd.SetDataSource(query);
+            rd.SetDataSource(new List<object>());
+
+            // Setting subreport data source
+            rd.Subreports["SubBalanceSheetDetail1.rpt"].SetDataSource(query1);
+            rd.Subreports["SubBalanceSheetDetail2.rpt"].SetDataSource(query2);
+
+            // Set parameters, need to be done after all data sources are set (to prevent reseting parameters)
+            rd.SetParameterValue("CompanyName", company.Name);
+            rd.SetParameterValue("StartDate", closing.BeginningPeriod.Date);
+            rd.SetParameterValue("EndDate", closing.EndDatePeriod.Date);
 
             var stream = rd.ExportToStream(CrystalDecisions.Shared.ExportFormatType.PortableDocFormat);
             return File(stream, "application/pdf");

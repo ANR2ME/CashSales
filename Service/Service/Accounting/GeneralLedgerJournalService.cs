@@ -180,6 +180,7 @@ namespace Service.Service
         public IList<GeneralLedgerJournal> CreateConfirmationJournalForPaymentVoucherNonTrading(PaymentVoucher paymentVoucher, CashBank cashBank, decimal Amount, IAccountService _accountService)
         {
             IList<GeneralLedgerJournal> journals = new List<GeneralLedgerJournal>();
+            var parentLegacyCode = cashBank.IsBank ? Constant.AccountLegacyCode.CashBankBank : Constant.AccountLegacyCode.CashBankCash;
 
             GeneralLedgerJournal debitaccountpayable = new GeneralLedgerJournal()
             {
@@ -210,7 +211,7 @@ namespace Service.Service
             {
                 GeneralLedgerJournal creditcashbank = new GeneralLedgerJournal()
                 {
-                    AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.CashBank + cashBank.Id.ToString("D3")).Id,
+                    AccountId = _accountService.GetObjectByLegacyCode(parentLegacyCode + cashBank.Id.ToString("D3")).Id,
                     SourceDocument = Constant.GeneralLedgerSource.PaymentVoucher,
                     SourceDocumentId = paymentVoucher.Id,
                     TransactionDate = (DateTime)paymentVoucher.ConfirmationDate,
@@ -229,6 +230,7 @@ namespace Service.Service
         {
             IList<GeneralLedgerJournal> journals = new List<GeneralLedgerJournal>();
             //DateTime UnconfirmationDate = paymentVoucher.ConfirmationDate.GetValueOrDefault(); // DateTime.Now;
+            var parentLegacyCode = cashBank.IsBank ? Constant.AccountLegacyCode.CashBankBank : Constant.AccountLegacyCode.CashBankCash;
 
             GeneralLedgerJournal creditaccountpayable = new GeneralLedgerJournal()
             {
@@ -259,7 +261,7 @@ namespace Service.Service
             {
                 GeneralLedgerJournal debitcashbank = new GeneralLedgerJournal()
                 {
-                    AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.CashBank + cashBank.Id.ToString("D3")).Id,
+                    AccountId = _accountService.GetObjectByLegacyCode(parentLegacyCode + cashBank.Id.ToString("D3")).Id,
                     SourceDocument = Constant.GeneralLedgerSource.PaymentVoucher,
                     SourceDocumentId = paymentVoucher.Id,
                     TransactionDate = UnconfirmationDate,
@@ -277,6 +279,7 @@ namespace Service.Service
         public IList<GeneralLedgerJournal> CreateReconcileJournalForPaymentVoucher(PaymentVoucher paymentVoucher, CashBank cashBank, IAccountService _accountService)
         {
             IList<GeneralLedgerJournal> journals = new List<GeneralLedgerJournal>();
+            var parentLegacyCode = cashBank.IsBank ? Constant.AccountLegacyCode.CashBankBank : Constant.AccountLegacyCode.CashBankCash;
 
             GeneralLedgerJournal debitaccountpayable = new GeneralLedgerJournal()
             {
@@ -291,7 +294,7 @@ namespace Service.Service
 
             GeneralLedgerJournal creditcashbank = new GeneralLedgerJournal()
             {
-                AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.CashBank + cashBank.Id.ToString("D3")).Id,
+                AccountId = _accountService.GetObjectByLegacyCode(parentLegacyCode + cashBank.Id.ToString("D3")).Id,
                 SourceDocument = Constant.GeneralLedgerSource.PaymentVoucher,
                 SourceDocumentId = paymentVoucher.Id,
                 TransactionDate = (DateTime)paymentVoucher.ReconciliationDate.GetValueOrDefault(), // .ConfirmationDate,
@@ -310,6 +313,7 @@ namespace Service.Service
         {
             IList<GeneralLedgerJournal> journals = new List<GeneralLedgerJournal>();
             //DateTime UnreconcileDate = paymentVoucher.ReconciliationDate.GetValueOrDefault(); // DateTime.Now;
+            var parentLegacyCode = cashBank.IsBank ? Constant.AccountLegacyCode.CashBankBank : Constant.AccountLegacyCode.CashBankCash;
 
             GeneralLedgerJournal creditaccountpayable = new GeneralLedgerJournal()
             {
@@ -324,7 +328,7 @@ namespace Service.Service
 
             GeneralLedgerJournal debitcashbank = new GeneralLedgerJournal()
             {
-                AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.CashBank + cashBank.Id.ToString("D3")).Id,
+                AccountId = _accountService.GetObjectByLegacyCode(parentLegacyCode + cashBank.Id.ToString("D3")).Id,
                 SourceDocument = Constant.GeneralLedgerSource.PaymentVoucher,
                 SourceDocumentId = paymentVoucher.Id,
                 TransactionDate = UnreconcileDate,
@@ -342,6 +346,7 @@ namespace Service.Service
         public IList<GeneralLedgerJournal> CreateConfirmationJournalForPaymentVoucherTrading(PaymentVoucher paymentVoucher, CashBank cashBank, decimal Amount, IAccountService _accountService)
         {
             IList<GeneralLedgerJournal> journals = new List<GeneralLedgerJournal>();
+            var parentLegacyCode = cashBank.IsBank ? Constant.AccountLegacyCode.CashBankBank : Constant.AccountLegacyCode.CashBankCash;
 
             GeneralLedgerJournal debitaccountpayable = new GeneralLedgerJournal()
             {
@@ -372,7 +377,7 @@ namespace Service.Service
             {
                 GeneralLedgerJournal creditcashbank = new GeneralLedgerJournal()
                 {
-                    AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.CashBank + cashBank.Id.ToString("D3")).Id,
+                    AccountId = _accountService.GetObjectByLegacyCode(parentLegacyCode + cashBank.Id.ToString("D3")).Id,
                     SourceDocument = Constant.GeneralLedgerSource.PaymentVoucher,
                     SourceDocumentId = paymentVoucher.Id,
                     TransactionDate = (DateTime)paymentVoucher.ConfirmationDate,
@@ -391,6 +396,7 @@ namespace Service.Service
         {
             IList<GeneralLedgerJournal> journals = new List<GeneralLedgerJournal>();
             //DateTime UnconfirmationDate = paymentVoucher.ConfirmationDate.GetValueOrDefault(); // DateTime.Now;
+            var parentLegacyCode = cashBank.IsBank ? Constant.AccountLegacyCode.CashBankBank : Constant.AccountLegacyCode.CashBankCash;
 
             GeneralLedgerJournal creditaccountpayable = new GeneralLedgerJournal()
             {
@@ -421,7 +427,7 @@ namespace Service.Service
             {
                 GeneralLedgerJournal debitcashbank = new GeneralLedgerJournal()
                 {
-                    AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.CashBank + cashBank.Id.ToString("D3")).Id,
+                    AccountId = _accountService.GetObjectByLegacyCode(parentLegacyCode + cashBank.Id.ToString("D3")).Id,
                     SourceDocument = Constant.GeneralLedgerSource.PaymentVoucher,
                     SourceDocumentId = paymentVoucher.Id,
                     TransactionDate = UnconfirmationDate,
@@ -439,6 +445,7 @@ namespace Service.Service
         public IList<GeneralLedgerJournal> CreateConfirmationJournalForReceiptVoucherTrading(ReceiptVoucher receiptVoucher, CashBank cashBank, IAccountService _accountService)
         {
             IList<GeneralLedgerJournal> journals = new List<GeneralLedgerJournal>();
+            var parentLegacyCode = cashBank.IsBank ? Constant.AccountLegacyCode.CashBankBank : Constant.AccountLegacyCode.CashBankCash;
 
             GeneralLedgerJournal creditaccountreceivable = new GeneralLedgerJournal()
             {
@@ -469,7 +476,7 @@ namespace Service.Service
             {
                 GeneralLedgerJournal debitcashbank = new GeneralLedgerJournal()
                 {
-                    AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.CashBank + cashBank.Id.ToString("D3")).Id,
+                    AccountId = _accountService.GetObjectByLegacyCode(parentLegacyCode + cashBank.Id.ToString("D3")).Id,
                     SourceDocument = Constant.GeneralLedgerSource.ReceiptVoucher,
                     SourceDocumentId = receiptVoucher.Id,
                     TransactionDate = (DateTime)receiptVoucher.ConfirmationDate,
@@ -488,6 +495,7 @@ namespace Service.Service
         {
             IList<GeneralLedgerJournal> journals = new List<GeneralLedgerJournal>();
             //DateTime UnconfirmationDate = receiptVoucher.ConfirmationDate.GetValueOrDefault(); // DateTime.Now;
+            var parentLegacyCode = cashBank.IsBank ? Constant.AccountLegacyCode.CashBankBank : Constant.AccountLegacyCode.CashBankCash;
 
             GeneralLedgerJournal debitaccountreceivable = new GeneralLedgerJournal()
             {
@@ -518,7 +526,7 @@ namespace Service.Service
             {
                 GeneralLedgerJournal creditcashbank = new GeneralLedgerJournal()
                 {
-                    AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.CashBank + cashBank.Id.ToString("D3")).Id,
+                    AccountId = _accountService.GetObjectByLegacyCode(parentLegacyCode + cashBank.Id.ToString("D3")).Id,
                     SourceDocument = Constant.GeneralLedgerSource.ReceiptVoucher,
                     SourceDocumentId = receiptVoucher.Id,
                     TransactionDate = UnconfirmationDate,
@@ -536,10 +544,11 @@ namespace Service.Service
         public IList<GeneralLedgerJournal> CreateReconcileJournalForReceiptVoucher(ReceiptVoucher receiptVoucher, CashBank cashBank, IAccountService _accountService)
         {
             IList<GeneralLedgerJournal> journals = new List<GeneralLedgerJournal>();
+            var parentLegacyCode = cashBank.IsBank ? Constant.AccountLegacyCode.CashBankBank : Constant.AccountLegacyCode.CashBankCash;
 
             GeneralLedgerJournal debitcashbank = new GeneralLedgerJournal()
             {
-                AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.CashBank + cashBank.Id.ToString("D3")).Id,
+                AccountId = _accountService.GetObjectByLegacyCode(parentLegacyCode + cashBank.Id.ToString("D3")).Id,
                 SourceDocument = Constant.GeneralLedgerSource.ReceiptVoucher,
                 SourceDocumentId = receiptVoucher.Id,
                 TransactionDate = (DateTime)receiptVoucher.ReconciliationDate.GetValueOrDefault(),
@@ -569,10 +578,11 @@ namespace Service.Service
         {
             IList<GeneralLedgerJournal> journals = new List<GeneralLedgerJournal>();
             //DateTime UnreconcileDate = receiptVoucher.ConfirmationDate.GetValueOrDefault(); // DateTime.Now;
+            var parentLegacyCode = cashBank.IsBank ? Constant.AccountLegacyCode.CashBankBank : Constant.AccountLegacyCode.CashBankCash;
 
             GeneralLedgerJournal creditcashbank = new GeneralLedgerJournal()
             {
-                AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.CashBank + cashBank.Id.ToString("D3")).Id,
+                AccountId = _accountService.GetObjectByLegacyCode(parentLegacyCode + cashBank.Id.ToString("D3")).Id,
                 SourceDocument = Constant.GeneralLedgerSource.ReceiptVoucher,
                 SourceDocumentId = receiptVoucher.Id,
                 TransactionDate = UnreconcileDate,
@@ -601,10 +611,11 @@ namespace Service.Service
         public IList<GeneralLedgerJournal> CreateConfirmationJournalForCashBankAdjustment(CashBankAdjustment cashBankAdjustment, CashBank cashBank, IAccountService _accountService)
         {
             IList<GeneralLedgerJournal> journals = new List<GeneralLedgerJournal>();
+            var parentLegacyCode = cashBank.IsBank ? Constant.AccountLegacyCode.CashBankBank : Constant.AccountLegacyCode.CashBankCash;
+            string LegacyCode = parentLegacyCode + cashBank.Id.ToString("D3");
 
             if (cashBankAdjustment.Amount >= 0)
             {
-                string LegacyCode = Constant.AccountLegacyCode.CashBank + cashBank.Id.ToString("D3");
                 int AccountId = _accountService.GetObjectByLegacyCode(LegacyCode).Id;
                 GeneralLedgerJournal debitcashbank = new GeneralLedgerJournal()
                 {
@@ -646,7 +657,7 @@ namespace Service.Service
 
                 GeneralLedgerJournal creditcashbank = new GeneralLedgerJournal()
                 {
-                    AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.CashBank + cashBank.Id.ToString("D3")).Id,
+                    AccountId = _accountService.GetObjectByLegacyCode(parentLegacyCode + cashBank.Id.ToString("D3")).Id,
                     SourceDocument = Constant.GeneralLedgerSource.CashBankAdjustment,
                     SourceDocumentId = cashBankAdjustment.Id,
                     TransactionDate = (DateTime)cashBankAdjustment.ConfirmationDate,
@@ -666,12 +677,13 @@ namespace Service.Service
         {
             IList<GeneralLedgerJournal> journals = new List<GeneralLedgerJournal>();
             //DateTime UnconfirmationDate = cashBankAdjustment.ConfirmationDate.GetValueOrDefault(); // DateTime.Now;
+            var parentLegacyCode = cashBank.IsBank ? Constant.AccountLegacyCode.CashBankBank : Constant.AccountLegacyCode.CashBankCash;
 
             if (cashBankAdjustment.Amount >= 0)
             {
                 GeneralLedgerJournal creditcashbank = new GeneralLedgerJournal()
                 {
-                    AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.CashBank + cashBank.Id.ToString("D3")).Id,
+                    AccountId = _accountService.GetObjectByLegacyCode(parentLegacyCode + cashBank.Id.ToString("D3")).Id,
                     SourceDocument = Constant.GeneralLedgerSource.CashBankAdjustment,
                     SourceDocumentId = cashBankAdjustment.Id,
                     TransactionDate = UnconfirmationDate,
@@ -709,7 +721,7 @@ namespace Service.Service
 
                 GeneralLedgerJournal debitcashbank = new GeneralLedgerJournal()
                 {
-                    AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.CashBank + cashBank.Id.ToString("D3")).Id,
+                    AccountId = _accountService.GetObjectByLegacyCode(parentLegacyCode + cashBank.Id.ToString("D3")).Id,
                     SourceDocument = Constant.GeneralLedgerSource.CashBankAdjustment,
                     SourceDocumentId = cashBankAdjustment.Id,
                     TransactionDate = UnconfirmationDate,
@@ -728,10 +740,12 @@ namespace Service.Service
         public IList<GeneralLedgerJournal> CreateConfirmationJournalForCashBankMutation(CashBankMutation cashBankMutation, CashBank sourceCashBank, CashBank targetCashBank, IAccountService _accountService)
         {
             IList<GeneralLedgerJournal> journals = new List<GeneralLedgerJournal>();
+            var srcparentLegacyCode = sourceCashBank.IsBank ? Constant.AccountLegacyCode.CashBankBank : Constant.AccountLegacyCode.CashBankCash;
+            var tgtparentLegacyCode = targetCashBank.IsBank ? Constant.AccountLegacyCode.CashBankBank : Constant.AccountLegacyCode.CashBankCash;
 
             GeneralLedgerJournal debittargetcashbank = new GeneralLedgerJournal()
             {
-                AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.CashBank + targetCashBank.Id.ToString("D3")).Id,
+                AccountId = _accountService.GetObjectByLegacyCode(tgtparentLegacyCode + targetCashBank.Id.ToString("D3")).Id,
                 SourceDocument = Constant.GeneralLedgerSource.CashBankMutation,
                 SourceDocumentId = cashBankMutation.Id,
                 TransactionDate = (DateTime)cashBankMutation.ConfirmationDate,
@@ -742,7 +756,7 @@ namespace Service.Service
 
             GeneralLedgerJournal creditsourcecashbank = new GeneralLedgerJournal()
             {
-                AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.CashBank + sourceCashBank.Id.ToString("D3")).Id,
+                AccountId = _accountService.GetObjectByLegacyCode(srcparentLegacyCode + sourceCashBank.Id.ToString("D3")).Id,
                 SourceDocument = Constant.GeneralLedgerSource.CashBankMutation,
                 SourceDocumentId = cashBankMutation.Id,
                 TransactionDate = (DateTime)cashBankMutation.ConfirmationDate,
@@ -761,10 +775,12 @@ namespace Service.Service
         {
             IList<GeneralLedgerJournal> journals = new List<GeneralLedgerJournal>();
             //DateTime UnconfirmationDate = cashBankMutation.ConfirmationDate.GetValueOrDefault(); // DateTime.Now;
+            var srcparentLegacyCode = sourceCashBank.IsBank ? Constant.AccountLegacyCode.CashBankBank : Constant.AccountLegacyCode.CashBankCash;
+            var tgtparentLegacyCode = targetCashBank.IsBank ? Constant.AccountLegacyCode.CashBankBank : Constant.AccountLegacyCode.CashBankCash;
 
             GeneralLedgerJournal credittargetcashbank = new GeneralLedgerJournal()
             {
-                AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.CashBank + targetCashBank.Id.ToString("D3")).Id,
+                AccountId = _accountService.GetObjectByLegacyCode(tgtparentLegacyCode + targetCashBank.Id.ToString("D3")).Id,
                 SourceDocument = Constant.GeneralLedgerSource.CashBankMutation,
                 SourceDocumentId = cashBankMutation.Id,
                 TransactionDate = UnconfirmationDate,
@@ -775,7 +791,7 @@ namespace Service.Service
 
             GeneralLedgerJournal debitsourcecashbank = new GeneralLedgerJournal()
             {
-                AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.CashBank + sourceCashBank.Id.ToString("D3")).Id,
+                AccountId = _accountService.GetObjectByLegacyCode(srcparentLegacyCode + sourceCashBank.Id.ToString("D3")).Id,
                 SourceDocument = Constant.GeneralLedgerSource.CashBankMutation,
                 SourceDocumentId = cashBankMutation.Id,
                 TransactionDate = UnconfirmationDate,

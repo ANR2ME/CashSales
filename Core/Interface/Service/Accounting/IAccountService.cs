@@ -13,8 +13,9 @@ namespace Core.Interface.Service
         IAccountValidator GetValidator();
         IList<Account> GetAll();
         IList<Account> GetLeafObjects();
-        IList<Account> GetLeafObjectsById(int? Id);
+        IList<Account> GetChildObjectsById(int? ParentId);
         IList<Account> GetLegacyObjects();
+        IList<Account> GetObjectsByName(string Name);
         Account GetObjectById(int Id);
         Account GetObjectByLegacyCode(string LegacyCode);
         Account GetObjectByNameAndLegacyCode(string LegacyCode, string Name);
@@ -33,6 +34,7 @@ namespace Core.Interface.Service
         Account SoftDeleteObjectForLegacy(Account account);
         bool DeleteObject(int Id);
         bool IsCodeDuplicated(Account account);
+        bool IsChildOf(int AccountId, int? ParentId);
         string GetGroupName(int Group);
     }
 }

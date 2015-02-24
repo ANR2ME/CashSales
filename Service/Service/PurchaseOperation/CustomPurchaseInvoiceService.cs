@@ -158,7 +158,7 @@ namespace Service.Service
             return customPurchaseInvoice;
         }
 
-        public CustomPurchaseInvoice PaidObjectForRepair(CustomPurchaseInvoice customPurchaseInvoice, decimal AmountPaid, Nullable<DateTime> PaymentDate, string VoucherCode, string VoucherDetailCode,
+        public CustomPurchaseInvoice PaidObjectForRepair(CustomPurchaseInvoice customPurchaseInvoice, decimal AmountPaid, Nullable<DateTime> PaymentDate, string VoucherCode, string VoucherDetailCode, int VoucherId,
                                                 ICashBankService _cashBankService, IPayableService _payableService,
                                                 IPaymentVoucherService _paymentVoucherService, IPaymentVoucherDetailService _paymentVoucherDetailService, IContactService _contactService,
                                                 ICashMutationService _cashMutationService, IGeneralLedgerJournalService _generalLedgerJournalService, IAccountService _accountService, IClosingService _closingService)
@@ -186,15 +186,33 @@ namespace Service.Service
                 PaymentVoucher paymentVoucher = null;
                 if (customPurchaseInvoice.AmountPaid.GetValueOrDefault() > 0)
                 {
-                    paymentVoucher = _paymentVoucherService.CreateObject((int)customPurchaseInvoice.CashBankId.GetValueOrDefault(), customPurchaseInvoice.ContactId, customPurchaseInvoice.PaymentDate.GetValueOrDefault()/*DateTime.Now*/, customPurchaseInvoice.AmountPaid.GetValueOrDefault()/*payable.RemainingAmount*/,
-                                                                                customPurchaseInvoice.IsGBCH, (DateTime)customPurchaseInvoice.DueDate.GetValueOrDefault(), customPurchaseInvoice.IsBank, VoucherCode, _paymentVoucherDetailService,
-                                                                                _payableService, _contactService, _cashBankService);
-
-                    PaymentVoucherDetail paymentVoucherDetail = _paymentVoucherDetailService.CreateObject(paymentVoucher.Id, payable.Id, customPurchaseInvoice.AmountPaid.GetValueOrDefault(),
-                                                                                "Automatic Payment", VoucherDetailCode, _paymentVoucherService, _cashBankService, _payableService);
-
-                    _paymentVoucherService.ConfirmObject(paymentVoucher, (DateTime)customPurchaseInvoice.PaymentDate.GetValueOrDefault(), _paymentVoucherDetailService,
-                                                         _cashBankService, _payableService, _cashMutationService, _generalLedgerJournalService, _accountService, _closingService);
+                    if (VoucherId > 0)
+                    {
+                        paymentVoucher = _paymentVoucherService.GetObjectById(VoucherId);
+                    }
+                    if (paymentVoucher == null)
+                    {
+                        paymentVoucher = _paymentVoucherService.CreateObject((int)customPurchaseInvoice.CashBankId.GetValueOrDefault(), customPurchaseInvoice.ContactId, customPurchaseInvoice.PaymentDate.GetValueOrDefault()/*DateTime.Now*/, customPurchaseInvoice.AmountPaid.GetValueOrDefault()/*payable.RemainingAmount*/,
+                                                                                    customPurchaseInvoice.IsGBCH, (DateTime)customPurchaseInvoice.DueDate.GetValueOrDefault(), customPurchaseInvoice.IsBank, VoucherCode, _paymentVoucherDetailService,
+                                                                                    _payableService, _contactService, _cashBankService);
+                    }
+                    if (paymentVoucher != null)
+                    {
+                        if (!(paymentVoucher.TotalAmount >= customPurchaseInvoice.AmountPaid.GetValueOrDefault() && _paymentVoucherDetailService.GetObjectsByPaymentVoucherId(paymentVoucher.Id).Any()))
+                        {
+                            PaymentVoucherDetail paymentVoucherDetail = _paymentVoucherDetailService.CreateObject(paymentVoucher.Id, payable.Id, customPurchaseInvoice.AmountPaid.GetValueOrDefault(),
+                                                                                        "Automatic Payment", VoucherDetailCode, _paymentVoucherService, _cashBankService, _payableService);
+                            if (paymentVoucherDetail != null)
+                            {
+                                paymentVoucherDetail.IsAutomatic = true;
+                            }
+                        }
+                        if (!paymentVoucher.IsConfirmed)
+                        {
+                            _paymentVoucherService.ConfirmObject(paymentVoucher, (DateTime)customPurchaseInvoice.PaymentDate.GetValueOrDefault(), _paymentVoucherDetailService,
+                                                                 _cashBankService, _payableService, _cashMutationService, _generalLedgerJournalService, _accountService, _closingService);
+                        }
+                    }
                 }
                 if (paymentVoucher == null || !paymentVoucher.Errors.Any())
                 {
@@ -245,12 +263,20 @@ namespace Service.Service
                     paymentVoucher = _paymentVoucherService.CreateObject((int)customPurchaseInvoice.CashBankId.GetValueOrDefault(), customPurchaseInvoice.ContactId, customPurchaseInvoice.PaymentDate.GetValueOrDefault()/*DateTime.Now*/, customPurchaseInvoice.AmountPaid.GetValueOrDefault()/*payable.RemainingAmount*/,
                                                                                 customPurchaseInvoice.IsGBCH, (DateTime)customPurchaseInvoice.DueDate.GetValueOrDefault(), customPurchaseInvoice.IsBank, "", _paymentVoucherDetailService,
                                                                                 _payableService, _contactService, _cashBankService);
-                    
-                    PaymentVoucherDetail paymentVoucherDetail = _paymentVoucherDetailService.CreateObject(paymentVoucher.Id, payable.Id, customPurchaseInvoice.AmountPaid.GetValueOrDefault(),
-                                                                                "Automatic Payment", "", _paymentVoucherService, _cashBankService, _payableService);
-
-                    _paymentVoucherService.ConfirmObject(paymentVoucher, (DateTime)customPurchaseInvoice.PaymentDate.GetValueOrDefault(), _paymentVoucherDetailService,
-                                                         _cashBankService, _payableService, _cashMutationService, _generalLedgerJournalService, _accountService, _closingService);
+                    if (paymentVoucher != null)
+                    {
+                        //if (!(paymentVoucher.TotalAmount >= customPurchaseInvoice.AmountPaid.GetValueOrDefault() && _paymentVoucherDetailService.GetObjectsByPaymentVoucherId(paymentVoucher.Id).Any()))
+                        {
+                            PaymentVoucherDetail paymentVoucherDetail = _paymentVoucherDetailService.CreateObject(paymentVoucher.Id, payable.Id, customPurchaseInvoice.AmountPaid.GetValueOrDefault(),
+                                                                                        "Automatic Payment", "", _paymentVoucherService, _cashBankService, _payableService);
+                            if (paymentVoucherDetail != null)
+                            {
+                                paymentVoucherDetail.IsAutomatic = true;
+                            }
+                        }
+                        _paymentVoucherService.ConfirmObject(paymentVoucher, (DateTime)customPurchaseInvoice.PaymentDate.GetValueOrDefault(), _paymentVoucherDetailService,
+                                                             _cashBankService, _payableService, _cashMutationService, _generalLedgerJournalService, _accountService, _closingService);
+                    }
                 }
                 if (paymentVoucher == null || !paymentVoucher.Errors.Any())
                 {

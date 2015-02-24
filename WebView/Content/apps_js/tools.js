@@ -24,6 +24,9 @@ function getQueryStringByName(name) {
 }
 
 function dateTimeEnt(ent_datetime) {
+    if (ent_datetime == "" || ent_datetime == null)
+        return "";
+
     var date = new Date(parseInt(ent_datetime.substr(6), 10));
     var time = date.getTime();
     var year = date.getFullYear();
@@ -41,14 +44,30 @@ function dateEnt(ent_date) {
         return "";
 
     var date = new Date(parseInt(ent_date.substr(6), 10));
-    var time = date.getTime();
+    //var time = date.getTime();
     var year = date.getFullYear();
     var month = leadZero(date.getMonth() + 1, 2);
     var day = leadZero(date.getDate(), 2)
+    //var hour = leadZero(date.getHours(), 2);
+    //var minute = leadZero(date.getMinutes(), 2);
+
+    return month + '/' + day + '/' + year;
+
+}
+
+function timeEnt(ent_datetime) {
+    if (ent_datetime == "" || ent_datetime == null)
+        return "";
+
+    var date = new Date(parseInt(ent_datetime.substr(6), 10));
+    var time = date.getTime();
+    //var year = date.getFullYear();
+    //var month = leadZero(date.getMonth() + 1, 2);
+    //var day = leadZero(date.getDate(), 2)
     var hour = leadZero(date.getHours(), 2);
     var minute = leadZero(date.getMinutes(), 2);
 
-    return month + '/' + day + '/' + year;
+    return hour + ':' + minute;
 
 }
 
@@ -60,7 +79,11 @@ function leadZero(number, width) {
     return number;
 }
 
+// Input datetime needs to be string formatted date/time instead of Int-based datetime
 function dateTimeReportEnt(ent_datetime) {
+    if (ent_datetime == "" || ent_datetime == null)
+        return "";
+
     var vdates = ent_datetime.split(" ");
     var vdate = vdates[0];
     var x = vdate.split("/");
@@ -78,6 +101,9 @@ function dateTimeReportEnt(ent_datetime) {
 }
 
 function dateReportEnt(ent_datetime) {
+    if (ent_datetime == "" || ent_datetime == null)
+        return "";
+
     var vdates = ent_datetime.split(" ");
     var vdate = vdates[0];
     var x = vdate.split("/");
@@ -87,6 +113,21 @@ function dateReportEnt(ent_datetime) {
     var day = leadZero(x[0], 2)
 
     return day + '/' + month + '/' + year;
+
+}
+
+function timeReportEnt(ent_datetime) {
+    if (ent_datetime == "" || ent_datetime == null)
+        return "";
+
+    var vdates = ent_datetime.split(" ");
+    var vtime = vdates[1];
+    var y = vtime.split(":");
+
+    var hour = leadZero(y[0], 2);
+    var minute = leadZero(y[1], 2);
+
+    return hour + ':' + minute;
 
 }
 
@@ -145,6 +186,66 @@ function numberFormat(number) {
 function split(val) {
     return val.split(/,\s*/);
 }
+
 function extractLast(term) {
     return split(term).pop();
+}
+
+function getSelectOption(selopt) {
+    var ret = ":;";
+    if (selopt == null) return ret + "true:Yes;false:No";
+    $(selopt + " option").each(function (i) {
+        var v = this.value.replace(/:/g, "|").replace(/;/g, "|").replace(/"/g, "'");
+        var t = this.text.replace(/:/g, "|").replace(/;/g, "|").replace(/"/g, "'");
+        ret += v + ":" + t + ";";
+    });
+    ret = ret.substr(0, ret.length - 1);
+    return ret;
+}
+
+function clearForm(form) {
+    $(':input', form).each(function () {
+        var type = this.type;
+        var tag = this.tagName.toLowerCase(); // normalize case
+        if (type == 'text' || type == 'password' || type == 'number' || tag == 'textarea')
+            this.value = "";
+        else if (type == 'checkbox' || type == 'radio')
+            this.checked = false;
+        else if (tag == 'select')
+            this.selectedIndex = 0;
+        if ($(this).hasClass('easyui-numberbox'))
+            $(this).numberbox('clear');
+    });
+}
+
+jQuery.extend($.fn.fmatter, { // allow using custom (ie. "yesno" formatter)
+    yesno: function (cellvalue, options, rowdata) {
+        return cellvalue == true ? "Yes" : "No";
+    },
+});
+
+// For jQuery < 1.8
+jQuery.expr[':'].icontains = function (a, i, m) { // allow using custom is ":icontains" for case-insensitive (like .is(":contains(str)"))
+    return jQuery(a).text().toUpperCase().indexOf(m[3].toUpperCase()) >= 0;
+};
+
+// For jQuery 1.8++
+jQuery.expr[":"].icontains = jQuery.expr.createPseudo(function (arg) {
+    return function (elem) {
+        return jQuery(elem).text().toUpperCase().indexOf(arg.toUpperCase()) >= 0;
+    };
+});
+
+function jqGetNextId(objJqGrid) {
+    var nextid = 0;
+    if (objJqGrid.getDataIDs().length > 0)
+        nextid = parseInt(objJqGrid.getDataIDs()[objJqGrid.getDataIDs().length - 1]) + 1;
+
+    return nextid;
+}
+
+// This optional function html-encodes messages for display in the page, to prevent script injection
+function htmlEncode(value) {
+    var encodedValue = $('<div />').text(value).html();
+    return encodedValue;
 }

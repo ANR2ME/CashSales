@@ -28,6 +28,10 @@ namespace Validation.Validation
             {
                 memorialDetail.Errors.Add("AccountId", "Tidak boleh tidak ada");
             }
+            else if (account.IsCashBankAccount)
+            {
+                memorialDetail.Errors.Add("AccountId", "Tidak boleh memilih CashBank Account secara langsung");
+            }
             return memorialDetail;
         }
 
@@ -82,7 +86,7 @@ namespace Validation.Validation
             if (memorialDetail.Status != Constant.GeneralLedgerStatus.Debit &&
                 memorialDetail.Status != Constant.GeneralLedgerStatus.Credit)
             {
-                memorialDetail.Errors.Add("Generic", "Sistem mengharapkan posting General Ledger credit/debit");
+                memorialDetail.Errors.Add("Generic", "Sistem mengharapkan posting General Ledger Credit/Debit");
             }
             return memorialDetail;
         }

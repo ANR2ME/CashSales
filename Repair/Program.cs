@@ -19,8 +19,12 @@ namespace Repair
             TextWriter oldOut = Console.Out;
             try
             {
+                if (File.Exists(@"./ConsoleLog.txt"))
+                {
+                    File.Delete(@"./ConsoleLog.txt");
+                }
                 Console.WriteLine("Generating ConsoleLog.txt file....");
-                ostrm = new FileStream("./ConsoleLog.txt", FileMode.OpenOrCreate, FileAccess.Write);
+                ostrm = new FileStream(@"./ConsoleLog.txt", FileMode.OpenOrCreate, FileAccess.Write);
                 writer = new StreamWriter(ostrm);
                 Console.SetOut(writer);
             }

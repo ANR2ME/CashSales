@@ -17,7 +17,8 @@ namespace Data.Mapping
                 .HasForeignKey(vc => vc.AccountId);
             HasRequired(vc => vc.Closing)
                 .WithMany(c => c.ValidCombs)
-                .HasForeignKey(vc => vc.ClosingId);
+                .HasForeignKey(vc => vc.ClosingId)
+                .WillCascadeOnDelete(true);
             Ignore(vc => vc.Errors);
         }
     }

@@ -91,8 +91,8 @@ namespace Service.Service
                                                           .ToList();
                     decimal totalAmountInLedgers = 0;
                     decimal totalAmountLast = 0;
-                    if (lastClosing != null 
-                        && (leaf.Group != Constant.AccountGroup.Expense && leaf.Group != Constant.AccountGroup.Revenue)
+                    if (lastClosing != null
+                        && (leaf.Group != (int)Constant.AccountGroup.Expense && leaf.Group != (int)Constant.AccountGroup.Revenue)
                         )
                     {
                         var lastVC = _validCombService.GetQueryable().
@@ -104,12 +104,12 @@ namespace Service.Service
                     {
                         Account account = _accountService.GetObjectById(ledger.AccountId);
                         if ((ledger.Status == Constant.GeneralLedgerStatus.Debit &&
-                            (account.Group == Constant.AccountGroup.Asset ||
-                             account.Group == Constant.AccountGroup.Expense)) ||
+                            (account.Group == (int)Constant.AccountGroup.Asset ||
+                             account.Group == (int)Constant.AccountGroup.Expense)) ||
                            (ledger.Status == Constant.GeneralLedgerStatus.Credit &&
-                            (account.Group == Constant.AccountGroup.Liability ||
-                             account.Group == Constant.AccountGroup.Equity ||
-                             account.Group == Constant.AccountGroup.Revenue)))
+                            (account.Group == (int)Constant.AccountGroup.Liability ||
+                             account.Group == (int)Constant.AccountGroup.Equity ||
+                             account.Group == (int)Constant.AccountGroup.Revenue)))
                         {
                             totalAmountInLedgers += ledger.Amount;
                         }
@@ -134,15 +134,19 @@ namespace Service.Service
                 Account Revenue = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.Revenue);
                 Account Expense = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.Expense);
                 Account RetainedEarnings = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.RetainedEarnings);
+                Account RetainedEarnings2 = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.RetainedEarnings2);
                 Account Equity = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.Equity);
 
                 ValidComb VCRevenue = _validCombService.FindOrCreateObjectByAccountAndClosing(Revenue.Id, closing.Id);
                 ValidComb VCExpense = _validCombService.FindOrCreateObjectByAccountAndClosing(Expense.Id, closing.Id);
                 ValidComb VCRetainedEarnings = _validCombService.FindOrCreateObjectByAccountAndClosing(RetainedEarnings.Id, closing.Id);
+                ValidComb VCRetainedEarnings2 = _validCombService.FindOrCreateObjectByAccountAndClosing(RetainedEarnings2.Id, closing.Id);
                 ValidComb VCEquity = _validCombService.FindOrCreateObjectByAccountAndClosing(Equity.Id, closing.Id);
 
                 VCRetainedEarnings.Amount += (VCRevenue.Amount - VCExpense.Amount); // use += instead of = if Rev & Exp not zeroed
                 _validCombService.UpdateObject(VCRetainedEarnings, _accountService, this);
+                VCRetainedEarnings2.Amount += (VCRevenue.Amount - VCExpense.Amount);
+                _validCombService.UpdateObject(VCRetainedEarnings2, _accountService, this);
                 VCEquity.Amount += VCRetainedEarnings.Amount;
                 _validCombService.UpdateObject(VCEquity, _accountService, this);
                 //VCRevenue.Amount = 0;

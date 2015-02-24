@@ -73,13 +73,14 @@ namespace Validation.Validation
 
         public Account VIsValidGroup(Account account)
         {
-            if (!account.Group.Equals(Constant.AccountGroup.Asset) &&
-                !account.Group.Equals(Constant.AccountGroup.Expense) &&
-                !account.Group.Equals(Constant.AccountGroup.Liability) &&
-                !account.Group.Equals(Constant.AccountGroup.Equity) &&
-                !account.Group.Equals(Constant.AccountGroup.Revenue))
+            //if (!account.Group.Equals(Constant.AccountGroup.Asset) &&
+            //    !account.Group.Equals(Constant.AccountGroup.Expense) &&
+            //    !account.Group.Equals(Constant.AccountGroup.Liability) &&
+            //    !account.Group.Equals(Constant.AccountGroup.Equity) &&
+            //    !account.Group.Equals(Constant.AccountGroup.Revenue))
+            if (!Enum.IsDefined(typeof(Constant.AccountGroup), account.Group))
             {
-                account.Errors.Add("Group", "Harus merupakan bagian dari Constant.AccountGroup");
+                account.Errors.Add("Generic", "Account Group harus Asset/Expense/Liability/Equity/Revenue");
             }
             return account;
         }
@@ -99,18 +100,26 @@ namespace Validation.Validation
             {
                 if (account.ParentId == null || account.ParentId.GetValueOrDefault() <= 0)
                 {
-                    account.Errors.Add("Parent", "Tidak valid");
+                    account.Errors.Add("ParentName", "Tidak valid");
                 }
                 else
                 {
                     Account parent = _accountService.GetObjectById((int)account.ParentId);
                     if (parent == null)
                     {
-                        account.Errors.Add("Parent", "Tidak ada");
+                        account.Errors.Add("ParentName", "Tidak ada");
+                    }
+                    else if (parent.Id == account.Id)
+                    {
+                        account.Errors.Add("ParentName", "Tidak boleh memilih diri sendiri");
                     }
                     else if (parent.IsLeaf && parent.IsUsedBySystem)
                     {
-                        account.Errors.Add("Parent", "Tidak boleh ada account anak pada account yang digunakan oleh System");
+                        account.Errors.Add("ParentName", "Tidak boleh ada account anak pada account yang digunakan oleh System");
+                    }
+                    else if (_accountService.IsChildOf(parent.Id, account.Id))
+                    {
+                        account.Errors.Add("ParentName", "Tidak boleh memilih anak sendiri");
                     }
                 }
             }

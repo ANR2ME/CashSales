@@ -539,6 +539,16 @@ namespace WebView.Controllers
                 }
 
                 var data = _receiptVoucherDetailService.GetObjectById(model.Id);
+                if (data.IsAutomatic)
+                {
+                    Dictionary<string, string> Errors = new Dictionary<string, string>();
+                    Errors.Add("Generic", "Tidak boleh menghapus Automatic Voucher");
+
+                    return Json(new
+                    {
+                        Errors
+                    }, JsonRequestBehavior.AllowGet);
+                }
                 model = _receiptVoucherDetailService.SoftDeleteObject(data, _receiptVoucherService);
                 total = _receiptVoucherService.GetObjectById(model.ReceiptVoucherId).TotalAmount;
             }
@@ -579,6 +589,16 @@ namespace WebView.Controllers
                 }
 
                 var data = _receiptVoucherDetailService.GetObjectById(model.Id);
+                if (data.IsAutomatic)
+                {
+                    Dictionary<string, string> Errors = new Dictionary<string, string>();
+                    Errors.Add("Generic", "Tidak boleh mengubah Automatic Voucher");
+
+                    return Json(new
+                    {
+                        Errors
+                    }, JsonRequestBehavior.AllowGet);
+                }
                 data.ReceivableId = model.ReceivableId;
                 data.Amount = model.Amount;
                 data.Description = model.Description;

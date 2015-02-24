@@ -5,7 +5,7 @@
     }
 
     function ReloadGrid() {
-        $("#list_mstcoa").setGridParam({ url: base_url + 'ChartOfAccount/GetList', postData: { filters: null }, page: '1' }).trigger("reloadGrid");
+        $("#list_mstcoa").setGridParam({ url: base_url + 'ChartOfAccount/GetList'/*, postData: { filters: null }, page: '1'*/ }).trigger("reloadGrid");
     }
 
     function ClearData() {
@@ -28,12 +28,12 @@
         colNames: ['ID', 'Account Code', 'Account Name', 'Group', 'Level', 'Parent ID', 'Parent Code', 'Parent Name', 'Legacy','Cash&Bank', 'Legacy Code', 'Leaf', 'Used By System'],
         colModel: [
 				  { name: 'Id', index: 'Id', width: 40, hidden: true},
-				  { name: 'Code', index: 'Code', width: 80, classes: "grid-col" },
+				  { name: 'Code', index: 'Code', width: 120, classes: "grid-col" },
 				  { name: 'name', index: 'name', width: 250 },
-                  { name: 'group', index: 'group', width: 90 },
+                  { name: 'group', index: 'group', width: 90, formatter:'select', stype: 'select', editoptions: { value: getSelectOption("#AccountGroup") } },
                   { name: 'level', index: 'level', width: 50 },
                   { name: 'parentid', index: 'parentid', width: 40, hidden: true },
-                  { name: 'parentcode', index: 'parentid', width: 80, classes: "grid-col" },
+                  { name: 'parentcode', index: 'parentcode', width: 80, classes: "grid-col" },
                   { name: 'parent', index: 'parent', width: 200 },
                   { name: 'islegacy', index: 'islegacy', width: 40, stype: 'select', editoptions: { value: ':;true:Y;false:N' } },
                   { name: 'iscashbankaccount', index: 'iscashbankaccount', width: 70, stype: 'select', editoptions: { value: ':;true:Y;false:N' } },
@@ -89,25 +89,25 @@
             }
             $(this).jqGrid('setRowData', ids[i], { isusedbysystem: rowIsSystem });
 
-            rowGroup = $(this).getRowData(cl).group;
-            if (rowGroup == 1) {
-                rowGroup = "Asset";
-            } else if (rowGroup == 2){
-                rowGroup = "Expense";
-            } else if (rowGroup == 3) {
-                rowGroup = "Liability";
-            } else if (rowGroup == 4) {
-                rowGroup = "Equity";
-            } else if (rowGroup == 5) {
-                rowGroup = "Revenue";
-            }
-            $(this).jqGrid('setRowData', ids[i], { group: rowGroup});
+            //rowGroup = $(this).getRowData(cl).group;
+            //if (rowGroup == 1) {
+            //    rowGroup = "Asset";
+            //} else if (rowGroup == 2){
+            //    rowGroup = "Expense";
+            //} else if (rowGroup == 3) {
+            //    rowGroup = "Liability";
+            //} else if (rowGroup == 4) {
+            //    rowGroup = "Equity";
+            //} else if (rowGroup == 5) {
+            //    rowGroup = "Revenue";
+            //}
+            //$(this).jqGrid('setRowData', ids[i], { group: rowGroup});
 
         }
     }
       
 });
-    $("#list_mstcoa").jqGrid('navGrid', '#toolbar_coa', { del: false, add: false, edit: false, search: false })
+    $("#list_mstcoa").jqGrid('navGrid', '#toolbar_coa', { del: false, add: false, edit: false, search: false/*, refreshstate: "current"*/ })
            .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: true });
 
     //GRID LOOKUP +++++++++++++++
@@ -117,9 +117,9 @@
         colNames: ['Id', 'Account Code', 'Account Name', 'Account Group'],
         colModel: [
                   { name: 'Id', index: 'Id', width: 40, hidden: true },
-				  { name: 'Code', index: 'Code', width: 80 },
+				  { name: 'Code', index: 'Code', width: 120 },
 				  { name: 'Name', index: 'Name', width: 150 },
-                  { name: 'Group', index: 'Group', width: 100 },
+                  { name: 'Group', index: 'Group', width: 90, formatter: 'select', stype: 'select', editoptions: { value: getSelectOption("#AccountGroup") } },
             ],
         page: '1',
         pager: $('#lookup_pager_coa'),
@@ -159,19 +159,19 @@
                  }
                  $(this).jqGrid('setRowData', ids[i], { isleaf: rowIsLeaf });
 
-                 rowGroup = $(this).getRowData(cl).Group;
-                 if (rowGroup == 1) {
-                     rowGroup = "Asset";
-                 } else if (rowGroup == 2) {
-                     rowGroup = "Expense";
-                 } else if (rowGroup == 3) {
-                     rowGroup = "Liability";
-                 } else if (rowGroup == 4) {
-                     rowGroup = "Equity";
-                 } else if (rowGroup == 5) {
-                     rowGroup = "Revenue";
-                 }
-                 $(this).jqGrid('setRowData', ids[i], { Group: rowGroup });
+                 //rowGroup = $(this).getRowData(cl).Group;
+                 //if (rowGroup == 1) {
+                 //    rowGroup = "Asset";
+                 //} else if (rowGroup == 2) {
+                 //    rowGroup = "Expense";
+                 //} else if (rowGroup == 3) {
+                 //    rowGroup = "Liability";
+                 //} else if (rowGroup == 4) {
+                 //    rowGroup = "Equity";
+                 //} else if (rowGroup == 5) {
+                 //    rowGroup = "Revenue";
+                 //}
+                 //$(this).jqGrid('setRowData', ids[i], { Group: rowGroup });
 
              }
          }
@@ -210,19 +210,19 @@
             $('#ParentName').val(ret.name);
             $('#Code').val(ret.Code);
             switch (ret.group) {
-                case ("Asset"):
+                case ("1"): //"Asset"
                     $('#radiogroup1').prop('checked', true);
                     break;
-                case ("Expense"):
+                case ("2"): //"Expense"
                     $('#radiogroup2').prop('checked', true);
                     break;
-                case ("Liability"):
+                case ("3"): //"Liability"
                     $('#radiogroup3').prop('checked', true);
                     break;
-                case ("Equity"):
+                case ("4"): //"Equity"
                     $('#radiogroup4').prop('checked', true);
                     break;
-                case ("Revenue"):
+                case ("5"): //"Revenue"
                     $('#radiogroup5').prop('checked', true);
                     break;
             }

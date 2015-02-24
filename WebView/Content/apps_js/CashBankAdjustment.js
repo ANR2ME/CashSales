@@ -40,7 +40,7 @@
                   { name: 'cashbank', index: 'cashbank', width: 120 },
                   { name: 'amount', index: 'amount', width: 100, formatter: 'currency', formatoptions: { decimalSeparator: ".", thousandsSeparator: ",", decimalPlaces: 2, prefix: "", suffix: "", defaultValue: '0.00' } },
                   { name: 'isconfirmed', index: 'isconfirmed', width: 100, stype: 'select', editoptions: { value: ':All;true:Yes;false:No' } },
-                  { name: 'confirmationdate', index: 'confirmationdate', hidden: true, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
+                  { name: 'confirmationdate', index: 'confirmationdate', hidden: true, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'Y/m/d' } },
                   { name: 'adjustmentdate', index: 'adjustmentdate', width: 120, align: "center", formatter: 'date', search: false, formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y', dataInit: datePick, attr: { title: 'Select Date' } } },
                   { name: 'createdat', index: 'createdat', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
 				  { name: 'updatedat', index: 'updatedat', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },

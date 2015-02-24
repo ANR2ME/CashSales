@@ -20,6 +20,7 @@ namespace Core.DomainModel
         public decimal Total { get; set; }
         public decimal CoGS { get; set; }
         public bool IsPaid { get; set; }
+        public Nullable<DateTime> PaymentDate { get; set; }
 
         public DateTime CreatedAt { get; set; }
         public Nullable<DateTime> DeletedAt { get; set; }

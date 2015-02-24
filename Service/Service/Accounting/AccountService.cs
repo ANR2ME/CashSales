@@ -41,14 +41,19 @@ namespace Service.Service
             return _repository.GetQueryable().Where(x => x.IsLeaf == true && !x.IsDeleted).ToList();
         }
 
-        public IList<Account> GetLeafObjectsById(int? Id)
+        public IList<Account> GetChildObjectsById(int? ParentId)
         {
-            return _repository.GetQueryable().Where(x => x.IsLeaf == true && x.ParentId == Id && !x.IsDeleted).ToList();
+            return _repository.GetQueryable().Where(x => x.ParentId == ParentId && !x.IsDeleted).ToList();
         }
 
         public IList<Account> GetLegacyObjects()
         {
             return _repository.FindAll(x => x.IsLegacy == true && !x.IsDeleted).ToList();
+        }
+
+        public IList<Account> GetObjectsByName(string Name)
+        {
+            return _repository.FindAll(x => x.Name == Name && !x.IsDeleted).ToList();
         }
 
         public Account GetObjectById(int Id)
@@ -162,7 +167,7 @@ namespace Service.Service
             Account oldparent = GetObjectById(OldParentId.GetValueOrDefault());
             if (oldparent != null)
             {
-                if (!GetLeafObjectsById(OldParentId).Any())
+                if (!GetChildObjectsById(OldParentId).Any())
                 {
                     if (!oldparent.IsLeaf)
                     {
@@ -222,7 +227,7 @@ namespace Service.Service
             // Fix Parent's IsLeaf
             if (account.ParentId.GetValueOrDefault() > 0)
             {
-                if (!GetLeafObjectsById(account.ParentId).Any())
+                if (!GetChildObjectsById(account.ParentId).Any())
                 {
                     Account parent = GetObjectById(account.ParentId.GetValueOrDefault());
                     if (parent != null && !parent.IsLeaf)
@@ -270,6 +275,28 @@ namespace Service.Service
         public bool IsCodeDuplicated(Account account)
         {
             return _repository.FindAll(x => !x.IsDeleted && x.Code == account.Code && x.Id != account.Id).Any();
+        }
+
+        public bool IsChildOf(int AccountId, int? ParentId)
+        {
+            bool ischild = false;
+            if (ParentId != null && AccountId != ParentId.GetValueOrDefault())
+            {
+                var childs = GetChildObjectsById(ParentId);
+                foreach (var child in childs)
+                {
+                    if (AccountId == child.Id)
+                    {
+                        ischild = true;
+                    }
+                    else if (!child.IsLeaf)
+                    {
+                        ischild = IsChildOf(AccountId, child.Id);
+                    }
+                    if (ischild) break;
+                }
+            }
+            return ischild;
         }
 
         public int UpdateChildren(Account parent)

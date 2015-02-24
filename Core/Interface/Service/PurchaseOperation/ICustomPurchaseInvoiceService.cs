@@ -36,7 +36,7 @@ namespace Core.Interface.Service
                                            IWarehouseItemService _warehouseItemService, IWarehouseService _warehouseService, IItemService _itemService,
                                            IBarringService _barringService, IStockMutationService _stockMutationService, IPriceMutationService _priceMutationService,
                                            IGeneralLedgerJournalService _generalLedgerJournalService, IAccountService _accountService, IClosingService _closingService);
-        CustomPurchaseInvoice PaidObjectForRepair(CustomPurchaseInvoice customPurchaseInvoice, decimal AmountPaid, Nullable<DateTime> PaymentDate, string VoucherCode, string VoucherDetailCode,
+        CustomPurchaseInvoice PaidObjectForRepair(CustomPurchaseInvoice customPurchaseInvoice, decimal AmountPaid, Nullable<DateTime> PaymentDate, string VoucherCode, string VoucherDetailCode, int VoucherId,
                                            ICashBankService _cashBankService, IPayableService _payableService,
                                            IPaymentVoucherService _paymentVoucherService, IPaymentVoucherDetailService _paymentVoucherDetailService,
                                            IContactService _contactService, ICashMutationService _cashMutationService,

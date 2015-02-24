@@ -30,7 +30,7 @@
         colNames: ['ID', 'Name', 'Description', 'Amount', 'IsBank', 'Created At', 'Updated At'],
         colModel: [
     			  { name: 'id', index: 'id', width: 80, align: "center" },
-				  { name: 'name', index: 'name', width: 80 },
+				  { name: 'name', index: 'name', width: 150 },
                   { name: 'description', index: 'description', width: 250 },
                   { name: 'amount', index: 'amount', width: 150, align: "right", formatter: 'currency', formatoptions: { decimalSeparator: ".", thousandsSeparator: ",", decimalPlaces: 2, prefix: "", suffix: "", defaultValue: '0.00' } },
                   { name: 'isbank', index: 'isbank', width: 100, stype: 'select', editoptions: { value: ':All;true:Yes;false:No' } },

@@ -57,24 +57,25 @@ namespace Service.Service
             if (_validator.ValidCreateObject(cashBank, this))
             {
                 _repository.CreateObject(cashBank);
-                Account account = _accountService.GetObjectByNameAndParentLegacyCode(Constant.AccountLegacyCode.CashBank, cashBank.Name);
+                var parentLegacyCode = cashBank.IsBank ? Constant.AccountLegacyCode.CashBankBank : Constant.AccountLegacyCode.CashBankCash;
+                Account account = _accountService.GetObjectByNameAndParentLegacyCode(parentLegacyCode, cashBank.Name);
                 if (account == null)
                 {
                     // Create Leaf Cash Bank Account
-                    string Code = GenerateAccountCode(_accountService);
-                    Account parent = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.CashBank);
+                    string Code = GenerateAccountCode(cashBank, _accountService);
+                    Account parent = _accountService.GetObjectByLegacyCode(parentLegacyCode);
                     account = new Account()
                     {
                         Name = cashBank.Name,
                         //Level = 3,
-                        Group = Constant.AccountGroup.Asset,
+                        Group = (int)Constant.AccountGroup.Asset,
                         Code = Code,
                         IsCashBankAccount = true,
                         IsLeaf = true,
                         IsUsedBySystem = true,
                         ParentId = parent.Id,
                         Level = parent.Level + 1,
-                        LegacyCode = Constant.AccountLegacyCode.CashBank + cashBank.Id.ToString("D3"),
+                        LegacyCode = parent.LegacyCode + cashBank.Id.ToString("D3"),
                     };
                     _accountService.CreateCashBankAccount(account);
 
@@ -85,15 +86,21 @@ namespace Service.Service
             return cashBank;
         }
 
-        public CashBank UpdateObject(CashBank cashBank, string OldName, IAccountService _accountService)
+        public CashBank UpdateObject(CashBank cashBank, string OldName, bool OldIsBank, IAccountService _accountService)
         {
             if(_validator.ValidUpdateObject(cashBank, this))
             {
                 _repository.UpdateObject(cashBank);
-                Account account = _accountService.GetObjectByNameAndLegacyCode(Constant.AccountLegacyCode.CashBank + cashBank.Id.ToString("D3"), OldName);
-                if (account != null && cashBank.Name != account.Name)
+                var oldparentLegacyCode = OldIsBank ? Constant.AccountLegacyCode.CashBankBank : Constant.AccountLegacyCode.CashBankCash;
+                var newparentLegacyCode = cashBank.IsBank ? Constant.AccountLegacyCode.CashBankBank : Constant.AccountLegacyCode.CashBankCash;
+                Account Oldparent = _accountService.GetObjectByLegacyCode(oldparentLegacyCode);
+                Account Newparent = _accountService.GetObjectByLegacyCode(newparentLegacyCode);
+                Account account = _accountService.GetObjectByNameAndLegacyCode(oldparentLegacyCode + cashBank.Id.ToString("D3"), OldName);
+                if (account != null && (cashBank.Name != account.Name || cashBank.IsBank != OldIsBank))
                 {
                     account.Name = cashBank.Name;
+                    account.LegacyCode = newparentLegacyCode + cashBank.Id.ToString("D3");
+                    account.ParentId = Newparent.Id;
                     _accountService.UpdateObjectForCashBank(account, account.ParentId);
                 }
             };
@@ -105,7 +112,8 @@ namespace Service.Service
             if(_validator.ValidDeleteObject(cashBank, _cashMutationService))
             {
                 _repository.SoftDeleteObject(cashBank);
-                Account account = _accountService.GetObjectByNameAndLegacyCode(Constant.AccountLegacyCode.CashBank + cashBank.Id.ToString("D3"), cashBank.Name);
+                var parentLegacyCode = cashBank.IsBank ? Constant.AccountLegacyCode.CashBankBank : Constant.AccountLegacyCode.CashBankCash;
+                Account account = _accountService.GetObjectByNameAndLegacyCode(parentLegacyCode + cashBank.Id.ToString("D3"), cashBank.Name);
                 if (account != null)
                 {
                     _accountService.SoftDeleteObjectForCashBank(account);
@@ -136,19 +144,19 @@ namespace Service.Service
             return Total;
         }
 
-        public string GenerateAccountCode(IAccountService _accountService)
+        public string GenerateAccountCode(CashBank cashBank, IAccountService _accountService)
         {
-            int ParentId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.CashBank).Id;
-            string parentCode = _accountService.GetObjectById(ParentId).Code;
-            int newId = _accountService.GetQueryable().Where(x => x.ParentId == ParentId && !x.IsDeleted).Count() + 1;
-            while (true)
-            {
-                if (_accountService.GetObjectByLegacyCode(parentCode + newId.ToString("D3")) == null)
-                {
-                    return parentCode + newId.ToString("D3");
-                }
-                newId += 1;
-            }
+            var parent = _accountService.GetObjectByLegacyCode(cashBank.IsBank ? Constant.AccountLegacyCode.CashBankBank : Constant.AccountLegacyCode.CashBankCash);
+            //int newId = _accountService.GetQueryable().Where(x => x.ParentId == parent.Id && !x.IsDeleted).Count() + 1;
+            //while (true)
+            //{
+            //    if (_accountService.GetObjectByLegacyCode(parent.LegacyCode + newId.ToString("D3")) == null)
+            //    {
+            //        return parent.Code + newId.ToString("D3");
+            //    }
+            //    newId += 1;
+            //}
+            return parent.Code + cashBank.Id.ToString("D3");
         }
     }
 }

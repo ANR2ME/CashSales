@@ -31,7 +31,7 @@ namespace WebView.Controllers
                 return Content(Constant.ErrorPage.PageViewNotAllowed);
             }
 
-            return View();
+            return View(this);
         }
 
          public dynamic GetList(string _search, long nd, int rows, int? page, string sidx, string sord, string filters = "")

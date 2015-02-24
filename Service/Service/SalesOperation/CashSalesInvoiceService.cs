@@ -168,13 +168,14 @@ namespace Service.Service
             return cashSalesInvoice;
         }
 
-        public CashSalesInvoice PaidObjectForRepair(CashSalesInvoice cashSalesInvoice, decimal AmountPaid, decimal Allowance, string VoucherCode, string VoucherDetailCode, 
+        public CashSalesInvoice PaidObjectForRepair(CashSalesInvoice cashSalesInvoice, decimal AmountPaid, decimal Allowance, Nullable<DateTime> PaymentDate, string VoucherCode, string VoucherDetailCode, int VoucherId,
                                              ICashBankService _cashBankService, IReceivableService _receivableService, IReceiptVoucherService _receiptVoucherService, IReceiptVoucherDetailService _receiptVoucherDetailService,
                                              IContactService _contactService, ICashMutationService _cashMutationService, ICashSalesReturnService _cashSalesReturnService,
                                              IGeneralLedgerJournalService _generalLedgerJournalService, IAccountService _accountService, IClosingService _closingService)
         {
             cashSalesInvoice.AmountPaid = AmountPaid;
             cashSalesInvoice.Allowance = Allowance;
+            cashSalesInvoice.PaymentDate = PaymentDate;
             if (_validator.ValidPaidObject(cashSalesInvoice, _cashBankService, _receiptVoucherService, _cashSalesReturnService, _closingService))
             {
                 CashBank cashBank = _cashBankService.GetObjectById((int)cashSalesInvoice.CashBankId.GetValueOrDefault());
@@ -191,15 +192,33 @@ namespace Service.Service
                 ReceiptVoucher receiptVoucher = null;
                 if (cashSalesInvoice.AmountPaid.GetValueOrDefault() > 0)
                 {
-                    receiptVoucher = _receiptVoucherService.CreateObject((int)cashSalesInvoice.CashBankId.GetValueOrDefault(), receivable.ContactId, cashSalesInvoice.PaymentDate.GetValueOrDefault()/*DateTime.Now*/, cashSalesInvoice.AmountPaid.GetValueOrDefault()/*receivable.RemainingAmount*/,
-                                                                            false, (DateTime)cashSalesInvoice.DueDate.GetValueOrDefault(), cashSalesInvoice.IsBank, VoucherCode, _receiptVoucherDetailService,
-                                                                            _receivableService, _contactService, _cashBankService);
-
-                    ReceiptVoucherDetail receiptVoucherDetail = _receiptVoucherDetailService.CreateObject(receiptVoucher.Id, receivable.Id, cashSalesInvoice.AmountPaid.GetValueOrDefault(),
-                                                                                "Automatic Receipt", VoucherDetailCode, _receiptVoucherService, _cashBankService, _receivableService);
-
-                    _receiptVoucherService.ConfirmObject(receiptVoucher, (DateTime)cashSalesInvoice.PaymentDate.GetValueOrDefault(), _receiptVoucherDetailService, _cashBankService,
-                                                         _receivableService, _cashMutationService, _generalLedgerJournalService, _accountService, _closingService);
+                    if (VoucherId > 0)
+                    {
+                        receiptVoucher = _receiptVoucherService.GetObjectById(VoucherId);
+                    }
+                    if (receiptVoucher == null)
+                    {
+                        receiptVoucher = _receiptVoucherService.CreateObject((int)cashSalesInvoice.CashBankId.GetValueOrDefault(), receivable.ContactId, cashSalesInvoice.PaymentDate.GetValueOrDefault()/*DateTime.Now*/, cashSalesInvoice.AmountPaid.GetValueOrDefault()/*receivable.RemainingAmount*/,
+                                                                                false, (DateTime)cashSalesInvoice.DueDate.GetValueOrDefault(), cashSalesInvoice.IsBank, VoucherCode, _receiptVoucherDetailService,
+                                                                                _receivableService, _contactService, _cashBankService);
+                    }
+                    if (receiptVoucher != null)
+                    {
+                        if (!(receiptVoucher.TotalAmount >= cashSalesInvoice.AmountPaid.GetValueOrDefault() && _receiptVoucherDetailService.GetObjectsByReceiptVoucherId(receiptVoucher.Id).Any()))
+                        {
+                            ReceiptVoucherDetail receiptVoucherDetail = _receiptVoucherDetailService.CreateObject(receiptVoucher.Id, receivable.Id, cashSalesInvoice.AmountPaid.GetValueOrDefault(),
+                                                                                        "Automatic Receipt", VoucherDetailCode, _receiptVoucherService, _cashBankService, _receivableService);
+                            if (receiptVoucherDetail != null)
+                            {
+                                receiptVoucherDetail.IsAutomatic = true;
+                            }
+                        }
+                        if (!receiptVoucher.IsConfirmed)
+                        {
+                            _receiptVoucherService.ConfirmObject(receiptVoucher, (DateTime)cashSalesInvoice.PaymentDate.GetValueOrDefault(), _receiptVoucherDetailService, _cashBankService,
+                                                                 _receivableService, _cashMutationService, _generalLedgerJournalService, _accountService, _closingService);
+                        }
+                    }
                 }
                 if (receiptVoucher == null || !receiptVoucher.Errors.Any())
                 {
@@ -245,12 +264,20 @@ namespace Service.Service
                     receiptVoucher = _receiptVoucherService.CreateObject((int)cashSalesInvoice.CashBankId.GetValueOrDefault(), receivable.ContactId, cashSalesInvoice.PaymentDate.GetValueOrDefault()/*DateTime.Now*/, cashSalesInvoice.AmountPaid.GetValueOrDefault()/*receivable.RemainingAmount*/,
                                                                             false, (DateTime)cashSalesInvoice.DueDate.GetValueOrDefault(), cashSalesInvoice.IsBank, "", _receiptVoucherDetailService,
                                                                             _receivableService, _contactService, _cashBankService);
-                    
-                    ReceiptVoucherDetail receiptVoucherDetail = _receiptVoucherDetailService.CreateObject(receiptVoucher.Id, receivable.Id, cashSalesInvoice.AmountPaid.GetValueOrDefault(),
-                                                                                "Automatic Receipt", "", _receiptVoucherService, _cashBankService, _receivableService);
-                    
-                    _receiptVoucherService.ConfirmObject(receiptVoucher, (DateTime)cashSalesInvoice.PaymentDate.GetValueOrDefault(), _receiptVoucherDetailService, _cashBankService,
-                                                         _receivableService, _cashMutationService, _generalLedgerJournalService, _accountService, _closingService);
+                    if (receiptVoucher != null)
+                    {
+                        //if (!(receiptVoucher.TotalAmount >= cashSalesInvoice.AmountPaid.GetValueOrDefault() && _receiptVoucherDetailService.GetObjectsByReceiptVoucherId(receiptVoucher.Id).Any()))
+                        {
+                            ReceiptVoucherDetail receiptVoucherDetail = _receiptVoucherDetailService.CreateObject(receiptVoucher.Id, receivable.Id, cashSalesInvoice.AmountPaid.GetValueOrDefault(),
+                                                                                        "Automatic Receipt", "", _receiptVoucherService, _cashBankService, _receivableService);
+                            if (receiptVoucherDetail != null)
+                            {
+                                receiptVoucherDetail.IsAutomatic = true;
+                            }
+                        }
+                        _receiptVoucherService.ConfirmObject(receiptVoucher, (DateTime)cashSalesInvoice.PaymentDate.GetValueOrDefault(), _receiptVoucherDetailService, _cashBankService,
+                                                             _receivableService, _cashMutationService, _generalLedgerJournalService, _accountService, _closingService);
+                    }
                 }
                 if (receiptVoucher == null || !receiptVoucher.Errors.Any())
                 {

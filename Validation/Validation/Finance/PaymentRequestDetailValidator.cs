@@ -28,6 +28,10 @@ namespace Validation.Validation
             {
                 paymentRequestDetail.Errors.Add("AccountId", "Tidak boleh tidak ada");
             }
+            else if (account.IsCashBankAccount)
+            {
+                paymentRequestDetail.Errors.Add("AccountId", "Tidak boleh memilih CashBank Account secara langsung");
+            }
             return paymentRequestDetail;
         }
 
@@ -81,7 +85,7 @@ namespace Validation.Validation
         {
             if (paymentRequestDetail.Status == Constant.GeneralLedgerStatus.Debit)
             {
-                paymentRequestDetail.Errors.Add("Generic", "Sistem mengharapkan posting General Ledger credit");
+                paymentRequestDetail.Errors.Add("Generic", "Sistem mengharapkan posting General Ledger Credit");
             }
             return paymentRequestDetail;
         }
@@ -90,7 +94,7 @@ namespace Validation.Validation
         {
             if (paymentRequestDetail.Status == Constant.GeneralLedgerStatus.Credit)
             {
-                paymentRequestDetail.Errors.Add("Generic", "Sistem mengharapkan posting General Ledger debit");
+                paymentRequestDetail.Errors.Add("Generic", "Sistem mengharapkan posting General Ledger Debit");
             }
             return paymentRequestDetail;
         }
@@ -99,7 +103,7 @@ namespace Validation.Validation
         {
             if (paymentRequestDetail.IsLegacy)
             {
-                paymentRequestDetail.Errors.Add("Generic", "Hanya untuk non legacy object");
+                paymentRequestDetail.Errors.Add("Generic", "Hanya untuk non-legacy object");
             }
             return paymentRequestDetail;
         }

@@ -39,7 +39,7 @@ namespace Core.Interface.Service
                                         IWarehouseItemService _warehouseItemService, IWarehouseService _warehouseService, IItemService _itemService,
                                         IBarringService _barringService, IStockMutationService _stockMutationService,
                                         IGeneralLedgerJournalService _generalLedgerJournalService, IAccountService _accountService, IClosingService _closingService);
-        CashSalesReturn PaidObjectForRepair(CashSalesReturn cashSalesReturn, /*decimal Allowance,*/ string VoucherCode, string VoucherDetailCode,
+        CashSalesReturn PaidObjectForRepair(CashSalesReturn cashSalesReturn, Nullable<DateTime> PaymentDate, /*decimal Allowance,*/ string VoucherCode, string VoucherDetailCode, int VoucherId,
                                    ICashBankService _cashBankService, IPayableService _payableService,
                                    IPaymentVoucherService _paymentVoucherService, IPaymentVoucherDetailService _paymentVoucherDetailService,
                                    IContactService _contactService, ICashMutationService _cashMutationService,

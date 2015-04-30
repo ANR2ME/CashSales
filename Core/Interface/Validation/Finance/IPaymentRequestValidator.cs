@@ -22,12 +22,12 @@ namespace Core.Interface.Validation
         PaymentRequest VUpdateObject(PaymentRequest paymentRequest, IContactService _contactService);
         PaymentRequest VDeleteObject(PaymentRequest paymentRequest);
         PaymentRequest VConfirmObject(PaymentRequest paymentRequest, IPaymentRequestDetailService _paymentRequestDetailService, IClosingService _closingService);
-        PaymentRequest VUnconfirmObject(PaymentRequest paymentRequest, IPaymentRequestDetailService _paymentRequestDetailService, IClosingService _closingService);
+        PaymentRequest VUnconfirmObject(PaymentRequest paymentRequest, IPaymentRequestDetailService _paymentRequestDetailService, IClosingService _closingService, IPayableService _payableService, IPaymentVoucherDetailService _paymentVoucherDetailService);
         bool ValidCreateObject(PaymentRequest paymentRequest, IContactService _contactService);
         bool ValidUpdateObject(PaymentRequest paymentRequest, IContactService _contactService);
         bool ValidDeleteObject(PaymentRequest paymentRequest);
         bool ValidConfirmObject(PaymentRequest paymentRequest, IPaymentRequestDetailService _paymentRequestDetailService, IClosingService _closingService);
-        bool ValidUnconfirmObject(PaymentRequest paymentRequest, IPaymentRequestDetailService _paymentRequestDetailService, IClosingService _closingService);
+        bool ValidUnconfirmObject(PaymentRequest paymentRequest, IPaymentRequestDetailService _paymentRequestDetailService, IClosingService _closingService, IPayableService _payableService, IPaymentVoucherDetailService _paymentVoucherDetailService);
         bool isValid(PaymentRequest paymentRequest);
         string PrintError(PaymentRequest paymentRequest);
     }

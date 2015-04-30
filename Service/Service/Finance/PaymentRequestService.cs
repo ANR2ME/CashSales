@@ -132,22 +132,25 @@ namespace Service.Service
         public PaymentRequest UnconfirmObject(PaymentRequest paymentRequest, IPaymentRequestDetailService _paymentRequestDetailService, IPayableService _payableService, IPaymentVoucherDetailService _paymentVoucherDetailService,
                                               IAccountService _accountService, IGeneralLedgerJournalService _generalLedgerJournalService, IClosingService _closingService)
         {
-            if (_validator.ValidUnconfirmObject(paymentRequest, _paymentRequestDetailService, _closingService))
+            if (_validator.ValidUnconfirmObject(paymentRequest, _paymentRequestDetailService, _closingService, _payableService, _paymentVoucherDetailService))
             {
                 DateTime confirmdate = paymentRequest.ConfirmationDate.GetValueOrDefault();
                 Payable payable = _payableService.GetObjectBySource(Constant.PayableSource.PaymentRequest, paymentRequest.Id);
-                _payableService.SoftDeleteObject(payable, _paymentVoucherDetailService); // DeleteObject(payable.Id);
-                if (!payable.Errors.Any())
+                //if (payable != null)
                 {
-                    _repository.UnconfirmObject(paymentRequest);
-                    _generalLedgerJournalService.CreateUnconfirmationJournalForPaymentRequest(paymentRequest, confirmdate, _paymentRequestDetailService, _accountService);
-                }
-                else
-                {
-                    paymentRequest.Errors.Clear();
-                    foreach (var err in payable.Errors)
+                    _payableService.SoftDeleteObject(payable, _paymentVoucherDetailService); // DeleteObject(payable.Id);
+                    if (!payable.Errors.Any())
                     {
-                        paymentRequest.Errors.Add("Generic", err.Key + " " + err.Value);
+                        _repository.UnconfirmObject(paymentRequest);
+                        _generalLedgerJournalService.CreateUnconfirmationJournalForPaymentRequest(paymentRequest, confirmdate, _paymentRequestDetailService, _accountService);
+                    }
+                    else
+                    {
+                        paymentRequest.Errors.Clear();
+                        foreach (var err in payable.Errors)
+                        {
+                            paymentRequest.Errors.Add("Generic", err.Key + " " + err.Value);
+                        }
                     }
                 }
             }

@@ -848,7 +848,7 @@ namespace WebView
                         else
                         {
                             //filterValues.Add(filterValue);
-                            filter += temp[0].Trim() + ".ToLower().Contains(\"" + filterValue.ToLower() + "\")";
+                            filter += temp[0].Trim() + ".ToLower().Contains(\"" + filterValue.ToLower().Replace("%", "").Replace("*", "") + "\")";
                         }
 
                         if (i < conditions.Length - 1)
